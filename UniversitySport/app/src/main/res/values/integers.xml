@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="duration_zoom">130</integer>
+    <integer name="duration_ripple">130</integer>
+    <integer name="shadow_1">1</integer>
+    <integer name="shadow_2">2</integer>
+    <integer name="shadow_3">3</integer>
+    <integer name="shadow_4">4</integer>
+    <integer name="shadow_5">5</integer>
+    <integer name="shadow_6">6</integer>
+    <integer name="shadow_7">7</integer>
+    <integer name="shadow_8">8</integer>
+    <integer name="max_lines_1">1</integer>
+    <integer name="max_lines_2">2</integer>
+</resources>

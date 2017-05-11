@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="google_colors">
+        <item>@color/refresh_progress_red</item>
+        <item>@color/refresh_progress_blue</item>
+        <item>@color/refresh_progress_yellow</item>
+        <item>@color/refresh_progress_green</item>
+    </integer-array>
+</resources>

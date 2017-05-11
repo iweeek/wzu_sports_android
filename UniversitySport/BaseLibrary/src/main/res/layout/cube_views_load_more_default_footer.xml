@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/footer_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp">
+
+        <LinearLayout
+            android:id="@+id/llContainer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.application.library.widget.ProgressBarCircular
+                android:id="@+id/progressbar"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="5dp"
+                app:matProg_barColor="@color/progressbar_load_color"
+                app:matProg_barWidth="@dimen/progress_border_width"
+                app:matProg_circleRadius="25dp"
+                app:matProg_progressIndeterminate="true" />
+
+            <TextView
+                android:id="@+id/cube_views_load_more_default_footer_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/black_30"
+                android:textSize="14dp" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/vLeftLine"
+            android:layout_width="50dp"
+            android:layout_height="0.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/llContainer"
+            android:background="@color/black_6" />
+
+        <View
+            android:id="@+id/vRightLine"
+            android:layout_width="50dp"
+            android:layout_height="0.5dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/llContainer"
+            android:background="@color/black_6" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/bottom_view"
+        android:layout_width="fill_parent"
+        android:layout_height="62dp"
+        android:background="@color/transparent" />
+
+</LinearLayout>

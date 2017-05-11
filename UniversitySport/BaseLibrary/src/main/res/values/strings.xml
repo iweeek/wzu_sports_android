@@ -1,0 +1,34 @@
+<resources>
+    <string name="unit_wan">万</string>
+    <string name="unit_qian_wan">千万</string>
+    <string name="unit_ren">人</string>
+    <string name="def_data_loading">加载中&#8230;</string>
+    <string name="action_ok">确定</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_search">搜索</string>
+    <string name="prompt">提示</string>
+
+    <!-- empty layout -->
+    <string name="def_empty_data_text">没有内容</string>
+    <string name="def_net_error_text">我的天啊，没有网啦！</string>
+    <string name="def_empty_button_retry">重试</string>
+
+    <!-- 下拉刷新 -->
+    <string name="cube_ptr_pull_down">下拉</string>
+    <string name="cube_ptr_pull_down_to_refresh">下拉刷新</string>
+    <string name="cube_ptr_release_to_refresh">释放刷新</string>
+    <string name="cube_ptr_refreshing">@string/def_data_loading</string>
+    <string name="cube_ptr_refresh_complete">更新完成.</string>
+    <string name="cube_ptr_last_update">上次更新:&#160;</string>
+    <string name="cube_ptr_seconds_ago">&#160;秒之前</string>
+    <string name="cube_ptr_minutes_ago">&#160;分钟之前</string>
+    <string name="cube_ptr_hours_ago">&#160;小时之前</string>
+
+    <!-- 加载更多 -->
+    <string name="cube_views_load_more_loading">@string/def_data_loading</string>
+    <string name="cube_views_load_more_click_to_load_more">点击加载更多</string>
+    <string name="cube_views_load_more_loaded_complete">加载完毕</string>
+    <string name="no_more_data">被你看光了/(ㄒoㄒ)/</string>
+    <string name="load_more_data">加载更多内容</string>
+
+</resources>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pickimagedialog_text_year_moon_day">yyyy年MM月dd日</string>
+    <string name="pickimagedialog_text_year_moon_day_hour_mm">yyyy年MM月dd日 HH:mm</string>
+    <string name="timeutil_text_year">年</string>
+    <string name="timeutil_text_month">月</string>
+    <string name="timeutil_text_day">日</string>
+    <string name="timeutil_text_hours">时</string>
+    <string name="timeutil_text_minute">分</string>
+    <string name="timeutil_text_just">刚刚</string>
+    <string name="timeutil_text_before_second">秒之前</string>
+    <string name="timeutil_text_before_minute">分钟之前</string>
+    <string name="timeutil_text_xiaoshi">小时</string>
+    <string name="timeutil_text_yesterday">昨天</string>
+    <string name="timeutil_text_before_yesterday">前天</string>
+    <string name="timeutil_text_tomorrow">明天</string>
+    <string name="timeutil_text_month_day_hours">MM月dd日HH时</string>
+    <string name="timeutil_text_within_half_hour">半小时之内</string>
+    <string name="timeutil_text_half_hour_before">半小时之前</string>
+    <string name="timeutil_text_hour_before">小时之前</string>
+    <string name="timeutil_text_day_before">天前</string>
+    <string name="timeutil_text_this_month">本个月内</string>
+    <string name="timeutil_text_within_one_month">三十天内</string>
+    <string name="timeutil_text_going_mars">去火星了</string>
+    <string name="timeutil_text_minutes_ago">分钟前</string>
+    <string name="timeutil_text_today_hh_mm">今天 HH:mm</string>
+    <string name="timeutil_text_today">今天</string>
+    <string name="timeutil_text_month_day">MM月dd日</string>
+    <string name="timeutil_text_month_day_hour_mm">MM月dd日 HH:mm</string>
+    <string name="timeutil_text_monday">一</string>
+    <string name="timeutil_text_tuesday">二</string>
+    <string name="timeutil_text_wednesday">三</string>
+    <string name="timeutil_text_thursday">四</string>
+    <string name="timeutil_text_friday">五</string>
+    <string name="timeutil_text_saturday">六</string>
+    <string name="timeutil_text_week">星期</string>
+    <string name="timeutil_text_second">秒</string>
+    <string name="timeutil_text_fengzhong">分钟</string>
+    <string name="timeutil_text_tian">天</string>
+    
+    <!-- 星座 -->
+    <string name="star_shuiping">水瓶座</string>
+    <string name="star_shuangyu">双鱼座</string>
+    <string name="star_baiyang">白羊座</string>
+    <string name="star_jinniu">金牛座</string>
+    <string name="star_shuangzi">双子座</string>
+    <string name="star_juxie">巨蟹座</string>
+    <string name="star_shizi">狮子座</string>
+    <string name="star_chunv">处女座</string>
+    <string name="star_tianping">天秤座</string>
+    <string name="star_tianxie">天蝎座</string>
+    <string name="star_sheshou">射手座</string>
+    <string name="star_mojie">摩羯座</string>
+    
+
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tab_titles">
+        <item>@string/main_tab_title_1</item>
+        <item>@string/main_tab_title_2</item>
+        <item>@string/main_tab_title_3</item>
+        <item>@string/main_tab_title_4</item>
+        <item>@string/main_tab_title_5</item>
+    </string-array>
+
+
+</resources>

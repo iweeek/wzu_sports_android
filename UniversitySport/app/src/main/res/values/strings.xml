@@ -1,0 +1,131 @@
+<resources>
+    <string name="app_name">茉莉</string>
+    <string name="app_exit">再次点击退出</string>
+
+    <!-- 通用动作 -->
+    <string name="action_back">返回</string>
+    <string name="action_delete">删除</string>
+    <string name="action_edit">编辑</string>
+    <string name="action_send">发送</string>
+    <string name="action_reconnect">请重试</string>
+    <string name="action_finish">完成</string>
+    <string name="action_prompt">提示</string>
+    <string name="action_clear">清空</string>
+    <string name="action_save">保存</string>
+
+    <!-- 网络 -->
+    <string name="crashhandler_sorry_error">Sorry,程序错误.</string>
+    <string name="httpconnection_text_not_network">网络不给力，请稍候再试</string>
+    <string name="network_interrupt">网络中断</string>
+    <string name="upload_picture_failed">上传失败</string>
+    <string name="uploading">上传中&#8230;</string>
+    <string name="download_failed">下载失败</string>
+    <string name="download_success">下载完成</string>
+
+
+    <!-- 主页TAB -->
+    <string name="main_tab_title_1">精选</string>
+    <string name="main_tab_title_2">发现</string>
+    <string name="main_tab_title_3">故事</string>
+    <string name="main_tab_title_4">私信</string>
+    <string name="main_tab_title_5">我</string>
+    <!--修改密码-->
+    <string name="modify_password">修改密码</string>
+    <string name="modify_password_success">修改成功</string>
+    <string name="find_password">忘记密码</string>
+    <string name="check_phone">手机验证</string>
+    <string name="get_sms_mark">点击获取验证码</string>
+    <string name="input_phone_num">请输入手机号码</string>
+    <string name="input_sms_mark">请输入短信验证码</string>
+    <string name="input_new_password">请输入新密码</string>
+    <string name="input_new_password_again">再次输入新密码</string>
+    <string name="txt_bind_resend">秒后重发</string>
+    <string name="action_enter">确定</string>
+    <string name="action_register_enter">确定注册</string>
+    <string name="input_phone_num_error">请输入格式正确的11位手机号</string>
+    <string name="loading_verify">获取验证码中&#8230;</string>
+    <string name="tag_bind_phone_enter_re">请重新输入手机号</string>
+    <string name="tag_bind_verify_enter">请输入验证码</string>
+
+    <!--系统设置-->
+    <string name="system_setting">设置</string>
+    <string name="personal_info">基本资料</string>
+    <string name="recharge_center">充值中心</string>
+    <string name="security_center">账号绑定</string>
+    <string name="no_bind_account_tip">请先账号绑定</string>
+    <string name="problem_and_help">问题帮助</string>
+    <string name="logout_user">退出登录</string>
+    <string name="txt_exit">退出%s？还是在看看？</string>
+    <string name="logout_enter">退出</string>
+    <string name="see_others">再看看</string>
+
+    <!--手机登录-->
+    <string name="login_title">登录</string>
+    <string name="login_input_phone_num">请输入手机号</string>
+    <string name="login_input_password">请输入密码</string>
+    <string name="login_forget_password">忘记密码？</string>
+    <string name="login_login">点击登录</string>
+    <string name="login_register_with_phone">手机注册</string>
+    <string name="login_third_login">- 使用第三方账号登录 -</string>
+    <string name="about_third_login_declare">《用户协议》</string>
+    <string name="login_third_login_declare">登录表示同意《用户协议》</string>
+    <string name="login_dialog_desc">登陆后才可进行更多操作哦！</string>
+
+    <!--安全中心-->
+    <string name="bound_phone">已绑定手机</string>
+    <string name="account_password">输入密码</string>
+    <string name="account_password_2">再次输入密码</string>
+    <!--注册-->
+    <string name="register">注册</string>
+    <string name="input_password">请输入密码</string>
+    <string name="input_password_again">再次输入密码</string>
+    <string name="bind_phone">绑定手机</string>
+    <string name="register_des">同意《用户协议》</string>
+
+    <!--关于我们-->
+    <string name="about_version">当前版本：%s</string>
+    <string name="about_text_1">Copyright © 2017 </string>
+    <string name="about_text_2">inc.All Rights Reserved</string>
+
+    <!-- 个人资料 -->
+    <string name="tag_info_avatar">头像:</string>
+    <string name="tag_info_name">昵称:</string>
+    <string name="tag_info_sex">性别:</string>
+    <string name="tag_info_sign">签名:</string>
+    <string name="tag_info_publish">简介:</string>
+    <string name="tag_info_temperament">标签:</string>
+    <string name="userinfo_publish_hint">写段话让人知道你的牛X</string>
+    <string name="userinfo_sign_hint">个性的签名能为您吸引更多粉丝</string>
+    <string name="userinfo_tag_hint">选择您主要直播的游戏</string>
+    <string name="tag_info_save">保存</string>
+    <string name="txt_info_sign">签名不能超过16个汉字</string>
+    <string name="txt_info_self">简介不能超过30个汉字</string>
+    <string name="txt_info_title">标题不能超过30个汉字</string>
+    <string name="txt_info_des">公告不能超过140个汉字</string>
+    <string name="txt_info_name">昵称不能超过7个汉字</string>
+    <string name="txt_save_success">保存成功</string>
+    <string name="tag_man">男</string>
+    <string name="tag_woman">女</string>
+    <string name="txt_name_nonull">姓名不能置空</string>
+    <string name="disable_emoji">禁止输入表情符号</string>
+    <string name="txt_tag_detail">天生丽质难自弃</string>
+    <string name="floatshortcutchatgroupview_text_insert_sdcard">请插入SD卡</string>
+    <string name="getphotoactivity_text_no_photo">图片不存在</string>
+    <string name="crop_but_save">保存</string>
+    <string name="cropview_text_operate_fail">操作失败,请重试</string>
+    <string name="error_pic_get">获取图片失败</string>
+    <string name="error_picupload">图片上传失败</string>
+
+    <!--登录-->
+    <string name="error_mobile_empty">请输入手机号</string>
+    <string name="error_mobile_error">手机号错误，请重新输入</string>
+    <string name="error_mobile_vertify">请输入验证码</string>
+    <string name="error_password">请输入6&#8211;12位字母或数字密码</string>
+    <string name="error_password_again">请再次输入密码</string>
+    <string name="error_password_nosame">两次密码输入不一致</string>
+    <string name="error_check_agreement">请勾选用户协议</string>
+
+
+    <!--空白页面的提示文案-->
+
+</resources>

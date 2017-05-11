@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="blue">#2d68ac</color>
+    <color name="white_90">#e6ffffff</color>
+    <color name="white_80">#ccffffff</color>
+    <color name="white_60">#99ffffff</color>
+    <color name="white_50">#80ffffff</color>
+    <color name="white_40">#66ffffff</color>
+    <color name="white_30">#4dffffff</color>
+    <color name="white_20">#33ffffff</color>
+    <color name="white_10">#1affffff</color>
+    <color name="white_5">#0cffffff</color>
+    <color name="black">#000000</color>
+    <color name="black_90">#e6000000</color>
+    <color name="black_80">#cc000000</color>
+    <color name="black_60">#99000000</color>
+    <color name="black_50">#80000000</color>
+    <color name="black_40">#66000000</color>
+    <color name="black_30">#4D000000</color>
+    <color name="black_20">#33000000</color>
+    <color name="black_15">#26000000</color>
+    <color name="black_10">#1A000000</color>
+    <color name="black_6">#0F000000</color>
+    <color name="black_4">#0A000000</color>
+    <color name="text_black_90">#e6000000</color>
+    <color name="text_black_80">#cc000000</color>
+    <color name="text_black_60">#99000000</color>
+    <color name="text_black_40">#66000000</color>
+    <color name="text_black_4">#16000000</color>
+    <color name="progressbar_color">#ffffff</color>
+    <color name="progressbar_load_color">#ffb033</color>
+    <color name="title_text_gray">#737373</color>
+    <color name="text_desc_color">#8c8c8c</color>
+
+    <!-- 下拉刷新进度条颜色 -->
+    <color name="refresh_progress_red">#FFC93437</color>
+    <color name="refresh_progress_blue">#FF375BF1</color>
+    <color name="refresh_progress_yellow">#FFF7D23E</color>
+    <color name="refresh_progress_green">#FF34A350</color>
+</resources>

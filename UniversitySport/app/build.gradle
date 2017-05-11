@@ -1,0 +1,60 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    defaultConfig {
+        applicationId "com.tim.moli"
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0.0"
+        manifestPlaceholders = [YOUR_APP_KEY: "57c68fab67e58ecacf002627"]
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "2g"
+    }
+
+    signingConfigs {
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+    productFlavors {
+        ceshi { // 测试渠道
+            manifestPlaceholders = [channelID: "57fyjjandroidBJ20170109"]
+        }
+        guanwang { // 官网
+            manifestPlaceholders = [channelID: "13fyjjandroidBJ20161020"]
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':BaseLibrary')
+    testCompile 'junit:junit:4.12'
+}
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
