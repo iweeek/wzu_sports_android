@@ -48,7 +48,7 @@ public class RT {
     /**
      * The Constant ROOT.
      */
-    public static String ROOT = "sports";
+    public static String ROOT = "UniversitySports";
 
     // 缺省根目录
     /**

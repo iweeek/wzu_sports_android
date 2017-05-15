@@ -13,7 +13,6 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
 import com.tim.app.server.util.NetWorkUtil;
-import com.tim.app.server.util.ServerTimeListener;
 import com.application.library.log.DLOG;
 import com.application.library.net.ResponseCallback;
 

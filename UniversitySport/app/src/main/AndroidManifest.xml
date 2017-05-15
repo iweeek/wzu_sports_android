@@ -85,9 +85,6 @@
             android:name="com.tim.app.ui.activity.setting.RegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
-        <activity
-            android:name="com.tim.app.ui.activity.H5Activity"
-            android:screenOrientation="portrait" />
 
         <receiver android:name="com.tim.app.receiver.LSReceiver">
             <intent-filter android:priority="2147483647">

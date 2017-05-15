@@ -38,7 +38,6 @@ public class AboutActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.esports_des:
-//                H5Activity.start(AboutActivity.this, "用户协议", API_User.ins().getUserUprot());
                 break;
             case R.id.ib_back:
                 finish();
