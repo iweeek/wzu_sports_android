@@ -1,11 +1,14 @@
 package com.tim.app.server.logic;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.FileUtils;
+import com.google.gson.Gson;
 import com.tim.app.RT;
 import com.tim.app.constant.EventTag;
+import com.tim.app.server.entry.User;
 import com.tim.app.util.PreferenceHelper;
 
 import java.io.File;
@@ -44,6 +47,14 @@ public class UserManager {
         return mUserManager;
     }
 
+    /**
+     * 用户是否登录
+     *
+     * @return
+     */
+    public boolean isLogin() {
+        return loginUser != null && !TextUtils.isEmpty(loginUser.getUid());
+    }
 
     /**
      * 注销 清空数据 发送注销事件
@@ -53,10 +64,6 @@ public class UserManager {
         PreferenceHelper.ins().storeBooleanShareData(KEY_IS_THIRD, false);
         PreferenceHelper.ins().commit();
 //        saveUserInfo(null);
-        UserManager.ins().saveScore(0);
-        UserManager.ins().saveAddressId(0);
-        UserManager.ins().saveAddress("");
-        UserManager.ins().saveBalance(0);
         FileUtils.deleteFile(RT.defaultCache);
         EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGOUT, 0, 0, null);
         try {
@@ -75,41 +82,41 @@ public class UserManager {
 //        context.startActivity(intent);
     }
 
+    public User loginUser = new User();
+
     /**
      * 保存用户信息
      */
-//    public void saveUserInfo(User user) {
-//        this.loginUser = user;
-//        if (loginUser != null) {
-//            String content = new Gson().toJson(loginUser);
-////          PreferenceHelper.ins().storeShareData(LOGIN_USER_KEY, content.getBytes("UTF-8"), false);
-//            PreferenceHelper.ins().storeShareStringData(KEY_USER_INFO, content);
-//            PreferenceHelper.ins().commit();
-//        } else {
-////          PreferenceHelper.ins().storeShareData(LOGIN_USER_KEY, "".getBytes("UTF-8"), false);
-//            PreferenceHelper.ins().storeShareStringData(KEY_USER_INFO, "");
-//            PreferenceHelper.ins().commit();
-//        }
-//    }
+    public void saveUserInfo(User user) {
+        this.loginUser = user;
+        if (loginUser != null) {
+            String content = new Gson().toJson(loginUser);
+            PreferenceHelper.ins().storeShareStringData(KEY_USER_INFO, content);
+            PreferenceHelper.ins().commit();
+        } else {
+            PreferenceHelper.ins().storeShareStringData(KEY_USER_INFO, "");
+            PreferenceHelper.ins().commit();
+        }
+    }
 
-//    /**
-//     * 读取用户信息
-//     */
-//    public void loadUserInfo(LoadCallBack callBack) {
-//        try {
-//            // 从手机内存中读取
-//            String content = PreferenceHelper.ins().getStringShareData(KEY_USER_INFO, "");
-//            if (!TextUtils.isEmpty(content)) {
-//                loginUser = new Gson().fromJson(content, User.class);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            if (null != callBack) {
-//                callBack.onComlpete();
-//            }
-//        }
-//    }
+    /**
+     * 读取用户信息
+     */
+    public void loadUserInfo(LoadCallBack callBack) {
+        try {
+            // 从手机内存中读取
+            String content = PreferenceHelper.ins().getStringShareData(KEY_USER_INFO, "");
+            if (!TextUtils.isEmpty(content)) {
+                loginUser = new Gson().fromJson(content, User.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (null != callBack) {
+                callBack.onComlpete();
+            }
+        }
+    }
 
     public interface LoadCallBack {
 

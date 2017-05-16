@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">茉莉</string>
+    <string name="app_name">温州大学运动</string>
     <string name="app_exit">再次点击退出</string>
 
     <!-- 通用动作 -->
@@ -60,16 +60,12 @@
     <string name="see_others">再看看</string>
 
     <!--手机登录-->
-    <string name="login_title">登录</string>
-    <string name="login_input_phone_num">请输入手机号</string>
-    <string name="login_input_password">请输入密码</string>
+    <string name="login">登录</string>
+    <string name="no.">学号</string>
+    <string name="login_input_num">请输入您的学号</string>
+    <string name="password">密码</string>
+    <string name="login_input_password">请输入6-16位密码</string>
     <string name="login_forget_password">忘记密码？</string>
-    <string name="login_login">点击登录</string>
-    <string name="login_register_with_phone">手机注册</string>
-    <string name="login_third_login">- 使用第三方账号登录 -</string>
-    <string name="about_third_login_declare">《用户协议》</string>
-    <string name="login_third_login_declare">登录表示同意《用户协议》</string>
-    <string name="login_dialog_desc">登陆后才可进行更多操作哦！</string>
 
     <!--安全中心-->
     <string name="bound_phone">已绑定手机</string>

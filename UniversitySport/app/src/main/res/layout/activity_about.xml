@@ -36,16 +36,14 @@
         android:layout_height="match_parent"
         android:layout_below="@id/line"
         android:layout_marginLeft="@dimen/dimen_10"
-        android:layout_marginRight="@dimen/dimen_10"
-        android:background="@drawable/bg_shape_card_round">
+        android:layout_marginRight="@dimen/dimen_10">
 
         <ImageView
             android:id="@+id/iv_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="122dp"
-            android:src="@drawable/about_logo" />
+            android:layout_marginTop="122dp" />
 
         <TextView
             android:id="@+id/tv_app_name"
@@ -100,7 +98,6 @@
             android:background="@color/transparent"
             android:clickable="true"
             android:gravity="center"
-            android:text="@string/about_third_login_declare"
             android:textColor="@color/text_about"
             android:textSize="@dimen/text_size_12" />
 

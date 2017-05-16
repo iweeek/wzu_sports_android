@@ -28,7 +28,7 @@ public class MainActivity extends BaseActivity {
     private Class mFragmentArray[] = {HomePageFragment.class, HomePageFragment.class,
             HomePageFragment.class, HomePageFragment.class,HomePageFragment.class};
     private String[] tabTitles;
-    private int[] tabIcons = {R.drawable.tab_hot_selector, R.drawable.tab_match_selector, R.drawable.tab_video_selector, R.drawable.tab_data_selector, R.drawable.tab_me_selector};
+    private int[] tabIcons = {R.drawable.tab_hot_selector, R.drawable.tab_match_selector, R.drawable.tab_video_selector, R.drawable.password_input_selector, R.drawable.tab_me_selector};
     private static int toFragmentIndex = -1;
 
     public static void start(Context context) {

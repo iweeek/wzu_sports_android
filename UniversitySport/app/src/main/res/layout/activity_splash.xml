@@ -12,4 +12,18 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_splash" />
 
+    <Button
+        android:id="@+id/btLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="60dp"
+        android:text="@string/login"
+        android:textSize="@dimen/button_text_size"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_shape_button_round"/>
+
 </RelativeLayout>

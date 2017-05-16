@@ -27,7 +27,7 @@ import com.application.library.widget.roundimg.RoundedImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
-import com.tim.app.ui.activity.setting.PhoneLoginActivity;
+import com.tim.app.ui.activity.setting.LoginActivity;
 
 /**
  * 主页
@@ -135,7 +135,6 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_avatar:
-                PhoneLoginActivity.start(getActivity());
                 break;
             default:
                 break;

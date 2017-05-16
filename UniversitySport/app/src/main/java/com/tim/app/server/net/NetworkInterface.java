@@ -12,7 +12,6 @@ import com.lzy.okhttputils.request.BaseRequest;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
-import com.tim.app.server.util.NetWorkUtil;
 import com.application.library.log.DLOG;
 import com.application.library.net.ResponseCallback;
 
@@ -61,25 +60,25 @@ public class NetworkInterface {
             return;
         }
         if (isSign) {
-            NetWorkUtil.getServerTime(apiTag, new ServerTimeListener() {
-                @Override
-                public void onSuccess(String timeStamp) {
-                    params.put(NetWorkRequestParams.TIMESTAMP, timeStamp);
-                    if (method == POST) {
-                        connectedByPost(url, apiTag, SignRequestParams.generationParams(params, true), cache, callback);
-                    } else if (method == GET) {
-                        connectedByGet(url, apiTag, SignRequestParams.generationParams(params, true), cache, callback);
-                    }
-
-                }
-
-                @Override
-                public void onFalied() {
-                    OkHttpUtils.getInstance().cancelTag(apiTag);
-                    callback.onResponse(null, -1, "", 0, false);
-                    return;
-                }
-            });
+//            NetWorkUtil.getServerTime(apiTag, new ServerTimeListener() {
+//                @Override
+//                public void onSuccess(String timeStamp) {
+//                    params.put(NetWorkRequestParams.TIMESTAMP, timeStamp);
+//                    if (method == POST) {
+//                        connectedByPost(url, apiTag, SignRequestParams.generationParams(params, true), cache, callback);
+//                    } else if (method == GET) {
+//                        connectedByGet(url, apiTag, SignRequestParams.generationParams(params, true), cache, callback);
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFalied() {
+//                    OkHttpUtils.getInstance().cancelTag(apiTag);
+//                    callback.onResponse(null, -1, "", 0, false);
+//                    return;
+//                }
+//            });
         } else {
             if (method == POST) {
                 connectedByPost(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);

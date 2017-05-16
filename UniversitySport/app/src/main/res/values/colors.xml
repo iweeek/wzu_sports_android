@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#eeeeee</color>
     <color name="white">#ffffff</color>
+    <color name="login_btn_text_color">#535353</color>
+    <color name="errorTextColor">#57FFDA</color>
     <color name="white_90">#e6ffffff</color>
     <color name="white_80">#ccffffff</color>
     <color name="white_60">#99ffffff</color>
