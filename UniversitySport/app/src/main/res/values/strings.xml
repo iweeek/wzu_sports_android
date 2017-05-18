@@ -65,7 +65,13 @@
     <string name="login_input_num">请输入您的学号</string>
     <string name="password">密码</string>
     <string name="login_input_password">请输入6-16位密码</string>
-    <string name="login_forget_password">忘记密码？</string>
+    <string name="login_forget_password">忘记密码</string>
+    <string name="modtify_init_password">修改初始密码</string>
+    <string name="mobile_number">手机号</string>
+    <string name="input_mobile_prompt">请输入您的手机号</string>
+    <string name="verification_code">验证码</string>
+    <string name="bt_get_verification_code">获取验证码</string>
+    <string name="new_password">新密码</string>
 
     <!--安全中心-->
     <string name="bound_phone">已绑定手机</string>

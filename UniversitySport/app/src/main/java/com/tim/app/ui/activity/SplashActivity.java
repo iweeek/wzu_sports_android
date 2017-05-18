@@ -83,12 +83,12 @@ public class SplashActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_WHAT_GOTO_MAINACTIVITY:
-                    if (UserManager.ins().isLogin()) {
+//                    if (UserManager.ins().isLogin()) {
                         Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
                         main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                         startActivity(main_intent);
                         finish();
-                    }
+//                    }
                     break;
             }
 

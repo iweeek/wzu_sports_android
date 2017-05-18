@@ -180,7 +180,7 @@ public class HomePageFragment extends BaseFragment implements View.OnClickListen
 //                    BitmapLoader.ins().loadImage(UserManager.ins().getAvatar(), R.drawable.ic_def_avatar_small, iv_avatar);
                     break;
                 case EventTag.ACCOUNT_LOGOUT:
-                    iv_avatar.setImageResource(R.drawable.ic_def_avatar_small);
+//                    iv_avatar.setImageResource(R.drawable.ic_def_avatar_small);
                     break;
             }
         }
