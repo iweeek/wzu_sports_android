@@ -66,6 +66,24 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name="com.tim.app.ui.activity.SportsScoreActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tim.app.ui.activity.BodyTestDataActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tim.app.ui.activity.HistorSportActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.tim.app.ui.activity.setting.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.tim.app.ui.activity.AboutActivity"
             android:screenOrientation="portrait" />
         <activity

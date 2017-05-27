@@ -21,7 +21,6 @@ import com.tim.app.util.ToastUtil;
 
 /**
  * 修改密码
- * create at 2016/7/13
  */
 public class ModifyPasswordActivity extends BaseActivity {
     private static final String TAG = "ModifyPasswordActivity";

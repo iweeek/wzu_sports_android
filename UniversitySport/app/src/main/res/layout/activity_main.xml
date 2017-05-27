@@ -10,17 +10,17 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/llContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/llContainer"
         tools:context=".ui.activity.MainActivity">
 
         <RelativeLayout
             android:id="@+id/rl_title"
             style="@style/TitleBarStyle"
-            android:padding="20dp"
-            android:background="@color/blue">
+            android:background="@color/blue"
+            android:padding="20dp">
 
             <ImageView
                 android:id="@+id/ibMenu"
@@ -45,22 +45,55 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@color/transparent"
-                android:src="@drawable/ic_notify" />
+                android:src="@drawable/ic_notify"
+                android:visibility="gone" />
 
         </RelativeLayout>
+
         <FrameLayout
             android:id="@+id/flContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+            <com.application.library.widget.recycle.WrapRecyclerView
+                android:id="@+id/wrvSportType"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></com.application.library.widget.recycle.WrapRecyclerView>
+        </FrameLayout>
 
     </LinearLayout>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nv_main_navigation"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/white"
-        app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/drawer_view" />
+        android:background="@color/white">
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nv_main_navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="50dp"
+            app:headerLayout="@layout/navigation_header"
+            app:itemTextColor="@color/menu_text_color_selector"
+            app:menu="@menu/drawer_view" />
+
+        <TextView
+            android:id="@+id/tvLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/bt_logout_selector"
+            android:drawablePadding="10dp"
+            android:padding="5dp"
+            android:text="退出帐号"
+            android:textColor="@color/logout_text_color_selector"
+            android:textSize="15dp" />
+    </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

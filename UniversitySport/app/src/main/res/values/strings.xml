@@ -130,4 +130,24 @@
 
     <!--空白页面的提示文案-->
 
+    <!-- 首页 -->
+    <string name="joinPrompt">%s人正在参加</string>
+    <string name="targetDistance">%s 米</string>
+    <string name="targetTime">%s 分钟</string>
+    <string name="targetSpeed">%s 米/秒</string>
+    <string name="targetStep">%s 步</string>
+    <string name="targetTitleSpeed">达标速度</string>
+    <string name="targetTitleStep">达标步数</string>
+    <string name="targetCount">本学期总目标次数：%s次</string>
+    <string name="totalCost">%s 千卡</string>
+    <string name="completeCount">%s 段</string>
+    <string name="sportCostQuantity">本次消耗热量: %s大卡</string>
+    <string name="sportCostTime">本次运动时长:%s分钟</string>
+    <string name="currentTermSurplus">本学期剩余次数:%s次</string>
+    <string name="totalNumber">总目标次数:%s次</string>
+    <string name="sportCount">%s 次</string>
+
+    <!-- -->
+    <string name="score">得分:%s</string>
+    <string name="scoreDesc">成绩:%s</string>
 </resources>

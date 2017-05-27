@@ -42,7 +42,7 @@
     <color name="def_text_yellow_color">#ff9600</color>
     <color name="def_tab_indicator_color">#333333</color>
     <color name="def_tab_text_color">@color/black_50</color>
-    <color name="def_tab_text_selector_color">#333333</color>
+    <color name="def_tab_text_selector_color">#66a7fe</color>
     <color name="def_button_dark_color">#333333</color>
 
     <!-- home -->

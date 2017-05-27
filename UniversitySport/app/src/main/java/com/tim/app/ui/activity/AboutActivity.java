@@ -25,8 +25,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void initView() {
         tv_version = (TextView) findViewById(R.id.tv_version);
-        findViewById(R.id.esports_des).setOnClickListener(this);
-        findViewById(R.id.ib_back).setOnClickListener(this);
+        findViewById(R.id.ibBack).setOnClickListener(this);
     }
 
     @Override
@@ -37,9 +36,7 @@ public class AboutActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.esports_des:
-                break;
-            case R.id.ib_back:
+            case R.id.ibBack:
                 finish();
                 break;
         }

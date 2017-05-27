@@ -8,21 +8,15 @@ public class AppKey {
     public static final String HTTP_TAG = "http";
     public static final String HTTP_CACHE_TAG = "http_cache";
 
-    public static final String WEB_URL = "web_url";
-    public static final String WEB_TITLE = "title";//标题
-
-
-    public static final int LOGIN_TYPE_MOBILE = 1;//手机登录
-    public static final int LOGIN_TYPE_QQ = 2;//QQ登录
-    public static final int LOGIN_TYPE_WX = 3;//微信登录
-    public static final int LOGIN_TYPE_SINA = 4;//微博登录
-
-
     public static final int SEX_MAN = 1;
     public static final int SEX_WOMAN = 2;
 
     public static final int CODE_LOGIN_REGISTER = 103;
     public static final int CODE_LOGIN_FINDPWD = 104;
+
+    public static final int TYPE_WEEK = 1;//周
+    public static final int TYPE_MONTH = 2;//月
+    public static final int TYPE_TERM = 3;//学期
 
     //    1注册
     //    2：找回密码
