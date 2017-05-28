@@ -40,7 +40,7 @@
         <TextView
             style="@style/inputContentTitle"
             android:gravity="center"
-            android:text="@string/verification_code" />
+            android:text="@string/mobile_number" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -103,6 +103,6 @@
         android:gravity="center"
         android:text="@string/bt_get_verification_code"
         android:textColor="@color/login_btn_text_color"
-        android:textSize="@dimen/button_text_size" />
+        android:textSize="@dimen/text_size_18" />
 
 </LinearLayout>

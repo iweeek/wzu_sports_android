@@ -3,7 +3,6 @@ package com.tim.app.ui.activity.setting;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -57,17 +56,19 @@ public class VerificationCodeActivity extends BaseActivity {
         etNo = (EditText) findViewById(R.id.etNo);
 //        etPassword = (EditText) findViewById(R.id.etPassword);
         tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
-        tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
-        ivPasswordVisiable = (ImageView)findViewById(R.id.ivPasswordVisiable);
-        tvForgotPassword = (TextView)findViewById(R.id.tvForgotPassword);
+//        tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
+//        ivPasswordVisiable = (ImageView)findViewById(R.id.ivPasswordVisiable);
+//        tvForgotPassword = (TextView)findViewById(R.id.tvForgotPassword);
         ivDeleteNo = (ImageView)findViewById(R.id.ivDeleteNo);
-        ivPasswordDelete = (ImageView)findViewById(R.id.ivPasswordDelete);
-        tvForgotPassword.setOnClickListener(this);
+        btConfirm = (Button) findViewById(R.id.btConfirm);
+
+//        ivPasswordDelete = (ImageView)findViewById(R.id.ivPasswordDelete);
+//        tvForgotPassword.setOnClickListener(this);
         findViewById(R.id.ibClose).setOnClickListener(this);
         findViewById(R.id.ivDeleteNo).setOnClickListener(this);
-        findViewById(R.id.ivPasswordDelete).setOnClickListener(this);
-        findViewById(R.id.tvForgotPassword).setOnClickListener(this);
-        findViewById(R.id.ivPasswordVisiable).setOnClickListener(this);
+//        findViewById(R.id.ivPasswordDelete).setOnClickListener(this);
+//        findViewById(R.id.tvForgotPassword).setOnClickListener(this);
+//        findViewById(R.id.ivPasswordVisiable).setOnClickListener(this);
 //        btLogin.setOnClickListener(this);
 
         etNo.addTextChangedListener(new TextWatcher() {

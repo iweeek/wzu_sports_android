@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -30,7 +29,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 

@@ -13,13 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.runtime.event.EventManager;
-import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
+import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
 
@@ -142,7 +142,7 @@ public class LoginActivity extends BaseActivity {
         } else if (v.getId() == R.id.ivPasswordDelete) {
             etPassword.setText("");
         } else if (v.getId() == R.id.tvForgotPassword) {
-            startActivityForResult(new Intent(LoginActivity.this, FindPasswordActivity.class), AppKey.CODE_LOGIN_FINDPWD);
+            startActivityForResult(new Intent(LoginActivity.this, VerificationCodeActivity.class), AppKey.CODE_LOGIN_FINDPWD);
         } else if (v.getId() == R.id.btLogin) {
             no = etNo.getText().toString().trim();
             password = etPassword.getText().toString().trim();
@@ -169,17 +169,17 @@ public class LoginActivity extends BaseActivity {
      */
     public boolean checkLogin(String phone, String password) {
         if (TextUtils.isEmpty(phone)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
+            ToastUtil.showToast(RT.getString(R.string.login_input_num));
             return false;
         }
-        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
-            return false;
-        }
-        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
-            ToastUtil.showToast(RT.getString(R.string.error_password));
-            return false;
-        }
+//        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
+//            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
+//            return false;
+//        }
+//        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
+//            ToastUtil.showToast(RT.getString(R.string.error_password));
+//            return false;
+//        }
         return true;
     }
 
@@ -226,5 +226,7 @@ public class LoginActivity extends BaseActivity {
 //                return false;
 //            }
 //        });
+
+        MainActivity.start(this);
     }
 }

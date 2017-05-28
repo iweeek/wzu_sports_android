@@ -186,6 +186,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:text="@string/login_forget_password"
-            android:textSize="18dp" />
+            android:textSize="@dimen/text_size_18" />
     </LinearLayout>
 </RelativeLayout>
