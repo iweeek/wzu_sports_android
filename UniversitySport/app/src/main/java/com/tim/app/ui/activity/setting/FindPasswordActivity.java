@@ -56,7 +56,7 @@ public class FindPasswordActivity extends BaseActivity  {
 
     @Override
     public void initView() {
-        ((TextView) findViewById(R.id.tv_title)).setText(RT.getString(R.string.find_password));
+        ((TextView) findViewById(R.id.tvTitle)).setText(RT.getString(R.string.find_password));
         tv_modify_layout_get_sms_mark_tx = ((TextView) findViewById(R.id.tv_modify_layout_get_sms_mark_tx));
         tv_modify_layout_get_sms_mark_tx.setOnClickListener(this);
         btnConfirm = (Button)findViewById(R.id.btnConfirm);
@@ -75,7 +75,7 @@ public class FindPasswordActivity extends BaseActivity  {
         input_password_again.addTextChangedListener(new MyEditChangeListener());
 
 
-        show_time = (TextView) findViewById(R.id.modify_layout_get_sms_mark_tx);
+//        show_time = (TextView) findViewById(R.id.modify_layout_get_sms_mark_tx);
         timer = new CountDownTimer(AppKey.VERTIFY_SECONDS * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

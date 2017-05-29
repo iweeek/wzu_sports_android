@@ -1,0 +1,333 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:2:1-123:12
+	package
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:3:5-26
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:5:5-81
+MERGED from [UniversitySport:BaseLibrary:unspecified] /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/BaseLibrary/build/intermediates/bundles/default/AndroidManifest.xml:14:5-81
+MERGED from [com.lzy.net:okhttputils:1.8.0] /Users/nimon/.android/build-cache/8e84a32cea48328a7e2deaf0a43988d4c25548aa/output/AndroidManifest.xml:13:5-81
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:5:22-78
+uses-permission#android.permission.MOUNT_UNMOUNT_FILESYSTEMS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:6:5-84
+MERGED from [UniversitySport:BaseLibrary:unspecified] /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/BaseLibrary/build/intermediates/bundles/default/AndroidManifest.xml:12:5-84
+MERGED from [com.lzy.net:okhttputils:1.8.0] /Users/nimon/.android/build-cache/8e84a32cea48328a7e2deaf0a43988d4c25548aa/output/AndroidManifest.xml:14:5-84
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:6:22-81
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:7:5-80
+MERGED from [UniversitySport:BaseLibrary:unspecified] /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/BaseLibrary/build/intermediates/bundles/default/AndroidManifest.xml:16:5-80
+MERGED from [com.lzy.net:okhttputils:1.8.0] /Users/nimon/.android/build-cache/8e84a32cea48328a7e2deaf0a43988d4c25548aa/output/AndroidManifest.xml:12:5-80
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:7:22-77
+uses-permission#android.permission.READ_PHONE_STATE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:8:5-75
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:8:22-72
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:9:5-71
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:9:22-68
+uses-permission#android.permission.CAMERA
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:10:5-65
+MERGED from [UniversitySport:BaseLibrary:unspecified] /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/BaseLibrary/build/intermediates/bundles/default/AndroidManifest.xml:18:5-65
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:10:22-62
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:11:5-76
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:11:22-73
+uses-permission#android.permission.INTERNET
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:12:5-67
+MERGED from [com.lzy.net:okhttputils:1.8.0] /Users/nimon/.android/build-cache/8e84a32cea48328a7e2deaf0a43988d4c25548aa/output/AndroidManifest.xml:11:5-67
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:12:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:13:5-79
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:13:22-76
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:14:5-81
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:14:22-78
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:15:5-81
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:15:22-78
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:16:5-80
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:16:22-77
+uses-permission#android.permission.READ_LOGS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:17:5-68
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:17:22-65
+uses-permission#android.permission.CALL_PHONE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:18:5-69
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:18:22-66
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:19:5-79
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:19:22-76
+uses-permission#android.permission.GET_TASKS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:20:5-68
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:20:22-65
+uses-permission#android.permission.SET_DEBUG_APP
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:21:5-72
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:21:22-69
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:22:5-78
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:22:22-75
+uses-permission#android.permission.GET_ACCOUNTS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:23:5-71
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:23:22-68
+uses-permission#android.permission.USE_CREDENTIALS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:24:5-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:24:22-71
+uses-permission#android.permission.MANAGE_ACCOUNTS
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:25:5-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:25:22-71
+uses-feature#android.hardware.camera.autofocus
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:28:5-70
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:28:19-67
+uses-feature#0x00020000
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:31:5-33:35
+	android:glEsVersion
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:32:9-41
+	android:required
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:33:9-32
+supports-screens
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:36:5-41:39
+	android:largeScreens
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:38:9-36
+	android:smallScreens
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:41:9-36
+	android:normalScreens
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:39:9-37
+	android:resizeable
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:40:9-34
+	android:anyDensity
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:37:9-34
+application
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:43:5-121:19
+MERGED from [UniversitySport:BaseLibrary:unspecified] /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/BaseLibrary/build/intermediates/bundles/default/AndroidManifest.xml:20:5-23:19
+MERGED from [com.android.support:cardview-v7:22.2.0] /Users/nimon/.android/build-cache/89a43e2b1fbdcc55cff4ca899d9999e50c3a8940/output/AndroidManifest.xml:22:5-20
+MERGED from [com.karumi:dexter:2.2.2] /Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/AndroidManifest.xml:26:5-31:19
+MERGED from [com.android.support:design:23.1.1] /Users/nimon/.android/build-cache/41ac51f600d03e1fc878d22f10ba2a28b1d9d3a5/output/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:appcompat-v7:23.1.1] /Users/nimon/.android/build-cache/7d7112aaae6be398a2b1dd7e4d16362ccb20a378/output/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-v4:26.0.0-alpha1] /Users/nimon/.android/build-cache/8ae25091f8652b3d969e53d02deaf362169f8c25/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-media-compat:26.0.0-alpha1] /Users/nimon/.android/build-cache/7e4ef364235c75a0aa84d51ccbd9541811222cb0/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-fragment:26.0.0-alpha1] /Users/nimon/.android/build-cache/18961d7cf7e050a81a829c238aa4e2a5a21ea8b2/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-ui:26.0.0-alpha1] /Users/nimon/.android/build-cache/2bd2f7500f18a038516147bc820cf908702d9651/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-core-utils:26.0.0-alpha1] /Users/nimon/.android/build-cache/604058f966e512d24d17184ecb28092360fe5a0c/output/AndroidManifest.xml:29:5-20
+MERGED from [com.android.support:support-compat:26.0.0-alpha1] /Users/nimon/.android/build-cache/89d6788f3dfd6477091c00f19667563d3e02404e/output/AndroidManifest.xml:29:5-20
+	android:label
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:48:9-41
+	android:supportsRtl
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:49:9-35
+	android:hardwareAccelerated
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:46:9-43
+	android:allowBackup
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:45:9-35
+	android:icon
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:47:9-45
+	android:largeHeap
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:50:9-33
+	android:theme
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:51:9-41
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:44:9-50
+activity#com.tim.app.ui.activity.SplashActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:52:9-60:20
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:54:13-49
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:53:13-66
+intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:55:13-59:29
+action#android.intent.action.MAIN
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:56:17-69
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:56:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:58:17-77
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:58:27-74
+activity#com.tim.app.ui.activity.MainActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:62:9-66:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:66:13-49
+	android:launchMode
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:65:13-44
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:64:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:63:13-64
+activity#com.tim.app.ui.activity.SportsScoreActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:68:9-72:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:72:13-49
+	android:launchMode
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:71:13-44
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:70:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:69:13-71
+activity#com.tim.app.ui.activity.BodyTestDataActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:73:9-77:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:77:13-49
+	android:launchMode
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:76:13-44
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:75:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:74:13-72
+activity#com.tim.app.ui.activity.HistorSportActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:78:9-82:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:82:13-49
+	android:launchMode
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:81:13-44
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:80:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:79:13-71
+activity#com.tim.app.ui.activity.setting.SettingActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:83:9-85:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:85:13-49
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:84:13-75
+activity#com.tim.app.ui.activity.AboutActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:86:9-88:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:88:13-49
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:87:13-65
+activity#com.tim.app.ui.activity.setting.LoginActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:89:9-92:51
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:92:13-49
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:91:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:90:13-73
+activity#com.tim.app.ui.activity.setting.ModifyPasswordActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:93:9-96:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:96:13-49
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:95:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:94:13-82
+activity#com.tim.app.ui.activity.setting.RegistPhoneActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:97:9-100:51
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:100:13-49
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:99:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:98:13-68
+activity#com.tim.app.ui.activity.setting.FindPasswordActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:101:9-104:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:104:13-49
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:103:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:102:13-80
+activity#com.tim.app.ui.activity.setting.VerificationCodeActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:105:9-108:51
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:108:13-49
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:107:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:106:13-73
+activity#com.tim.app.ui.activity.setting.RegisterActivity
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:109:9-112:52
+	android:screenOrientation
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:112:13-49
+	android:configChanges
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:111:13-74
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:110:13-76
+receiver#com.tim.app.receiver.LSReceiver
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:114:9-119:20
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:114:19-65
+intent-filter#android.intent.action.BOOT_COMPLETED+android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:115:13-118:29
+	android:priority
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:115:28-57
+action#android.net.conn.CONNECTIVITY_CHANGE
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:116:17-79
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:116:25-76
+action#android.intent.action.BOOT_COMPLETED
+ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:117:17-79
+	android:name
+		ADDED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml:117:25-76
+uses-sdk
+INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [UniversitySport:BaseLibrary:unspecified] /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/BaseLibrary/build/intermediates/bundles/default/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:cardview-v7:22.2.0] /Users/nimon/.android/build-cache/89a43e2b1fbdcc55cff4ca899d9999e50c3a8940/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:multidex:1.0.1] /Users/nimon/.android/build-cache/168a2c389c57424c997b2548e4d7c4e81257989d/output/AndroidManifest.xml:18:5-42
+MERGED from [com.lzy.net:okhttputils:1.8.0] /Users/nimon/.android/build-cache/8e84a32cea48328a7e2deaf0a43988d4c25548aa/output/AndroidManifest.xml:7:5-9:41
+MERGED from [com.karumi:dexter:2.2.2] /Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/AndroidManifest.xml:22:5-24:41
+MERGED from [com.android.support:design:23.1.1] /Users/nimon/.android/build-cache/41ac51f600d03e1fc878d22f10ba2a28b1d9d3a5/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:recyclerview-v7:23.1.1] /Users/nimon/.android/build-cache/1eaf1cee205a3963ddcef111ccd54182feb3b36e/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:appcompat-v7:23.1.1] /Users/nimon/.android/build-cache/7d7112aaae6be398a2b1dd7e4d16362ccb20a378/output/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:support-v4:26.0.0-alpha1] /Users/nimon/.android/build-cache/8ae25091f8652b3d969e53d02deaf362169f8c25/output/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-media-compat:26.0.0-alpha1] /Users/nimon/.android/build-cache/7e4ef364235c75a0aa84d51ccbd9541811222cb0/output/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-fragment:26.0.0-alpha1] /Users/nimon/.android/build-cache/18961d7cf7e050a81a829c238aa4e2a5a21ea8b2/output/AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-core-ui:26.0.0-alpha1] /Users/nimon/.android/build-cache/2bd2f7500f18a038516147bc820cf908702d9651/output/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:26.0.0-alpha1] /Users/nimon/.android/build-cache/604058f966e512d24d17184ecb28092360fe5a0c/output/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:26.0.0-alpha1] /Users/nimon/.android/build-cache/89d6788f3dfd6477091c00f19667563d3e02404e/output/AndroidManifest.xml:21:5-23:58
+	tools:overrideLibrary
+		ADDED from [com.android.support:support-v4:26.0.0-alpha1] /Users/nimon/.android/build-cache/8ae25091f8652b3d969e53d02deaf362169f8c25/output/AndroidManifest.xml:23:9-51
+	android:targetSdkVersion
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/src/main/AndroidManifest.xml
+activity#com.karumi.dexter.DexterActivity
+ADDED from [com.karumi:dexter:2.2.2] /Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/AndroidManifest.xml:27:9-30:56
+	android:launchMode
+		ADDED from [com.karumi:dexter:2.2.2] /Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/AndroidManifest.xml:29:13-44
+	android:theme
+		ADDED from [com.karumi:dexter:2.2.2] /Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/AndroidManifest.xml:30:13-53
+	android:name
+		ADDED from [com.karumi:dexter:2.2.2] /Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/AndroidManifest.xml:28:13-60
+meta-data#android.support.VERSION
+ADDED from [com.android.support:support-v4:26.0.0-alpha1] /Users/nimon/.android/build-cache/8ae25091f8652b3d969e53d02deaf362169f8c25/output/AndroidManifest.xml:25:5-27:41
+MERGED from [com.android.support:support-media-compat:26.0.0-alpha1] /Users/nimon/.android/build-cache/7e4ef364235c75a0aa84d51ccbd9541811222cb0/output/AndroidManifest.xml:25:5-27:41
+MERGED from [com.android.support:support-fragment:26.0.0-alpha1] /Users/nimon/.android/build-cache/18961d7cf7e050a81a829c238aa4e2a5a21ea8b2/output/AndroidManifest.xml:25:5-27:41
+MERGED from [com.android.support:support-core-ui:26.0.0-alpha1] /Users/nimon/.android/build-cache/2bd2f7500f18a038516147bc820cf908702d9651/output/AndroidManifest.xml:25:5-27:41
+MERGED from [com.android.support:support-core-utils:26.0.0-alpha1] /Users/nimon/.android/build-cache/604058f966e512d24d17184ecb28092360fe5a0c/output/AndroidManifest.xml:25:5-27:41
+MERGED from [com.android.support:support-compat:26.0.0-alpha1] /Users/nimon/.android/build-cache/89d6788f3dfd6477091c00f19667563d3e02404e/output/AndroidManifest.xml:25:5-27:41
+	android:value
+		ADDED from [com.android.support:support-v4:26.0.0-alpha1] /Users/nimon/.android/build-cache/8ae25091f8652b3d969e53d02deaf362169f8c25/output/AndroidManifest.xml:27:9-38
+	android:name
+		ADDED from [com.android.support:support-v4:26.0.0-alpha1] /Users/nimon/.android/build-cache/8ae25091f8652b3d969e53d02deaf362169f8c25/output/AndroidManifest.xml:26:9-47

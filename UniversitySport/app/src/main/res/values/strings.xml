@@ -31,6 +31,7 @@
     <string name="main_tab_title_5">我</string>
     <!--修改密码-->
     <string name="modify_password">修改密码</string>
+    <string name="modify_first_password">修改初始密码</string>
     <string name="modify_password_success">修改成功</string>
     <string name="find_password">忘记密码</string>
     <string name="check_phone">手机验证</string>
@@ -72,6 +73,7 @@
     <string name="verification_code">验证码</string>
     <string name="bt_get_verification_code">获取验证码</string>
     <string name="new_password">新密码</string>
+    <string name="submit">提交</string>
 
     <!--安全中心-->
     <string name="bound_phone">已绑定手机</string>

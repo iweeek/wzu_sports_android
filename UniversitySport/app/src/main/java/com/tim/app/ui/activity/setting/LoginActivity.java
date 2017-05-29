@@ -2,6 +2,7 @@ package com.tim.app.ui.activity.setting;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -19,7 +20,6 @@ import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
-import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
 
@@ -142,7 +142,7 @@ public class LoginActivity extends BaseActivity {
         } else if (v.getId() == R.id.ivPasswordDelete) {
             etPassword.setText("");
         } else if (v.getId() == R.id.tvForgotPassword) {
-            startActivityForResult(new Intent(LoginActivity.this, VerificationCodeActivity.class), AppKey.CODE_LOGIN_FINDPWD);
+            findPassword();
         } else if (v.getId() == R.id.btLogin) {
             no = etNo.getText().toString().trim();
             password = etPassword.getText().toString().trim();
@@ -158,6 +158,8 @@ public class LoginActivity extends BaseActivity {
             }
         }
     }
+
+
 
 
     /**
@@ -190,8 +192,8 @@ public class LoginActivity extends BaseActivity {
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
             finish();
         } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
-            etNo.setText(data.getStringExtra("mobile"));
-            etPassword.setText(data.getStringExtra("password"));
+//            etNo.setText(data.getStringExtra("mobile"));
+//            etPassword.setText(data.getStringExtra("password"));
             phoneLogin();
         }
     }
@@ -227,6 +229,21 @@ public class LoginActivity extends BaseActivity {
 //            }
 //        });
 
-        MainActivity.start(this);
+//        MainActivity.start(this);
+
+
+        Bundle bundle=new Bundle();
+        bundle.putInt("flag",AppKey.VERTIFY_FIRSTPASSWORD);
+        Intent intent = new Intent(LoginActivity.this,RegistPhoneActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent,AppKey.CODE_LOGIN_REGISTER);
+    }
+
+    private void findPassword() {
+        Bundle bundle=new Bundle();
+        bundle.putInt("flag",AppKey.VERTIFY_RESETPASSWORD);
+        Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
     }
 }

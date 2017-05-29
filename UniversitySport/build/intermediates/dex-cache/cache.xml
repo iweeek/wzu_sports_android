@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/nijun/02develop/gradle-3.3/caches/modules-2/files-2.1/com.google.code.gson/gson/2.7/751f548c85fa49f330cecbb1875893f971b33c4e/gson-2.7.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="751f548c85fa49f330cecbb1875893f971b33c4e">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/gson-2.7_25c6a45764e8c06cef23c2748e98e5f6bf964645/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/nijun/02develop/gradle-3.3/caches/modules-2/files-2.1/com.squareup.okhttp3/okhttp/3.4.1/c7c4f9e35c2fd5900da24f9872e3971801f08ce0/okhttp-3.4.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c7c4f9e35c2fd5900da24f9872e3971801f08ce0">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/okhttp-3.4.1_cd2bef0765099d3354f442851ff4b511dd2c3464/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/nijun/02develop/gradle-3.3/caches/modules-2/files-2.1/com.squareup.okhttp/okhttp/2.4.0/40340c0748190fe897baf7bffbc1b282734294e5/okhttp-2.4.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="40340c0748190fe897baf7bffbc1b282734294e5">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/okhttp-2.4.0_e87066899f4228d02673b74e53f08424cfd10579/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/.android/build-cache/4e90f474a3c213998825e5c4391a6ded0416fb93/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="22bab473db1c258a4c7e8f0ae50c651e0de6b845">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/classes_518519d838e18c1331b4ccf8671bcc51e9e46d49/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/.android/build-cache/8e84a32cea48328a7e2deaf0a43988d4c25548aa/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="a889a83279b535456159c312e71e83f4c0407b25">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/classes_95e23ea8dcfc2fad089f63724a673ea752b29ede/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/incremental-classes/ceshi/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="de55b7a14e3f5729b3e3474e9b50f37a943e335d">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10000/instant-run-bootstrap_b30f8cfe82f0a79abb45ae883881f98a49e096af/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/nijun/02develop/gradle-3.3/caches/modules-2/files-2.1/com.squareup.okio/okio/1.9.0/f824591a0016efbaeddb8300bee54832a1398cfa/okio-1.9.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="f824591a0016efbaeddb8300bee54832a1398cfa">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/okio-1.9.0_231eef5f7f3f0828d275de299dc60e20f5d7c52f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/nijun/02develop/gradle-3.3/caches/modules-2/files-2.1/com.nostra13.universalimageloader/universal-image-loader/1.9.5/442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375/universal-image-loader-1.9.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="442dbfb517b9ab5cb5c6da7ebf8cc28ec5bd0375">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10/universal-image-loader-1.9.5_b39c60ae13ac1902158d0a2b123649faa1e49e4f/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/incremental-runtime-classes/ceshi/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="12920f9016b8b05acbc2af7cdc13cef6946fe7d3">
+        <dex dex="/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10000/instant-run_7b0d4cff9f1703420b082e0a317bb7a160310d45/classes.dex" />
+    </item>
+
+</items>

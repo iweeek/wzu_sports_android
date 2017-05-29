@@ -1,0 +1,7 @@
+#Mon May 29 15:46:02 CST 2017
+base.0=/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10000/instant-run-bootstrap_b30f8cfe82f0a79abb45ae883881f98a49e096af
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10000/instant-run_7b0d4cff9f1703420b082e0a317bb7a160310d45/classes.dex
+base.1=/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10000/instant-run_7b0d4cff9f1703420b082e0a317bb7a160310d45
+file.0=/Users/nimon/AndroidStudioProjects/wzu_sports_android/UniversitySport/app/build/intermediates/transforms/dex/ceshi/debug/folders/1000/10000/instant-run-bootstrap_b30f8cfe82f0a79abb45ae883881f98a49e096af/classes.dex

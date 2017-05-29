@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_survey"
+            android:icon="@drawable/nav_survet_selector"
+            android:title="历史数据概况" />
+        <item
+            android:id="@+id/nav_fitness_test"
+            android:icon="@drawable/nav_survet_selector"
+            android:title="体测数据" />
+        <item
+            android:id="@+id/nav_sports_achievement"
+            android:icon="@drawable/nav_sports_achievment_selector"
+            android:title="体育成绩" />
+        <item
+            android:id="@+id/nav_approval"
+            android:icon="@drawable/nav_approval_selector"
+            android:title="审批" />
+        <item
+            android:id="@+id/nav_customer_service"
+            android:icon="@drawable/nav_custom_service_selector"
+            android:title="客服" />
+        <item
+            android:id="@+id/nav_set"
+            android:icon="@drawable/nav_sets_selector"
+            android:title="设置" />
+    </group>
+
+</menu>

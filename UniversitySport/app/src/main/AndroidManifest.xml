@@ -89,11 +89,15 @@
         <activity
             android:name="com.tim.app.ui.activity.setting.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.tim.app.ui.activity.setting.ModifyPasswordActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.setting.RegistPhoneActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.tim.app.ui.activity.setting.FindPasswordActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
