@@ -123,8 +123,11 @@
     <!--登录-->
     <string name="error_mobile_empty">请输入手机号</string>
     <string name="error_mobile_error">手机号错误，请重新输入</string>
+    <string name="error_sno_error">学号错误，请重新输入，ps:11位</string>
     <string name="error_mobile_vertify">请输入验证码</string>
+    <string name="error_smscode_error">验证码错误</string>
     <string name="error_password">请输入6&#8211;12位字母或数字密码</string>
+    <string name="error_password_noput">请输入您的密码</string>
     <string name="error_password_again">请再次输入密码</string>
     <string name="error_password_nosame">两次密码输入不一致</string>
     <string name="error_check_agreement">请勾选用户协议</string>

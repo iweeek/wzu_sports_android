@@ -2,18 +2,23 @@ package com.tim.app.ui.activity.setting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
+import com.tim.app.constant.AppKey;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -25,9 +30,15 @@ import com.tim.app.util.ToastUtil;
 public class ModifyPasswordActivity extends BaseActivity {
     private static final String TAG = "ModifyPasswordActivity";
 
-    private EditText input_password;
+    private EditText etPassword;
     private Button btnModifyPassword;
-    private String phone, password, repeat_password, smscode;
+    private String phone, password, smscode;
+    private TextView tvTitle;
+    private ImageButton ibClose;
+
+    Bundle bundle;
+    int flag;
+
 
     public static void startModifyPasswordActivity(Context context) {
         Intent intent = new Intent(context, ModifyPasswordActivity.class);
@@ -47,18 +58,25 @@ public class ModifyPasswordActivity extends BaseActivity {
 
     @Override
     public void initView() {
-//        ((TextView) findViewById(R.id.tv_title)).setText(RT.getString(R.string.modify_password));
         btnModifyPassword = (Button) findViewById(R.id.btnModifyPassword);
-        input_password = (EditText) findViewById(R.id.etPassword);
-        input_password.addTextChangedListener(new ModifyPasswordActivity.MyEditChangeListener());
-
-        findViewById(R.id.ibClose).setOnClickListener(this);
+        etPassword = (EditText) findViewById(R.id.etPassword);
+        tvTitle = (TextView) findViewById(R.id.tvTitle);
+        ibClose = (ImageButton) findViewById(R.id.ibClose);
+        etPassword.addTextChangedListener(new ModifyPasswordActivity.MyEditChangeListener());
+        ibClose.setOnClickListener(this);
         btnModifyPassword.setOnClickListener(this);
 
+        bundle = this.getIntent().getExtras();
+        flag = bundle.getInt("flag");
+        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+            tvTitle.setText(R.string.modify_first_password);
+        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
+            tvTitle.setText(R.string.find_password);
+        }
     }
 
 
-     private class MyEditChangeListener implements TextWatcher {
+    private class MyEditChangeListener implements TextWatcher {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -74,15 +92,16 @@ public class ModifyPasswordActivity extends BaseActivity {
     }
 
     private void updateBtn() {
-        //        if (!TextUtils.isEmpty(input_phone_num.getText().toString().trim()) ||
-        //                !TextUtils.isEmpty(input_password.getText().toString().trim()) || !TextUtils.isEmpty(input_password_again.getText().toString().trim()) || !TextUtils.isEmpty(input_sms_mark.getText().toString().trim())) {
-        //            btConfirmRegist.setTextColor(getResources().getColor(R.color.black_90));
-        //        } else {
-        //            btConfirmRegist.setTextColor(getResources().getColor(R.color.black_10));
-        //        }
+        if (!TextUtils.isEmpty(etPassword.getText().toString().trim())) {
+            btnModifyPassword.setTextColor(getResources().getColor(R.color.black_90));
+        } else {
+            btnModifyPassword.setTextColor(getResources().getColor(R.color.black_10));
+        }
     }
+
     @Override
     public void initData() {
+
     }
 
     @Override
@@ -90,9 +109,14 @@ public class ModifyPasswordActivity extends BaseActivity {
         if (v.getId() == R.id.ibClose) {
             finish();
         } else if (v.getId() == R.id.btnModifyPassword) {
-            password = input_password.getText().toString();
-            if (checkRegister(phone, password, repeat_password, smscode)) {
+            password = etPassword.getText().toString();
+            if (checkRegister(phone, password, smscode)) {
                 //处理密码信息
+                SharedPreferences sharedPreferences=getSharedPreferences("user",MODE_PRIVATE);
+                SharedPreferences.Editor edit = sharedPreferences.edit();
+                edit.putBoolean(LoginActivity.USER_HAS_EDIT_FIRST_PASSWORD,true);
+                edit.apply();
+
                 startActivity(new Intent(ModifyPasswordActivity.this, MainActivity.class));
             }
         }
@@ -106,40 +130,21 @@ public class ModifyPasswordActivity extends BaseActivity {
      * @param smscode
      * @return
      */
-    public boolean checkRegister(String phone, String password, String repeat_password, String smscode) {
-//        if (TextUtils.isEmpty(phone)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
-//            return false;
-//        }
-//        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
-//            return false;
-//        }
-//        if (TextUtils.isEmpty(smscode)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
-//            return false;
-//        }
+    public boolean checkRegister(String phone, String password, String smscode) {
         if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
             ToastUtil.showToast(RT.getString(R.string.error_password));
             return false;
         }
-//        if (TextUtils.isEmpty(repeat_password)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_password_again));
-//            return false;
-//        }
-//        if (!password.equals(repeat_password)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_password_nosame));
-//            return false;
-//        }
         return true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (input_password != null) {
-            SoftKeyboardUtil.hideSoftKeyboard(input_password);
+        if (etPassword != null) {
+            SoftKeyboardUtil.hideSoftKeyboard(etPassword);
         }
+        hideLoadingDialog();
     }
 
     @Override
@@ -147,8 +152,6 @@ public class ModifyPasswordActivity extends BaseActivity {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(TAG);
     }
-
-
 }
 
 

@@ -21,7 +21,9 @@ import java.util.regex.Pattern;
 
 public class StringUtil {
     public static String ZHENGZE_PHONE = "^1[0-9]{10}";//手机号正则
+    public static String ZHENGZE_SNO = "[0-9]{11}";//学号正则
     public static String ZHENGZE_PASSWORD = "[0-9A-Za-z]{6,12}";//密码6-12位字母或数字
+    public static String ZHENGZE_SMSCODE = "[0-9A-Za-z]{6}";//密码6-12位字母或数字
 
     public static boolean checkMobilePhoneNo(String phoneNo) {
         boolean result = false;

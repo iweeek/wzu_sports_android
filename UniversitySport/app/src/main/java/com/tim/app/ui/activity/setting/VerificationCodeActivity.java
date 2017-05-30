@@ -37,17 +37,17 @@ public class VerificationCodeActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-    private EditText input_verification_code;
+    private EditText etSmsCode;
     private TextView show_time;
     private CountDownTimer timer;
     private boolean isTiming = false;
-    private String phone, password, repeat_password, smscode;
     private CheckBox cbUserAgreement;
     private TextView tvUserAgreement;
     private Button btConfirmRegist;
     private Button btBindNo;
     private ImageButton ibClose;
     private TextView tvTitle;
+    private String smscode;
 
 
     Bundle bundle;
@@ -66,14 +66,13 @@ public class VerificationCodeActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        input_verification_code = (EditText) findViewById(R.id.etVerificationCode);
-        input_verification_code.addTextChangedListener(new VerificationCodeActivity.MyEditChangeListener());
+        etSmsCode = (EditText) findViewById(R.id.etSmsCode);
+        etSmsCode.addTextChangedListener(new VerificationCodeActivity.MyEditChangeListener());
         btBindNo = (Button) findViewById(R.id.btBindNo);
         btBindNo.setOnClickListener(this);
         ibClose = (ImageButton) findViewById(R.id.ibClose);
         ibClose.setOnClickListener(this);
-        tvTitle= (TextView) findViewById(R.id.tvTitle);
-
+        tvTitle = (TextView) findViewById(R.id.tvTitle);
 
         bundle = this.getIntent().getExtras();
         flag = bundle.getInt("flag");
@@ -82,6 +81,24 @@ public class VerificationCodeActivity extends BaseActivity {
         } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
             tvTitle.setText(R.string.find_password);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (etSmsCode != null) {
+            SoftKeyboardUtil.hideSoftKeyboard(etSmsCode);
+        }
+        hideLoadingDialog();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timer != null && isTiming) {
+            timer.cancel();
+        }
+        OkHttpUtils.getInstance().cancelTag(TAG);
     }
 
 
@@ -101,12 +118,11 @@ public class VerificationCodeActivity extends BaseActivity {
     }
 
     private void updateBtn() {
-        //        if (!TextUtils.isEmpty(input_phone_num.getText().toString().trim()) ||
-        //                !TextUtils.isEmpty(input_password.getText().toString().trim()) || !TextUtils.isEmpty(input_password_again.getText().toString().trim()) || !TextUtils.isEmpty(input_sms_mark.getText().toString().trim())) {
-        //            btConfirmRegist.setTextColor(getResources().getColor(R.color.black_90));
-        //        } else {
-        //            btConfirmRegist.setTextColor(getResources().getColor(R.color.black_10));
-        //        }
+        if (!TextUtils.isEmpty(etSmsCode.getText().toString().trim())) {
+            btBindNo.setTextColor(getResources().getColor(R.color.black_90));
+        } else {
+            btBindNo.setTextColor(getResources().getColor(R.color.black_10));
+        }
     }
 
     @Override
@@ -118,92 +134,53 @@ public class VerificationCodeActivity extends BaseActivity {
         if (v.getId() == R.id.ibClose) {
             finish();
         } else if (v.getId() == R.id.btBindNo) {
-            Intent intent=new Intent();
-            intent.setClass(VerificationCodeActivity.this,ModifyPasswordActivity.class);
-            startActivity(intent);
-            phoneBind();
-
+            smscode = etSmsCode.getText().toString();
+            if (checkPhone(smscode)) {
+                phoneBind(smscode);
+            }
         }
     }
 
-    private void phoneBind() {
+    private boolean checkPhone(String smscode) {
+        if (TextUtils.isEmpty(smscode)) {
+            ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
+        } else if (!smscode.matches(StringUtil.ZHENGZE_SMSCODE)) {
+            ToastUtil.showToast(RT.getString(R.string.error_smscode_error));
+            return false;
+        }
+        return true;
+    }
+
+    private void phoneBind(String smscode) {
         showLoadingDialog();
 
 
         //跳转至下一页面
-        Bundle bundle=new Bundle();
+        Bundle bundle = new Bundle();
+        Intent intent = new Intent(VerificationCodeActivity.this, ModifyPasswordActivity.class);
 
-        if(flag==AppKey.VERTIFY_FIRSTPASSWORD){
-            bundle.putInt("flag",AppKey.VERTIFY_FIRSTPASSWORD);
-            Intent intent = new Intent(VerificationCodeActivity.this,ModifyPasswordActivity.class);
+        String phone = bundle.getString("phone");
+        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+            bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
+            bundle.putString("phone", phone);
             intent.putExtras(bundle);
-            startActivityForResult(intent,AppKey.CODE_LOGIN_REGISTER);
-        }else if (flag==AppKey.VERTIFY_FIRSTPASSWORD){
-            bundle.putInt("flag",AppKey.VERTIFY_RESETPASSWORD);
-            Intent intent = new Intent(VerificationCodeActivity.this,ModifyPasswordActivity.class);
+            startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
+        } else if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+            bundle.putInt("flag", AppKey.VERTIFY_RESETPASSWORD);
             intent.putExtras(bundle);
-            startActivityForResult(intent,AppKey.CODE_LOGIN_FINDPWD);
+            startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
         }
-
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (input_verification_code != null) {
-            SoftKeyboardUtil.hideSoftKeyboard(input_verification_code);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (timer != null && isTiming) {
-            timer.cancel();
-        }
-        OkHttpUtils.getInstance().cancelTag(TAG);
-    }
-
-    private boolean checkRegisterEnable() {
-        if (!cbUserAgreement.isChecked()) {
-            ToastUtil.showToast(RT.getString(R.string.error_check_agreement));
-            return false;
-        }
-        return checkRegister(phone, password, repeat_password, smscode);
     }
 
     /**
      * 检测注册参数
      *
-     * @param phone
-     * @param password
      * @param smscode
      * @return
      */
-    public boolean checkRegister(String phone, String password, String repeat_password, String smscode) {
-        if (TextUtils.isEmpty(phone)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
-            return false;
-        }
-        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
-            return false;
-        }
+    public boolean checkRegister(String smscode) {
         if (TextUtils.isEmpty(smscode)) {
             ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
-            return false;
-        }
-        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
-            ToastUtil.showToast(RT.getString(R.string.error_password));
-            return false;
-        }
-        if (TextUtils.isEmpty(repeat_password)) {
-            ToastUtil.showToast(RT.getString(R.string.error_password_again));
-            return false;
-        }
-        if (!password.equals(repeat_password)) {
-            ToastUtil.showToast(RT.getString(R.string.error_password_nosame));
             return false;
         }
         return true;
