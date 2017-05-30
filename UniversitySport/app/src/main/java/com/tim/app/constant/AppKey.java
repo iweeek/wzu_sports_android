@@ -18,6 +18,9 @@ public class AppKey {
     public static final int TYPE_MONTH = 2;//月
     public static final int TYPE_TERM = 3;//学期
 
+    public static final int TYPE_COST_ENERGY = 1;//消耗热量
+    public static final int TYPE_COST_TIME = 2;//消耗时长
+
     //    1注册
     //    2：找回密码
     //    3：绑定手机
