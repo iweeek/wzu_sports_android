@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,12 +14,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.runtime.event.EventManager;
+import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
+import com.tim.app.util.ToastUtil;
 
 /**
  * 忘记密码
@@ -26,14 +31,13 @@ import com.tim.app.util.SoftKeyboardUtil;
 public class RegistPhoneActivity extends BaseActivity {
     private static final String TAG = "RegistPhoneActivity";
 
-    private EditText etNo;
+    private EditText etPhone;
     private Button btGetVerificationCode;
-    private String no;
+    private String phone;
     private TextView tvNoErrorPrmpt;
     private TextView tvTitle;
     private ImageView ivDeleteNo;
-
-    private boolean isModify = false;
+    private boolean mHasEditFirstPassword = false;
 
     Bundle bundle;
     int flag;
@@ -50,7 +54,7 @@ public class RegistPhoneActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        etNo = (EditText) findViewById(R.id.etNo);
+        etPhone = (EditText) findViewById(R.id.etNo);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
         ivDeleteNo = (ImageView) findViewById(R.id.ivDeleteNo);
@@ -68,7 +72,7 @@ public class RegistPhoneActivity extends BaseActivity {
             tvTitle.setText(R.string.find_password);
         }
 
-        etNo.addTextChangedListener(new TextWatcher() {
+        etPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -81,14 +85,25 @@ public class RegistPhoneActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if (editable.toString().length() > 0) {
-                    ivDeleteNo.setVisibility(View.VISIBLE);
-                } else {
-                    ivDeleteNo.setVisibility(View.GONE);
-                }
+
+                updateEditText();
+
             }
         });
 
+    }
+
+    private void updateEditText() {
+//        if (editable.toString().length() > 0) {
+//            ivDeleteNo.setVisibility(View.VISIBLE);
+//        } else {
+//            ivDeleteNo.setVisibility(View.GONE);
+//        }
+        if (!TextUtils.isEmpty(etPhone.getText().toString().trim())) {
+            btGetVerificationCode.setTextColor(getResources().getColor(R.color.black_90));
+        } else {
+            btGetVerificationCode.setTextColor(getResources().getColor(R.color.black_10));
+        }
     }
 
     @Override
@@ -97,34 +112,32 @@ public class RegistPhoneActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (etNo != null) {
-            SoftKeyboardUtil.hideSoftKeyboard(etNo);
-        }
-        //        if (etPassword != null) {
-        //            SoftKeyboardUtil.hideSoftKeyboard(etPassword);
-        //        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        OkHttpUtils.getInstance().cancelTag(TAG);
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ibClose) {
-//            setResult(Activity.RESULT_OK);
+
+            //            setResult(Activity.RESULT_OK);
             finish();
         } else if (v.getId() == R.id.ivDeleteNo) {
-            etNo.setText("");
-        } else if ((v.getId()==R.id.btGetVerificationCode)){
+            etPhone.setText("");
+        } else if ((v.getId() == R.id.btGetVerificationCode)) {
             //处理获取验证码的逻辑
-
-            phoneLogin();
+            phone = etPhone.getText().toString();
+            if(checkPhone(phone)) {
+                phoneLogin(phone);
+            }
         }
+
+    }
+
+    private boolean checkPhone(String phone) {
+        if (TextUtils.isEmpty(phone)) {
+            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
+            return false;
+        }else if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
+            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
+            return false;
+        }
+        return true;
     }
 
 
@@ -133,34 +146,61 @@ public class RegistPhoneActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
+
+            mHasEditFirstPassword = data.getBooleanExtra("mHasEditFirstPassword", false);
+
             finish();
         } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
-            //            etNo.setText(data.getStringExtra("mobile"));
+            //            etPhone.setText(data.getStringExtra("mobile"));
             //            etPassword.setText(data.getStringExtra("password"));
-            phoneLogin();
+//            phoneLogin(phone);
         }
     }
 
 
-
-    private void phoneLogin() {
+    private void phoneLogin(String phone) {
         showLoadingDialog();
 
 
         //跳转至下一页面
-        Bundle bundle=new Bundle();
+        Bundle bundle = new Bundle();
+        Intent intent = new Intent(RegistPhoneActivity.this, VerificationCodeActivity.class);
 
-        if(flag==AppKey.VERTIFY_FIRSTPASSWORD){
-            bundle.putInt("flag",AppKey.VERTIFY_FIRSTPASSWORD);
-            Intent intent = new Intent(RegistPhoneActivity.this,VerificationCodeActivity.class);
+        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+            bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
+            bundle.putString("phone",phone);
             intent.putExtras(bundle);
-            startActivityForResult(intent,AppKey.CODE_LOGIN_REGISTER);
-        }else if (flag==AppKey.VERTIFY_RESETPASSWORD){
-            bundle.putInt("flag",AppKey.VERTIFY_RESETPASSWORD);
-            Intent intent = new Intent(RegistPhoneActivity.this,VerificationCodeActivity.class);
+            startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
+        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
+            bundle.putInt("flag", AppKey.VERTIFY_RESETPASSWORD);
             intent.putExtras(bundle);
-            startActivityForResult(intent,AppKey.CODE_LOGIN_FINDPWD);
+            startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
         }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (etPhone != null) {
+            SoftKeyboardUtil.hideSoftKeyboard(etPhone);
+        }
+        hideLoadingDialog();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        OkHttpUtils.getInstance().cancelTag(TAG);
+        Log.d(TAG, "onDestroy: ");
+
+        mHasEditFirstPassword = true;
+
+        Bundle returnBundle = new Bundle();
+        returnBundle.putBoolean("mHasEditFirstPassword", mHasEditFirstPassword);
+        Intent intent = new Intent();
+        intent.putExtras(returnBundle);
+        setResult(Activity.RESULT_OK, intent);
 
     }
 }
