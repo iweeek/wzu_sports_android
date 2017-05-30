@@ -47,7 +47,7 @@ public class VerificationCodeActivity extends BaseActivity {
     private Button btBindNo;
     private ImageButton ibClose;
     private TextView tvTitle;
-    private String smscode;
+    private String smsCode;
 
 
     Bundle bundle;
@@ -134,26 +134,27 @@ public class VerificationCodeActivity extends BaseActivity {
         if (v.getId() == R.id.ibClose) {
             finish();
         } else if (v.getId() == R.id.btBindNo) {
-            smscode = etSmsCode.getText().toString();
-            if (checkPhone(smscode)) {
-                phoneBind(smscode);
+            smsCode = etSmsCode.getText().toString();
+            if (checkPhone(smsCode)) {
+                phoneBind(smsCode);
             }
         }
     }
 
-    private boolean checkPhone(String smscode) {
-        if (TextUtils.isEmpty(smscode)) {
+
+    private boolean checkPhone(String smsCode) {
+        if (TextUtils.isEmpty(smsCode)) {
             ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
-        } else if (!smscode.matches(StringUtil.ZHENGZE_SMSCODE)) {
+        } else if (!smsCode.matches(StringUtil.ZHENGZE_SMSCODE)) {
             ToastUtil.showToast(RT.getString(R.string.error_smscode_error));
             return false;
         }
         return true;
     }
 
-    private void phoneBind(String smscode) {
-        showLoadingDialog();
 
+    private void phoneBind(String smsCode) {
+        showLoadingDialog();
 
         //跳转至下一页面
         Bundle bundle = new Bundle();
@@ -163,6 +164,7 @@ public class VerificationCodeActivity extends BaseActivity {
         if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
             bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
             bundle.putString("phone", phone);
+            bundle.putString("smsCode",smsCode);
             intent.putExtras(bundle);
             startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
         } else if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
@@ -206,7 +208,7 @@ public class VerificationCodeActivity extends BaseActivity {
 
     private void RegisterApi() {
         showLoadingDialog();
-        //        API_User.ins().phoneRegister(TAG, phone, SignRequestParams.MDString(password), smscode, new JsonResponseCallback() {
+        //        API_User.ins().phoneRegister(TAG, phone, SignRequestParams.MDString(password), smsCode, new JsonResponseCallback() {
         //            @Override
         //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
         //                hideLoadingDialog();

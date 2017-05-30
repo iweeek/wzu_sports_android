@@ -32,7 +32,7 @@ public class ModifyPasswordActivity extends BaseActivity {
 
     private EditText etPassword;
     private Button btnModifyPassword;
-    private String phone, password, smscode;
+    private String phone, password, smsCode;
     private TextView tvTitle;
     private ImageButton ibClose;
 
@@ -73,6 +73,10 @@ public class ModifyPasswordActivity extends BaseActivity {
         } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
             tvTitle.setText(R.string.find_password);
         }
+
+         phone = bundle.getString("phone");
+         smsCode = bundle.getString("smsCode");
+
     }
 
 
@@ -110,16 +114,24 @@ public class ModifyPasswordActivity extends BaseActivity {
             finish();
         } else if (v.getId() == R.id.btnModifyPassword) {
             password = etPassword.getText().toString();
-            if (checkRegister(phone, password, smscode)) {
+            if (checkRegister(phone, password, smsCode)) {
                 //处理密码信息
-                SharedPreferences sharedPreferences=getSharedPreferences("user",MODE_PRIVATE);
-                SharedPreferences.Editor edit = sharedPreferences.edit();
-                edit.putBoolean(LoginActivity.USER_HAS_EDIT_FIRST_PASSWORD,true);
-                edit.apply();
-
-                startActivity(new Intent(ModifyPasswordActivity.this, MainActivity.class));
+                updatePassword(password);
             }
         }
+    }
+
+    private void updatePassword(String password) {
+
+
+        SharedPreferences sharedPreferences=getSharedPreferences("user",MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putBoolean(LoginActivity.USER_HAS_EDIT_FIRST_PASSWORD,true);
+        edit.putString("password",password);
+        edit.apply();
+
+        startActivity(new Intent(ModifyPasswordActivity.this, MainActivity.class));
+
     }
 
     /**
