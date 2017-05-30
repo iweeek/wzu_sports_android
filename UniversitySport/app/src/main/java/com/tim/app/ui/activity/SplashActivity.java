@@ -8,7 +8,6 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
@@ -30,7 +29,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -83,12 +82,12 @@ public class SplashActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_WHAT_GOTO_MAINACTIVITY:
-//                    if (UserManager.ins().isLogin()) {
+                    if (UserManager.ins().isLogin()) {
                         Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
                         main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                         startActivity(main_intent);
                         finish();
-//                    }
+                    }
                     break;
             }
 

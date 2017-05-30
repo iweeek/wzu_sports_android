@@ -31,6 +31,7 @@
     <string name="main_tab_title_5">我</string>
     <!--修改密码-->
     <string name="modify_password">修改密码</string>
+    <string name="modify_first_password">修改初始密码</string>
     <string name="modify_password_success">修改成功</string>
     <string name="find_password">忘记密码</string>
     <string name="check_phone">手机验证</string>
@@ -72,6 +73,7 @@
     <string name="verification_code">验证码</string>
     <string name="bt_get_verification_code">获取验证码</string>
     <string name="new_password">新密码</string>
+    <string name="submit">提交</string>
 
     <!--安全中心-->
     <string name="bound_phone">已绑定手机</string>
@@ -121,8 +123,11 @@
     <!--登录-->
     <string name="error_mobile_empty">请输入手机号</string>
     <string name="error_mobile_error">手机号错误，请重新输入</string>
+    <string name="error_sno_error">学号错误，请重新输入，ps:11位</string>
     <string name="error_mobile_vertify">请输入验证码</string>
+    <string name="error_smscode_error">验证码错误</string>
     <string name="error_password">请输入6&#8211;12位字母或数字密码</string>
+    <string name="error_password_noput">请输入您的密码</string>
     <string name="error_password_again">请再次输入密码</string>
     <string name="error_password_nosame">两次密码输入不一致</string>
     <string name="error_check_agreement">请勾选用户协议</string>

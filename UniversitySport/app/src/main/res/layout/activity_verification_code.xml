@@ -22,7 +22,7 @@
             android:src="@drawable/btn_close" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             style="@style/TitleTextStyle"
             android:layout_marginLeft="50dp"
             android:layout_toRightOf="@id/ibClose"
@@ -49,12 +49,12 @@
             android:layout_marginTop="16dp">
 
             <EditText
-                android:id="@+id/etNo"
+                android:id="@+id/etSmsCode"
                 style="@style/inputContentText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="@string/input_mobile_prompt"
+                android:hint="@string/input_sms_mark"
                 android:inputType="number"
                 android:textColorHint="@color/white_80" />
 
@@ -92,7 +92,7 @@
 
 
     <Button
-        android:id="@+id/btConfirm"
+        android:id="@+id/btBindNo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -101,8 +101,8 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/bg_shape_button_round_white"
         android:gravity="center"
-        android:text="@string/bt_get_verification_code"
+        android:text="@string/bind_phone"
         android:textColor="@color/login_btn_text_color"
-        android:textSize="@dimen/button_text_size" />
+        android:textSize="@dimen/text_size_18" />
 
 </LinearLayout>

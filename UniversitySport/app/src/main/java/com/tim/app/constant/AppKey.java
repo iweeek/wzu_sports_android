@@ -29,6 +29,7 @@ public class AppKey {
     public static final int VERTIFY_RESETPASSWORD = 2;
     public static final int VERTIFY_BINDMOBILE = 3;
     public static final int VERTIFY_LOGINMOBILE = 4;
+    public static final int VERTIFY_FIRSTPASSWORD = 5;
 
     public static final int VERTIFY_SECONDS = 60;//验证码倒数秒数
 

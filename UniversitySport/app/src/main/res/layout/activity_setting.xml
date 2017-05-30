@@ -22,7 +22,7 @@
             android:src="@drawable/ic_back_white" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             style="@style/TitleTextStyle"
             android:layout_marginLeft="50dp"
             android:text="设置" />

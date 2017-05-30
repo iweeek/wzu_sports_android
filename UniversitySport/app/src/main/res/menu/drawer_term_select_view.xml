@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <!--<item-->
+            <!--android:id="@+id/nav_term_one"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2016年~2017年  第一学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_two"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2016年~2017年  第二学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_three"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2017年~2018年  第一学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_four"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2017年~2018年  第二学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_five"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2018年~2019年  第一学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_six"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2018年~2019年  第二学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_seven"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2019年~2020年  第一学期"/>-->
+        <!--<item-->
+            <!--android:id="@+id/nav_term_eight"-->
+            <!--android:icon="@drawable/nav_survet_selector"-->
+            <!--android:title="2019年~2020年  第二学期"/>-->
+    </group>
+</menu>

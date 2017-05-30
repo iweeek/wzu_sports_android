@@ -1,5 +1,6 @@
 package com.tim.app.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
@@ -57,8 +58,15 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private HomepageHeadView homepageHeadView;
 
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
+
     @Override
-    protected void onBeforeSetContentLayout() {
+        protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
     }

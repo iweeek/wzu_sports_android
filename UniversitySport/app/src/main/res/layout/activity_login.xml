@@ -20,7 +20,7 @@
             android:src="@drawable/btn_close" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             style="@style/TitleTextStyle"
             android:layout_marginLeft="50dp"
             android:layout_toRightOf="@id/ibClose"
@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="@string/login_input_num"
+                    android:hint="@string/error_password_noput"
                     android:inputType="textPassword"
                     android:textColorHint="@color/white_80" />
 
@@ -186,6 +186,6 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:text="@string/login_forget_password"
-            android:textSize="18dp" />
+            android:textSize="@dimen/text_size_18" />
     </LinearLayout>
 </RelativeLayout>

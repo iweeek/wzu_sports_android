@@ -40,7 +40,7 @@
         <TextView
             style="@style/inputContentTitle"
             android:gravity="center"
-            android:text="@string/new_password" />
+            android:text="@string/mobile_number" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -49,12 +49,12 @@
             android:layout_marginTop="16dp">
 
             <EditText
-                android:id="@+id/etPassword"
+                android:id="@+id/etNo"
                 style="@style/inputContentText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:hint="@string/login_input_password"
+                android:hint="@string/input_mobile_prompt"
                 android:inputType="number"
                 android:textColorHint="@color/white_80" />
 
@@ -65,7 +65,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/password_input_selector"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/ivDeleteNo"
@@ -92,7 +92,7 @@
 
 
     <Button
-        android:id="@+id/btnModifyPassword"
+        android:id="@+id/btGetVerificationCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -101,7 +101,7 @@
         android:layout_marginTop="30dp"
         android:background="@drawable/bg_shape_button_round_white"
         android:gravity="center"
-        android:text="@string/submit"
+        android:text="@string/bt_get_verification_code"
         android:textColor="@color/login_btn_text_color"
         android:textSize="@dimen/text_size_18" />
 
