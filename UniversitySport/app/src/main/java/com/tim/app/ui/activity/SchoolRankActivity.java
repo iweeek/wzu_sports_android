@@ -46,8 +46,8 @@ public class SchoolRankActivity extends BaseActivity {
 
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(RankDataFragment.newInstance(AppKey.TYPE_WEEK), "累计消耗热量");
-        pagerAdapter.addFragment(RankDataFragment.newInstance(AppKey.TYPE_MONTH), "累计锻炼时长");
+        pagerAdapter.addFragment(RankDataFragment.newInstance(AppKey.TYPE_COST_ENERGY), "累计消耗热量");
+        pagerAdapter.addFragment(RankDataFragment.newInstance(AppKey.TYPE_COST_TIME), "累计锻炼时长");
         vpRank.setOffscreenPageLimit(2);
         vpRank.setAdapter(pagerAdapter);
         vpRank.setCurrentItem(0);

@@ -1,6 +1,7 @@
 package com.tim.app.ui.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tim.app.R;
+import com.tim.app.ui.activity.SchoolRankActivity;
 
 /**
  * 首页的headerview
@@ -41,17 +43,20 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rlRank:
+                Intent intent = new Intent(getContext(), SchoolRankActivity.class);
+                getContext().startActivity(intent);
                 break;
         }
     }
 
     /**
      * 刷新界面
+     *
      * @param count
      * @param surplus
      * @param cost
      */
-    public void setData(int count,int surplus, String cost) {
+    public void setData(int count, int surplus, String cost) {
         tvTargetNumber.setText(getContext().getString(R.string.targetCount, String.valueOf(count)));
         tvSurplus.setText(String.valueOf(surplus));
         tvCost.setText(getContext().getString(R.string.totalCost, cost));

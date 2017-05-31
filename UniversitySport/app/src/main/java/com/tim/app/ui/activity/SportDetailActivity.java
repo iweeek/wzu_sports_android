@@ -14,11 +14,13 @@ import android.widget.Button;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.util.ViewGT;
 
-public class SplashActivity extends BaseActivity {
+/**
+ * 运动详情
+ */
+public class SportDetailActivity extends BaseActivity {
 
-    private static final String TAG = "SplashActivity";
+    private static final String TAG = "SportDetailActivity";
 
     private static final int MESSAGE_WHAT_GOTO_MAINACTIVITY = 0X01;
 
@@ -73,7 +75,7 @@ public class SplashActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btLogin:
 //                ViewGT.gotoLoginActivity(this);
-                Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent main_intent = new Intent(SportDetailActivity.this, MainActivity.class);
                 main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                 startActivity(main_intent);
                 break;
@@ -86,7 +88,7 @@ public class SplashActivity extends BaseActivity {
             switch (msg.what) {
                 case MESSAGE_WHAT_GOTO_MAINACTIVITY:
                     if (UserManager.ins().isLogin()) {
-                        Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
+                        Intent main_intent = new Intent(SportDetailActivity.this, MainActivity.class);
                         main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                         startActivity(main_intent);
                         finish();

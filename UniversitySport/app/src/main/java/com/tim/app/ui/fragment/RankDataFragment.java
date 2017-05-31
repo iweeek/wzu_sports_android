@@ -19,14 +19,17 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppKey;
 import com.tim.app.server.entry.HistoryData;
+import com.tim.app.server.entry.RankData;
 import com.tim.app.ui.adapter.HistoryDataAdapter;
+import com.tim.app.ui.adapter.RankDataAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
+import com.tim.app.ui.view.RankDataHeadView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 历史数据
+ * 排行榜数据
  */
 public class RankDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
 
@@ -38,10 +41,10 @@ public class RankDataFragment extends BaseFragment implements View.OnClickListen
     private WrapRecyclerView wrvHistoryData;
     private EmptyLayout emptyLayout;
 
-    private HistoryDataAdapter adapter;
-    private List<HistoryData> dataList;
+    private RankDataAdapter adapter;
+    private List<RankData> dataList;
 
-    private HistoryDataHeadView headView;
+    private RankDataHeadView headView;
 
     int type;
 
@@ -80,19 +83,17 @@ public class RankDataFragment extends BaseFragment implements View.OnClickListen
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             wrvHistoryData.setLayoutManager(layoutManager);
-            wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.view_background_color)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
 
-            headView = (HistoryDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.historydata_head_view, null);
+            headView = (RankDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.rankdata_head_view, null);
             wrvHistoryData.addHeaderView(headView);
-
-            dataList = new ArrayList<>();
-            adapter = new HistoryDataAdapter(getActivity(), dataList);
-            wrvHistoryData.setAdapter(adapter);
 
             if (getArguments() != null) {
                 type = getArguments().getInt("type");
             }
 
+            dataList = new ArrayList<>();
+            adapter = new RankDataAdapter(getActivity(), dataList, type);
+            wrvHistoryData.setAdapter(adapter);
         }
         initData();
         return rootView;
@@ -100,24 +101,14 @@ public class RankDataFragment extends BaseFragment implements View.OnClickListen
 
     private void initData() {
         for (int i = 0; i < 5; i++) {
-            HistoryData historyData = new HistoryData();
-            historyData.setSportDesc("累计分段距离快走或跑");
-            historyData.setTime(System.currentTimeMillis());
-            historyData.setSpeed("1.0");
-            historyData.setCompleteCount(4);
-            historyData.setMinDistance(1000);
-            historyData.setCostNumber(1000);
-            historyData.setSportTime(300);
-            dataList.add(historyData);
+            RankData data = new RankData();
+            data.setAvatar("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg");
+            data.setUserName("学生" + (i + 1));
+            data.setCostValue(1200);
+            dataList.add(data);
         }
         adapter.notifyDataSetChanged();
-        if(AppKey.TYPE_WEEK == type){
-            headView.setData("本周训练",3,5,1,1200,120);
-        }else if(AppKey.TYPE_MONTH == type){
-            headView.setData("本月训练",3,5,1,1200,120);
-        }else if(AppKey.TYPE_TERM == type){
-            headView.setData("本学期训练",3,5,1,1200,120);
-        }
+        headView.setData("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "新垣结衣", 3600, "http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "石原里美", 2400, "http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "佐佐木希", 1800, type);
     }
 
     @Override

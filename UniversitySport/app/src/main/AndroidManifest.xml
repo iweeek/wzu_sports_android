@@ -84,6 +84,9 @@
             android:name="com.tim.app.ui.activity.setting.SettingActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.tim.app.ui.activity.SchoolRankActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.tim.app.ui.activity.AboutActivity"
             android:screenOrientation="portrait" />
         <activity

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tim.app.ui.view.RankDataHeadView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="226dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="102dp">
+
+                <com.application.library.widget.roundimg.RoundedImageView
+                    android:id="@+id/rivSecondAvatar"
+                    android:layout_width="83.5dp"
+                    android:layout_height="83.5dp"
+                    android:background="@drawable/ic_default_avatar"
+                    android:scaleType="centerCrop"
+                    app:oval="true"
+                    app:riv_border_color="@color/white"
+                    app:riv_border_width="3dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/ic_second_label" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="129dp">
+
+                <com.application.library.widget.roundimg.RoundedImageView
+                    android:id="@+id/rivFristAvatar"
+                    android:layout_width="116dp"
+                    android:layout_height="116dp"
+                    android:background="@drawable/ic_default_avatar"
+                    android:scaleType="centerCrop"
+                    app:oval="true"
+                    app:riv_border_color="@color/white"
+                    app:riv_border_width="3dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/ic_first_label" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="102dp">
+
+                <com.application.library.widget.roundimg.RoundedImageView
+                    android:id="@+id/rivThirdAvatar"
+                    android:layout_width="83.5dp"
+                    android:layout_height="83.5dp"
+                    android:background="@drawable/ic_default_avatar"
+                    android:scaleType="centerCrop"
+                    app:oval="true"
+                    app:riv_border_color="@color/white"
+                    app:riv_border_width="3dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/ic_third_label" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSecondName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#535353"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/tvSecondUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#535353"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tvFristName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#535353"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/tvFristUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#535353"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvThirdName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#535353"
+                android:textSize="21dp" />
+
+            <TextView
+                android:id="@+id/tvThirdUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#535353"
+                android:textSize="12dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#edf0f2" />
+
+
+</com.tim.app.ui.view.RankDataHeadView>
