@@ -72,10 +72,7 @@ public class SplashActivity extends BaseActivity {
 
         switch (v.getId()) {
             case R.id.btLogin:
-//                ViewGT.gotoLoginActivity(this);
-                Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
-                main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-                startActivity(main_intent);
+                ViewGT.gotoLoginActivity(this);
                 break;
         }
 
