@@ -24,7 +24,6 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 
-
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
 
@@ -46,8 +45,8 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/MainTheme">
         <activity
             android:name="com.tim.app.ui.activity.SplashActivity"
@@ -87,12 +86,15 @@
             android:name="com.tim.app.ui.activity.SchoolRankActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.tim.app.ui.activity.SportDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.tim.app.ui.activity.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.tim.app.ui.activity.setting.LoginActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tim.app.ui.activity.setting.ModifyPasswordActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -100,7 +102,7 @@
         <activity
             android:name=".ui.activity.setting.RegistPhoneActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tim.app.ui.activity.setting.FindPasswordActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -108,7 +110,7 @@
         <activity
             android:name=".ui.activity.setting.VerificationCodeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.tim.app.ui.activity.setting.RegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -120,7 +122,9 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="您的Key"/>
     </application>
 
 </manifest>

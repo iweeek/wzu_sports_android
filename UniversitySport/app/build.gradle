@@ -54,6 +54,10 @@ dependencies {
     compile project(':BaseLibrary')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:26.0.0-alpha1'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.amap.api:map3d-native:latest.integration'
+    compile 'com.amap.api:map3d:latest.integration'
+    compile 'com.amap.api:location:latest.integration'
 }
 
 def releaseTime() {
