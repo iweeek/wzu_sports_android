@@ -20,7 +20,12 @@ android {
     }
 
     signingConfigs {
-
+        wzu_sports_config {
+            keyAlias 'wzu_sports'
+            keyPassword '2wsx@WSX'
+            storeFile file('/Users/chaiyu/wzu_sports_android/app.keystore.jks')
+            storePassword '1qaz!QAZ'
+        }
     }
 
     buildTypes {
@@ -29,17 +34,15 @@ android {
             zipAlignEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.wzu_sports_config
+        }
+        debug {
+            signingConfig signingConfigs.wzu_sports_config
         }
     }
 
 
     productFlavors {
-        ceshi { // 测试渠道
-            manifestPlaceholders = [channelID: "57fyjjandroidBJ20170109"]
-        }
-        guanwang { // 官网
-            manifestPlaceholders = [channelID: "13fyjjandroidBJ20161020"]
-        }
     }
 }
 
@@ -54,7 +57,7 @@ dependencies {
     compile project(':BaseLibrary')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:26.0.0-alpha1'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.amap.api:map3d-native:latest.integration'
     compile 'com.amap.api:map3d:latest.integration'
     compile 'com.amap.api:location:latest.integration'
