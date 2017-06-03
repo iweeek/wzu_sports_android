@@ -1,7 +1,6 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -28,9 +27,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
@@ -39,6 +40,8 @@ import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.Utils;
+
+import static com.tim.app.R.id.map;
 
 
 /**
@@ -61,6 +64,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private TextView tvSportJoinNumber;
     private TextView tvCurrentDistance;
     private TextView tvCurrentTitle;
+    private TextView tvCurrentTime;
     private TextView tvCurrentValue;
     private TextView tvTargetDistance;
     private TextView tvTargetTime;
@@ -87,6 +91,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     private int state = STATE_NORMAL;
 
+    private int currentDistance = 0;
+    private long currentTime = 0;
+
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
         intent.putExtra("sport", sport);
@@ -96,8 +103,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
+
         initLocation();
         mapView = (MapView) findViewById(R.id.map);
+
+//        mapView = (MapView) findViewById(map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         aMap = mapView.getMap();
         initMap();
@@ -133,9 +143,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
+        tvCurrentTime = (TextView)findViewById(R.id.tvCurrentTime);
         tvTargetTitle = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetValue = (TextView) findViewById(R.id.tvTargetValue);
-        tvPause =  (TextView)findViewById(R.id.tvPause);
+        tvPause = (TextView) findViewById(R.id.tvPause);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
         btStart = (Button) findViewById(R.id.btStart);
@@ -169,6 +180,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
             tvTargetTitle.setText(getString(R.string.targetTitleSpeed));
             tvTargetValue.setText(getString(R.string.targetSpeed, sport.getTargetSpeed()));
         }
+        tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
+        tvCurrentTime.setText(getString(R.string.targetTime, String.valueOf(currentTime/60)));
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {
@@ -236,6 +249,27 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
         //使用 aMap.setMapTextZIndex(2) 可以将地图底图文字设置在添加的覆盖物之上
         aMap.setMapTextZIndex(2);
+        mlocationClient = new AMapLocationClient(this);
+        mLocationOption = new AMapLocationClientOption();
+        //设置定位监听
+        mlocationClient.setLocationListener(this);
+        //设置为高精度定位模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置定位参数
+        mlocationClient.setLocationOption(mLocationOption);
+        mLocationOption.setOnceLocation(false);
+        /**
+         * 设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
+         * 注意：只有在高精度模式下的单次定位有效，其他方式无效
+         */
+        mLocationOption.setGpsFirst(true);
+        // 设置发送定位请求的时间间隔,最小值为1000ms,1秒更新一次定位信息
+        mLocationOption.setInterval(1000);
+        // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+        // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+        // 在定位结束后，在合适的生命周期调用onDestroy()方法
+        // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+        mlocationClient.startLocation();
     }
 
     /**
@@ -256,10 +290,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+
+
 //                //定位成功
                 LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
                 Log.d("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
 //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
+                //修改地图的中心点位置
+                CameraPosition cp = aMap.getCameraPosition();
+                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+                aMap.moveCamera(cu);
 
                 if (isFirstLatLng) {
                     //记录第一次的定位信息
