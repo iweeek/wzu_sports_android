@@ -101,6 +101,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         aMap = mapView.getMap();
         initMap();
+        onMapLoaded();
     }
 
     private void initMap() {
