@@ -96,6 +96,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
+        initLocation();
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         aMap = mapView.getMap();
@@ -222,6 +223,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     @Override
     public void onMapLoaded() {
+        Log.d(TAG, "onMapLoaded");
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
@@ -248,13 +250,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     @Override
     public void onLocationChanged(AMapLocation amapLocation) {
+        Log.d(TAG, "onLocationChanged amapLocation: " + amapLocation);
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
 //                //定位成功
                 LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
-//                Log.e("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
+                Log.d("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
 //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
 
                 if (isFirstLatLng) {
@@ -292,8 +295,43 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         deactivate();
     }
 
+    /**
+     * 默认的定位参数
+     * @since 2.8.0
+     * @author hongming.wang
+     *
+     */
+    private AMapLocationClientOption getDefaultOption() {
+        AMapLocationClientOption option = new AMapLocationClientOption();
+        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+        option.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+        option.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+        option.setInterval(2000);//可选，设置定位间隔。默认为2秒
+        option.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+        option.setOnceLocation(false);//可选，设置是否单次定位。默认是false
+        option.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+        option.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+        option.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
+        option.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
+        return option;
+    }
+
+    private void initLocation() {
+        Log.d(TAG, "initLocation");
+        //初始化client
+        mlocationClient = new AMapLocationClient(this.getApplicationContext());
+        mLocationOption = getDefaultOption();
+        //设置定位参数
+        mlocationClient.setLocationOption(mLocationOption);
+        // 设置定位监听
+        mlocationClient.setLocationListener(this);
+        mlocationClient.startLocation();
+    }
+
     @Override
     public void activate(OnLocationChangedListener listener) {
+        Log.d(TAG, "activate");
         mListener = listener;
         if (mlocationClient == null) {
             mlocationClient = new AMapLocationClient(this);
@@ -317,6 +355,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
             // 在定位结束后，在合适的生命周期调用onDestroy()方法
             // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
             mlocationClient.startLocation();
+            Log.d(TAG, "startLocation");
         }
     }
 

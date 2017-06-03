@@ -38,6 +38,7 @@ android {
         }
         debug {
             signingConfig signingConfigs.wzu_sports_config
+            debuggable true
         }
     }
 
