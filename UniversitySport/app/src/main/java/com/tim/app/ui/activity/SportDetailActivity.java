@@ -7,6 +7,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -17,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,11 +31,11 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.CameraPosition;
@@ -38,20 +43,25 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
+import com.application.library.runtime.event.EventListener;
+import com.application.library.runtime.event.EventManager;
+import com.tim.app.BuildConfig;
 import com.tim.app.R;
+import com.tim.app.constant.EventTag;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
+import com.tim.app.sport.Database;
+import com.tim.app.sport.SensorListener;
+import com.tim.app.sport.Util;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.ToastUtil;
 import com.tim.app.util.Utils;
-
-import static com.amap.api.maps.AMapUtils.calculateLineDistance;
-import static com.tim.app.R.id.map;
 
 
 /**
  * 运动详情
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener {
+public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener, SensorEventListener {
 
     private static final String TAG = "SportDetailActivity";
     private CoordinateConverter converter;
@@ -76,7 +86,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private TextView tvTargetTime;
     private TextView tvTargetTitle;
     private TextView tvTargetValue;
-
+    private TextView tvResult;//运动结果
+    private ImageView ivLocation;
+    private TextView tvStepTitle;
+    private TextView tvCurrentStep;
+    private LinearLayout llTargetContainer;
 
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -90,6 +104,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private Button btStop;
     private SlideUnlockView slideUnlockView;
 
+    private LinearLayout llCurrentInfo;
+    private RelativeLayout rlCostQuantity;
+    private TextView tvCostQuantity;
+
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
     static final int STATE_PAUSE = 2;//暂停
@@ -101,6 +119,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     private int currentDistance = 0;
     private long currentTime = 0;
+    private int currentSteps = 0;
+
+    private int initSteps = 0;//初始化的步数
 
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -115,11 +136,73 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         initLocation();
         mapView = (MapView) findViewById(R.id.map);
 
-//        mapView = (MapView) findViewById(map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         aMap = mapView.getMap();
         initMap();
         onMapLoaded();
+        startService(new Intent(this, SensorListener.class));
+
+        SensorManager sm =
+                (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (sensor == null) {
+            ToastUtil.showToast("必须有传感器才行");
+        } else {
+            sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
+        }
+        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
+    }
+
+    boolean isFirst = true;
+
+    private int noSportSteps = 0;
+
+    EventListener eventListener = new EventListener() {
+        @Override
+        public void handleMessage(int what, int arg1, int arg2, Object dataobj) {
+            switch (what) {
+                case EventTag.ON_STEP_CHANGE:
+                    int steps = (int) dataobj;
+                    if (state == STATE_STARTED) {
+                        if (isFirst) {
+                            initSteps = steps;
+                        } else {
+                            currentSteps = steps - initSteps - noSportSteps;
+                            tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+                        }
+                    } else {
+                        noSportSteps += steps - currentSteps;
+                    }
+                    break;
+            }
+        }
+    };
+
+    private int todayOffset, total_start, goal, since_boot, total_days;
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (BuildConfig.DEBUG)
+            DLOG.d("UI - sensorChanged | todayOffset: " + todayOffset + " since boot: " +
+                    event.values[0]);
+        if (event.values[0] > Integer.MAX_VALUE || event.values[0] == 0) {
+            return;
+        }
+        if (todayOffset == Integer.MIN_VALUE) {
+            // no values for today
+            // we dont know when the reboot was, so set todays steps to 0 by
+            // initializing them with -STEPS_SINCE_BOOT
+            todayOffset = -(int) event.values[0];
+            Database db = Database.getInstance(this);
+            db.insertNewDay(Util.getToday(), (int) event.values[0]);
+            db.close();
+        }
+        since_boot = (int) event.values[0];
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 
     private void initMap() {
@@ -151,19 +234,32 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvCurrentTime = (TextView)findViewById(R.id.tvCurrentTime);
+        tvCurrentTime = (TextView) findViewById(R.id.tvCurrentTime);
         tvTargetTitle = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetValue = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);
+        ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
         btStart = (Button) findViewById(R.id.btStart);
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
+        tvResult = (TextView) findViewById(R.id.tvResult);
+        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
+        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
+        llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
+
+        llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
+        rlCostQuantity = (RelativeLayout) findViewById(R.id.rlCostQuantity);
+        tvCostQuantity = (TextView) findViewById(R.id.tvCostQuantity);
         btStart.setOnClickListener(this);
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
+        ivLocation.setOnClickListener(this);
+
+        tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+        tvCurrentValue.setText("0 米/秒");
     }
 
     @Override
@@ -212,6 +308,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                     llBottom.setVisibility(View.VISIBLE);
                     if (state == STATE_STARTED) {
                         state = STATE_PAUSE;
+                        ibBack.setVisibility(View.GONE);
                     }
                 }
             }
@@ -242,6 +339,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     }
 
     private final static int AMAP_LOADED = 2;
+    private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
     @Override
     public void onMapLoaded() {
@@ -252,9 +350,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         // 设置定位的类型为定位模式 ，可以由定位 LOCATION_TYPE_LOCATE、跟随 LOCATION_TYPE_MAP_FOLLOW 或地图根据面向方向旋转 LOCATION_TYPE_MAP_ROTATE
 //        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
 
+//        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
         //画线
         // 缩放级别（zoom）：地图缩放级别范围为【4-20级】，值越大地图越详细
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         //使用 aMap.setMapTextZIndex(2) 可以将地图底图文字设置在添加的覆盖物之上
         aMap.setMapTextZIndex(2);
         mlocationClient = new AMapLocationClient(this);
@@ -326,6 +425,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 CameraPosition cp = aMap.getCameraPosition();
                 CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                 aMap.moveCamera(cu);
 
                 if (isFirstLatLng) {
@@ -340,11 +440,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                         setUpMap(oldLatLng, newLatLng);
                         currentTime += interval / 1000;
                         Log.d(TAG, "currentTime: " + currentTime);
-                        tvCurrentTime.setText(String.valueOf(currentTime /60)+"分钟");
+                        tvCurrentTime.setText(String.valueOf(currentTime / 60) + "分钟");
                         Log.d(TAG, "newLatLng: " + newLatLng);
                         Log.d(TAG, "oldLatLng: " + oldLatLng);
-                        currentDistance += AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                        tvCurrentDistance.setText(currentDistance);
+                        float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                        currentDistance += moveDistanec;
+                        tvCurrentDistance.setText(String.valueOf(currentDistance)+ "米");
+                        tvCurrentValue.setText(moveDistanec + "米/秒");
                     }
 
                     oldLatLng = newLatLng;
@@ -374,9 +476,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     /**
      * 默认的定位参数
-     * @since 2.8.0
-     * @author hongming.wang
      *
+     * @author hongming.wang
+     * @since 2.8.0
      */
     private AMapLocationClientOption getDefaultOption() {
         AMapLocationClientOption option = new AMapLocationClientOption();
@@ -465,6 +567,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 finish();
                 break;
             case R.id.btStart:
+                ibBack.setVisibility(View.GONE);
+                llCurrentInfo.setVisibility(View.VISIBLE);
+                rlCostQuantity.setVisibility(View.GONE);
+                llTargetContainer.setBackgroundColor(getColor(R.color.black_30));
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
                 }
@@ -483,12 +589,34 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
+                ibBack.setVisibility(View.VISIBLE);
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
                 }
+                if (currentDistance > sport.getTargetDistance() && currentTime / 60 > sport.getTargetTime()) {
+                    tvResult.setText("达标");
+                } else {
+                    tvResult.setText("不达标");
+                }
+                tvCurrentTitle.setText("平均速度");
+                tvCurrentValue.setText(currentDistance / currentTime + "米/秒");
+
+                String cost = String.valueOf(Math.round(currentDistance * 0.3));
+                rlCostQuantity.setVisibility(View.VISIBLE);
+                tvCostQuantity.setText(getString(R.string.sportCostQuantity, String.valueOf(cost)));
+                tvResult.setVisibility(View.VISIBLE);
+                tvSportJoinNumber.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.GONE);
                 btStart.setVisibility(View.VISIBLE);
+                break;
+            case R.id.ivLocation:
+                //修改地图的中心点位置
+                CameraPosition cp = aMap.getCameraPosition();
+                CameraPosition cpNew = CameraPosition.fromLatLngZoom(oldLatLng, cp.zoom);
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                aMap.moveCamera(cu);
                 break;
         }
 
@@ -508,6 +636,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }
+        EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
 
 }
