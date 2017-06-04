@@ -1,9 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -33,11 +31,11 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.AMapUtils;
-import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.CameraPosition;
@@ -58,14 +56,11 @@ import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 import com.tim.app.util.Utils;
 
-import static com.amap.api.maps.AMapUtils.calculateLineDistance;
-import static com.tim.app.R.id.map;
-
 
 /**
  * 运动详情
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener , SensorEventListener {
+public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener, SensorEventListener {
 
     private static final String TAG = "SportDetailActivity";
     private CoordinateConverter converter;
@@ -90,8 +85,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private TextView tvTargetTime;
     private TextView tvTargetTitle;
     private TextView tvTargetValue;
+    private TextView tvResult;//运动结果
     private ImageView ivLocation;
-
+    private TextView tvStepTitle;
+    private TextView tvCurrentStep;
+    private LinearLayout llTargetContainer;
 
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -104,6 +102,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private Button btStop;
     private SlideUnlockView slideUnlockView;
 
+    private LinearLayout llCurrentInfo;
+    private RelativeLayout rlCostQuantity;
+    private TextView tvCostQuantity;
+
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
     static final int STATE_PAUSE = 2;//暂停
@@ -115,6 +117,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     private int currentDistance = 0;
     private long currentTime = 0;
+    private int currentSteps = 0;
+
+    private int initSteps = 0;//初始化的步数
 
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -135,7 +140,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         onMapLoaded();
         startService(new Intent(this, SensorListener.class));
 
-
         SensorManager sm =
                 (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -147,14 +151,26 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
 
+    boolean isFirst = true;
+
+    private int noSportSteps = 0;
+
     EventListener eventListener = new EventListener() {
         @Override
         public void handleMessage(int what, int arg1, int arg2, Object dataobj) {
             switch (what) {
                 case EventTag.ON_STEP_CHANGE:
                     int steps = (int) dataobj;
-                    DLOG.e("===","ON_STEP_CHANGE  steps="+ steps);
-                    ToastUtil.showToast("步数:" + steps);
+                    if (state == STATE_STARTED) {
+                        if (isFirst) {
+                            initSteps = steps;
+                        } else {
+                            currentSteps = steps - initSteps - noSportSteps;
+                            tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+                        }
+                    } else {
+                        noSportSteps += steps - currentSteps;
+                    }
                     break;
             }
         }
@@ -227,10 +243,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
+        tvResult = (TextView) findViewById(R.id.tvResult);
+        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
+        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
+        llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
+
+        llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
+        rlCostQuantity = (RelativeLayout) findViewById(R.id.rlCostQuantity);
+        tvCostQuantity = (TextView) findViewById(R.id.tvCostQuantity);
         btStart.setOnClickListener(this);
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
+
+        tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+        tvCurrentValue.setText("0 米/秒");
     }
 
     @Override
@@ -279,6 +306,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                     llBottom.setVisibility(View.VISIBLE);
                     if (state == STATE_STARTED) {
                         state = STATE_PAUSE;
+                        ibBack.setVisibility(View.GONE);
                     }
                 }
             }
@@ -390,11 +418,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                         setUpMap(oldLatLng, newLatLng);
                         currentTime += interval / 1000;
                         Log.d(TAG, "currentTime: " + currentTime);
-                        tvCurrentTime.setText(String.valueOf(currentTime /60)+"分钟");
+                        tvCurrentTime.setText(String.valueOf(currentTime / 60) + "分钟");
                         Log.d(TAG, "newLatLng: " + newLatLng);
                         Log.d(TAG, "oldLatLng: " + oldLatLng);
-                        currentDistance += AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                        tvCurrentDistance.setText(currentDistance);
+                        float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                        currentDistance += moveDistanec;
+                        tvCurrentDistance.setText(String.valueOf(currentDistance)+ "米");
+                        tvCurrentValue.setText(moveDistanec + "米/秒");
                     }
 
                     oldLatLng = newLatLng;
@@ -515,6 +545,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 finish();
                 break;
             case R.id.btStart:
+                ibBack.setVisibility(View.GONE);
+                llCurrentInfo.setVisibility(View.VISIBLE);
+                rlCostQuantity.setVisibility(View.GONE);
+                llTargetContainer.setBackgroundColor(getColor(R.color.black_30));
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
                 }
@@ -533,9 +567,23 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
+                ibBack.setVisibility(View.VISIBLE);
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
                 }
+                if (currentDistance > sport.getTargetDistance() && currentTime / 60 > sport.getTargetTime()) {
+                    tvResult.setText("达标");
+                } else {
+                    tvResult.setText("不达标");
+                }
+                tvCurrentTitle.setText("平均速度");
+                tvCurrentValue.setText(currentDistance / currentTime + "米/秒");
+
+                String cost = String.valueOf(Math.round(currentDistance * 0.3));
+                rlCostQuantity.setVisibility(View.VISIBLE);
+                tvCostQuantity.setText(getString(R.string.sportCostQuantity, String.valueOf(cost)));
+                tvResult.setVisibility(View.VISIBLE);
+                tvSportJoinNumber.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.GONE);
                 btStart.setVisibility(View.VISIBLE);

@@ -29,6 +29,8 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 
 import com.application.library.log.DLOG;
+import com.application.library.runtime.event.EventManager;
+import com.tim.app.constant.EventTag;
 
 import java.util.Date;
 
@@ -70,7 +72,6 @@ public class SensorListener extends Service implements SensorEventListener {
             steps = (int) event.values[0];
             updateIfNecessary();
         }
-        DLOG.e("===","onSensorChanged  steps="+ event.values[0]);
     }
 
     private void updateIfNecessary() {
@@ -93,8 +94,11 @@ public class SensorListener extends Service implements SensorEventListener {
             lastSaveSteps = steps;
             lastSaveTime = System.currentTimeMillis();
             updateNotificationState();
-            DLOG.e("===","updateIfNecessary  lastSaveSteps="+ lastSaveSteps);
-            startService(new Intent(this, WidgetUpdateService.class));
+
+            Database db1 = Database.getInstance(this);
+            int steps = Math.max(db1.getCurrentSteps() + db1.getSteps(Util.getToday()), 0);
+            db1.close();
+            EventManager.ins().sendEvent(EventTag.ON_STEP_CHANGE, 0, 0, steps);
         }
     }
 

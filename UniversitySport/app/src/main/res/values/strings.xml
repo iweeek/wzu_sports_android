@@ -141,7 +141,7 @@
     <string name="targetTime">%s 分钟</string>
     <string name="targetSpeed">%s 米/秒</string>
     <string name="targetStep">%s 步</string>
-    <string name="targetTitleSpeed">达标速度</string>
+    <string name="targetTitleSpeed">达标平均速度</string>
     <string name="targetTitleStep">达标步数</string>
     <string name="targetCount">本学期总目标次数：%s次</string>
     <string name="totalCost">%s 千卡</string>
