@@ -28,6 +28,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
 
+import com.application.library.log.DLOG;
+
 import java.util.Date;
 
 
@@ -68,6 +70,7 @@ public class SensorListener extends Service implements SensorEventListener {
             steps = (int) event.values[0];
             updateIfNecessary();
         }
+        DLOG.e("===","onSensorChanged  steps="+ event.values[0]);
     }
 
     private void updateIfNecessary() {
@@ -90,6 +93,7 @@ public class SensorListener extends Service implements SensorEventListener {
             lastSaveSteps = steps;
             lastSaveTime = System.currentTimeMillis();
             updateNotificationState();
+            DLOG.e("===","updateIfNecessary  lastSaveSteps="+ lastSaveSteps);
             startService(new Intent(this, WidgetUpdateService.class));
         }
     }

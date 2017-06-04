@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tim.app">
 
+    <uses-feature
+        android:name="android.hardware.sensor.stepcounter"
+        android:required="true"/>
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -147,6 +151,26 @@
             android:name="com.amap.api.v2.apikey"
             android:value="dc491b1897d885b9e941db22041bf3a9"/>
         <service android:name="com.amap.api.location.APSService"></service>
+
+
+        <receiver android:name=".sport.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".sport.SensorListener"/>
+
+        <receiver
+            android:name=".sport.ShutdownRecevier">
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
+                <action android:name="de.j4velin.ACTION_SHUTDOWN"/>
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>
