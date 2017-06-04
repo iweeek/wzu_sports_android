@@ -33,6 +33,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -56,6 +58,7 @@ import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 import com.tim.app.util.Utils;
 
+import static com.amap.api.maps.AMapUtils.calculateLineDistance;
 import static com.tim.app.R.id.map;
 
 
@@ -65,6 +68,7 @@ import static com.tim.app.R.id.map;
 public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener , SensorEventListener {
 
     private static final String TAG = "SportDetailActivity";
+    private CoordinateConverter converter;
 
     private Sport sport;
     private ImageButton ibBack;
@@ -74,6 +78,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 
     private LatLng oldLatLng;
     private boolean isFirstLatLng;
+    private int interval = 1000;
 
     private TextView tvSportName;
     private TextView tvSportJoinNumber;
@@ -86,6 +91,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private TextView tvTargetTitle;
     private TextView tvTargetValue;
     private ImageView ivLocation;
+
 
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
@@ -333,7 +339,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
          */
         mLocationOption.setGpsFirst(true);
         // 设置发送定位请求的时间间隔,最小值为1000ms,1秒更新一次定位信息
-        mLocationOption.setInterval(1000);
+        mLocationOption.setInterval(interval);
         // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
         // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
         // 在定位结束后，在合适的生命周期调用onDestroy()方法
@@ -379,11 +385,20 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 }
                 //位置有变化
                 if (oldLatLng != newLatLng) {
-                    DLOG.e("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
+                    DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
                     if (state == STATE_STARTED) {
                         setUpMap(oldLatLng, newLatLng);
+                        currentTime += interval / 1000;
+                        Log.d(TAG, "currentTime: " + currentTime);
+                        tvCurrentTime.setText(String.valueOf(currentTime /60)+"分钟");
+                        Log.d(TAG, "newLatLng: " + newLatLng);
+                        Log.d(TAG, "oldLatLng: " + oldLatLng);
+                        currentDistance += AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                        tvCurrentDistance.setText(currentDistance);
                     }
+
                     oldLatLng = newLatLng;
+
                 }
 
             } else {
