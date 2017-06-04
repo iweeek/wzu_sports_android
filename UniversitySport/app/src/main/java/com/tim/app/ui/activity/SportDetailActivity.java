@@ -7,13 +7,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -44,23 +41,19 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
-import com.tim.app.BuildConfig;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.sport.Database;
 import com.tim.app.sport.SensorListener;
-import com.tim.app.sport.Util;
 import com.tim.app.ui.view.SlideUnlockView;
-import com.tim.app.util.ToastUtil;
 import com.tim.app.util.Utils;
 
 
 /**
  * 运动详情
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener, SensorEventListener {
+public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener {
 
     private static final String TAG = "SportDetailActivity";
     private CoordinateConverter converter;
@@ -140,14 +133,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         onMapLoaded();
         startService(new Intent(this, SensorListener.class));
 
-        SensorManager sm =
-                (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (sensor == null) {
-            ToastUtil.showToast("必须有传感器才行");
-        } else {
-            sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
-        }
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
 
@@ -176,32 +161,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         }
     };
 
-    private int todayOffset, total_start, goal, since_boot, total_days;
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (BuildConfig.DEBUG)
-            DLOG.d("UI - sensorChanged | todayOffset: " + todayOffset + " since boot: " +
-                    event.values[0]);
-        if (event.values[0] > Integer.MAX_VALUE || event.values[0] == 0) {
-            return;
-        }
-        if (todayOffset == Integer.MIN_VALUE) {
-            // no values for today
-            // we dont know when the reboot was, so set todays steps to 0 by
-            // initializing them with -STEPS_SINCE_BOOT
-            todayOffset = -(int) event.values[0];
-            Database db = Database.getInstance(this);
-            db.insertNewDay(Util.getToday(), (int) event.values[0]);
-            db.close();
-        }
-        since_boot = (int) event.values[0];
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
 
     private void initMap() {
         if (aMap == null) {
@@ -423,7 +382,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                         Log.d(TAG, "oldLatLng: " + oldLatLng);
                         float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
                         currentDistance += moveDistanec;
-                        tvCurrentDistance.setText(String.valueOf(currentDistance)+ "米");
+                        tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
                         tvCurrentValue.setText(moveDistanec + "米/秒");
                     }
 
@@ -548,7 +507,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 ibBack.setVisibility(View.GONE);
                 llCurrentInfo.setVisibility(View.VISIBLE);
                 rlCostQuantity.setVisibility(View.GONE);
-                llTargetContainer.setBackgroundColor(getColor(R.color.black_30));
+                llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
                 }
