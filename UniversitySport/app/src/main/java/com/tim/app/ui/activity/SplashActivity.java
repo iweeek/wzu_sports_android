@@ -115,4 +115,9 @@ public class SplashActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
 }

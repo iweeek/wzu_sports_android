@@ -22,7 +22,6 @@ import com.tim.app.constant.AppKey;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
-import com.tim.app.util.ToastUtil;
 
 /**
  * 忘记密码
@@ -85,20 +84,18 @@ public class RegistPhoneActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
-                updateEditText();
-
+                updateEditText(editable);
             }
         });
 
     }
 
-    private void updateEditText() {
-//        if (editable.toString().length() > 0) {
-//            ivDeleteNo.setVisibility(View.VISIBLE);
-//        } else {
-//            ivDeleteNo.setVisibility(View.GONE);
-//        }
+    private void updateEditText(Editable editable) {
+        if (editable.toString().length() > 0) {
+            ivDeleteNo.setVisibility(View.VISIBLE);
+        } else {
+            ivDeleteNo.setVisibility(View.GONE);
+        }
         if (!TextUtils.isEmpty(etPhone.getText().toString().trim())) {
             btGetVerificationCode.setTextColor(getResources().getColor(R.color.black_90));
         } else {
@@ -114,14 +111,12 @@ public class RegistPhoneActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ibClose) {
-
-            //            setResult(Activity.RESULT_OK);
             finish();
         } else if (v.getId() == R.id.ivDeleteNo) {
             etPhone.setText("");
         } else if ((v.getId() == R.id.btGetVerificationCode)) {
-            //处理获取验证码的逻辑
             phone = etPhone.getText().toString();
+            //todo 处理手机好是否绑定的逻辑
             if(checkPhone(phone)) {
                 phoneLogin(phone);
             }
@@ -131,12 +126,15 @@ public class RegistPhoneActivity extends BaseActivity {
 
     private boolean checkPhone(String phone) {
         if (TextUtils.isEmpty(phone)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_mobile_empty));
             return false;
         }else if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_mobile_error));
             return false;
         }
+        tvNoErrorPrmpt.setVisibility(View.GONE);
         return true;
     }
 

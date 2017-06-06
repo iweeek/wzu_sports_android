@@ -171,17 +171,21 @@ public class LoginActivity extends BaseActivity {
      */
     public boolean checkLogin(String sNo, String password) {
         if (TextUtils.isEmpty(sNo)) {
-            ToastUtil.showToast(RT.getString(R.string.login_input_num));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.login_input_num));
             return false;
         }
         if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
-            ToastUtil.showToast(RT.getString(R.string.error_sno_error));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
             return false;
         }
         if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
-            ToastUtil.showToast(RT.getString(R.string.error_password));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_password));
             return false;
         }
+        tvNoErrorPrmpt.setVisibility(View.GONE);
         return true;
     }
 
@@ -228,7 +232,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login(String sNo, String password) {
-                showLoadingDialog();
+        showLoadingDialog();
         //        API_User.ins().login(TAG, input_phone_num.getText().toString(), SignRequestParams.MDString(input_password.getText().toString()), "", new JsonResponseCallback() {
         //            @Override
         //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

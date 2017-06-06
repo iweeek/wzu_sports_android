@@ -9,9 +9,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.util.SmoothSwitchScreenUtil;
@@ -39,15 +39,13 @@ public class VerificationCodeActivity extends BaseActivity {
 
     private EditText etSmsCode;
     private TextView show_time;
+    private TextView tvTitle,tvNoErrorPrmpt;
     private CountDownTimer timer;
-    private boolean isTiming = false;
-    private CheckBox cbUserAgreement;
-    private TextView tvUserAgreement;
-    private Button btConfirmRegist;
     private Button btBindNo;
     private ImageButton ibClose;
-    private TextView tvTitle;
+    private ImageView ivDeleteNo;
     private String smsCode;
+    private boolean isTiming = false;
 
 
     Bundle bundle;
@@ -66,13 +64,16 @@ public class VerificationCodeActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        etSmsCode = (EditText) findViewById(R.id.etSmsCode);
-        etSmsCode.addTextChangedListener(new VerificationCodeActivity.MyEditChangeListener());
         btBindNo = (Button) findViewById(R.id.btBindNo);
-        btBindNo.setOnClickListener(this);
+        etSmsCode = (EditText) findViewById(R.id.etSmsCode);
         ibClose = (ImageButton) findViewById(R.id.ibClose);
-        ibClose.setOnClickListener(this);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
+        ivDeleteNo = (ImageView) findViewById(R.id.ivDeleteNo);
+        etSmsCode.addTextChangedListener(new VerificationCodeActivity.MyEditChangeListener());
+        btBindNo.setOnClickListener(this);
+        ibClose.setOnClickListener(this);
+        ivDeleteNo.setOnClickListener(this);
 
         bundle = this.getIntent().getExtras();
         flag = bundle.getInt("flag");
@@ -112,12 +113,21 @@ public class VerificationCodeActivity extends BaseActivity {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
-            updateBtn();
+        public void afterTextChanged(Editable editable) {
+            updateBtn(editable);
         }
     }
 
-    private void updateBtn() {
+    @Override
+    public void initData() {
+    }
+
+    private void updateBtn(Editable editable) {
+        if (editable.toString().length() > 0) {
+            ivDeleteNo.setVisibility(View.VISIBLE);
+        } else {
+            ivDeleteNo.setVisibility(View.GONE);
+        }
         if (!TextUtils.isEmpty(etSmsCode.getText().toString().trim())) {
             btBindNo.setTextColor(getResources().getColor(R.color.black_90));
         } else {
@@ -126,29 +136,35 @@ public class VerificationCodeActivity extends BaseActivity {
     }
 
     @Override
-    public void initData() {
-    }
-
-    @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ibClose) {
             finish();
         } else if (v.getId() == R.id.btBindNo) {
             smsCode = etSmsCode.getText().toString();
-            if (checkPhone(smsCode)) {
+            if (checkSmsCode(smsCode)) {
                 phoneBind(smsCode);
             }
+        }else if(v.getId() ==R.id.ivDeleteNo){
+            etSmsCode.setText("");
         }
     }
 
-
-    private boolean checkPhone(String smsCode) {
+    /**
+     * 检查短信验证码
+     * @param smsCode
+     * @return
+     */
+    private boolean checkSmsCode(String smsCode) {
         if (TextUtils.isEmpty(smsCode)) {
-            ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_mobile_vertify));
+            return false;
         } else if (!smsCode.matches(StringUtil.ZHENGZE_SMSCODE)) {
-            ToastUtil.showToast(RT.getString(R.string.error_smscode_error));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_smscode_error));
             return false;
         }
+        tvNoErrorPrmpt.setVisibility(View.GONE);
         return true;
     }
 
