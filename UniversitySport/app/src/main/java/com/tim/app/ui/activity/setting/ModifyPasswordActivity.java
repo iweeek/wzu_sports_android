@@ -1,5 +1,6 @@
 package com.tim.app.ui.activity.setting;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,9 +40,10 @@ public class ModifyPasswordActivity extends BaseActivity {
     private ImageButton ibClose;
     private ImageView ivNoVisiable;
     private ImageView ivDeleteNo;
+    private boolean mHasEditFirstPassword = false;
 
 
-    Bundle bundle;
+    Bundle mBundle;
     int flag;
 
 
@@ -75,8 +77,8 @@ public class ModifyPasswordActivity extends BaseActivity {
         ivNoVisiable.setOnClickListener(this);
         ivDeleteNo.setOnClickListener(this);
 
-        bundle = this.getIntent().getExtras();
-        flag = bundle.getInt("flag");
+        mBundle = this.getIntent().getExtras();
+        flag = mBundle.getInt("flag");
         if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
             tvTitle.setText(R.string.modify_first_password);
         } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
@@ -99,15 +101,11 @@ public class ModifyPasswordActivity extends BaseActivity {
             public void afterTextChanged(Editable editable) {
                 if (editable.length() > 0) {
                     ivDeleteNo.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     ivDeleteNo.setVisibility(View.GONE);
                 }
             }
         });
-
-         phone = bundle.getString("phone");
-         smsCode = bundle.getString("smsCode");
-
     }
 
 
@@ -155,29 +153,27 @@ public class ModifyPasswordActivity extends BaseActivity {
                 //处理密码信息
                 updatePassword(password);
             }
-        }else if (v.getId() == R.id.ivNoVisiable) {
+        } else if (v.getId() == R.id.ivNoVisiable) {
             ivNoVisiable.setSelected(!ivNoVisiable.isSelected());
             if (ivNoVisiable.isSelected()) {
                 etPassword.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
             } else {
                 etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
-        }else if(v.getId() == R.id.ivDeleteNo){
+        } else if (v.getId() == R.id.ivDeleteNo) {
             etPassword.setText("");
         }
     }
 
     private void updatePassword(String password) {
-
-
-        SharedPreferences sharedPreferences=getSharedPreferences("user",MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putBoolean(LoginActivity.USER_HAS_EDIT_FIRST_PASSWORD,true);
-        edit.putString("password",password);
+        edit.putBoolean(LoginActivity.USER_HAS_EDIT_FIRST_PASSWORD, true);
+        String sno = mBundle.getString("sno");
+        edit.putString(sno, password);
         edit.apply();
-
+        mHasEditFirstPassword=true;
         startActivity(new Intent(ModifyPasswordActivity.this, MainActivity.class));
-
     }
 
     /**
@@ -209,6 +205,12 @@ public class ModifyPasswordActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(TAG);
+
+        Bundle returnBundle = new Bundle();
+        returnBundle.putBoolean("hasEditFirstPassword", mHasEditFirstPassword);
+        Intent intent = new Intent();
+        intent.putExtras(returnBundle);
+        setResult(Activity.RESULT_OK, intent);
     }
 }
 

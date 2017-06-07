@@ -1,5 +1,6 @@
 package com.tim.app.ui.activity.setting;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +15,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.application.library.runtime.event.EventManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
+import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
@@ -46,9 +49,10 @@ public class VerificationCodeActivity extends BaseActivity {
     private ImageView ivDeleteNo;
     private String smsCode;
     private boolean isTiming = false;
+    private boolean mHasEditFirstPassword = false;
 
 
-    Bundle bundle;
+    Bundle mBundle;
     int flag;
 
     @Override
@@ -75,31 +79,13 @@ public class VerificationCodeActivity extends BaseActivity {
         ibClose.setOnClickListener(this);
         ivDeleteNo.setOnClickListener(this);
 
-        bundle = this.getIntent().getExtras();
-        flag = bundle.getInt("flag");
+        mBundle = this.getIntent().getExtras();
+        flag = mBundle.getInt("flag");
         if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
             tvTitle.setText(R.string.modify_first_password);
         } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
             tvTitle.setText(R.string.find_password);
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (etSmsCode != null) {
-            SoftKeyboardUtil.hideSoftKeyboard(etSmsCode);
-        }
-        hideLoadingDialog();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (timer != null && isTiming) {
-            timer.cancel();
-        }
-        OkHttpUtils.getInstance().cancelTag(TAG);
     }
 
 
@@ -181,9 +167,11 @@ public class VerificationCodeActivity extends BaseActivity {
             bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
             bundle.putString("phone", phone);
             bundle.putString("smsCode",smsCode);
+
+            bundle.putString("sno",mBundle.getString("sno"));
             intent.putExtras(bundle);
             startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
-        } else if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
             bundle.putInt("flag", AppKey.VERTIFY_RESETPASSWORD);
             intent.putExtras(bundle);
             startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
@@ -252,5 +240,43 @@ public class VerificationCodeActivity extends BaseActivity {
         //                return false;
         //            }
         //        });
+    }
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (etSmsCode != null) {
+            SoftKeyboardUtil.hideSoftKeyboard(etSmsCode);
+        }
+        hideLoadingDialog();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (timer != null && isTiming) {
+            timer.cancel();
+        }
+        OkHttpUtils.getInstance().cancelTag(TAG);
+
+        Bundle returnBundle = new Bundle();
+        returnBundle.putBoolean("hasEditFirstPassword", mHasEditFirstPassword);
+        Intent intent = new Intent();
+        intent.putExtras(returnBundle);
+        setResult(Activity.RESULT_OK, intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
+            EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
+            mHasEditFirstPassword = data.getBooleanExtra("hasEditFirstPassword", false);
+            finish();
+        } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
+
+        }
     }
 }
