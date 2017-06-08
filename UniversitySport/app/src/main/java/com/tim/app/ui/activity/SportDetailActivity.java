@@ -40,14 +40,20 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
+import com.application.library.net.StringResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
+import com.google.gson.Gson;
+import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
+import com.tim.app.server.api.API;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
+import com.tim.app.server.result.CommitResult;
 import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.ToastUtil;
 import com.tim.app.util.Utils;
 
 
@@ -112,6 +118,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private int currentDistance = 0;
     private long currentTime = 0;
     private int currentSteps = 0;
+    private long startTime;//开始时间
 
     private int initSteps = 0;//初始化的步数
 
@@ -359,7 +366,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                     && amapLocation.getErrorCode() == 0) {
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 Log.d(TAG, "我一直会执行哦");
-
+                currentTime += interval / 1000;
 
                 MyLocationStyle myLocationStyle;
                 myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
@@ -391,7 +398,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                     DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
                     if (state == STATE_STARTED) {
                         setUpMap(oldLatLng, newLatLng);
-                        currentTime += interval / 1000;
                         Log.d(TAG, "currentTime: " + currentTime);
                         tvCurrentTime.setText(String.valueOf(currentTime / 60) + "分钟");
                         Log.d(TAG, "newLatLng: " + newLatLng);
@@ -416,6 +422,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
             }
         }
     }
+
 
     /**
      * 方法必须重写
@@ -522,6 +529,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 finish();
                 break;
             case R.id.btStart:
+                startTime = System.currentTimeMillis();
                 ibBack.setVisibility(View.GONE);
                 llCurrentInfo.setVisibility(View.VISIBLE);
                 rlCostQuantity.setVisibility(View.GONE);
@@ -544,6 +552,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
+                if(currentTime ==0){
+                    ToastUtil.showToast("运动时间太短，无法结束");
+                    return;
+                }
                 ibBack.setVisibility(View.VISIBLE);
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
@@ -555,6 +567,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 }
                 tvCurrentTitle.setText("平均速度");
                 tvCurrentValue.setText(currentDistance / currentTime + "米/秒");
+
+                int studentId = 1;//学生的id
+                commmitSportData(sport.getId(),studentId,sport.getTargetTime());
 
                 String cost = String.valueOf(Math.round(currentDistance * 0.3));
                 rlCostQuantity.setVisibility(View.VISIBLE);
@@ -575,6 +590,26 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 break;
         }
 
+    }
+
+    /**
+     * 提交运动数据
+     */
+    private void commmitSportData(int projectId,int studenetId,int targetTime){
+        API.ins().runningActivitys(TAG, projectId, studenetId, currentDistance, currentTime, targetTime, startTime, new StringResponseCallback() {
+            @Override
+            public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
+                if(errCode == 200 && !TextUtils.isEmpty(result)){
+                    CommitResult commitResult = new Gson().fromJson(result,CommitResult.class);
+                    if(null != commitResult){
+                        //TODO 业务逻辑
+                    }
+                }else{
+                    ToastUtil.showToast(errMsg);
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -598,6 +633,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
         }
+        //页面销毁移除未完成的网络请求
+        OkHttpUtils.getInstance().cancelTag(TAG);
         EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
 

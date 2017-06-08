@@ -21,7 +21,7 @@ public abstract class StringResponseCallback extends ResponseCallback {
         try {
             json = new JSONObject(new String((byte[]) resultInfo));
             int code = json.optInt("status", -1);
-            errMsg = json.optString("msg");
+            errMsg = json.optString("message");
             if (code == -1) {
                 errMsg = "我的天啊，没有网啦！";
             }

@@ -51,6 +51,8 @@ public class NetworkInterface {
      * @param apiTag
      * @param request  接口名称
      * @param params   参数列表
+     * @param cache    缓存模式
+     * @param isSign   是否加密
      * @param callback 回调接口
      */
     public void connected(final HttpMethod method, final String request, final String apiTag, final HashMap<String, Object> params, final CacheMode cache, boolean isSign, final ResponseCallback callback) {
@@ -60,25 +62,7 @@ public class NetworkInterface {
             return;
         }
         if (isSign) {
-//            NetWorkUtil.getServerTime(apiTag, new ServerTimeListener() {
-//                @Override
-//                public void onSuccess(String timeStamp) {
-//                    params.put(NetWorkRequestParams.TIMESTAMP, timeStamp);
-//                    if (method == POST) {
-//                        connectedByPost(url, apiTag, SignRequestParams.generationParams(params, true), cache, callback);
-//                    } else if (method == GET) {
-//                        connectedByGet(url, apiTag, SignRequestParams.generationParams(params, true), cache, callback);
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFalied() {
-//                    OkHttpUtils.getInstance().cancelTag(apiTag);
-//                    callback.onResponse(null, -1, "", 0, false);
-//                    return;
-//                }
-//            });
+            //加密的流程
         } else {
             if (method == POST) {
                 connectedByPost(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);
@@ -324,25 +308,7 @@ public class NetworkInterface {
      */
 
     public String getRequsetUrl(String request) {
-        String api = "";
-        if (request.contains("/")) {
-//            int index = request.split("/").length;
-//            api = request.split("/")[index - 1];
-            api = request.split("/")[0];
-        } else {
-            api = request;
-        }
-        if (api.equals("init")) {
-            return ServerAddressManager.getServerStateDomain() + request;
-        } else if (api.equals("user") || api.equals("hx") || api.equals("upload") || api.equals("pay")) {
-            return ServerAddressManager.getUserServerDomain() + request;
-//            return "http://192.168.1.149:8888/usercenter_api/" + request;
-        } else {
-            if (TextUtils.isEmpty(ServerAddressManager.getHttpServerDomain())) {
-                return ServerAddressManager.getServerStateDomain() + request;
-            }
-            return ServerAddressManager.getHttpServerDomain() + request;
-        }
+        return ServerAddressManager.getServerStateDomain() + request;
     }
 
     public void connected(String url, String tag, HashMap<String, Object> params, ResponseCallback callback) {

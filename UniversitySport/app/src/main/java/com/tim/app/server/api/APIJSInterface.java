@@ -6,7 +6,7 @@ import com.tim.app.ui.view.LSWebView;
 
 
 public class APIJSInterface {
-    public static final String JS_FUNCTION_NAME = "nextjoy";
+    public static final String JS_FUNCTION_NAME = "";//js方法名称
     private LSWebView webView;
     private OnWebCloseListener webCloseListener;
     private OnTagClickListener tagClickListener;

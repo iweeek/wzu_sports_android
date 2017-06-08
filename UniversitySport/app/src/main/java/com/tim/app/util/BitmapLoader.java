@@ -3,10 +3,8 @@ package com.tim.app.util;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.tim.app.server.net.ServerAddressManager;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -49,7 +47,6 @@ public class BitmapLoader {
     }
 
     public void loadImage(String url, int placeholder, ImageView imageView, ImageLoadingListener listener) {
-        url = getRealUrl(url);
         DisplayImageOptions options;
         if (placeholder > 0) {
             options = new DisplayImageOptions.Builder().showImageOnLoading(placeholder)
@@ -87,7 +84,6 @@ public class BitmapLoader {
     }
 
     public void loadQiniuImage(String url, int placeholder, ImageView imageView) {
-        url = getRealUrl(url);
         DisplayImageOptions options;
         if (placeholder > 0) {
             options = new DisplayImageOptions.Builder().showImageOnLoading(placeholder)
@@ -106,7 +102,6 @@ public class BitmapLoader {
     }
 
     public void loadQiniuImageForCircle(String url, Drawable placeholder, ImageView imageView, ImageLoadingListener listener) {
-        url = getRealUrl(url);
         DisplayImageOptions options;
         if (null != placeholder) {
             options = new DisplayImageOptions.Builder().showImageOnLoading(placeholder)
@@ -125,7 +120,6 @@ public class BitmapLoader {
     }
 
     public void loadBitmap(String url, int placeholder, SimpleImageLoadingListener listener) {
-        url = getRealUrl(url);
         DisplayImageOptions options;
         if (placeholder > 0) {
             options = new DisplayImageOptions.Builder().showImageOnLoading(placeholder)
@@ -139,16 +133,6 @@ public class BitmapLoader {
                     .build();
         }
         ImageLoader.getInstance().loadImage(url, options, listener);
-    }
-
-    public String getRealUrl(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return "";
-        }
-        if (url.contains("http://")) {
-            return url;
-        }
-        return ServerAddressManager.getImageServerDomain() + url;
     }
 
 //    public String getQiniuUrl(String url) {
