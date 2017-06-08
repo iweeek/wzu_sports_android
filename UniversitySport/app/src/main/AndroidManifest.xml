@@ -150,6 +150,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="dc491b1897d885b9e941db22041bf3a9"/>
+
         <service android:name="com.amap.api.location.APSService"></service>
 
 
