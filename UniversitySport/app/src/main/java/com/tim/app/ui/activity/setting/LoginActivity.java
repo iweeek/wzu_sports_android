@@ -138,6 +138,11 @@ public class LoginActivity extends BaseActivity {
             sNo = etNo.getText().toString().trim();
             password = etPassword.getText().toString().trim();
 
+            //暂时跳过登录
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+
+/*
             SharedPreferences sharedPreferences = getSharedPreferences(USER, Activity.MODE_PRIVATE);
             mIsFirstLogin = sharedPreferences.getBoolean(USER_IS_FIRST_LOGIN, true);
             mHasEditFirstPassword = sharedPreferences.getBoolean(USER_HAS_EDIT_FIRST_PASSWORD, false);
@@ -150,6 +155,7 @@ public class LoginActivity extends BaseActivity {
             }else{  //如果sharedPreference不存在学生学号，那就当作是第一次登录。
                 firstLogin(sNo, password);
             }
+            */
         } else if (v.getId() == R.id.ivPasswordVisiable) {
             ivPasswordVisiable.setSelected(!ivPasswordVisiable.isSelected());
             if (ivPasswordVisiable.isSelected()) {

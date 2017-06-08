@@ -5,7 +5,9 @@
 build/  
 .gradle/  
 */build/  
-  
+app/build.gradle
+
+
 # IDEA  
 *.iml  
 .idea/  

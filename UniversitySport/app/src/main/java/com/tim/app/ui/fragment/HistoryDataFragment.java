@@ -15,16 +15,12 @@ import com.application.library.widget.loadmore.LoadMoreHandler;
 import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
-import com.application.library.widget.roundimg.RoundedImageView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppKey;
 import com.tim.app.server.entry.HistoryData;
-import com.tim.app.server.entry.Sport;
 import com.tim.app.ui.adapter.HistoryDataAdapter;
-import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
-import com.tim.app.ui.view.HomepageHeadView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +61,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
             load_more = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.load_more);
             wrvHistoryData = (WrapRecyclerView) rootView.findViewById(R.id.wrvHistoryData);
-            wrvHistoryData.setOverScrollMode(View.OVER_SCROLL_NEVER);
+            //去除滑动到顶部或者是底部时会出现阴影的问题
+//            wrvHistoryData.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
             load_more.useDefaultFooter(View.GONE);
             load_more.setAutoLoadMore(true);
