@@ -21,10 +21,11 @@ public class AppKey {
     public static final int TYPE_COST_ENERGY = 1;//消耗热量
     public static final int TYPE_COST_TIME = 2;//消耗时长
 
-    //    1注册
+    //    1：注册
     //    2：找回密码
     //    3：绑定手机
-    //    4:手机号登录"
+    //    4:手机号登录
+    //    5:第一次登录
     public static final int VERTIFY_REGISTER = 1;
     public static final int VERTIFY_RESETPASSWORD = 2;
     public static final int VERTIFY_BINDMOBILE = 3;

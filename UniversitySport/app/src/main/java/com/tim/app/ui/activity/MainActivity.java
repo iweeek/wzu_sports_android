@@ -228,6 +228,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.tvLogout:
+                finish();
                 break;
         }
     }

@@ -25,7 +25,6 @@ import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
-import com.tim.app.util.ToastUtil;
 
 /**
  * 登录
@@ -142,14 +141,14 @@ public class LoginActivity extends BaseActivity {
             SharedPreferences sharedPreferences = getSharedPreferences(USER, Activity.MODE_PRIVATE);
             mIsFirstLogin = sharedPreferences.getBoolean(USER_IS_FIRST_LOGIN, true);
             mHasEditFirstPassword = sharedPreferences.getBoolean(USER_HAS_EDIT_FIRST_PASSWORD, false);
-            if (mIsFirstLogin || !mHasEditFirstPassword) {
-                if (checkLogin(sNo, password)) {
-                    firstLogin(sNo, password);
-                }
-            } else {
+
+            String password = sharedPreferences.getString(sNo, "");
+            if(!"".equals(password)) {
                 if (checkLogin(sNo, password)) {
                     login(sNo, password);
                 }
+            }else{  //如果sharedPreference不存在学生学号，那就当作是第一次登录。
+                firstLogin(sNo, password);
             }
         } else if (v.getId() == R.id.ivPasswordVisiable) {
             ivPasswordVisiable.setSelected(!ivPasswordVisiable.isSelected());
@@ -171,23 +170,29 @@ public class LoginActivity extends BaseActivity {
      */
     public boolean checkLogin(String sNo, String password) {
         if (TextUtils.isEmpty(sNo)) {
-            ToastUtil.showToast(RT.getString(R.string.login_input_num));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.login_input_num));
             return false;
         }
         if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
-            ToastUtil.showToast(RT.getString(R.string.error_sno_error));
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
             return false;
         }
         if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
-            ToastUtil.showToast(RT.getString(R.string.error_password));
+            tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
+            tvPasswordErrorPrmpt.setText(RT.getString(R.string.error_password));
             return false;
         }
+        tvNoErrorPrmpt.setVisibility(View.GONE);
+        tvPasswordErrorPrmpt.setVisibility(View.GONE);
         return true;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //如果是从修改初始密码界面返回。
         if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "onActivityResult: CODE_LOGIN_REGISTER");
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
@@ -195,40 +200,37 @@ public class LoginActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             mHasEditFirstPassword = bundle.getBoolean("hasEditFirstPassword");
 
-            finish();
+            Log.d(TAG, "onActivityResult: 从修改初始密码界面返回。 mHasEditFirstPassword "+ mHasEditFirstPassword);
         } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
-            //            etNo.setText(data.getStringExtra("mobile"));
-            //            etPassword.setText(data.getStringExtra("password"));
-            login(sNo, password);
-            Log.d(TAG, "onActivityResult: CODE_LOGIN_FINDPWD");
-
+            //如果是从忘记密码界面返回。
+            Log.d(TAG, "onActivityResult: 从忘记密码界面返回。");
         }
+        //每次结束记得隐藏加载条。
         hideLoadingDialog();
     }
 
     private void firstLogin(String sNo, String password) {
         showLoadingDialog();
 
-        Log.d(TAG, "firstLogin: ");
         Log.d(TAG, "firstLogin: " + sNo);
         Log.d(TAG, "firstLogin: " + password);
 
         SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putBoolean(USER_IS_FIRST_LOGIN, false);
-        edit.putString("sno", sNo);
-        edit.putString("password", password);
+        edit.putString(sNo, password);
         edit.apply();
 
         Bundle bundle = new Bundle();
         bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
+        bundle.putString("sno",sNo);
         Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
     }
 
     private void login(String sNo, String password) {
-                showLoadingDialog();
+        //showLoadingDialog();
         //        API_User.ins().login(TAG, input_phone_num.getText().toString(), SignRequestParams.MDString(input_password.getText().toString()), "", new JsonResponseCallback() {
         //            @Override
         //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -259,19 +261,20 @@ public class LoginActivity extends BaseActivity {
         //        });
 
         //        MainActivity.start(this);
-
         SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
-        String sno1 = sharedPreferences.getString("sno", "");
-        String password1 = sharedPreferences.getString("password", "");
-        if (!sno1.equals(sNo) || !password.equals(password1)) {
-            ToastUtil.showToast("用户名和密码输入错误");
+        String password1 = sharedPreferences.getString(sNo, "");
+
+        if("".equals(password1)){
+            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
+        }else if (!password.equals(password1)) {
+            tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
+            tvPasswordErrorPrmpt.setText(RT.getString(R.string.error_login));
         } else {
-
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-
             startActivity(intent);
+            showLoadingDialog();
         }
-
     }
 
     private void findPassword() {
