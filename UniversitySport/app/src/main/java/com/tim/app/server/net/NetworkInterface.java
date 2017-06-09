@@ -33,7 +33,7 @@ public class NetworkInterface {
 
     }
 
-    public static NetworkInterface ins() {
+    public static NetworkInterface instance() {
         NetworkInterface mInstance = instance;
         if (mInstance == null) {
             synchronized (NetworkInterface.class) {

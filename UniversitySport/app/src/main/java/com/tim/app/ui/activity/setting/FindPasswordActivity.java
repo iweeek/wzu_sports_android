@@ -145,7 +145,7 @@ public class FindPasswordActivity extends BaseActivity  {
             password = input_password.getText().toString();
             repeat_password = input_password_again.getText().toString();
             smscode = input_sms_mark.getText().toString();
-//            if (UserManager.ins().checkRegister(phone, password, repeat_password, smscode)) {
+//            if (UserManager.instance().checkRegister(phone, password, repeat_password, smscode)) {
 //                getPasswordApi();
 //            }
         }
@@ -179,7 +179,7 @@ public class FindPasswordActivity extends BaseActivity  {
 
     private void getPasswordApi() {
         showLoadingDialog();
-//        API_User.ins().resetPassword(TAG, phone, SignRequestParams.MDString(password), smscode, new JsonResponseCallback() {
+//        API_User.instance().resetPassword(TAG, phone, SignRequestParams.MDString(password), smscode, new JsonResponseCallback() {
 //            @Override
 //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
 //                hideLoadingDialog();
@@ -199,7 +199,7 @@ public class FindPasswordActivity extends BaseActivity  {
 
     private void VerifyApi() {
         showLoadingDialog();
-//        API_User.ins().getPhoneCode(TAG, phone, AppKey.VERTIFY_RESETPASSWORD, new JsonResponseCallback() {
+//        API_User.instance().getPhoneCode(TAG, phone, AppKey.VERTIFY_RESETPASSWORD, new JsonResponseCallback() {
 //            @Override
 //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
 //                hideLoadingDialog();

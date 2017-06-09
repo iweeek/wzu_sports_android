@@ -69,7 +69,7 @@ public class CheckErrorThread extends Thread
                             count++;
                         }
 
-                        // APIReport.ins().sendErrorLog(sb.toString(), new StringResponseCallback()
+                        // APIReport.instance().sendErrorLog(sb.toString(), new StringResponseCallback()
                         // {
                         // public boolean onStringResponse(String result, int errcode, String errmsg, int id,
                         // boolean fromcache)

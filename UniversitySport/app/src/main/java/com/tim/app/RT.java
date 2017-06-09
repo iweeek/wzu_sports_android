@@ -128,7 +128,7 @@ public class RT {
                     mkdirs();
                     initOkHttp();
                     initBitmap();
-//                    UserManager.ins().loadUserInfo(null);
+//                    UserManager.instance().loadUserInfo(null);
                     // UpdateInfo.loadUpdate();// 载入升级信息
                     ins().regReceivers();
 //                    typeFace = Typeface.createFromAsset(application.getAssets(), "fonts/FZLTZHUNHK.TTF");

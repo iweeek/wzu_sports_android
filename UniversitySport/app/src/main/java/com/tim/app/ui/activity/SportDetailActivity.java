@@ -60,7 +60,8 @@ import com.tim.app.util.Utils;
 /**
  * 运动详情
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoadedListener, LocationSource, AMapLocationListener {
+public class SportDetailActivity extends BaseActivity implements LocationSource,
+        AMapLocationListener {
 
     private static final String TAG = "SportDetailActivity";
     private CoordinateConverter converter;
@@ -171,7 +172,44 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private void initMap() {
         if (aMap == null) {
             aMap = mapView.getMap();
-            aMap.setOnMapLoadedListener(this);
+            setUpMap();
+        }
+    }
+
+    /**
+     * 设置一些amap的属性
+     */
+    private void setUpMap() {
+        aMap.setLocationSource(this);// 设置定位监听
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+        mListener = listener;
+        if (mlocationClient == null) {
+            // 缩放级别（zoom）：地图缩放级别范围为【4-20级】，值越大地图越详细
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+            //使用 aMap.setMapTextZIndex(2) 可以将地图底图文字设置在添加的覆盖物之上
+            aMap.setMapTextZIndex(2);
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            mLocationOption.setInterval(interval);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
         }
     }
 
@@ -304,65 +342,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private final static int AMAP_LOADED = 2;
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
-    @Override
-    public void onMapLoaded() {
-        Log.d(TAG, "onMapLoaded");
-        aMap.setLocationSource(this);// 设置定位监听
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表、示隐藏、定位层并不可触发定位，默认是false
-        // 设置定位的类型为定位模式 ，可以由定位 LOCATION_TYPE_LOCATE、跟随 LOCATION_TYPE_MAP_FOLLOW 或地图根据面向方向旋转 LOCATION_TYPE_MAP_ROTATE
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
-
-        // 缩放级别（zoom）：地图缩放级别范围为【4-20级】，值越大地图越详细
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-        //使用 aMap.setMapTextZIndex(2) 可以将地图底图文字设置在添加的覆盖物之上
-        aMap.setMapTextZIndex(2);
-        mlocationClient = new AMapLocationClient(this);
-        mLocationOption = new AMapLocationClientOption();
-        //设置定位监听
-        mlocationClient.setLocationListener(this);
-        //设置为高精度定位模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //设置定位参数
-        mlocationClient.setLocationOption(mLocationOption);
-        mLocationOption.setOnceLocation(false);
-        /**
-         * 设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
-         * 注意：只有在高精度模式下的单次定位有效，其他方式无效
-         */
-        mLocationOption.setGpsFirst(true);
-        // 设置发送定位请求的时间间隔,最小值为1000ms,1秒更新一次定位信息
-        mLocationOption.setInterval(interval);
-        // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-        // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-        // 在定位结束后，在合适的生命周期调用onDestroy()方法
-        // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-
-        mlocationClient.startLocation();
-
-
-        myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-        myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-//aMap.getUiSettings().setMyLocationButtonEnabled(true);设置默认定位按钮是否显示，非必需设置。
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW);//只定位一次。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE) ;//定位一次，且将视角移动到地图中心点。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW) ;//连续定位、且将视角移动到地图中心点，定位蓝点跟随设备移动。（1秒1次定位）
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE);//连续定位、且将视角移动到地图中心点，地图依照设备方向旋转，定位点会跟随设备移动。（1秒1次定位）
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
-//以下四种模式从5.1.0版本开始提供
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）默认执行此种模式。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，定位点依照设备方向旋转，并且蓝点会跟随设备移动。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，并且蓝点会跟随设备移动。
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-    }
-
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
      */
-    private void setUpMap(LatLng oldData, LatLng newData) {
+    private void drawLine(LatLng oldData, LatLng newData) {
         // 绘制一个大地曲线
         aMap.addPolyline((new PolylineOptions())
                 .add(oldData, newData)
@@ -379,13 +362,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                     && amapLocation.getErrorCode() == 0) {
                 //定位成功
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-                Log.d(TAG, "我一直会执行哦");
 
                 MyLocationStyle myLocationStyle;
                 myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-//                myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+                myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
                 aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-//                aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
+                aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
                 aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
                 LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
@@ -412,7 +394,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 if (oldLatLng != newLatLng) {
                     DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
                     if (state == STATE_STARTED) {
-                        setUpMap(oldLatLng, newLatLng);
+                        drawLine(oldLatLng, newLatLng);
                         Log.d(TAG, "newLatLng: " + newLatLng);
                         Log.d(TAG, "oldLatLng: " + oldLatLng);
                         float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
@@ -479,38 +461,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         // 设置定位监听
         mlocationClient.setLocationListener(this);
         mlocationClient.startLocation();
-    }
-
-    @Override
-    public void activate(OnLocationChangedListener listener) {
-        Log.d(TAG, "onLocationChanged");
-        mListener = listener;
-        if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(this);
-            mLocationOption = new AMapLocationClientOption();
-            //设置定位监听
-            mlocationClient.setLocationListener(this);
-            //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            //设置定位参数
-            //            mlocationClient.setLocationOption(mLocationOption);
-            mLocationOption.setOnceLocation(false);
-            /**
-             * 设置是否优先返回GPS定位结果，如果30秒内GPS没有返回定位结果则进行网络定位
-             * 注意：只有在高精度模式下的单次定位有效，其他方式无效
-             */
-            mLocationOption.setGpsFirst(true);
-            // 设置发送定位请求的时间间隔,最小值为1000ms,1秒更新一次定位信息
-            mLocationOption.setInterval(1000);
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-
-            mlocationClient.setLocationOption(mLocationOption);
-            mlocationClient.startLocation();
-            Log.d(TAG, "startLocation");
-        }
     }
 
     @Override
@@ -609,7 +559,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
      * 提交运动数据
      */
     private void commmitSportData(int projectId,int studenetId,int targetTime){
-        API.ins().runningActivitys(TAG, projectId, studenetId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
+        API.instance().runningActivitys(TAG, projectId, studenetId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
             @Override
             public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
                 if(errCode == 200 && !TextUtils.isEmpty(result)){

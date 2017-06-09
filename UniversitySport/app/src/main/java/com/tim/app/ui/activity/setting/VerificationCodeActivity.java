@@ -194,7 +194,7 @@ public class VerificationCodeActivity extends BaseActivity {
 
     private void VerifyApi() {
         showLoadingDialog();
-        //        API_User.ins().getPhoneCode(TAG, phone, AppKey.VERTIFY_REGISTER, new JsonResponseCallback() {
+        //        API_User.instance().getPhoneCode(TAG, phone, AppKey.VERTIFY_REGISTER, new JsonResponseCallback() {
         //            @Override
         //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
         //                hideLoadingDialog();
@@ -212,20 +212,20 @@ public class VerificationCodeActivity extends BaseActivity {
 
     private void RegisterApi() {
         showLoadingDialog();
-        //        API_User.ins().phoneRegister(TAG, phone, SignRequestParams.MDString(password), smsCode, new JsonResponseCallback() {
+        //        API_User.instance().phoneRegister(TAG, phone, SignRequestParams.MDString(password), smsCode, new JsonResponseCallback() {
         //            @Override
         //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
         //                hideLoadingDialog();
         //                if (errCode == 200 && json != null) {
         //                    String token = json.optString("token");
-        //                    UserManager.ins().saveToken(token);
+        //                    UserManager.instance().saveToken(token);
         //                    JSONObject userJson = json.optJSONObject("user");
         //                    if (userJson != null) {
         //                        User user = new Gson().fromJson(userJson.toString(), User.class);
-        //                        UserManager.ins().savePassword(password);
-        //                        UserManager.ins().saveLoginType(AppKey.LOGIN_TYPE_MOBILE);
-        //                        UserManager.ins().saveUserInfo(user);
-        //                        API_Init.ins().initPush(TAG, new StringResponseCallback() {
+        //                        UserManager.instance().savePassword(password);
+        //                        UserManager.instance().saveLoginType(AppKey.LOGIN_TYPE_MOBILE);
+        //                        UserManager.instance().saveUserInfo(user);
+        //                        API_Init.instance().initPush(TAG, new StringResponseCallback() {
         //                            @Override
         //                            public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
         //                                return false;

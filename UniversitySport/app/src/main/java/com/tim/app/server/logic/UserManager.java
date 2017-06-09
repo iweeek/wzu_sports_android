@@ -60,7 +60,7 @@ public class UserManager {
      * 注销 清空数据 发送注销事件
      */
     public void logout(Context context) {
-//        IMManager.ins().switchAccount();
+//        IMManager.instance().switchAccount();
         PreferenceHelper.ins().storeBooleanShareData(KEY_IS_THIRD, false);
         PreferenceHelper.ins().commit();
 //        saveUserInfo(null);
@@ -74,7 +74,7 @@ public class UserManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        ActivityManager.ins().finishAllActivity();
+//        ActivityManager.instance().finishAllActivity();
 //        DaoFactory.clearDataAll(context);
         //暂时不做退出的activity处理 liuhao 2016/7/12
 //        Intent intent = new Intent(context, MainActivity.class);

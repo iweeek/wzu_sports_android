@@ -568,7 +568,7 @@ public class PhoneInfoUtil {
             params.put(NetWorkRequestParams.IMSI, getPhoneImsi(context));
             params.put(NetWorkRequestParams.IMEI, getPhoneImei(context));
             params.put(NetWorkRequestParams.OS, "android");
-//            params.put(NetWorkRequestParams.DISPLAY, UserManager.ins().getPhoneDisplay());
+//            params.put(NetWorkRequestParams.DISPLAY, UserManager.instance().getPhoneDisplay());
             params.put(NetWorkRequestParams.OS_VERSION, getOsVersion());
             params.put(NetWorkRequestParams.MAC, getMacAddress(context));
             params.put(NetWorkRequestParams.SERIAL_NUMBER, getSerialNumber());

@@ -1,7 +1,6 @@
 package com.tim.app.server.api;
 
 import com.lzy.okhttputils.cache.CacheMode;
-import com.tim.app.server.logic.UserManager;
 import com.application.library.net.ResponseCallback;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
@@ -23,7 +22,7 @@ public class API {
 
     }
 
-    public static API ins() {
+    public static API instance() {
         if (api == null) {
             synchronized (API.class) {
                 if (api == null) {
@@ -54,7 +53,7 @@ public class API {
         params.put("costTime", costTime);
         params.put("targetTime", targetTime);
         params.put("startTime", startTime);
-        NetworkInterface.ins().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
 
