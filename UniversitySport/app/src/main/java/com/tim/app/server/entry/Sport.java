@@ -23,6 +23,7 @@ public class Sport implements Serializable {
     private String bgUrl;//背景图片地址
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
+    private int id;//运动id
 
     public String getTitle() {
         return title;
@@ -94,5 +95,13 @@ public class Sport implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

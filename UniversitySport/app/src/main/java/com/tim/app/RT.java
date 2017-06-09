@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.application.library.log.DLOG;
 import com.application.library.util.ChannelUtil;
 import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.model.HttpHeaders;
 import com.tim.app.receiver.LSReceiver;
 import com.tim.app.server.net.NetworkHost;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -150,7 +151,8 @@ public class RT {
     }
 
     private void initOkHttp() {
-//        HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("content-type", "application/json;charset=UTF-8 ");
 //        headers.put("commonHeaderKey1", "commonHeaderValue1");    //所有的 header 都 不支持 中文
 //        headers.put("commonHeaderKey2", "commonHeaderValue2");
 //        HttpParams params = new HttpParams();
@@ -164,10 +166,11 @@ public class RT {
 //                .debug(AppKey.HTTP_TAG)                                              //是否打开调试
                 .setConnectTimeout(30000)               //全局的连接超时时间
                 .setReadTimeOut(30000)                  //全局的读取超时时间
-                .setWriteTimeOut(30000);                //全局的写入超时时间
-        //.setCookieStore(new MemoryCookieStore())                           //cookie使用内存缓存（app退出后，cookie消失）
-        //.setCookieStore(new PersistentCookieStore())                       //cookie持久化存储，如果cookie不过期，则一直有效
-//                .addCommonHeaders(headers)                                         //设置全局公共头
+                .setWriteTimeOut(30000)               //全局的写入超时时间
+                //.setCookieStore(new MemoryCookieStore())                           //cookie使用内存缓存（app退出后，cookie消失）
+                //.setCookieStore(new PersistentCookieStore())
+                // cookie持久化存储，如果cookie不过期，则一直有效
+                .addCommonHeaders(headers);                                      //设置全局公共头
 //                .addCommonParams(params);                                          //设置全局公共参数
     }
 
