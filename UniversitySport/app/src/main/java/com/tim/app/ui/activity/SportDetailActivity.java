@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -23,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.location.Location;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -60,8 +62,7 @@ import com.tim.app.util.Utils;
 /**
  * 运动详情
  */
-public class SportDetailActivity extends BaseActivity implements LocationSource,
-        AMapLocationListener {
+public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
 
     private static final String TAG = "SportDetailActivity";
     private CoordinateConverter converter;
@@ -92,7 +93,6 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
     private TextView tvCurrentStep;
     private LinearLayout llTargetContainer;
 
-    private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
     private MyLocationStyle myLocationStyle;
@@ -138,6 +138,7 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mapView.onCreate(savedInstanceState);// 此方法必须重写
         initMap();
+        initLocation();
         startService(new Intent(this, SensorListener.class));
 
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
@@ -168,7 +169,6 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
         }
     };
 
-
     private void initMap() {
         if (aMap == null) {
             aMap = mapView.getMap();
@@ -177,10 +177,48 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
     }
 
     /**
+     * 默认的定位参数
+     *
+     * @author hongming.wang
+     * @since 2.8.0
+     */
+    private AMapLocationClientOption getDefaultOption() {
+        AMapLocationClientOption option = new AMapLocationClientOption();
+        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+        option.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+        option.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+        option.setInterval(interval);//可选，设置定位间隔。默认为2秒
+        option.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+        option.setOnceLocation(false);//可选，设置是否单次定位。默认是false
+        option.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+        option.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+        option.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
+        option.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
+        return option;
+    }
+
+    private void initLocation() {
+        Log.d(TAG, "initLocation");
+//        mlocationClient.setLocationListener(this);
+        //初始化client
+        mlocationClient = new AMapLocationClient(this.getApplicationContext());
+        mLocationOption = getDefaultOption();
+        //设置定位参数
+        mlocationClient.setLocationOption(mLocationOption);
+
+        //设置SDK 自带定位消息监听
+        aMap.setOnMyLocationChangeListener(this);
+        // 设置定位监听
+//        mlocationClient.setLocationListener(this);
+        mlocationClient.startLocation();
+    }
+
+    /**
      * 设置一些amap的属性
      */
     private void setUpMap() {
-        aMap.setLocationSource(this);// 设置定位监听
+//        aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
@@ -188,28 +226,70 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
     }
 
     @Override
-    public void activate(OnLocationChangedListener listener) {
-        mListener = listener;
-        if (mlocationClient == null) {
-            // 缩放级别（zoom）：地图缩放级别范围为【4-20级】，值越大地图越详细
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-            //使用 aMap.setMapTextZIndex(2) 可以将地图底图文字设置在添加的覆盖物之上
-            aMap.setMapTextZIndex(2);
-            mlocationClient = new AMapLocationClient(this);
-            mLocationOption = new AMapLocationClientOption();
-            //设置定位监听
-            mlocationClient.setLocationListener(this);
-            //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            mLocationOption.setInterval(interval);
-            //设置定位参数
-            mlocationClient.setLocationOption(mLocationOption);
+    public void onMyLocationChange(Location location) {
+        Log.d(TAG, "onLocationChanged amapLocation: " + location);
+        Bundle bundle = location.getExtras();
+        if (location != null) {
+            //定位成功
+//                mListener.onLocationChanged(location);// 显示系统小蓝点
 
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mlocationClient.startLocation();
+            MyLocationStyle myLocationStyle;
+            myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+            myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+            aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+            aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
+            aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+
+            LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Log.d("Amap", location.getLatitude() + "," + location.getLongitude());
+            //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
+            //修改地图的中心点位置
+            CameraPosition cp = aMap.getCameraPosition();
+            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+            aMap.moveCamera(cu);
+
+            if (isFirstLatLng) {
+                //记录第一次的定位信息
+                oldLatLng = newLatLng;
+                isFirstLatLng = false;
+            }
+
+            elapseTime += interval / 1000;
+            Log.d(TAG, "elapseTime: " + elapseTime);
+            tvElapseTime.setText(String.valueOf(elapseTime / 60) + "分钟");
+
+            //位置有变化
+            if (oldLatLng != newLatLng) {
+                DLOG.d(TAG, location.getLatitude() + "," + location.getLongitude());
+                if (state == STATE_STARTED) {
+                    drawLine(oldLatLng, newLatLng);
+                    Log.d(TAG, "newLatLng: " + newLatLng);
+                    Log.d(TAG, "oldLatLng: " + oldLatLng);
+                    float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                    currentDistance += moveDistanec;
+                    tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
+                    tvCurrentValue.setText(moveDistanec + "米/秒");
+                }
+
+                oldLatLng = newLatLng;
+
+            }
+
+        } else {
+            if (bundle != null) {
+                int errorCode = bundle.getInt(MyLocationStyle.ERROR_CODE);
+                String errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
+                // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
+                int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
+                String errText = "定位失败," + errorCode + ": " + errorInfo;
+                Log.e("AmapErr", errText);
+                //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                if (isFirstLatLng) {
+                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -353,70 +433,70 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
 
     }
 
-    @Override
-    public void onLocationChanged(AMapLocation amapLocation) {
-        Log.d(TAG, "onLocationChanged amapLocation: " + amapLocation);
-        Log.d(TAG, "mListener:" + mListener + "    amapLocation.getErrorCode():" + amapLocation.getErrorCode());
-        if (mListener != null && amapLocation != null) {
-            if (amapLocation != null
-                    && amapLocation.getErrorCode() == 0) {
-                //定位成功
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-
-                MyLocationStyle myLocationStyle;
-                myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-                myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-                aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-                aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
-                aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-
-                LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
-                Log.d("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
-                //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
-                //修改地图的中心点位置
-                CameraPosition cp = aMap.getCameraPosition();
-                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                aMap.moveCamera(cu);
-
-                if (isFirstLatLng) {
-                    //记录第一次的定位信息
-                    oldLatLng = newLatLng;
-                    isFirstLatLng = false;
-                }
-
-                elapseTime += interval / 1000;
-                Log.d(TAG, "elapseTime: " + elapseTime);
-                tvElapseTime.setText(String.valueOf(elapseTime / 60) + "分钟");
-
-                //位置有变化
-                if (oldLatLng != newLatLng) {
-                    DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
-                    if (state == STATE_STARTED) {
-                        drawLine(oldLatLng, newLatLng);
-                        Log.d(TAG, "newLatLng: " + newLatLng);
-                        Log.d(TAG, "oldLatLng: " + oldLatLng);
-                        float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                        currentDistance += moveDistanec;
-                        tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-                        tvCurrentValue.setText(moveDistanec + "米/秒");
-                    }
-
-                    oldLatLng = newLatLng;
-
-                }
-
-            } else {
-                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
-                Log.e("AmapErr", errText);
-                //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                if (isFirstLatLng) {
-                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
+//    @Override
+//    public void onLocationChanged(AMapLocation amapLocation) {
+//        Log.d(TAG, "onLocationChanged amapLocation: " + amapLocation);
+//        Log.d(TAG, "mListener:" + mListener + "    amapLocation.getErrorCode():" + amapLocation.getErrorCode());
+//        if (mListener != null && amapLocation != null) {
+//            if (amapLocation != null
+//                    && amapLocation.getErrorCode() == 0) {
+//                //定位成功
+//                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+//
+//                MyLocationStyle myLocationStyle;
+//                myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+//                myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+//                aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+//                aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
+//                aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+//
+//                LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
+//                Log.d("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
+//                //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
+//                //修改地图的中心点位置
+//                CameraPosition cp = aMap.getCameraPosition();
+//                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//                aMap.moveCamera(cu);
+//
+//                if (isFirstLatLng) {
+//                    //记录第一次的定位信息
+//                    oldLatLng = newLatLng;
+//                    isFirstLatLng = false;
+//                }
+//
+//                elapseTime += interval / 1000;
+//                Log.d(TAG, "elapseTime: " + elapseTime);
+//                tvElapseTime.setText(String.valueOf(elapseTime / 60) + "分钟");
+//
+//                //位置有变化
+//                if (oldLatLng != newLatLng) {
+//                    DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
+//                    if (state == STATE_STARTED) {
+//                        drawLine(oldLatLng, newLatLng);
+//                        Log.d(TAG, "newLatLng: " + newLatLng);
+//                        Log.d(TAG, "oldLatLng: " + oldLatLng);
+//                        float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+//                        currentDistance += moveDistanec;
+//                        tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
+//                        tvCurrentValue.setText(moveDistanec + "米/秒");
+//                    }
+//
+//                    oldLatLng = newLatLng;
+//
+//                }
+//
+//            } else {
+//                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+//                Log.e("AmapErr", errText);
+//                //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+//                if (isFirstLatLng) {
+//                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
+//    }
 
 
     /**
@@ -426,52 +506,8 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
     protected void onPause() {
         super.onPause();
         mapView.onPause();
-        deactivate();
     }
 
-    /**
-     * 默认的定位参数
-     *
-     * @author hongming.wang
-     * @since 2.8.0
-     */
-    private AMapLocationClientOption getDefaultOption() {
-        AMapLocationClientOption option = new AMapLocationClientOption();
-        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-        option.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
-        option.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        option.setInterval(2000);//可选，设置定位间隔。默认为2秒
-        option.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-        option.setOnceLocation(false);//可选，设置是否单次定位。默认是false
-        option.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-        option.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
-        option.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
-        option.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
-        return option;
-    }
-
-    private void initLocation() {
-        Log.d(TAG, "initLocation");
-        //初始化client
-        mlocationClient = new AMapLocationClient(this.getApplicationContext());
-        mLocationOption = getDefaultOption();
-        //设置定位参数
-        mlocationClient.setLocationOption(mLocationOption);
-        // 设置定位监听
-        mlocationClient.setLocationListener(this);
-        mlocationClient.startLocation();
-    }
-
-    @Override
-    public void deactivate() {
-        mListener = null;
-        if (mlocationClient != null) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
-        mlocationClient = null;
-    }
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
 
@@ -515,7 +551,7 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
-                if(elapseTime == 0){
+                if (elapseTime == 0) {
                     ToastUtil.showToast("运动时间太短，无法结束");
                     return;
                 }
@@ -532,7 +568,7 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
                 tvCurrentValue.setText(currentDistance / elapseTime + "米/秒");
 
                 int studentId = 1;//学生的id
-                commmitSportData(sport.getId(),studentId,sport.getTargetTime());
+                commmitSportData(sport.getId(), studentId, sport.getTargetTime());
 
                 String cost = String.valueOf(Math.round(currentDistance * 0.3));
                 rlCostQuantity.setVisibility(View.VISIBLE);
@@ -558,16 +594,16 @@ public class SportDetailActivity extends BaseActivity implements LocationSource,
     /**
      * 提交运动数据
      */
-    private void commmitSportData(int projectId,int studenetId,int targetTime){
+    private void commmitSportData(int projectId, int studenetId, int targetTime) {
         API.instance().runningActivitys(TAG, projectId, studenetId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
             @Override
             public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
-                if(errCode == 200 && !TextUtils.isEmpty(result)){
-                    CommitResult commitResult = new Gson().fromJson(result,CommitResult.class);
-                    if(null != commitResult){
+                if (errCode == 200 && !TextUtils.isEmpty(result)) {
+                    CommitResult commitResult = new Gson().fromJson(result, CommitResult.class);
+                    if (null != commitResult) {
                         //TODO 业务逻辑
                     }
-                }else{
+                } else {
                     ToastUtil.showToast(errMsg);
                 }
                 return false;
