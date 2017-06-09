@@ -505,7 +505,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+//        mapView.onPause();
     }
 
 
