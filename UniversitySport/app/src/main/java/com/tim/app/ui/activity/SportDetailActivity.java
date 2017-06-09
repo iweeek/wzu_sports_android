@@ -244,11 +244,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             Log.d("Amap", location.getLatitude() + "," + location.getLongitude());
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
             //修改地图的中心点位置
-            CameraPosition cp = aMap.getCameraPosition();
-            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-            aMap.moveCamera(cu);
+//            CameraPosition cp = aMap.getCameraPosition();
+//            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+//            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+//            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//            aMap.moveCamera(cu);
 
             if (isFirstLatLng) {
                 //记录第一次的定位信息
@@ -267,10 +267,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     Log.d(TAG, "newLatLng: " + newLatLng);
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
-                    float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    currentDistance += moveDistanec;
+                    float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                    currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-                    tvCurrentValue.setText(moveDistanec + "米/秒");
+                    tvCurrentValue.setText(moveDistance + "米/秒");
                 }
 
                 oldLatLng = newLatLng;
@@ -419,7 +419,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         return screenBitmap;
     }
 
-    private final static int AMAP_LOADED = 2;
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
     /**
@@ -433,79 +432,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     }
 
-//    @Override
-//    public void onLocationChanged(AMapLocation amapLocation) {
-//        Log.d(TAG, "onLocationChanged amapLocation: " + amapLocation);
-//        Log.d(TAG, "mListener:" + mListener + "    amapLocation.getErrorCode():" + amapLocation.getErrorCode());
-//        if (mListener != null && amapLocation != null) {
-//            if (amapLocation != null
-//                    && amapLocation.getErrorCode() == 0) {
-//                //定位成功
-//                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-//
-//                MyLocationStyle myLocationStyle;
-//                myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-//                myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-//                aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-//                aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
-//                aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-//
-//                LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
-//                Log.d("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
-//                //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
-//                //修改地图的中心点位置
-//                CameraPosition cp = aMap.getCameraPosition();
-//                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//                aMap.moveCamera(cu);
-//
-//                if (isFirstLatLng) {
-//                    //记录第一次的定位信息
-//                    oldLatLng = newLatLng;
-//                    isFirstLatLng = false;
-//                }
-//
-//                elapseTime += interval / 1000;
-//                Log.d(TAG, "elapseTime: " + elapseTime);
-//                tvElapseTime.setText(String.valueOf(elapseTime / 60) + "分钟");
-//
-//                //位置有变化
-//                if (oldLatLng != newLatLng) {
-//                    DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
-//                    if (state == STATE_STARTED) {
-//                        drawLine(oldLatLng, newLatLng);
-//                        Log.d(TAG, "newLatLng: " + newLatLng);
-//                        Log.d(TAG, "oldLatLng: " + oldLatLng);
-//                        float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-//                        currentDistance += moveDistanec;
-//                        tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-//                        tvCurrentValue.setText(moveDistanec + "米/秒");
-//                    }
-//
-//                    oldLatLng = newLatLng;
-//
-//                }
-//
-//            } else {
-//                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
-//                Log.e("AmapErr", errText);
-//                //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-//                if (isFirstLatLng) {
-//                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }
-//    }
-
-
     /**
      * 方法必须重写
      */
     @Override
     protected void onPause() {
         super.onPause();
-//        mapView.onPause();
+        mapView.onPause();
     }
 
 
