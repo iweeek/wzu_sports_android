@@ -111,7 +111,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     private int state = STATE_NORMAL;
 
     private int currentDistance = 0;
-    private long currentTime = 0;
+    private long elapseTime = 0;
     private int currentSteps = 0;
 
     private int initSteps = 0;//初始化的步数
@@ -126,15 +126,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        initLocation();
         mapView = (MapView) findViewById(R.id.map);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mapView.onCreate(savedInstanceState);// 此方法必须重写
-//        if (aMap == null) {
-//            aMap = mapView.getMap();
-//        }
         initMap();
-//        onMapLoaded();
         startService(new Intent(this, SensorListener.class));
 
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
@@ -246,7 +241,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
             tvTargetValue.setText(getString(R.string.targetSpeed, sport.getTargetSpeed()));
         }
         tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
-        tvCurrentTime.setText(getString(R.string.targetTime, String.valueOf(currentTime / 60)));
+        tvCurrentTime.setText(getString(R.string.targetTime, String.valueOf(elapseTime / 60)));
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {
@@ -305,14 +300,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
     @Override
     public void onMapLoaded() {
         Log.d(TAG, "onMapLoaded");
-//        aMap.setLocationSource(this);// 设置定位监听
-//        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-//        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表、示隐藏、定位层并不可触发定位，默认是false
+        aMap.setLocationSource(this);// 设置定位监听
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表、示隐藏、定位层并不可触发定位，默认是false
         // 设置定位的类型为定位模式 ，可以由定位 LOCATION_TYPE_LOCATE、跟随 LOCATION_TYPE_MAP_FOLLOW 或地图根据面向方向旋转 LOCATION_TYPE_MAP_ROTATE
-//        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
+        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
 
-//        aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_ROTATE);
-        //画线
         // 缩放级别（zoom）：地图缩放级别范围为【4-20级】，值越大地图越详细
         aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         //使用 aMap.setMapTextZIndex(2) 可以将地图底图文字设置在添加的覆盖物之上
@@ -377,9 +370,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
+                //定位成功
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
                 Log.d(TAG, "我一直会执行哦");
-
 
                 MyLocationStyle myLocationStyle;
                 myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
@@ -388,9 +381,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
 //                aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
                 aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
-
-
-                //定位成功
                 LatLng newLatLng = Utils.getLocationLatLng(amapLocation);
                 Log.d("Amap", amapLocation.getLatitude() + "," + amapLocation.getLongitude());
                 //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
@@ -406,14 +396,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                     oldLatLng = newLatLng;
                     isFirstLatLng = false;
                 }
+
+                elapseTime += interval / 1000;
+                Log.d(TAG, "elapseTime: " + elapseTime);
+
                 //位置有变化
                 if (oldLatLng != newLatLng) {
                     DLOG.d(TAG, amapLocation.getLatitude() + "," + amapLocation.getLongitude());
                     if (state == STATE_STARTED) {
                         setUpMap(oldLatLng, newLatLng);
-                        currentTime += interval / 1000;
-                        Log.d(TAG, "currentTime: " + currentTime);
-                        tvCurrentTime.setText(String.valueOf(currentTime / 60) + "分钟");
+                        tvCurrentTime.setText(String.valueOf(elapseTime / 60) + "分钟");
                         Log.d(TAG, "newLatLng: " + newLatLng);
                         Log.d(TAG, "oldLatLng: " + oldLatLng);
                         float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
@@ -568,13 +560,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMapLoade
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
                 }
-                if (currentDistance > sport.getTargetDistance() && currentTime / 60 > sport.getTargetTime()) {
+                if (currentDistance > sport.getTargetDistance() && elapseTime / 60 > sport.getTargetTime()) {
                     tvResult.setText("达标");
                 } else {
                     tvResult.setText("不达标");
                 }
                 tvCurrentTitle.setText("平均速度");
-                tvCurrentValue.setText(currentDistance / currentTime + "米/秒");
+                tvCurrentValue.setText(currentDistance / elapseTime + "米/秒");
 
                 String cost = String.valueOf(Math.round(currentDistance * 0.3));
                 rlCostQuantity.setVisibility(View.VISIBLE);
