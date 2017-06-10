@@ -23,7 +23,7 @@ android {
         wzu_sports_config {
             keyAlias 'wzu_sports'
             keyPassword '2wsx@WSX'
-            storeFile file('/Users/chaiyu/wzu_sports_android/app.keystore.jks')
+            storeFile file('app.keystore.jks')
             storePassword '1qaz!QAZ'
         }
     }

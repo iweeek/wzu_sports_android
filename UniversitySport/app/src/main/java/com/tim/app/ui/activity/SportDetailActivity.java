@@ -242,11 +242,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             Log.d("Amap", location.getLatitude() + "," + location.getLongitude());
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
             //修改地图的中心点位置
-            CameraPosition cp = aMap.getCameraPosition();
-            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-            aMap.moveCamera(cu);
+//            CameraPosition cp = aMap.getCameraPosition();
+//            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+//            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+//            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//            aMap.moveCamera(cu);
 
             if (isFirstLatLng) {
                 //记录第一次的定位信息
@@ -265,10 +265,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     Log.d(TAG, "newLatLng: " + newLatLng);
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
-                    float moveDistanec = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    currentDistance += moveDistanec;
+                    float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                    currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-                    tvCurrentValue.setText(moveDistanec + "米/秒");
+                    tvCurrentValue.setText(moveDistance + "米/秒");
                 }
 
                 oldLatLng = newLatLng;
@@ -417,7 +417,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         return screenBitmap;
     }
 
-    private final static int AMAP_LOADED = 2;
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
 
@@ -431,7 +430,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 .geodesic(true).color(Color.GREEN));
 
     }
-
 
     /**
      * 方法必须重写
@@ -469,6 +467,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
                 }
+                mlocationClient.startLocation();
                 btStart.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.GONE);
                 slideUnlockView.setVisibility(View.VISIBLE);
@@ -493,6 +492,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
+                mlocationClient.stopLocation();
                 if (elapseTime == 0) {
                     ToastUtil.showToast("运动时间太短，无法结束");
                     return;
@@ -538,8 +538,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void commmitSportData(int projectId, int studenetId, int targetTime) {
-        API.instance().runningActivitys(TAG, projectId, studenetId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
+    private void commmitSportData(int projectId, int studentId, int targetTime) {
+        API.instance().runningActivitys(TAG, projectId, studentId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
             @Override
             public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
                 if (errCode == 200 && !TextUtils.isEmpty(result)) {
@@ -574,6 +574,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         super.onDestroy();
         mapView.onDestroy();
         if (null != mlocationClient) {
+            mlocationClient.stopLocation();
             mlocationClient.onDestroy();
         }
         //页面销毁移除未完成的网络请求

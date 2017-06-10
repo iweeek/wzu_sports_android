@@ -23,7 +23,7 @@ public class Sport implements Serializable {
     private String bgUrl;//背景图片地址
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
-    private int id;//运动id
+    private int id = 1;//运动id，默认值为1
 
     public String getTitle() {
         return title;
