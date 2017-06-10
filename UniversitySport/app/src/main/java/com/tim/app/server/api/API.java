@@ -1,5 +1,7 @@
 package com.tim.app.server.api;
 
+import android.util.Log;
+
 import com.lzy.okhttputils.cache.CacheMode;
 import com.application.library.net.ResponseCallback;
 import com.tim.app.server.net.HttpMethod;
@@ -7,10 +9,13 @@ import com.tim.app.server.net.NetworkInterface;
 
 import java.util.HashMap;
 
+import static com.lzy.okhttputils.interceptor.LoggerInterceptor.TAG;
+
 /**
  * 接口
  */
 public class API {
+    private static final String TAG = "API";
 
     private static volatile API api = null;
 
@@ -53,6 +58,7 @@ public class API {
         params.put("costTime", costTime);
         params.put("targetTime", targetTime);
         params.put("startTime", startTime);
+        Log.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 

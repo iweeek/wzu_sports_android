@@ -469,6 +469,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
                 }
+                mlocationClient.startLocation();
                 btStart.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.GONE);
                 slideUnlockView.setVisibility(View.VISIBLE);
@@ -484,6 +485,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
+                mlocationClient.stopLocation();
                 if (elapseTime == 0) {
                     ToastUtil.showToast("运动时间太短，无法结束");
                     return;
@@ -527,8 +529,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void commmitSportData(int projectId, int studenetId, int targetTime) {
-        API.instance().runningActivitys(TAG, projectId, studenetId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
+    private void commmitSportData(int projectId, int studentId, int targetTime) {
+        API.instance().runningActivitys(TAG, projectId, studentId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
             @Override
             public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
                 if (errCode == 200 && !TextUtils.isEmpty(result)) {
@@ -563,6 +565,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         super.onDestroy();
         mapView.onDestroy();
         if (null != mlocationClient) {
+            mlocationClient.stopLocation();
             mlocationClient.onDestroy();
         }
         //页面销毁移除未完成的网络请求

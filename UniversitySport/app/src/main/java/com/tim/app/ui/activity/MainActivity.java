@@ -163,7 +163,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onItemClick(View view, int position, long id) {
         Sport sport = dataList.get(position);
         //TODO 跳转详情
-        SportDetailActivity.start(this,sport);
+        SportDetailActivity.start(this, sport);
     }
 
     @Override
