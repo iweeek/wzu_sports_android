@@ -147,12 +147,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     EventListener eventListener = new EventListener() {
         @Override
         public void handleMessage(int what, int arg1, int arg2, Object dataobj) {
+
+            Log.d(TAG, "isFirst: " + isFirst);
             switch (what) {
                 case EventTag.ON_STEP_CHANGE:
                     int steps = (int) dataobj;
                     if (state == STATE_STARTED) {
                         if (isFirst) {
                             initSteps = steps;
+                            tvCurrentStep.setText(String.valueOf(initSteps) + "步");
                         } else {
                             currentSteps = steps - initSteps - noSportSteps;
                             tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
@@ -214,11 +217,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      * 设置一些amap的属性
      */
     private void setUpMap() {
-//        aMap.setLocationSource(this);// 设置定位监听
+
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
         aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-        // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
     }
 
     @Override
@@ -365,7 +366,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvElapseTime.setText(getString(R.string.targetTime, String.valueOf(elapseTime / 60)));
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } else {
+        } else {// PackageManager.PERMISSION_DENIED
             UserManager.ins().cleanCache();
         }
 
@@ -417,6 +418,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
+
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
      */
@@ -436,7 +438,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         super.onPause();
         mapView.onPause();
     }
-
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
 
@@ -470,6 +471,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 rlBottom.setVisibility(View.GONE);
                 slideUnlockView.setVisibility(View.VISIBLE);
                 tvPause.setVisibility(View.VISIBLE);
+
+                if (!isFirst) {
+                    initSteps = 0;
+                    currentSteps = 0;
+                    noSportSteps = 0;
+                    currentDistance = 0;
+                    elapseTime = 0;
+                    isFirst = true;
+                }
                 break;
             case R.id.btContinue:
                 if (state == STATE_PAUSE) {
@@ -509,6 +519,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 rlBottom.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.GONE);
                 btStart.setVisibility(View.VISIBLE);
+
+                isFirst = false;
                 break;
             case R.id.ivLocation:
                 //修改地图的中心点位置

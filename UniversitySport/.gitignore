@@ -6,6 +6,7 @@ build/
 .gradle/  
 */build/  
 app/build.gradle
+/geadle
 
 
 # IDEA  
@@ -86,4 +87,5 @@ out
   
 build.xml  
   
-proguard-project.txt  
+proguard-project.txt
+gradle/
