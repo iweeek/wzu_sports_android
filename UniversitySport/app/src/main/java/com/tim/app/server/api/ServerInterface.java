@@ -20,7 +20,7 @@ public class ServerInterface {
 
     private static volatile ServerInterface instance = null;
 
-    private static final String API_SCHEME = "/api/";//扩展字段
+    private static final String API_SCHEME = "api/";//扩展字段
 
     public static final String INIT_PUSH = "runningActivitys";//
 
@@ -69,10 +69,13 @@ public class ServerInterface {
     public void runningProjects(int universityId, ResponseCallback callback) {
         String url = API_SCHEME + QUERY_INTERFACE;
         HashMap params = new HashMap();
-        String queryStr = "{runningProjects(universityId:1){id name qualifiedDistance qualifiedCostTime}}";
+        String queryStr = "{runningProjects(universityId:" + universityId + "){id name qualifiedDistance qualifiedCostTime}}";
 
 
         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+
+        Log.d(TAG, "runningProjects: headers.toString()"+headers.toString());
+
         headers.put("Content-Type", "application/json;charset=UTF-8");
         Log.d(TAG, "headers: " + headers);
         headers.remove("content-type");
