@@ -24,18 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.location.Location;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
-import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -48,15 +44,15 @@ import com.application.library.runtime.event.EventManager;
 import com.google.gson.Gson;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.constant.AppKey;
 import com.tim.app.constant.EventTag;
-import com.tim.app.server.api.API;
+import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.server.result.CommitResult;
 import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
-import com.tim.app.util.Utils;
 
 
 /**
@@ -530,7 +526,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      * 提交运动数据
      */
     private void commmitSportData(int projectId, int studentId, int targetTime) {
-        API.instance().runningActivitys(TAG, projectId, studentId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
+        ServerInterface.instance().runningActivitys(TAG, projectId, studentId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
             @Override
             public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
                 if (errCode == 200 && !TextUtils.isEmpty(result)) {

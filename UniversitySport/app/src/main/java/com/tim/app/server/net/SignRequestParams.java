@@ -128,7 +128,7 @@ public class SignRequestParams {
         String paramsStr = "";
         for (String key : keys) {
             try {
-                realParams.put(key, URLEncoder.encode(String.valueOf(params.get(key)), "UTF-8"));
+                realParams.put(key, String.valueOf(params.get(key)));
                 if (RT.DEBUG) {
                     paramsStr = paramsStr + key + "=" + URLEncoder.encode(String.valueOf(params.get(key)), "UTF-8") + "&";
                 }

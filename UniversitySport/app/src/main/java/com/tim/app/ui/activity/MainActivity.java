@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,14 +17,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.application.library.net.StringResponseCallback;
 import com.application.library.runtime.ActivityManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
+import com.google.gson.Gson;
 import com.tim.app.R;
 import com.tim.app.RT;
+import com.tim.app.constant.AppKey;
+import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Sport;
+import com.tim.app.server.result.CommitResult;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.view.HomepageHeadView;
@@ -162,52 +168,65 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void onItemClick(View view, int position, long id) {
         Sport sport = dataList.get(position);
-        //TODO 跳转详情
         SportDetailActivity.start(this, sport);
     }
 
     @Override
     public void initData() {
-        for (int i = 0; i < 4; i++) {
-            Sport sport = new Sport();
-            sport.setType(i);
-            if (i == 0) {
-                sport.setTitle("随机慢跑");
-                sport.setJoinNumber(new Random().nextInt(100));
-                sport.setTargetDistance(600);
-                sport.setTargetTime(60);
-                sport.setTargetSpeed("1.0");
-                sport.setSteps(6000);
-                sport.setBgDrawableId(R.drawable.ic_bg_jogging);
-            } else if (i == 1) {
-                sport.setTitle("快跑");
-                sport.setJoinNumber(new Random().nextInt(100));
-                sport.setTargetDistance(600);
-                sport.setTargetTime(60);
-                sport.setTargetSpeed("1.0");
-                sport.setSteps(6000);
-                sport.setBgDrawableId(R.drawable.ic_bg_run);
-            } else if (i == 2) {
-                sport.setTitle("快走");
-                sport.setJoinNumber(new Random().nextInt(100));
-                sport.setTargetDistance(600);
-                sport.setTargetTime(60);
-                sport.setTargetSpeed("1.0");
-                sport.setSteps(6000);
-                sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-            } else if (i == 3) {
-                sport.setTitle("累计步数");
-                sport.setJoinNumber(new Random().nextInt(100));
-                sport.setTargetDistance(600);
-                sport.setTargetTime(60);
-                sport.setTargetSpeed("1.0");
-                sport.setSteps(6000);
-                sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
+        ServerInterface.instance().runningProjects(AppKey.UNIVERSITY_ID, new StringResponseCallback() {
+            @Override
+            public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
+                if (errCode == 200 && !TextUtils.isEmpty(result)) {
+                    CommitResult commitResult = new Gson().fromJson(result, CommitResult.class);
+                    if (null != commitResult) {
+                        //TODO 业务逻辑
+                    }
+                } else {
+                    ToastUtil.showToast(errMsg);
+                }
+                return false;
             }
-            dataList.add(sport);
-        }
-        adapter.notifyDataSetChanged();
-        homepageHeadView.setData(3, 1, "1000");
+        });
+//        for (int i = 1; i < 5; i++) {//项目id从1开始，因为暂时没有获取项目列表的接口，所以这些信息先写死在代码中
+//            Sport sport = new Sport();
+//            sport.setType(i);
+//            if (i == 1) {
+//                sport.setTitle("随机慢跑");
+//                sport.setJoinNumber(new Random().nextInt(100));
+//                sport.setTargetDistance(5000);
+//                sport.setTargetTime(60);
+//                sport.setTargetSpeed("1.0");
+//                sport.setSteps(6000);
+//                sport.setBgDrawableId(R.drawable.ic_bg_jogging);
+//            } else if (i == 2) {
+//                sport.setTitle("快跑");
+//                sport.setJoinNumber(new Random().nextInt(100));
+//                sport.setTargetDistance(3000);
+//                sport.setTargetTime(30);
+//                sport.setTargetSpeed("1.0");
+//                sport.setSteps(6000);
+//                sport.setBgDrawableId(R.drawable.ic_bg_run);
+//            } else if (i == 3) {
+//                sport.setTitle("快走");
+//                sport.setJoinNumber(new Random().nextInt(100));
+//                sport.setTargetDistance(7000);
+//                sport.setTargetTime(60);
+//                sport.setTargetSpeed("1.0");
+//                sport.setSteps(6000);
+//                sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
+//            } else if (i == 4) {
+//                sport.setTitle("累计步数");
+//                sport.setJoinNumber(new Random().nextInt(100));
+//                sport.setTargetDistance(600);
+//                sport.setTargetTime(60);
+//                sport.setTargetSpeed("1.0");
+//                sport.setSteps(6000);
+//                sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
+//            }
+//            dataList.add(sport);
+//        }
+//        adapter.notifyDataSetChanged();
+//        homepageHeadView.setData(3, 1, "1000");
     }
 
     @Override

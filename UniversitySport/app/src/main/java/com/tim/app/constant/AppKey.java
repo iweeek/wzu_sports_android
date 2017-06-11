@@ -21,6 +21,8 @@ public class AppKey {
     public static final int TYPE_COST_ENERGY = 1;//消耗热量
     public static final int TYPE_COST_TIME = 2;//消耗时长
 
+    public static final int UNIVERSITY_ID = 1;
+
     //    1：注册
     //    2：找回密码
     //    3：绑定手机

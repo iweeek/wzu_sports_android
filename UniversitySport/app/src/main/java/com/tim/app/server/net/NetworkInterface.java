@@ -7,8 +7,10 @@ import com.lzy.okhttputils.cache.CacheEntity;
 import com.lzy.okhttputils.cache.CacheMode;
 import com.lzy.okhttputils.callback.FileCallback;
 import com.lzy.okhttputils.callback.StringCallback;
+import com.lzy.okhttputils.model.HttpHeaders;
 import com.lzy.okhttputils.model.HttpParams;
 import com.lzy.okhttputils.request.BaseRequest;
+import com.squareup.okhttp.RequestBody;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppKey;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.lzy.okhttputils.OkHttpUtils.post;
 import static com.tim.app.server.net.HttpMethod.GET;
 import static com.tim.app.server.net.HttpMethod.POST;
 
@@ -45,6 +48,10 @@ public class NetworkInterface {
             }
         }
         return mInstance;
+    }
+
+    public HttpHeaders getCommonHeaders() {
+        return OkHttpUtils.getInstance().getCommonHeaders();
     }
 
     /**
@@ -88,7 +95,8 @@ public class NetworkInterface {
             if (cache == CacheMode.IF_NONE_CACHE_REQUEST) {
                 cacheTime = 30000L;
             }
-            OkHttpUtils.post(requestUrl).params(params).cacheMode(cache).cacheTime(cacheTime).tag(apiTag).execute(new StringCallback() {
+
+            post(requestUrl).params(params).cacheMode(cache).cacheTime(cacheTime).tag(apiTag).execute(new StringCallback() {
                 @Override
                 public void onBefore(BaseRequest request) {
                     super.onBefore(request);
@@ -204,7 +212,7 @@ public class NetworkInterface {
         if (RT.DEBUG) {
             DLOG.d(AppKey.HTTP_TAG, url);
         }
-        OkHttpUtils.post(url).tag(apiTag).params(params).execute(new StringCallback() {
+        post(url).tag(apiTag).params(params).execute(new StringCallback() {
             @Override
             public void onBefore(BaseRequest request) {
                 super.onBefore(request);
