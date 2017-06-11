@@ -1,5 +1,7 @@
 package com.application.library.net;
 
+import android.text.TextUtils;
+
 import com.application.library.log.DLOG;
 
 import org.json.JSONObject;
@@ -15,23 +17,17 @@ public abstract class JsonResponseCallback extends ResponseCallback {
         try {
             JSONObject json = new JSONObject(new String((byte[]) result));
 
-            int code = json.optInt("status", -1);
-            errMsg = json.optString("msg");
-            if(code == -1){
-                errMsg = "我的天啊，没有网啦！";
-            }
-            JSONObject data = json.optJSONObject("data");
-
-            if (code == 200) {
-                return onJsonResponse(data, code, errMsg, id, fromCache);
+            if (result == null || !(result instanceof byte[]) || TextUtils.isEmpty(result.toString())) {
+                onJsonResponse(null, httpErr, errMsg, id, fromCache);
             } else {
-                return onJsonResponse(null, code, errMsg, id, fromCache);
+                onJsonResponse(json, httpErr, errMsg, id, fromCache);
             }
         } catch (Exception e) {
             e.printStackTrace();
             DLOG.d("json parse error!");
             return onJsonResponse(null, -1, "", id, fromCache);
         }
+        return true;
     }
 
     public abstract boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache);

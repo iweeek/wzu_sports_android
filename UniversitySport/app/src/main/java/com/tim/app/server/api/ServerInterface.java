@@ -2,14 +2,9 @@ package com.tim.app.server.api;
 
 import android.util.Log;
 
-import com.lzy.okhttputils.cache.CacheMode;
 import com.application.library.net.ResponseCallback;
+import com.lzy.okhttputils.cache.CacheMode;
 import com.lzy.okhttputils.model.HttpHeaders;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
 

@@ -1,6 +1,7 @@
 package com.application.library.net;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.application.library.log.DLOG;
 
@@ -17,14 +18,22 @@ public abstract class StringResponseCallback extends ResponseCallback {
             return onStringResponse(null, httpErr, errMsg, id, fromCache);
         }
         JSONObject json;
+        int code;
 
         try {
             json = new JSONObject(new String((byte[]) resultInfo));
-            int code = json.optInt("status", -1);
-            errMsg = json.optString("message");
-            if (code == -1) {
-                errMsg = "我的天啊，没有网啦！";
+
+            Log.d("StringResponseCallback", json.toString());
+
+
+            String error = json.optString("error", "");
+            if ("".equals(error)) {
+                code = 0;
+            } else {
+                code = -1;
+                errMsg = "network has some error.";
             }
+
             //modify by liuhao 2016-5-17添加数据返回 resultInfo 值为"" 对象不为null时候的判断导致崩溃的问题
             if (resultInfo == null || !(resultInfo instanceof byte[]) || TextUtils.isEmpty(resultInfo.toString())) {
                 onStringResponse(null, code, errMsg, id, fromCache);

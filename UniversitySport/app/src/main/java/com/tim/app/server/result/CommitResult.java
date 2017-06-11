@@ -142,4 +142,25 @@ public class CommitResult {
     public void setCostCalorie(int costCalorie) {
         this.costCalorie = costCalorie;
     }
+
+    @Override
+    public String toString() {
+        return "CommitResult{" +
+                "status=" + status +
+                ", code=" + code +
+                ", message='" + message + '\'' +
+                ", developerMessage='" + developerMessage + '\'' +
+                ", id=" + id +
+                ", projectId=" + projectId +
+                ", studentId=" + studentId +
+                ", distance=" + distance +
+                ", costTime=" + costTime +
+                ", targetTime=" + targetTime +
+                ", qualified=" + qualified +
+                ", startTime=" + startTime +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", costCalorie=" + costCalorie +
+                '}';
+    }
 }
