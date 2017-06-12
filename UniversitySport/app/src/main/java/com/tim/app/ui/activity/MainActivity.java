@@ -179,7 +179,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
 
-                    JSONArray sportArray = json.optJSONArray("runningProjects");
+                    JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningProjects");
                     try {
 
                         for (int i = 0; i < 4; i++) {
