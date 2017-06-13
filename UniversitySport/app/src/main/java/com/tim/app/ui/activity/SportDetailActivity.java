@@ -25,8 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
@@ -89,8 +87,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvCurrentStep;
     private LinearLayout llTargetContainer;
 
-    private AMapLocationClient mlocationClient;
-    private AMapLocationClientOption mLocationOption;
     private MyLocationStyle myLocationStyle;
 
     private RelativeLayout rlBottom;
@@ -117,27 +113,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long elapseTime = 0;
     private int currentSteps = 0;
     private long startTime;//开始时间
-
     private int initSteps = 0;//初始化的步数
+
+    private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
         intent.putExtra("sport", sport);
         context.startActivity(intent);
-    }
-
-    @Override
-    protected void init(Bundle savedInstanceState) {
-        super.init(savedInstanceState);
-
-        mapView = (MapView) findViewById(R.id.map);
-        //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
-        initMap();
-        initLocation();
-        startService(new Intent(this, SensorListener.class));
-
-        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
 
     boolean isFirst = true;
@@ -161,7 +144,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     } else {
                         if (initSteps != 0) {
-                            noSportSteps = steps - initSteps - currentSteps;
+                            noSportSteps = steps - -initSteps - currentSteps;
                         }
                     }
                     break;
@@ -169,60 +152,38 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
     };
 
+    @Override
+    protected void init(Bundle savedInstanceState) {
+        super.init(savedInstanceState);
+
+        mapView = (MapView) findViewById(R.id.map);
+        //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
+        mapView.onCreate(savedInstanceState);// 此方法必须重写
+        initMap();
+
+        startService(new Intent(this, SensorListener.class));
+        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
+    }
+
     private void initMap() {
         if (aMap == null) {
             aMap = mapView.getMap();
             setUpMap();
         }
-    }
 
-    /**
-     * 默认的定位参数
-     *
-     * @author hongming.wang
-     * @since 2.8.0
-     */
-    private AMapLocationClientOption getDefaultOption() {
-        AMapLocationClientOption option = new AMapLocationClientOption();
-        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-        option.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
-        option.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        option.setInterval(interval);//可选，设置定位间隔。默认为2秒
-        option.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-        option.setOnceLocation(false);//可选，设置是否单次定位。默认是false
-        option.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-        option.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
-        option.setWifiScan(true); //可选，设置是否开启wifi扫描。默认为true，如果设置为false会同时停止主动刷新，停止以后完全依赖于系统刷新，定位位置可能存在误差
-        option.setLocationCacheEnable(true); //可选，设置是否使用缓存定位，默认为true
-        return option;
-    }
-
-    private void initLocation() {
-        Log.d(TAG, "initLocation");
-//        mlocationClient.setLocationListener(this);
-        //初始化client
-        mlocationClient = new AMapLocationClient(this.getApplicationContext());
-        mLocationOption = getDefaultOption();
-        //设置定位参数
-        mlocationClient.setLocationOption(mLocationOption);
-
-        //设置SDK 自带定位消息监听
         aMap.setOnMyLocationChangeListener(this);
-        // 设置定位监听
-//        mlocationClient.setLocationListener(this);
-        mlocationClient.startLocation();
     }
 
     /**
      * 设置一些amap的属性
      */
     private void setUpMap() {
-        // 如果要设置定位的默认状态，可以在此处进行设置
-        myLocationStyle = new MyLocationStyle();
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
         aMap.setMyLocationStyle(myLocationStyle);
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.getUiSettings().setMyLocationButtonEnabled(true);
+        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
     }
 
     @Override
@@ -233,15 +194,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //定位成功
 //                mListener.onLocationChanged(location);// 显示系统小蓝点
 
-            MyLocationStyle myLocationStyle;
-            myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-            myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-            aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-            aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
-            aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+//            MyLocationStyle myLocationStyle;
+//            myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
+//            myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+//            aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+//            aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
+//            aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            Log.d("Amap", location.getLatitude() + "," + location.getLongitude());
+            Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
             //修改地图的中心点位置
 //            CameraPosition cp = aMap.getCameraPosition();
@@ -264,10 +225,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             if (oldLatLng != newLatLng) {
                 DLOG.d(TAG, location.getLatitude() + "," + location.getLongitude());
                 if (state == STATE_STARTED) {
-                    drawLine(oldLatLng, newLatLng);
                     Log.d(TAG, "newLatLng: " + newLatLng);
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
                     float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                    drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
                     tvCurrentValue.setText(moveDistance + "米/秒");
@@ -284,7 +245,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
                 int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
                 String errText = "定位失败," + errorCode + ": " + errorInfo;
-                Log.e("AmapErr", errText);
+                Log.e(TAG, errText);
                 //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 if (isFirstLatLng) {
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
@@ -419,7 +380,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         return screenBitmap;
     }
 
-    private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
+
 
 
     /**
@@ -469,7 +430,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
                 }
-                mlocationClient.startLocation();
                 btStart.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.GONE);
                 slideUnlockView.setVisibility(View.VISIBLE);
@@ -494,7 +454,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
-                mlocationClient.stopLocation();
                 if (elapseTime == 0) {
                     ToastUtil.showToast("运动时间太短，无法结束");
                     return;
@@ -575,10 +534,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        if (null != mlocationClient) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
+
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
         EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);

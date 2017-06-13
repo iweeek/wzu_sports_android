@@ -63,8 +63,8 @@ dependencies {
     compile 'com.android.support:support-v4:26.0.0-alpha1'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 //    compile 'com.amap.api:map3d-native:latest.integration'
-    compile 'com.amap.api:3dmap:5.0.0'
-    compile 'com.amap.api:location:latest.integration'
+    compile 'com.amap.api:3dmap:latest.integration'
+//    compile 'com.amap.api:location:latest.integration'
 }
 
 def releaseTime() {
