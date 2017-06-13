@@ -42,7 +42,6 @@ import com.application.library.runtime.event.EventManager;
 import com.google.gson.Gson;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
-import com.tim.app.constant.AppKey;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Sport;
@@ -70,6 +69,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private LatLng oldLatLng;
     private boolean isFirstLatLng;
     private int interval = 1000;
+    private int speedLimitation = 10;
 
     private TextView tvSportName;
     private TextView tvSportJoinNumber;
@@ -99,13 +99,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private LinearLayout llCurrentInfo;
     private RelativeLayout rlCostQuantity;
     private TextView tvCostQuantity;
+    private TextView tvPause;
 
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
     static final int STATE_PAUSE = 2;//暂停
-    static final int STATE_END = 3;//结束
 
-    private TextView tvPause;
+    static final int STATE_END = 3;//结束
 
     private int state = STATE_NORMAL;
 
@@ -144,7 +144,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     } else {
                         if (initSteps != 0) {
-                            noSportSteps = steps - -initSteps - currentSteps;
+                            noSportSteps = steps - initSteps - currentSteps;
                         }
                     }
                     break;
@@ -155,10 +155,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-
         mapView = (MapView) findViewById(R.id.map);
-        //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
-        mapView.onCreate(savedInstanceState);// 此方法必须重写
+        mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
 
         startService(new Intent(this, SensorListener.class));
@@ -179,8 +177,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      */
     private void setUpMap() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+        myLocationStyle.interval(interval);
         aMap.setMyLocationStyle(myLocationStyle);
         aMap.getUiSettings().setMyLocationButtonEnabled(true);
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
@@ -192,24 +190,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Bundle bundle = location.getExtras();
         if (location != null) {
             //定位成功
-//                mListener.onLocationChanged(location);// 显示系统小蓝点
-
-//            MyLocationStyle myLocationStyle;
-//            myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
-//            myLocationStyle.interval(interval); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
-//            aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-//            aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
-//            aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
 
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
-            //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
-            //修改地图的中心点位置
-//            CameraPosition cp = aMap.getCameraPosition();
-//            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-//            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-//            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//            aMap.moveCamera(cu);
 
             if (isFirstLatLng) {
                 //记录第一次的定位信息
@@ -228,14 +211,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     Log.d(TAG, "newLatLng: " + newLatLng);
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
                     float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                    if (moveDistance > speedLimitation){
+                        //位置漂移
+                        return;
+                    }
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
                     tvCurrentValue.setText(moveDistance + "米/秒");
                 }
-
                 oldLatLng = newLatLng;
-
             }
 
         } else {
@@ -246,7 +231,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
                 String errText = "定位失败," + errorCode + ": " + errorInfo;
                 Log.e(TAG, errText);
-                //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 if (isFirstLatLng) {
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 }
@@ -260,49 +244,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
-    @Override
-    protected int getLayoutId() {
-        return R.layout.activity_sport_detail;
-    }
-
-    @Override
-    public void initView() {
-        ibBack = (ImageButton) findViewById(R.id.ibBack);
-        ibBack.setOnClickListener(this);
-        tvSportName = (TextView) findViewById(R.id.tvSportName);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
-        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
-        tvCurrentTitle = (TextView) findViewById(R.id.tvCurrentTitle);
-        tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
-        tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
-        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvElapseTime = (TextView) findViewById(R.id.tvCurrentTime);
-        tvTargetTitle = (TextView) findViewById(R.id.tvTargetTitle);
-        tvTargetValue = (TextView) findViewById(R.id.tvTargetValue);
-        tvPause = (TextView) findViewById(R.id.tvPause);
-        ivLocation = (ImageView) findViewById(R.id.ivLocation);
-        slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
-        rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
-        btStart = (Button) findViewById(R.id.btStart);
-        llBottom = (LinearLayout) findViewById(R.id.llBottom);
-        btContinue = (Button) findViewById(R.id.btContinue);
-        btStop = (Button) findViewById(R.id.btStop);
-        tvResult = (TextView) findViewById(R.id.tvResult);
-        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
-        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
-        llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
-
-        llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
-        rlCostQuantity = (RelativeLayout) findViewById(R.id.rlCostQuantity);
-        tvCostQuantity = (TextView) findViewById(R.id.tvCostQuantity);
-        btStart.setOnClickListener(this);
-        btContinue.setOnClickListener(this);
-        btStop.setOnClickListener(this);
-        ivLocation.setOnClickListener(this);
-
-        tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
-        tvCurrentValue.setText("0 米/秒");
-    }
 
     @Override
     public void initData() {
@@ -381,8 +322,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
 
-
-
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
      */
@@ -392,15 +331,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 .add(oldData, newData)
                 .geodesic(true).color(Color.GREEN));
 
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
     }
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
@@ -500,26 +430,67 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      * 提交运动数据
      */
     private void commmitSportData(int projectId, int studentId, int targetTime) {
-        ServerInterface.instance().runningActivitys(TAG, projectId, studentId, currentDistance, elapseTime, targetTime, startTime, new StringResponseCallback() {
-            @Override
-            public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
-                if (errCode == 200 && !TextUtils.isEmpty(result)) {
-                    CommitResult commitResult = new Gson().fromJson(result, CommitResult.class);
-                    if (null != commitResult) {
-                        //TODO 业务逻辑
+        ServerInterface.instance().runningActivitys(
+                TAG, projectId, studentId, currentDistance,
+                elapseTime, targetTime, startTime, new StringResponseCallback() {
+                    @Override
+                    public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
+                        if (errCode == 200 && !TextUtils.isEmpty(result)) {
+                            CommitResult commitResult = new Gson().fromJson(result, CommitResult.class);
+                            if (null != commitResult) {
+                                //TODO 业务逻辑
+                            }
+                        } else {
+                            ToastUtil.showToast(errMsg);
+                        }
+                        return false;
                     }
-                } else {
-                    ToastUtil.showToast(errMsg);
-                }
-                return false;
-            }
-        });
+                });
+    }
+
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_sport_detail;
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
+    public void initView() {
+        ibBack = (ImageButton) findViewById(R.id.ibBack);
+        ibBack.setOnClickListener(this);
+        tvSportName = (TextView) findViewById(R.id.tvSportName);
+        tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
+        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
+        tvCurrentTitle = (TextView) findViewById(R.id.tvCurrentTitle);
+        tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
+        tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
+        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
+        tvElapseTime = (TextView) findViewById(R.id.tvCurrentTime);
+        tvTargetTitle = (TextView) findViewById(R.id.tvTargetTitle);
+        tvTargetValue = (TextView) findViewById(R.id.tvTargetValue);
+        tvPause = (TextView) findViewById(R.id.tvPause);
+        ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
+        rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
+        btStart = (Button) findViewById(R.id.btStart);
+        llBottom = (LinearLayout) findViewById(R.id.llBottom);
+        btContinue = (Button) findViewById(R.id.btContinue);
+        btStop = (Button) findViewById(R.id.btStop);
+        tvResult = (TextView) findViewById(R.id.tvResult);
+        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
+        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
+        llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
+
+        llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
+        rlCostQuantity = (RelativeLayout) findViewById(R.id.rlCostQuantity);
+        tvCostQuantity = (TextView) findViewById(R.id.tvCostQuantity);
+        btStart.setOnClickListener(this);
+        btContinue.setOnClickListener(this);
+        btStop.setOnClickListener(this);
+        ivLocation.setOnClickListener(this);
+
+        tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+        tvCurrentValue.setText("0 米/秒");
     }
 
 
@@ -531,6 +502,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    /**
+     * 方法必须重写
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
@@ -539,5 +525,4 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         OkHttpUtils.getInstance().cancelTag(TAG);
         EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
-
 }
