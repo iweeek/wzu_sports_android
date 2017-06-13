@@ -147,21 +147,22 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     EventListener eventListener = new EventListener() {
         @Override
         public void handleMessage(int what, int arg1, int arg2, Object dataobj) {
-
-            Log.d(TAG, "isFirst: " + isFirst);
             switch (what) {
                 case EventTag.ON_STEP_CHANGE:
                     int steps = (int) dataobj;
+                    Log.d(TAG, "steps: " + steps);
                     if (state == STATE_STARTED) {
-                        if (isFirst) {
+                        Log.d(TAG, "state: " + state);
+                        if (initSteps == 0) {
                             initSteps = steps;
-                            tvCurrentStep.setText(String.valueOf(initSteps) + "步");
                         } else {
                             currentSteps = steps - initSteps - noSportSteps;
                             tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
                         }
                     } else {
-                        noSportSteps += steps - currentSteps;
+                        if (initSteps != 0) {
+                            noSportSteps = steps - initSteps - currentSteps;
+                        }
                     }
                     break;
             }
