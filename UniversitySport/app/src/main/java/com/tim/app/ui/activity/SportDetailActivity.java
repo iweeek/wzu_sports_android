@@ -68,7 +68,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private AMap aMap;
 
     private LatLng oldLatLng;
-    private boolean isFirstLatLng;
+    private boolean isFirstLatLng = true;
     private int interval = 1000;
 
     private TextView tvSportName;
@@ -144,7 +144,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     } else {
                         if (initSteps != 0) {
-                            noSportSteps = steps - -initSteps - currentSteps;
+                            noSportSteps = steps - initSteps - currentSteps;
                         }
                     }
                     break;
@@ -204,14 +204,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
-            //修改地图的中心点位置
-//            CameraPosition cp = aMap.getCameraPosition();
-//            CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-//            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-//            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//            aMap.moveCamera(cu);
-
+            if (location.getLatitude() >= 0.0 && location.getLatitude() <= 0.0) {
+                String errText = "GPS信号弱";
+                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (isFirstLatLng) {
+                //修改地图的中心点位置
+                CameraPosition cp = aMap.getCameraPosition();
+                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                aMap.moveCamera(cu);
                 //记录第一次的定位信息
                 oldLatLng = newLatLng;
                 isFirstLatLng = false;
