@@ -186,7 +186,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void onMyLocationChange(Location location) {
-        Log.d(TAG, "onLocationChanged amapLocation: " + location);
+        Log.d(TAG, "onMyLocationChange location: " + location);
+        Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
+        Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
         Bundle bundle = location.getExtras();
         if (location != null) {
             //定位成功
