@@ -51,8 +51,6 @@ import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 
-import static com.amap.api.mapcore.util.cz.t;
-
 
 /**
  * 运动详情
@@ -75,13 +73,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvSportName;
     private TextView tvSportJoinNumber;
     private TextView tvCurrentDistance;
-    private TextView tvCurrentTitle;
+    private TextView tvAverSpeedLabel;
     private TextView tvElapseTime;
-    private TextView tvCurrentValue;
+    private TextView tvAverSpeed;
     private TextView tvTargetDistance;
     private TextView tvTargetTime;
-    private TextView tvTargetTitle;
-    private TextView tvTargetValue;
+    private TextView tvTargetSpeedLabel;
+    private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
     private TextView tvStepTitle;
@@ -124,7 +122,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         context.startActivity(intent);
     }
 
-    private int noSportSteps = 0;
+    private int pauseStateSteps = 0;
 
     EventListener eventListener = new EventListener() {
         @Override
@@ -138,12 +136,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         if (initSteps == 0) {
                             initSteps = steps;
                         } else {
-                            currentSteps = steps - initSteps - noSportSteps;
+                            currentSteps = steps - initSteps - pauseStateSteps;
                             tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
                         }
                     } else {
                         if (initSteps != 0) {
-                            noSportSteps = steps - initSteps - currentSteps;
+                            pauseStateSteps = steps - initSteps - currentSteps;
                         }
                     }
                     break;
@@ -220,7 +218,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-                    tvCurrentValue.setText(moveDistance + "米/秒");
+                    tvAverSpeed.setText(moveDistance + "米/秒");
                 }
 
                 if (oldLatLng == null) {
@@ -271,15 +269,25 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (sport.getTargetTime() > 0) {
             tvTargetTime.setText(getString(R.string.targetTime, String.valueOf(sport.getTargetTime())));
         }
+
         if (Sport.TYPE_FOUR == sport.getType()) {
-            tvTargetTitle.setText(getString(R.string.targetTitleStep));
-            tvTargetValue.setText(getString(R.string.targetStep, String.valueOf(sport.getSteps())));
+            tvTargetSpeedLabel.setText(getString(R.string.targetTitleStep));
+            tvTargetSpeed.setText(getString(R.string.targetStep, String.valueOf(sport.getSteps())));
         } else {
-            tvTargetTitle.setText(getString(R.string.targetTitleSpeed));
-            tvTargetValue.setText(getString(R.string.targetSpeed, sport.getTargetSpeed()));
+            tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
+            tvTargetSpeed.setText(getString(R.string.targetSpeed, sport.getTargetSpeed()));
         }
+
         tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
         tvElapseTime.setText(getString(R.string.targetTime, String.valueOf(elapseTime / 60)));
+        tvCurrentStep.setText("0 步");
+        tvAverSpeed.setText("0 米/秒");
+        initSteps = 0;
+        currentSteps = 0;
+        pauseStateSteps = 0;
+        currentDistance = 0;
+        elapseTime = 0;
+
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {// PackageManager.PERMISSION_DENIED
@@ -376,11 +384,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 slideUnlockView.setVisibility(View.VISIBLE);
                 tvPause.setVisibility(View.VISIBLE);
 
-                initSteps = 0;
-                currentSteps = 0;
-                noSportSteps = 0;
-                currentDistance = 0;
-                elapseTime = 0;
+//                initSteps = 0;
+//                currentSteps = 0;
+//                pauseStateSteps = 0;
+//                currentDistance = 0;
+//                elapseTime = 0;
+                initData();
                 break;
             case R.id.btContinue:
                 if (state == STATE_PAUSE) {
@@ -405,8 +414,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else {
                     tvResult.setText("不达标");
                 }
-                tvCurrentTitle.setText("平均速度");
-                tvCurrentValue.setText(currentDistance / elapseTime + "米/秒");
+                tvAverSpeedLabel.setText("平均速度");
+                tvAverSpeed.setText(currentDistance / elapseTime + "米/秒");
 
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
@@ -468,13 +477,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvSportName = (TextView) findViewById(R.id.tvSportName);
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
-        tvCurrentTitle = (TextView) findViewById(R.id.tvCurrentTitle);
-        tvCurrentValue = (TextView) findViewById(R.id.tvCurrentValue);
+        tvAverSpeedLabel = (TextView) findViewById(R.id.tvCurrentTitle);
+        tvAverSpeed = (TextView) findViewById(R.id.tvCurrentValue);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvCurrentTime);
-        tvTargetTitle = (TextView) findViewById(R.id.tvTargetTitle);
-        tvTargetValue = (TextView) findViewById(R.id.tvTargetValue);
+        tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
+        tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
@@ -495,9 +504,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
-
-        tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
-        tvCurrentValue.setText("0 米/秒");
     }
 
 
