@@ -75,7 +75,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvCurrentDistance;
     private TextView tvAverSpeedLabel;
     private TextView tvElapseTime;
-    private TextView tvAverSpeed;
+    private TextView tvInstantSpeed;
     private TextView tvTargetDistance;
     private TextView tvTargetTime;
     private TextView tvTargetSpeedLabel;
@@ -165,7 +165,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             aMap = mapView.getMap();
             setUpMap();
         }
-
         aMap.setOnMyLocationChangeListener(this);
     }
 
@@ -218,7 +217,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-                    tvAverSpeed.setText(moveDistance + "米/秒");
+                    tvInstantSpeed.setText(moveDistance / interval + "米/秒");
                 }
 
                 if (oldLatLng == null) {
@@ -230,6 +229,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     aMap.moveCamera(cu);
                 }
                 oldLatLng = newLatLng;
+            } else {
+                tvInstantSpeed.setText("0.0米/秒");
             }
 
         } else {
@@ -281,7 +282,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
         tvElapseTime.setText(getString(R.string.targetTime, String.valueOf(elapseTime / 60)));
         tvCurrentStep.setText("0 步");
-        tvAverSpeed.setText("0 米/秒");
+        tvInstantSpeed.setText("0 米/秒");
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
@@ -415,7 +416,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                tvAverSpeed.setText(currentDistance / elapseTime + "米/秒");
+                tvInstantSpeed.setText(currentDistance / elapseTime + "米/秒");
 
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
@@ -478,7 +479,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvCurrentTitle);
-        tvAverSpeed = (TextView) findViewById(R.id.tvCurrentValue);
+        tvInstantSpeed = (TextView) findViewById(R.id.tvCurrentValue);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvCurrentTime);
