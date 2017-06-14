@@ -51,6 +51,8 @@ import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 
+import static com.amap.api.mapcore.util.cz.t;
+
 
 /**
  * 运动详情
@@ -66,8 +68,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private MapView mapView;
     private AMap aMap;
 
-    private LatLng oldLatLng;
-    private boolean isFirstLatLng = true;
+    private LatLng oldLatLng = null;
     private int interval = 1000;
     private int speedLimitation = 10;
 
@@ -122,8 +123,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         intent.putExtra("sport", sport);
         context.startActivity(intent);
     }
-
-    boolean isFirst = true;
 
     private int noSportSteps = 0;
 
@@ -198,26 +197,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
             if (location.getLatitude() >= 0.0 && location.getLatitude() <= 0.0) {
                 String errText = "GPS信号弱";
-                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
                 return;
-            }
-
-            if (isFirstLatLng) {
-                //修改地图的中心点位置
-                CameraPosition cp = aMap.getCameraPosition();
-                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                aMap.moveCamera(cu);
-                //记录第一次的定位信息
-                oldLatLng = newLatLng;
-                isFirstLatLng = false;
             }
 
             elapseTime += interval / 1000;
             Log.d(TAG, "elapseTime: " + elapseTime);
             tvElapseTime.setText(String.valueOf(elapseTime / 60) + "分钟");
 
+            Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
             //位置有变化
             if (oldLatLng != newLatLng) {
                 DLOG.d(TAG, location.getLatitude() + "," + location.getLongitude());
@@ -234,6 +222,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
                     tvCurrentValue.setText(moveDistance + "米/秒");
                 }
+
+                if (oldLatLng == null) {
+                    //修改地图的中心点位置
+                    CameraPosition cp = aMap.getCameraPosition();
+                    CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+                    aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                    aMap.moveCamera(cu);
+                }
                 oldLatLng = newLatLng;
             }
 
@@ -245,8 +242,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
                 String errText = "定位失败," + errorCode + ": " + errorInfo;
                 Log.e(TAG, errText);
-                if (isFirstLatLng) {
-                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                if (oldLatLng == null) {
+                    Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -379,14 +376,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 slideUnlockView.setVisibility(View.VISIBLE);
                 tvPause.setVisibility(View.VISIBLE);
 
-                if (!isFirst) {
-                    initSteps = 0;
-                    currentSteps = 0;
-                    noSportSteps = 0;
-                    currentDistance = 0;
-                    elapseTime = 0;
-                    isFirst = true;
-                }
+                initSteps = 0;
+                currentSteps = 0;
+                noSportSteps = 0;
+                currentDistance = 0;
+                elapseTime = 0;
                 break;
             case R.id.btContinue:
                 if (state == STATE_PAUSE) {
@@ -426,7 +420,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 llBottom.setVisibility(View.GONE);
                 btStart.setVisibility(View.VISIBLE);
 
-                isFirst = false;
                 break;
             case R.id.ivLocation:
                 //修改地图的中心点位置
@@ -534,6 +527,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        Log.d(TAG, "onDestroy");
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
