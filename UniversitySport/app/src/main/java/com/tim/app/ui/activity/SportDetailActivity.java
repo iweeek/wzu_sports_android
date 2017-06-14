@@ -193,7 +193,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
-            if (location.getLatitude() >= 0.0 && location.getLatitude() <= 0.0) {
+            if (Double.compare(location.getLatitude(), 0.0) == 0) {
                 String errText = "GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
                 return;
