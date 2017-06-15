@@ -138,11 +138,15 @@
 
     <!-- 首页 -->
     <string name="joinPrompt">%s人正在参加</string>
-    <string name="targetDistance">%s 米</string>
-    <string name="targetTime">%s 分钟</string>
-    <string name="targetSpeed">%s 米/秒</string>
-    <string name="targetStep">%s 步</string>
-    <string name="targetTitleSpeed">达标平均速度</string>
+    <string name="targetDistance">%s</string>
+    <string name="meter">米</string>
+    <string name="targetTime">%s</string>
+    <string name="minute">分钟</string>
+    <string name="targetSpeed">%s</string>
+    <string name="speed">米/秒</string>
+    <string name="targetStep">%s</string>
+    <string name="step">步</string>
+    <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTitleStep">达标步数</string>
     <string name="curTermTargetCount">学期目标次数：%s次</string>
     <string name="accumulCostEnergy">累计消耗热量：%s千卡</string>
