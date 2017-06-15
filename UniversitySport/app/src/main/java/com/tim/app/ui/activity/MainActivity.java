@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -39,6 +40,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static com.amap.api.mapcore.util.cz.v;
 
 /**
  * 首页
@@ -174,22 +177,20 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     public void initData() {
-        ServerInterface.instance().runningProjects(AppKey.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningProjects(AppKey.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-
                     JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningProjects");
                     try {
-
                         for (int i = 0; i < 4; i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
-                            int id1 = jsonObject.getInt("id");
+                            int projectId = jsonObject.getInt("id");
                             int distance = jsonObject.optInt("qualifiedDistance", 1000);
                             int time = jsonObject.optInt("qualifiedCostTime", 20);
                             int speed = distance / time;
                             Sport sport = new Sport();
-                            if (id1 == 1) {
+                            if (projectId == 1) {
                                 sport.setTitle(jsonObject.optString("name", "快走"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
@@ -197,7 +198,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetSpeed(speed+"");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_jogging);
-                            } else if (id1 == 2) {
+                            } else if (projectId == 2) {
                                 sport.setTitle(jsonObject.optString("name", "随机慢跑"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
@@ -205,7 +206,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetSpeed(speed+"");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_run);
-                            } else if (id1 == 3) {
+                            } else if (projectId == 3) {
                                 sport.setTitle(jsonObject.optString("name", "快跑"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
@@ -213,7 +214,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetSpeed(speed+"");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                            } else if (id1 == 4) {
+                            } else if (projectId == 4) {
                                 sport.setTitle(jsonObject.optString("name", "累计步数"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
@@ -225,59 +226,41 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             dataList.add(sport);
                         }
                         adapter.notifyDataSetChanged();
-                        homepageHeadView.setData(3, 1, "1000");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
+                    return true;
                 } else {
                     ToastUtil.showToast(errMsg);
+                    return false;
                 }
-                return false;
             }
 
         });
-        //        for (int i = 1; i < 5; i++) {//项目id从1开始，因为暂时没有获取项目列表的接口，所以这些信息先写死在代码中
-        //            Sport sport = new Sport();
-        //            sport.setType(i);
-        //            if (i == 1) {
-        //                sport.setTitle("随机慢跑");
-        //                sport.setJoinNumber(new Random().nextInt(100));
-        //                sport.setTargetDistance(5000);
-        //                sport.setTargetTime(60);
-        //                sport.setTargetSpeed("1.0");
-        //                sport.setSteps(6000);
-        //                sport.setBgDrawableId(R.drawable.ic_bg_jogging);
-        //            } else if (i == 2) {
-        //                sport.setTitle("快跑");
-        //                sport.setJoinNumber(new Random().nextInt(100));
-        //                sport.setTargetDistance(3000);
-        //                sport.setTargetTime(30);
-        //                sport.setTargetSpeed("1.0");
-        //                sport.setSteps(6000);
-        //                sport.setBgDrawableId(R.drawable.ic_bg_run);
-        //            } else if (i == 3) {
-        //                sport.setTitle("快走");
-        //                sport.setJoinNumber(new Random().nextInt(100));
-        //                sport.setTargetDistance(7000);
-        //                sport.setTargetTime(60);
-        //                sport.setTargetSpeed("1.0");
-        //                sport.setSteps(6000);
-        //                sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-        //            } else if (i == 4) {
-        //                sport.setTitle("累计步数");
-        //                sport.setJoinNumber(new Random().nextInt(100));
-        //                sport.setTargetDistance(600);
-        //                sport.setTargetTime(60);
-        //                sport.setTargetSpeed("1.0");
-        //                sport.setSteps(6000);
-        //                sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
-        //            }
-        //            dataList.add(sport);
-        //        }
-        //        adapter.notifyDataSetChanged();
-        //                homepageHeadView.setData(3, 1, "1000");
+
+        int studentId = 1;
+        ServerInterface.instance().queryCurTermData(AppKey.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    try {
+                        String targetSportTimes = json.optJSONObject("data").optJSONObject("university").optJSONObject("currentTerm").
+                                optJSONObject("termSportsTask").getString("targetSportsTimes");
+                        String curQuaTimes = json.optJSONObject("data").optJSONObject("student").getString("currentTermQualifiedActivityCount");
+                        String totalConsumeEnergy = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
+                        String surplusTimes = String.valueOf(Integer.parseInt(targetSportTimes) - Integer.parseInt(curQuaTimes));
+                        homepageHeadView.setData(targetSportTimes, surplusTimes, totalConsumeEnergy);
+                        return true;
+                    } catch (org.json.JSONException e) {
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: " + e);
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        });
     }
 
     @Override

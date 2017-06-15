@@ -22,7 +22,7 @@ public class ServerInterface {
 
     private static final String API_SCHEME = "api/";//扩展字段
 
-    public static final String INIT_PUSH = "runningActivitys";//
+    public static final String INIT_PUSH = "postRunningActDate";//
 
     public static final String QUERY_INTERFACE = "graphql/query";
 
@@ -52,8 +52,8 @@ public class ServerInterface {
      * @param startTime 开始时间
      * @param callback
      */
-    public void runningActivitys(String tag, int projectId ,int studentId, int distance, long costTime, long targetTime,
-                                 long startTime, ResponseCallback callback) {
+    public void postRunningActDate(String tag, int projectId , int studentId, int distance, long costTime, long targetTime,
+                                   long startTime, ResponseCallback callback) {
         String url = API_SCHEME + INIT_PUSH;
         HashMap params = new HashMap();
         params.put("projectId", projectId);
@@ -66,45 +66,44 @@ public class ServerInterface {
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
-    public void runningProjects(int universityId, ResponseCallback callback) {
+    public void query(String queryStr, ResponseCallback callback) {
         String url = API_SCHEME + QUERY_INTERFACE;
-        HashMap params = new HashMap();
-        String queryStr = "{runningProjects(universityId:" + universityId + "){id name qualifiedDistance qualifiedCostTime}}";
-
-
         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+        HashMap params = new HashMap();
+        Log.d(TAG, "queryRunningProjects: headers.toString()" + headers.toString());
 
-        Log.d(TAG, "runningProjects: headers.toString()"+headers.toString());
-
-        headers.put("Content-Type", "application/json;charset=UTF-8");
-        Log.d(TAG, "headers: " + headers);
-        headers.remove("content-type");
-        Log.d(TAG, "headers: " + headers);
+//        headers.put("Content-Type", "application/json;charset=UTF-8");
+//        Log.d(TAG, "headers: " + headers);
+//        headers.remove("content-type");
+//        Log.d(TAG, "headers: " + headers);
 //        headers.put("content-type", "x-www-form-urlencoded");
-        Log.d(TAG, "headers: " + headers);
+//        Log.d(TAG, "headers: " + headers);
         params.put("query", queryStr);
         Log.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
 
-//        OkHttpClient client = new OkHttpClient();
-//
-//        MediaType mediaType;
-//        mediaType = MediaType.parse("application/x-www-form-urlencoded");
-//        RequestBody body = RequestBody.create(mediaType, "query=%7BrunningProjects(universityId%3A1)%7Bid%20name%20qualifiedDistance%20qualifiedCostTime%7D%7D");
-//        Request request = new Request.Builder()
-//                .url("http://120.77.72.16:8080//api/graphql/query")
-//                .post(body)
-//                .addHeader("content-type", "application/x-www-form-urlencoded")
-//                .addHeader("cache-control", "no-cache")
-//                .addHeader("postman-token", "e8bfcc85-a2e7-2497-0233-8437ca653a96")
-//                .build();
-//        try {
-//            Response response = client.newCall(request).execute();
-//            Log.d(TAG, "response: " + response);
-//        } catch (java.io.IOException e) {
-//            Log.d(TAG, "IOException e: " + e);
-//        }
+    public void queryRunningProjects(int universityId, ResponseCallback callback) {
+        String queryStr = "{runningProjects(universityId:" + universityId + ")" +
+                "{id name qualifiedDistance qualifiedCostTime}}";
+        query(queryStr, callback);
+    }
 
+    public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
+        String queryStr = "{university(id:" + universityId +"){\n" +
+                "    currentTerm {\n" +
+                "      termSportsTask {\n" +
+                "        targetSportsTimes\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "  \n" +
+                "  student(id:" + studentId + ") {\n" +
+                "    currentTermQualifiedActivityCount\n" +
+                "    caloriesConsumption\n" +
+                "  }\n" +
+                "}\n";
+        query(queryStr, callback);
     }
 
 

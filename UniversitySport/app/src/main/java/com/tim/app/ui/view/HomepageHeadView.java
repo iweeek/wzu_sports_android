@@ -17,8 +17,8 @@ import com.tim.app.ui.activity.SchoolRankActivity;
  */
 public class HomepageHeadView extends LinearLayout implements View.OnClickListener {
 
-    private TextView tvTargetNumber;
-    private TextView tvCost;
+    private TextView tvCurTermTargetCount;
+    private TextView tvAccumulCostEnergy;
     private TextView tvSurplus;
     private RelativeLayout rlRank;
 
@@ -29,8 +29,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        tvTargetNumber = (TextView) findViewById(R.id.tvTargetNumber);
-        tvCost = (TextView) findViewById(R.id.tvCost);
+        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermTargetCount);
+        tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
         tvSurplus = (TextView) findViewById(R.id.tvSurplus);
 
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
@@ -56,10 +56,10 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      * @param surplus
      * @param cost
      */
-    public void setData(int count, int surplus, String cost) {
-        tvTargetNumber.setText(getContext().getString(R.string.targetCount, String.valueOf(count)));
-        tvSurplus.setText(String.valueOf(surplus));
-        tvCost.setText(getContext().getString(R.string.totalCost, cost));
+    public void setData(String count, String surplus, String cost) {
+        tvCurTermTargetCount.setText(getContext().getString(R.string.curTermTargetCount, count));
+        tvSurplus.setText(surplus);
+        tvAccumulCostEnergy.setText(getContext().getString(R.string.accumulCostEnergy, cost));
     }
 
 }

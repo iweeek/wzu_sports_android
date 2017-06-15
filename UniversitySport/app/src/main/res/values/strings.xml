@@ -144,7 +144,8 @@
     <string name="targetStep">%s 步</string>
     <string name="targetTitleSpeed">达标平均速度</string>
     <string name="targetTitleStep">达标步数</string>
-    <string name="targetCount">本学期总目标次数：%s次</string>
+    <string name="curTermTargetCount">学期目标次数：%s次</string>
+    <string name="accumulCostEnergy">累计消耗热量：%s千卡</string>
     <string name="totalCost">%s 千卡</string>
     <string name="completeCount">%s 段</string>
     <string name="sportCostQuantity">本次消耗热量: %s大卡</string>

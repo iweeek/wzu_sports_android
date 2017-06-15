@@ -446,7 +446,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      * 提交运动数据
      */
     private void commmitSportData(int projectId, int studentId, int targetTime) {
-        ServerInterface.instance().runningActivitys(
+        ServerInterface.instance().postRunningActDate(
                 TAG, projectId, studentId, currentDistance,
                 elapseTime, targetTime, startTime, new StringResponseCallback() {
                     @Override

@@ -19,35 +19,24 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvTargetNumber"
+                android:id="@+id/tvCurTermTargetCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/targetCount"
+                android:text="@string/curTermTargetCount"
                 android:textColor="#868892"
                 android:textSize="16dp" />
 
             <TextView
+                android:id="@+id/tvAccumulCostEnergy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="累计消耗热量"
+                android:text="@string/accumulCostEnergy"
                 android:textColor="#868892"
                 android:textSize="16dp" />
 
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tvCost"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/rlTop"
-            android:layout_marginTop="10dp"
-            android:text="@string/totalCost"
-            android:textColor="#868892"
-            android:textSize="16dp" />
-
 
         <RelativeLayout
             android:layout_width="match_parent"
