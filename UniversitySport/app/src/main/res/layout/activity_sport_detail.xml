@@ -201,7 +201,7 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/rlCostQuantity"
+            android:id="@+id/rlCurConsumeEnergy"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:visibility="gone"
@@ -212,11 +212,11 @@
                 android:layout_height="0.5dp"
                 android:background="@color/view_background_color" />
             <TextView
-                android:id="@+id/tvCostQuantity"
+                android:id="@+id/tvCurConsumeEnergy"
                 android:layout_centerInParent="true"
                 android:layout_width="wrap_content"
                 android:gravity="center"
-                android:text="@string/sportCostQuantity"
+                android:text="@string/curConsumeEnergy"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
 

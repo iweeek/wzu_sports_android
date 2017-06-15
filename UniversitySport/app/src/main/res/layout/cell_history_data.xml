@@ -136,7 +136,7 @@
             android:id="@+id/tvSportCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#979ea3"   android:text="@string/sportCostQuantity"
+            android:textColor="#979ea3"   android:text="@string/curConsumeEnergy"
             android:textSize="14dp" />
 
         <TextView

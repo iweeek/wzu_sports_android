@@ -36,20 +36,20 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
-import com.application.library.net.StringResponseCallback;
+import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
-import com.google.gson.Gson;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.server.result.CommitResult;
 import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
+
+import org.json.JSONObject;
 
 
 /**
@@ -96,8 +96,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SlideUnlockView slideUnlockView;
 
     private LinearLayout llCurrentInfo;
-    private RelativeLayout rlCostQuantity;
-    private TextView tvCostQuantity;
+    private RelativeLayout rlCurConsumeEnergy;
+    private TextView tvCurConsumeEnergy;
     private TextView tvPause;
 
     static final int STATE_NORMAL = 0;//初始状态
@@ -191,6 +191,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //定位成功
 
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Log.d(TAG, "newLatLng: " + newLatLng);
             Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
             //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
             if (Double.compare(location.getLatitude(), 0.0) == 0) {
@@ -208,7 +209,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             if (oldLatLng != newLatLng) {
                 DLOG.d(TAG, location.getLatitude() + "," + location.getLongitude());
                 if (state == STATE_STARTED) {
-                    Log.d(TAG, "newLatLng: " + newLatLng);
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
                     float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
                     if (moveDistance > speedLimitation){
@@ -222,6 +222,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
 
                 if (oldLatLng == null) {
+                    Log.d(TAG, "oldLatLng == null");
+                    Log.d(TAG, "newLatLng: " + newLatLng);
                     //修改地图的中心点位置
                     CameraPosition cp = aMap.getCameraPosition();
                     CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
@@ -230,6 +232,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     aMap.moveCamera(cu);
                 }
                 oldLatLng = newLatLng;
+                Log.d(TAG, "oldLatLng = newLatLng oldLatLng: " + oldLatLng);
             }
 
         } else {
@@ -374,7 +377,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 startTime = System.currentTimeMillis();
                 ibBack.setVisibility(View.GONE);
                 llCurrentInfo.setVisibility(View.VISIBLE);
-                rlCostQuantity.setVisibility(View.GONE);
+                rlCurConsumeEnergy.setVisibility(View.GONE);
                 llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
                 if (state == STATE_NORMAL || state == STATE_END) {
                     state = STATE_STARTED;
@@ -420,9 +423,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
 
-                String cost = String.valueOf(Math.round(currentDistance * 0.3));
-                rlCostQuantity.setVisibility(View.VISIBLE);
-                tvCostQuantity.setText(getString(R.string.sportCostQuantity, String.valueOf(cost)));
                 tvResult.setVisibility(View.VISIBLE);
                 tvSportJoinNumber.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.VISIBLE);
@@ -448,18 +448,22 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void commmitSportData(int projectId, int studentId, int targetTime) {
         ServerInterface.instance().postRunningActDate(
                 TAG, projectId, studentId, currentDistance,
-                elapseTime, targetTime, startTime, new StringResponseCallback() {
+                elapseTime, targetTime, startTime, new JsonResponseCallback() {
                     @Override
-                    public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
-                        if (errCode == 200 && !TextUtils.isEmpty(result)) {
-                            CommitResult commitResult = new Gson().fromJson(result, CommitResult.class);
-                            if (null != commitResult) {
-                                //TODO 业务逻辑
+                    public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                        if (errCode == 0) {
+                            try {
+                                String curConsumeEnergy = json.getString("caloriesConsumed");
+                                rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+                                tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
+                            } catch (org.json.JSONException e) {
+                                e.printStackTrace();
+                                Log.e(TAG, "commmitSportData onJsonResponse e: " + e);
                             }
+                            return true;
                         } else {
-                            ToastUtil.showToast(errMsg);
+                            return false;
                         }
-                        return false;
                     }
                 });
     }
@@ -498,8 +502,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
-        rlCostQuantity = (RelativeLayout) findViewById(R.id.rlCostQuantity);
-        tvCostQuantity = (TextView) findViewById(R.id.tvCostQuantity);
+        rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
+        tvCurConsumeEnergy = (TextView) findViewById(R.id.tvCurConsumeEnergy);
         btStart.setOnClickListener(this);
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);

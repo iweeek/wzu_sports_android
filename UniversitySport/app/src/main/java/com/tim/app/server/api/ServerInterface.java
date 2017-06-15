@@ -22,7 +22,7 @@ public class ServerInterface {
 
     private static final String API_SCHEME = "api/";//扩展字段
 
-    public static final String INIT_PUSH = "postRunningActDate";//
+    public static final String INIT_PUSH = "runningActivities";//
 
     public static final String QUERY_INTERFACE = "graphql/query";
 

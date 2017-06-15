@@ -51,7 +51,7 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvSportDistance.setText(mContext.getString(R.string.targetDistance, String.valueOf(data.getMinDistance())));
         }
         if (data.getCostNumber() > 0) {
-            holder.tvSportCost.setText(mContext.getString(R.string.sportCostQuantity, String.valueOf(data.getCostNumber())));
+            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getCostNumber())));
         }
         if (data.getSportTime() > 0) {
             holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(data.getSportTime())));
