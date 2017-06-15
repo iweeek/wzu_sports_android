@@ -31,6 +31,7 @@ import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
@@ -158,6 +159,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         startService(new Intent(this, SensorListener.class));
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
+
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int height = displayMetrics.heightPixels;
+//        int width = displayMetrics.widthPixels;
+
     }
 
     private void initMap() {
@@ -172,12 +179,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      * 设置一些amap的属性
      */
     private void setUpMap() {
+        setupLocationStyle();
+        aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
+    }
+
+    private void setupLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
         myLocationStyle.interval(interval);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
+                fromResource(R.drawable.navi_map_gps_locked));
         aMap.setMyLocationStyle(myLocationStyle);
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
     }
 
     @Override
@@ -200,7 +213,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
             elapseTime += interval / 1000;
             Log.d(TAG, "elapseTime: " + elapseTime);
-            tvElapseTime.setText(String.valueOf(elapseTime / 60) + "分钟");
+            tvElapseTime.setText(String.valueOf(elapseTime / 60));
 
             Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
             //位置有变化
@@ -216,8 +229,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
-                    tvCurrentDistance.setText(String.valueOf(currentDistance) + "米");
-                    tvInstantSpeed.setText(moveDistance / interval + "米/秒");
+                    tvCurrentDistance.setText(String.valueOf(currentDistance));
+                    tvInstantSpeed.setText(moveDistance / interval+"");
                 }
 
                 if (oldLatLng == null) {
@@ -230,7 +243,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
                 oldLatLng = newLatLng;
             } else {
-                tvInstantSpeed.setText("0.0米/秒");
+                tvInstantSpeed.setText("0.0");
             }
 
         } else {
@@ -265,7 +278,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sport.getJoinNumber())));
         }
         if (sport.getTargetDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
+//            tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
+            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
         }
         if (sport.getTargetTime() > 0) {
             tvTargetTime.setText(getString(R.string.targetTime, String.valueOf(sport.getTargetTime())));
@@ -282,7 +296,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
         tvElapseTime.setText(getString(R.string.targetTime, String.valueOf(elapseTime / 60)));
         tvCurrentStep.setText("0 步");
-        tvInstantSpeed.setText("0 米/秒");
+        tvInstantSpeed.setText("0.0");
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
@@ -385,11 +399,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 slideUnlockView.setVisibility(View.VISIBLE);
                 tvPause.setVisibility(View.VISIBLE);
 
-//                initSteps = 0;
-//                currentSteps = 0;
-//                pauseStateSteps = 0;
-//                currentDistance = 0;
-//                elapseTime = 0;
                 initData();
                 break;
             case R.id.btContinue:
@@ -416,7 +425,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                tvInstantSpeed.setText(currentDistance / elapseTime + "米/秒");
+                tvInstantSpeed.setText(currentDistance / elapseTime +"");
 
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
