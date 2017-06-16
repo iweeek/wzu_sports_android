@@ -3,13 +3,16 @@ package com.tim.app.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tim.app.R;
+import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.activity.SchoolRankActivity;
 
 /**
@@ -21,9 +24,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private TextView tvAccumulCostEnergy;
     private TextView tvSurplus;
     private RelativeLayout rlRank;
+    private RelativeLayout rlHeadView;
+    private LinearLayout llBadNetworkFresh;
+    private Context ctx;
 
     public HomepageHeadView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        ctx = context;
     }
 
     @Override
@@ -34,8 +41,11 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         tvSurplus = (TextView) findViewById(R.id.tvSurplus);
 
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
-
         rlRank.setOnClickListener(this);
+
+        rlHeadView = (RelativeLayout) findViewById(R.id.rlHeadView);
+
+        llBadNetworkFresh = (LinearLayout) findViewById(R.id.llBadNetworkFresh);
 
     }
 
@@ -47,6 +57,26 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
                 getContext().startActivity(intent);
                 break;
         }
+    }
+
+    public void setLayoutVisible(int id, boolean isVisible) {
+        ViewGroup vg = (ViewGroup) findViewById(id);
+        if (isVisible) {
+            vg.setVisibility(View.VISIBLE);
+        } else {
+            vg.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void displayBadNetworkLayout() {
+        rlHeadView.setVisibility(View.INVISIBLE);
+        llBadNetworkFresh.setVisibility(View.VISIBLE);
+        llBadNetworkFresh.setOnClickListener((MainActivity)ctx);
+    }
+
+    public void displayNormalLayout() {
+        rlHeadView.setVisibility(View.VISIBLE);
+        llBadNetworkFresh.setVisibility(View.INVISIBLE);
     }
 
     /**

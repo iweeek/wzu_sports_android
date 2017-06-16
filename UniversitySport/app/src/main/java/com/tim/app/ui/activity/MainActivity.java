@@ -41,12 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static android.R.attr.onClick;
 import static com.amap.api.mapcore.util.cz.v;
 
 /**
  * 首页
  */
-public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener {
+public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -227,6 +228,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         }
                         adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
+                        //TODO
                         e.printStackTrace();
                     }
                     return true;
@@ -250,12 +252,15 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String totalConsumeEnergy = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
                         String surplusTimes = String.valueOf(Integer.parseInt(targetSportTimes) - Integer.parseInt(curQuaTimes));
                         homepageHeadView.setData(targetSportTimes, surplusTimes, totalConsumeEnergy);
+                        homepageHeadView.displayNormalLayout();
+                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (org.json.JSONException e) {
-                        Log.e(TAG, "queryCurTermData onJsonResponse e: " + e);
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
                         return false;
                     }
                 } else {
+                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }
@@ -282,6 +287,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 break;
             case R.id.tvLogout:
                 finish();
+                break;
+            case R.id.llBadNetworkFresh:
+                initData();
+                Log.d(TAG, "onClick llBadNetworkFresh");
                 break;
         }
     }
