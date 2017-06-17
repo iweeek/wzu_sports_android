@@ -14,9 +14,9 @@ public class EventManager {
     private static EventManager manager = null;
 
     private Hashtable<Integer, ArrayList<ListenerItem>> EventTable = null;
-
+    //链表的pool  散开的。
     private LinkedList<ListenerItem> DistributePool = null;
-
+    //作为同步时的对象
     private Object lock = new Object();
 
     private EventManager() {
@@ -56,12 +56,13 @@ public class EventManager {
         MainHandler.sendMessage(msg);
     }
 
+    //处理事件
     private void dealWithEvent(int what, int arg1, int arg2, Object dataobj) {
         // Log.d("dmevent", "deal Event what:" + what + " arg1:" + arg1 + " arg2:" + arg2 + " obj:" + dataobj);
         if (EventTable == null) {
             return;
         }
-
+        //谁注册了，这里就会得到这个listener。
         ArrayList<ListenerItem> list = EventTable.get(what);
         if (list == null) {
             return;
@@ -70,7 +71,7 @@ public class EventManager {
         for (int i = 0; i < list.size(); i++) {
             item = list.get(i);
             if (item.getWhat() == what) {
-                if (item.getCallMainThread()) {
+                if (item.getCallMainThread()) {//默认是true
                     item.getListener().handleMessage(what, arg1, arg2, dataobj);
                 } else {
                     itemsend = new ListenerItem(item.getWhat(), item.getListener(), item.getCallMainThread());
@@ -104,7 +105,6 @@ public class EventManager {
                     return false;
                 }
             }
-
             list.add(item);
         } else {
             list = new ArrayList<ListenerItem>();

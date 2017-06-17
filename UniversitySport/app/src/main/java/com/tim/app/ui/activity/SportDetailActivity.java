@@ -46,6 +46,7 @@ import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
+import com.tim.app.sport.Database;
 import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
@@ -59,6 +60,7 @@ import org.json.JSONObject;
 public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
 
     private static final String TAG = "SportDetailActivity";
+    private Context context = this;
     private CoordinateConverter converter;
 
     private Sport sport;
@@ -113,6 +115,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long elapseTime = 0;
     private int currentSteps = 0;
     private long startTime;//开始时间
+    private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
 
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
@@ -158,7 +161,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         initMap();
 
         startService(new Intent(this, SensorListener.class));
-        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);
+        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
 
 //        DisplayMetrics displayMetrics = new DisplayMetrics();
 //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -281,11 +284,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sport.getJoinNumber())));
         }
         if (sport.getTargetDistance() > 0) {
-//            tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
-            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
+            tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
+//            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
         }
         if (sport.getTargetTime() > 0) {
-            tvTargetTime.setText(sport.getTargetTime());
+            tvTargetTime.setText(String.valueOf(sport.getTargetTime()));
         }
 
         if (Sport.TYPE_FOUR == sport.getType()) {
@@ -455,13 +458,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void commmitSportData(int projectId, int studentId, int targetTime) {
+    private void commmitSportData(final int projectId, final int studentId, int targetTime) {
+
         ServerInterface.instance().postRunningActDate(
                 TAG, projectId, studentId, currentDistance,
                 elapseTime, targetTime, startTime, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                        if (errCode == 0) {
+                        Log.d(TAG, "errCode:" + errCode);
+
+                        if (errCode == 0) {//todo
                             try {
                                 String curConsumeEnergy = json.getString("caloriesConsumed");
                                 rlCurConsumeEnergy.setVisibility(View.VISIBLE);
@@ -472,6 +478,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             }
                             return true;
                         } else {
+                            //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
+                            int result = Database.getInstance(context).saveRunningSportsRecord(
+                                    projectId, studentId, currentDistance,
+                                    elapseTime, startTime, currentSteps, System.currentTimeMillis());
+
+                            Log.d(TAG, "result:" + result);
                             return false;
                         }
                     }

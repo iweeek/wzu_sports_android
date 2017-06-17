@@ -46,6 +46,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
     private final static int NOTIFICATION_ID = 1;
     private final static long MICROSECONDS_IN_ONE_MINUTE = 60000000;
+    //时间间隔
     private final static long SAVE_OFFSET_TIME = AlarmManager.INTERVAL_HOUR;
     private final static int SAVE_OFFSET_STEPS = 1;
 
@@ -64,6 +65,7 @@ public class SensorListener extends Service implements SensorEventListener {
         // when this method is called...
     }
 
+    //这里的event中应该有最新的自启动以来的步数。
     @Override
     public void onSensorChanged(final SensorEvent event) {
         if (event.values[0] > Integer.MAX_VALUE) {
@@ -74,10 +76,14 @@ public class SensorListener extends Service implements SensorEventListener {
         }
     }
 
+    /**
+     * 获取上次暂停时记录的步数，根据当前步数计算得出暂停时走的步数。插入新的记录到数据库，并且更新SP。
+     */
     private void updateIfNecessary() {
         if (steps > lastSaveSteps + SAVE_OFFSET_STEPS ||
                 (steps > 0 && System.currentTimeMillis() > lastSaveTime + SAVE_OFFSET_TIME)) {
             Database db = Database.getInstance(this);
+            //为true 代表 今天的步数还未存入数据库中。
             if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
                 int pauseDifference = steps -
                         getSharedPreferences("pedometer", Context.MODE_PRIVATE)
@@ -89,6 +95,7 @@ public class SensorListener extends Service implements SensorEventListener {
                             .putInt("pauseCount", steps).commit();
                 }
             }
+            //保存自系统启动时到现在的步数
             db.saveCurrentSteps(steps);
             db.close();
             lastSaveSteps = steps;
@@ -98,6 +105,7 @@ public class SensorListener extends Service implements SensorEventListener {
             Database db1 = Database.getInstance(this);
             int steps = Math.max(db1.getCurrentSteps() + db1.getSteps(Util.getToday()), 0);
             db1.close();
+            //内部会调用注册了的eventListener 的 handleMessage()方法
             EventManager.ins().sendEvent(EventTag.ON_STEP_CHANGE, 0, 0, steps);
         }
     }
@@ -122,7 +130,7 @@ public class SensorListener extends Service implements SensorEventListener {
                 Database db = Database.getInstance(this);
                 db.addToLastEntry(-difference);
                 db.close();
-                prefs.edit().remove("pauseCount").commit();
+                prefs.edit().remove("pauseCount").apply();
                 updateNotificationState();
             } else { // pause counting
                 // cancel restart
@@ -130,7 +138,7 @@ public class SensorListener extends Service implements SensorEventListener {
                         .cancel(PendingIntent.getService(getApplicationContext(), 2,
                                 new Intent(this, SensorListener.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
-                prefs.edit().putInt("pauseCount", steps).commit();
+                prefs.edit().putInt("pauseCount", steps).apply();
                 updateNotificationState();
                 stopSelf();
                 return START_NOT_STICKY;
@@ -150,7 +158,6 @@ public class SensorListener extends Service implements SensorEventListener {
                         .getService(getApplicationContext(), 2,
                                 new Intent(this, SensorListener.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
-
         return START_STICKY;
     }
 
