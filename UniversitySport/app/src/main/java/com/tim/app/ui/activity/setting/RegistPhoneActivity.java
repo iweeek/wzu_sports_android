@@ -18,7 +18,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -65,9 +65,9 @@ public class RegistPhoneActivity extends BaseActivity {
 
         mBundle = this.getIntent().getExtras();
         flag = mBundle.getInt("flag");
-        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+        if (flag == AppConstant.VERTIFY_FIRSTPASSWORD) {
             tvTitle.setText(R.string.modify_first_password);
-        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
+        } else if (flag == AppConstant.VERTIFY_RESETPASSWORD) {
             tvTitle.setText(R.string.find_password);
         }
 
@@ -142,13 +142,13 @@ public class RegistPhoneActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
+        if (requestCode == AppConstant.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
 
             mHasEditFirstPassword = data.getBooleanExtra("hasEditFirstPassword", false);
 
 //            finish();
-        } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == AppConstant.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
 
         }
     }
@@ -160,17 +160,17 @@ public class RegistPhoneActivity extends BaseActivity {
         Bundle bundle = new Bundle();
         Intent intent = new Intent(RegistPhoneActivity.this, VerificationCodeActivity.class);
 
-        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
-            bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
+        if (flag == AppConstant.VERTIFY_FIRSTPASSWORD) {
+            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
             bundle.putString("phone",phone);
             String sno = mBundle.getString("sno");
             bundle.putString("sno",sno);
             intent.putExtras(bundle);
-            startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
-        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
-            bundle.putInt("flag", AppKey.VERTIFY_RESETPASSWORD);
+            startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
+        } else if (flag == AppConstant.VERTIFY_RESETPASSWORD) {
+            bundle.putInt("flag", AppConstant.VERTIFY_RESETPASSWORD);
             intent.putExtras(bundle);
-            startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
+            startActivityForResult(intent, AppConstant.CODE_LOGIN_FINDPWD);
         }
     }
 

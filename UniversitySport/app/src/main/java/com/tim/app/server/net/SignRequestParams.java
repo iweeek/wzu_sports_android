@@ -3,7 +3,7 @@ package com.tim.app.server.net;
 import android.text.TextUtils;
 
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.lzy.okhttputils.model.HttpParams;
 import com.application.library.log.DLOG;
 
@@ -139,7 +139,7 @@ public class SignRequestParams {
         }
         if (RT.DEBUG && paramsStr.length() > 0) {
             paramsStr = paramsStr.substring(0, paramsStr.length() - 1);
-            DLOG.d(AppKey.HTTP_TAG, paramsStr);
+            DLOG.d(AppConstant.HTTP_TAG, paramsStr);
         }
         return realParams;
     }

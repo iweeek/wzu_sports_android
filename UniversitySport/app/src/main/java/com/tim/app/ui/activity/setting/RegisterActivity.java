@@ -18,7 +18,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
@@ -83,7 +83,7 @@ public class RegisterActivity extends BaseActivity {
 
         cbUserAgreement.setChecked(true);
 
-        timer = new CountDownTimer(AppKey.VERTIFY_SECONDS * 1000, 1000) {
+        timer = new CountDownTimer(AppConstant.VERTIFY_SECONDS * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 show_time.setText(millisUntilFinished / 1000 + getString(R.string.txt_bind_resend));
@@ -230,7 +230,7 @@ public class RegisterActivity extends BaseActivity {
 
     private void VerifyApi() {
         showLoadingDialog();
-//        API_User.instance().getPhoneCode(TAG, phone, AppKey.VERTIFY_REGISTER, new JsonResponseCallback() {
+//        API_User.instance().getPhoneCode(TAG, phone, AppConstant.VERTIFY_REGISTER, new JsonResponseCallback() {
 //            @Override
 //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
 //                hideLoadingDialog();
@@ -259,7 +259,7 @@ public class RegisterActivity extends BaseActivity {
 //                    if (userJson != null) {
 //                        User user = new Gson().fromJson(userJson.toString(), User.class);
 //                        UserManager.instance().savePassword(password);
-//                        UserManager.instance().saveLoginType(AppKey.LOGIN_TYPE_MOBILE);
+//                        UserManager.instance().saveLoginType(AppConstant.LOGIN_TYPE_MOBILE);
 //                        UserManager.instance().saveUserInfo(user);
 //                        API_Init.instance().initPush(TAG, new StringResponseCallback() {
 //                            @Override

@@ -10,10 +10,9 @@ import com.lzy.okhttputils.callback.StringCallback;
 import com.lzy.okhttputils.model.HttpHeaders;
 import com.lzy.okhttputils.model.HttpParams;
 import com.lzy.okhttputils.request.BaseRequest;
-import com.squareup.okhttp.RequestBody;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.application.library.log.DLOG;
 import com.application.library.net.ResponseCallback;
 
@@ -65,7 +64,7 @@ public class NetworkInterface {
     public void connected(final HttpMethod method, final String request, final String apiTag, final HashMap<String, Object> params, final CacheMode cache, boolean isSign, final ResponseCallback callback) {
         final String url = getRequsetUrl(request);
         if (!url.contains("http://")) {
-            DLOG.e(AppKey.HTTP_TAG, "Bad request url ==" + url);
+            DLOG.e(AppConstant.HTTP_TAG, "Bad request url ==" + url);
             return;
         }
         if (isSign) {
@@ -89,7 +88,7 @@ public class NetworkInterface {
     private void connectedByPost(final String requestUrl, final String apiTag, final HttpParams params, CacheMode cache, final ResponseCallback callback) {
         {
             if (RT.DEBUG) {
-                DLOG.d(AppKey.HTTP_TAG, requestUrl);
+                DLOG.d(AppConstant.HTTP_TAG, requestUrl);
             }
             long cacheTime = CacheEntity.CACHE_NEVER_EXPIRE;
             if (cache == CacheMode.IF_NONE_CACHE_REQUEST) {
@@ -106,7 +105,7 @@ public class NetworkInterface {
                 @Override
                 public void onSuccess(String s, Call call, Response response) {
                     if (RT.DEBUG && !TextUtils.isEmpty(s)) {
-                        DLOG.json(AppKey.HTTP_TAG, s);
+                        DLOG.json(AppConstant.HTTP_TAG, s);
                     }
                     callback.onResponse(s.getBytes(), 0, "", 0, false);
                 }
@@ -115,7 +114,7 @@ public class NetworkInterface {
                 public void onCacheSuccess(String s, Call call) {
                     super.onCacheSuccess(s, call);
                     if (RT.DEBUG && !TextUtils.isEmpty(s)) {
-                        DLOG.json(AppKey.HTTP_CACHE_TAG, s);
+                        DLOG.json(AppConstant.HTTP_CACHE_TAG, s);
                     }
                     callback.onResponse(s.getBytes(), 0, "", 0, true);
                 }
@@ -152,7 +151,7 @@ public class NetworkInterface {
      */
     private void connectedByGet(final String requestUrl, String apiTag, HttpParams params, CacheMode cache, final ResponseCallback callback) {
         if (RT.DEBUG) {
-            DLOG.d(AppKey.HTTP_TAG, requestUrl);
+            DLOG.d(AppConstant.HTTP_TAG, requestUrl);
         }
         OkHttpUtils.get(requestUrl).params(params).cacheMode(cache).tag(apiTag).execute(new StringCallback() {
             @Override
@@ -164,7 +163,7 @@ public class NetworkInterface {
             @Override
             public void onSuccess(String s, Call call, Response response) {
                 if (RT.DEBUG && !TextUtils.isEmpty(s)) {
-                    DLOG.json(AppKey.HTTP_TAG, s);
+                    DLOG.json(AppConstant.HTTP_TAG, s);
                 }
                 callback.onResponse(s.getBytes(), 0, "", 0, false);
             }
@@ -173,7 +172,7 @@ public class NetworkInterface {
             public void onCacheSuccess(String s, Call call) {
                 super.onCacheSuccess(s, call);
                 if (RT.DEBUG && !TextUtils.isEmpty(s)) {
-                    DLOG.json(AppKey.HTTP_CACHE_TAG, s);
+                    DLOG.json(AppConstant.HTTP_CACHE_TAG, s);
                 }
                 callback.onResponse(s.getBytes(), 0, "", 0, true);
             }
@@ -210,7 +209,7 @@ public class NetworkInterface {
     public void upload(final String request, String apiTag, HttpParams params, final ResponseCallback callback) {
         String url = getRequsetUrl(request);
         if (RT.DEBUG) {
-            DLOG.d(AppKey.HTTP_TAG, url);
+            DLOG.d(AppConstant.HTTP_TAG, url);
         }
         post(url).tag(apiTag).params(params).execute(new StringCallback() {
             @Override
@@ -223,14 +222,14 @@ public class NetworkInterface {
             public void upProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
                 super.upProgress(currentSize, totalSize, progress, networkSpeed);
                 if (RT.DEBUG) {
-                    DLOG.d(AppKey.HTTP_TAG, "currentSize=" + currentSize + " totalSize=" + totalSize + " progress=" + progress + " networkSpeed=" + networkSpeed);
+                    DLOG.d(AppConstant.HTTP_TAG, "currentSize=" + currentSize + " totalSize=" + totalSize + " progress=" + progress + " networkSpeed=" + networkSpeed);
                 }
             }
 
             @Override
             public void onSuccess(String s, Call call, Response response) {
                 if (RT.DEBUG && !TextUtils.isEmpty(s)) {
-                    DLOG.json(AppKey.HTTP_TAG, s);
+                    DLOG.json(AppConstant.HTTP_TAG, s);
                 }
                 callback.onResponse(s.getBytes(), 0, "", 0, false);
             }
@@ -239,7 +238,7 @@ public class NetworkInterface {
             public void onCacheSuccess(String s, Call call) {
                 super.onCacheSuccess(s, call);
                 if (RT.DEBUG && !TextUtils.isEmpty(s)) {
-                    DLOG.json(AppKey.HTTP_CACHE_TAG, s);
+                    DLOG.json(AppConstant.HTTP_CACHE_TAG, s);
                 }
                 callback.onResponse(s.getBytes(), 0, "", 0, true);
             }
@@ -278,14 +277,14 @@ public class NetworkInterface {
      */
     public void downloadFile(String url, String apiTag, String filePath, String fileName) {
         if (RT.DEBUG) {
-            DLOG.d(AppKey.HTTP_TAG, url);
+            DLOG.d(AppConstant.HTTP_TAG, url);
         }
         OkHttpUtils.get(url).tag(apiTag).execute(new FileCallback(filePath, fileName) {
 
             @Override
             public void onSuccess(File file, Call call, Response response) {
                 if (RT.DEBUG) {
-                    DLOG.d(AppKey.HTTP_TAG, RT.getString(R.string.download_success));
+                    DLOG.d(AppConstant.HTTP_TAG, RT.getString(R.string.download_success));
                 }
             }
 
@@ -293,7 +292,7 @@ public class NetworkInterface {
             public void downloadProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
                 super.downloadProgress(currentSize, totalSize, progress, networkSpeed);
                 if (RT.DEBUG) {
-                    DLOG.d(AppKey.HTTP_TAG, "currentSize=" + currentSize + " totalSize=" + totalSize + " progress=" + progress + " networkSpeed" + networkSpeed);
+                    DLOG.d(AppConstant.HTTP_TAG, "currentSize=" + currentSize + " totalSize=" + totalSize + " progress=" + progress + " networkSpeed" + networkSpeed);
                 }
             }
 
@@ -301,7 +300,7 @@ public class NetworkInterface {
             public void onError(Call call, Response response, Exception e) {
                 super.onError(call, response, e);
                 if (RT.DEBUG) {
-                    DLOG.d(AppKey.HTTP_TAG, RT.getString(R.string.download_failed));
+                    DLOG.d(AppConstant.HTTP_TAG, RT.getString(R.string.download_failed));
                 }
             }
 

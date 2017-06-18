@@ -163,7 +163,7 @@ public class RT {
         OkHttpUtils.init(application);
         //以下都不是必须的，根据需要自行选择
         OkHttpUtils.getInstance()//
-//                .debug(AppKey.HTTP_TAG)                                              //是否打开调试
+//                .debug(AppConstant.HTTP_TAG)                                              //是否打开调试
                 .setConnectTimeout(30000)               //全局的连接超时时间
                 .setReadTimeOut(30000)                  //全局的读取超时时间
                 .setWriteTimeOut(30000)               //全局的写入超时时间

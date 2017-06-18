@@ -1,6 +1,6 @@
 package com.tim.app.constant;
 
-public class AppKey {
+public class AppConstant {
 
     /**
      * 网络请求日志标签
@@ -38,6 +38,8 @@ public class AppKey {
 
 
     public static final int THIS_WEEK = 1;
+    public static final int THIS_MONTH = 2;
+    public static final int THIS_TERM = 3;
 }
 
 

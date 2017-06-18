@@ -20,7 +20,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
@@ -199,7 +199,7 @@ public class LoginActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //如果是从修改初始密码界面返回。
-        if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
+        if (requestCode == AppConstant.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "onActivityResult: CODE_LOGIN_REGISTER");
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
 
@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity {
             mHasEditFirstPassword = bundle.getBoolean("hasEditFirstPassword");
 
             Log.d(TAG, "onActivityResult: 从修改初始密码界面返回。 mHasEditFirstPassword "+ mHasEditFirstPassword);
-        } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == AppConstant.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
             //如果是从忘记密码界面返回。
             Log.d(TAG, "onActivityResult: 从忘记密码界面返回。");
         }
@@ -228,11 +228,11 @@ public class LoginActivity extends BaseActivity {
         edit.apply();
 
         Bundle bundle = new Bundle();
-        bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
+        bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
         bundle.putString("sno",sNo);
         Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
         intent.putExtras(bundle);
-        startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
+        startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
     }
 
     private void login(String sNo, String password) {
@@ -248,7 +248,7 @@ public class LoginActivity extends BaseActivity {
         //                    if (userJson != null) {
         //                        User user = new Gson().fromJson(userJson.toString(), User.class);
         //                        UserManager.instance().savePassword(password);
-        //                        UserManager.instance().saveLoginType(AppKey.LOGIN_TYPE_MOBILE);
+        //                        UserManager.instance().saveLoginType(AppConstant.LOGIN_TYPE_MOBILE);
         //                        UserManager.instance().saveUserInfo(user);
         //                        EventManager.instance().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
         //                        API_Init.instance().initPush(TAG, new StringResponseCallback() {
@@ -285,10 +285,10 @@ public class LoginActivity extends BaseActivity {
 
     private void findPassword() {
         Bundle bundle = new Bundle();
-        bundle.putInt("flag", AppKey.VERTIFY_RESETPASSWORD);
+        bundle.putInt("flag", AppConstant.VERTIFY_RESETPASSWORD);
         Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
         intent.putExtras(bundle);
-        startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
+        startActivityForResult(intent, AppConstant.CODE_LOGIN_FINDPWD);
     }
 
     @Override

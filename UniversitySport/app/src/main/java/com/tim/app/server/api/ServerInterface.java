@@ -5,13 +5,12 @@ import android.util.Log;
 import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.cache.CacheMode;
 import com.lzy.okhttputils.model.HttpHeaders;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
 
 import java.util.HashMap;
 
-import static android.R.attr.type;
 import static com.lzy.okhttputils.utils.OkLogger.tag;
 
 /**
@@ -111,7 +110,7 @@ public class ServerInterface {
     }
 
     public void queryCollegeSportsRankingData(int universityId, int pageSize, int pageNo, int type, ResponseCallback callback) {
-        if (type == AppKey.TYPE_COST_ENERGY) {
+        if (type == AppConstant.TYPE_COST_ENERGY) {
             queryStr = "{    \n" +
                     "  university(id:1) {\n" +
                     "\t\tcaloriesConsumptionRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
@@ -142,7 +141,7 @@ public class ServerInterface {
     }
 
     public void queryHistorySportsRecord(int studentId, int pageNo, int pageSize, int type, ResponseCallback callback) {
-        if (type == AppKey.THIS_WEEK) {
+        if (type == AppConstant.THIS_WEEK) {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
                     "    currentWeekActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
@@ -161,15 +160,40 @@ public class ServerInterface {
                     "    }\n" +
                     "  }\n" +
                     "}";
+        } else if (type == AppConstant.THIS_MONTH) {
+            queryStr = "{    \n" +
+                    "\tstudent(id:" + studentId + ") {\n" +
+                    "    currentMonthActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
+                    "      pagesCount\n" +
+                    "      data {\n" +
+                    "        projectId\n" +
+                    "        costTime\n" +
+                    "        caloriesConsumed\n" +
+                    "        startTime\n" +
+                    "        distance\n" +
+                    "        qualified\n" +
+                    "        runningProject{\n" +
+                    "          name\n" +
+                    "         }\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
         } else {
             queryStr = "{    \n" +
-                    "  university(id:1) {\n" +
-                    "\t\ttimeCostedRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
+                    "\tstudent(id:" + studentId + ") {\n" +
+                    "    currentTermActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
-                    "      data{\n" +
-                    "      studentId\n" +
-                    "      studentName\n" +
-                    "      timeCosted\n" +
+                    "      data {\n" +
+                    "        projectId\n" +
+                    "        costTime\n" +
+                    "        caloriesConsumed\n" +
+                    "        startTime\n" +
+                    "        distance\n" +
+                    "        qualified\n" +
+                    "        runningProject{\n" +
+                    "          name\n" +
+                    "         }\n" +
                     "      }\n" +
                     "    }\n" +
                     "  }\n" +

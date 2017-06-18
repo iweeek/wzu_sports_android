@@ -25,7 +25,7 @@ import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.ui.activity.setting.SettingActivity;
@@ -175,7 +175,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     public void initData() {
-        ServerInterface.instance().queryRunningProjects(AppKey.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningProjects(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -238,7 +238,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
 
         int studentId = 1;
-        ServerInterface.instance().queryCurTermData(AppKey.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
+        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {

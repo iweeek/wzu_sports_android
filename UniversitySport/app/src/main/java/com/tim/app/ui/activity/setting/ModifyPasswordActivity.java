@@ -21,7 +21,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -79,9 +79,9 @@ public class ModifyPasswordActivity extends BaseActivity {
 
         mBundle = this.getIntent().getExtras();
         flag = mBundle.getInt("flag");
-        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+        if (flag == AppConstant.VERTIFY_FIRSTPASSWORD) {
             tvTitle.setText(R.string.modify_first_password);
-        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
+        } else if (flag == AppConstant.VERTIFY_RESETPASSWORD) {
             tvTitle.setText(R.string.find_password);
         }
 

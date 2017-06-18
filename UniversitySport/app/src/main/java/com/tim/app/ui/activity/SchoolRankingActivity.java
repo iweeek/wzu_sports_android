@@ -8,7 +8,7 @@ import android.widget.ImageButton;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.smarttab.SmartTabLayout;
 import com.tim.app.R;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.adapter.TabAdapter;
 import com.tim.app.ui.fragment.RankingDataFragment;
 
@@ -45,8 +45,8 @@ public class SchoolRankingActivity extends BaseActivity {
 
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(RankingDataFragment.newInstance(AppKey.TYPE_COST_ENERGY), "累计消耗热量");
-        pagerAdapter.addFragment(RankingDataFragment.newInstance(AppKey.TYPE_COST_TIME), "累计锻炼时长");
+        pagerAdapter.addFragment(RankingDataFragment.newInstance(AppConstant.TYPE_COST_ENERGY), "累计消耗热量");
+        pagerAdapter.addFragment(RankingDataFragment.newInstance(AppConstant.TYPE_COST_TIME), "累计锻炼时长");
         vpRanking.setOffscreenPageLimit(2);
         vpRanking.setAdapter(pagerAdapter);
         vpRanking.setCurrentItem(0);

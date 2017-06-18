@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.util.BitmapLoader;
 
 /**
@@ -79,7 +79,7 @@ public class RankingDataHeadView extends LinearLayout {
         if (!TextUtils.isEmpty(thirdAvatar)) {
             BitmapLoader.ins().loadImage(thirdAvatar, R.drawable.ic_default_avatar, rivThirdAvatar);
         }
-        if (AppKey.TYPE_COST_TIME == type) {
+        if (AppConstant.TYPE_COST_TIME == type) {
             tvFirstUnit.setText(firstValue +"分钟");
             tvSecondUnit.setText(secondValue +"分钟");
             tvThirdUnit.setText(thirdValue +"分钟");

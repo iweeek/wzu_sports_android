@@ -21,7 +21,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -81,9 +81,9 @@ public class VerificationCodeActivity extends BaseActivity {
 
         mBundle = this.getIntent().getExtras();
         flag = mBundle.getInt("flag");
-        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
+        if (flag == AppConstant.VERTIFY_FIRSTPASSWORD) {
             tvTitle.setText(R.string.modify_first_password);
-        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
+        } else if (flag == AppConstant.VERTIFY_RESETPASSWORD) {
             tvTitle.setText(R.string.find_password);
         }
     }
@@ -163,18 +163,18 @@ public class VerificationCodeActivity extends BaseActivity {
         Intent intent = new Intent(VerificationCodeActivity.this, ModifyPasswordActivity.class);
 
         String phone = bundle.getString("phone");
-        if (flag == AppKey.VERTIFY_FIRSTPASSWORD) {
-            bundle.putInt("flag", AppKey.VERTIFY_FIRSTPASSWORD);
+        if (flag == AppConstant.VERTIFY_FIRSTPASSWORD) {
+            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
             bundle.putString("phone", phone);
             bundle.putString("smsCode",smsCode);
 
             bundle.putString("sno",mBundle.getString("sno"));
             intent.putExtras(bundle);
-            startActivityForResult(intent, AppKey.CODE_LOGIN_REGISTER);
-        } else if (flag == AppKey.VERTIFY_RESETPASSWORD) {
-            bundle.putInt("flag", AppKey.VERTIFY_RESETPASSWORD);
+            startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
+        } else if (flag == AppConstant.VERTIFY_RESETPASSWORD) {
+            bundle.putInt("flag", AppConstant.VERTIFY_RESETPASSWORD);
             intent.putExtras(bundle);
-            startActivityForResult(intent, AppKey.CODE_LOGIN_FINDPWD);
+            startActivityForResult(intent, AppConstant.CODE_LOGIN_FINDPWD);
         }
     }
 
@@ -194,7 +194,7 @@ public class VerificationCodeActivity extends BaseActivity {
 
     private void VerifyApi() {
         showLoadingDialog();
-        //        API_User.instance().getPhoneCode(TAG, phone, AppKey.VERTIFY_REGISTER, new JsonResponseCallback() {
+        //        API_User.instance().getPhoneCode(TAG, phone, AppConstant.VERTIFY_REGISTER, new JsonResponseCallback() {
         //            @Override
         //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
         //                hideLoadingDialog();
@@ -223,7 +223,7 @@ public class VerificationCodeActivity extends BaseActivity {
         //                    if (userJson != null) {
         //                        User user = new Gson().fromJson(userJson.toString(), User.class);
         //                        UserManager.instance().savePassword(password);
-        //                        UserManager.instance().saveLoginType(AppKey.LOGIN_TYPE_MOBILE);
+        //                        UserManager.instance().saveLoginType(AppConstant.LOGIN_TYPE_MOBILE);
         //                        UserManager.instance().saveUserInfo(user);
         //                        API_Init.instance().initPush(TAG, new StringResponseCallback() {
         //                            @Override
@@ -271,11 +271,11 @@ public class VerificationCodeActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
+        if (requestCode == AppConstant.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
             mHasEditFirstPassword = data.getBooleanExtra("hasEditFirstPassword", false);
             finish();
-        } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == AppConstant.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
 
         }
     }

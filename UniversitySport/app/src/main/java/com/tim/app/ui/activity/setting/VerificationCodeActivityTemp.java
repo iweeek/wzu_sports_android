@@ -16,7 +16,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -145,7 +145,7 @@ public class VerificationCodeActivityTemp extends BaseActivity {
         } else if (v.getId() == R.id.ivPasswordDelete) {
 //            etPassword.setText("");
         } else if (v.getId() == R.id.tvForgotPassword) {
-            startActivityForResult(new Intent(VerificationCodeActivityTemp.this, FindPasswordActivity.class), AppKey.CODE_LOGIN_FINDPWD);
+            startActivityForResult(new Intent(VerificationCodeActivityTemp.this, FindPasswordActivity.class), AppConstant.CODE_LOGIN_FINDPWD);
         } else if (v.getId() == R.id.btLogin) {
             no = etNo.getText().toString().trim();
 //            password = etPassword.getText().toString().trim();
@@ -189,10 +189,10 @@ public class VerificationCodeActivityTemp extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppKey.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
+        if (requestCode == AppConstant.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
             finish();
-        } else if (requestCode == AppKey.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == AppConstant.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
             etNo.setText(data.getStringExtra("mobile"));
 //            etPassword.setText(data.getStringExtra("password"));
             phoneLogin();
@@ -212,7 +212,7 @@ public class VerificationCodeActivityTemp extends BaseActivity {
 //                    if (userJson != null) {
 //                        User user = new Gson().fromJson(userJson.toString(), User.class);
 //                        UserManager.instance().savePassword(password);
-//                        UserManager.instance().saveLoginType(AppKey.LOGIN_TYPE_MOBILE);
+//                        UserManager.instance().saveLoginType(AppConstant.LOGIN_TYPE_MOBILE);
 //                        UserManager.instance().saveUserInfo(user);
 //                        EventManager.instance().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
 //                        API_Init.instance().initPush(TAG, new StringResponseCallback() {

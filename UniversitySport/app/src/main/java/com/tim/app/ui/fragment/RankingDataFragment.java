@@ -18,7 +18,7 @@ import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.RankingData;
 import com.tim.app.ui.adapter.RankingDataAdapter;
@@ -110,7 +110,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void initData() {
-        if (type == AppKey.TYPE_COST_ENERGY) {
+        if (type == AppConstant.TYPE_COST_ENERGY) {
             ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -127,7 +127,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                     Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
                                     rankingDataArray.getJSONObject(2).getString("studentName"),
                                     Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
-                                    AppKey.TYPE_COST_ENERGY);
+                                    AppConstant.TYPE_COST_ENERGY);
 
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -165,7 +165,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                     Integer.valueOf(rankingDataArray.getJSONObject(1).getString("timeCosted")), "",
                                     rankingDataArray.getJSONObject(2).getString("studentName"),
                                     Integer.valueOf(rankingDataArray.getJSONObject(2).getString("timeCosted")),
-                                    AppKey.TYPE_COST_TIME);
+                                    AppConstant.TYPE_COST_TIME);
 
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -234,7 +234,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-        if (type == AppKey.TYPE_COST_ENERGY) {
+        if (type == AppConstant.TYPE_COST_ENERGY) {
             ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

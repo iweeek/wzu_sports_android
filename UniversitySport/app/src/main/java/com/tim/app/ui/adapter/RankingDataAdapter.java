@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
 import com.tim.app.util.BitmapLoader;
 
@@ -47,9 +47,9 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (data.getCostValue() > 0) {
             holder.tvCostNumber.setText(String.valueOf(data.getCostValue()));
         }
-        if (AppKey.TYPE_COST_TIME == type) {
+        if (AppConstant.TYPE_COST_TIME == type) {
             holder.tvCostUnit.setText("分钟");
-        } else if (AppKey.TYPE_COST_ENERGY == type) {
+        } else if (AppConstant.TYPE_COST_ENERGY == type) {
             holder.tvCostUnit.setText("千卡");
         }
         if (!TextUtils.isEmpty(data.getUserName())) {

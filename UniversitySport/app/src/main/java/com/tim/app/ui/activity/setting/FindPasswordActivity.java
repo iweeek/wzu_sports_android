@@ -17,7 +17,7 @@ import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppKey;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
@@ -76,7 +76,7 @@ public class FindPasswordActivity extends BaseActivity  {
 
 
 //        show_time = (TextView) findViewById(R.id.modify_layout_get_sms_mark_tx);
-        timer = new CountDownTimer(AppKey.VERTIFY_SECONDS * 1000, 1000) {
+        timer = new CountDownTimer(AppConstant.VERTIFY_SECONDS * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 show_time.setText(millisUntilFinished / 1000 + getString(R.string.txt_bind_resend));
@@ -199,7 +199,7 @@ public class FindPasswordActivity extends BaseActivity  {
 
     private void VerifyApi() {
         showLoadingDialog();
-//        API_User.instance().getPhoneCode(TAG, phone, AppKey.VERTIFY_RESETPASSWORD, new JsonResponseCallback() {
+//        API_User.instance().getPhoneCode(TAG, phone, AppConstant.VERTIFY_RESETPASSWORD, new JsonResponseCallback() {
 //            @Override
 //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
 //                hideLoadingDialog();
