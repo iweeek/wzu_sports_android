@@ -42,28 +42,40 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
         holder.tvSportTime.setText(TimeUtil.formatDate(mContext, data.getTime()));
         if (!TextUtils.isEmpty(data.getSpeed())) {
-            holder.tvSportSpeed.setText(mContext.getString(R.string.targetSpeed, data.getSpeed()));
+            holder.tvLeft.setText(mContext.getString(R.string.targetSpeed, data.getSpeed()));
         }
-        if (data.getCompleteCount() > 0) {
-            holder.tvSportCompleteCount.setText(mContext.getString(R.string.completeCount, String.valueOf(data.getCompleteCount())));
+
+        if (data.getSportTime() > 0) {
+            holder.tvMiddle.setText(String.valueOf(data.getSportTime() / 60) + "分");
         }
-        if (data.getMinDistance() > 0) {
-            holder.tvSportDistance.setText(mContext.getString(R.string.targetDistance, String.valueOf(data.getMinDistance())));
+
+        if (data.getSportDistance() > 0) {
+            holder.tvRight.setText(String.valueOf(data.getSportDistance()) + "米");
         }
-        if (data.getCostNumber() > 0) {
-            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getCostNumber())));
+
+        if (data.getSportTime() > 0 && data.getSportDistance() > 0) {
+            holder.tvLeft.setText(String.valueOf(data.getSportDistance() / (data.getSportTime() / 60)) + "米/分");
+        }
+        if (data.getCostEnergy() > 0) {
+            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getCostEnergy())));
         }
         if (data.getSportTime() > 0) {
-            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(data.getSportTime())));
+            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(data.getSportTime() / 60)));
         }
     }
 
     public class ViewHolder extends BaseRecyclerViewHolder {
         TextView tvSportDesc;
         TextView tvSportTime;
-        TextView tvSportSpeed;
-        TextView tvSportCompleteCount;
-        TextView tvSportDistance;
+
+        TextView tvLeftLabel;
+        TextView tvMiddleLabel;
+        TextView tvRightLabel;
+
+        TextView tvLeft;
+        TextView tvMiddle;
+        TextView tvRight;
+
         TextView tvSportCost;
         TextView tvSportCostTime;
 
@@ -71,9 +83,15 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             super(itemView);
             tvSportDesc = (TextView) itemView.findViewById(R.id.tvSportDesc);
             tvSportTime = (TextView) itemView.findViewById(R.id.tvSportTime);
-            tvSportSpeed = (TextView) itemView.findViewById(R.id.tvSportSpeed);
-            tvSportCompleteCount = (TextView) itemView.findViewById(R.id.tvSportCompleteCount);
-            tvSportDistance = (TextView) itemView.findViewById(R.id.tvSportDistance);
+
+            tvLeft = (TextView) itemView.findViewById(R.id.tvLeft);
+            tvMiddle = (TextView) itemView.findViewById(R.id.tvMiddle);
+            tvRight = (TextView) itemView.findViewById(R.id.tvRight);
+
+            tvLeft = (TextView) itemView.findViewById(R.id.tvLeft);
+            tvMiddle = (TextView) itemView.findViewById(R.id.tvMiddle);
+            tvRight = (TextView) itemView.findViewById(R.id.tvRight);
+
             tvSportCost = (TextView) itemView.findViewById(R.id.tvSportCost);
             tvSportCostTime = (TextView) itemView.findViewById(R.id.tvSportCostTime);
         }

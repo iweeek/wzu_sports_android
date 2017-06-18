@@ -37,6 +37,7 @@ public class AppKey {
     public static final int VERTIFY_SECONDS = 60;//验证码倒数秒数
 
 
+    public static final int THIS_WEEK = 1;
 }
 
 

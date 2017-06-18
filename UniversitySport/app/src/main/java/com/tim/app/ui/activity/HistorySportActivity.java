@@ -15,9 +15,9 @@ import com.tim.app.ui.fragment.HistoryDataFragment;
 /**
  * 历史运动数据
  */
-public class HistorSportActivity extends BaseActivity {
+public class HistorySportActivity extends BaseActivity {
 
-    private static final String TAG = "HistorSportActivity";
+    private static final String TAG = "HistorySportActivity";
 
     private ImageButton ibBack;
     private SmartTabLayout tab_layout;

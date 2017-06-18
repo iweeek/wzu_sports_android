@@ -86,7 +86,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.tim.app.ui.activity.HistorSportActivity"
+            android:name="com.tim.app.ui.activity.HistorySportActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />

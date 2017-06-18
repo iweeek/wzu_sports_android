@@ -16,7 +16,8 @@ public class HistoryData implements Serializable {
     private int completeCount;//完成段数
     private int minDistance;//最短距离
     private int sportTime;
-    private int costNumber;
+    private int costEnergy;
+    private int sportDistance;
 
     public String getSportDesc() {
         return sportDesc;
@@ -66,11 +67,19 @@ public class HistoryData implements Serializable {
         this.sportTime = sportTime;
     }
 
-    public int getCostNumber() {
-        return costNumber;
+    public int getCostEnergy() {
+        return costEnergy;
     }
 
-    public void setCostNumber(int costNumber) {
-        this.costNumber = costNumber;
+    public void setCostEnergy(int costEnergy) {
+        this.costEnergy = costEnergy;
+    }
+
+    public int getSportDistance() {
+        return sportDistance;
+    }
+
+    public void setSportDistance(int distance) {
+        sportDistance = distance;
     }
 }

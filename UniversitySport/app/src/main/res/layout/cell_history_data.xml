@@ -54,6 +54,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvLeftLable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
@@ -62,10 +63,10 @@
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/tvSportSpeed"
+                android:id="@+id/tvLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/targetSpeed"
+                android:text=""
                 android:textColor="#d5dadb"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -79,18 +80,19 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvMiddleLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="完成段数"
+                android:text="消耗时间"
                 android:textColor="#d5dadb"
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/tvSportCompleteCount"
+                android:id="@+id/tvMiddle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/completeCount"
+                android:text=""
                 android:textColor="#d5dadb"
                 android:textSize="16dp" />
         </LinearLayout>
@@ -104,19 +106,20 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvRightLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="本次最短距离"
+                android:text="运动距离"
                 android:textColor="#d5dadb"
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/tvSportDistance"
+                android:id="@+id/tvRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#d5dadb"
-                android:text="@string/targetDistance"
+                android:text=""
                 android:textSize="16dp" />
         </LinearLayout>
 

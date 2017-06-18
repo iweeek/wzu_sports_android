@@ -41,9 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static android.R.attr.onClick;
-import static com.amap.api.mapcore.util.cz.v;
-
 /**
  * 首页
  */
@@ -109,7 +106,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                            mDrawerLayout.closeDrawers();
                             switch (menuItem.getItemId()) {
                                 case R.id.nav_survey://历史数据概况
-                                    Intent intent = new Intent(MainActivity.this, HistorSportActivity.class);
+                                    Intent intent = new Intent(MainActivity.this, HistorySportActivity.class);
                                     startActivity(intent);
                                     break;
                                 case R.id.nav_fitness_test://体测数据
