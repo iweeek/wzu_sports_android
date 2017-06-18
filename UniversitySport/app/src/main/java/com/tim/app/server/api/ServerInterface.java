@@ -110,6 +110,7 @@ public class ServerInterface {
         String queryStr ="{    \n" +
                 "  university(id:1) {\n" +
                 "\t\tcaloriesConsumptionRanking (pageSize:"+pageSize+" pageNumber:"+pageNo+"){\n" +
+                "      pagesCount\n" +
                 "      data{\n" +
                 "      studentId\n" +
                 "      studentName\n" +

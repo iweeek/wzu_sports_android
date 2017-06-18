@@ -59,7 +59,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         if (null == rootView) {
             rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
-            load_more = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.load_more);
+            load_more = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.lrvLoadMore);
             wrvHistoryData = (WrapRecyclerView) rootView.findViewById(R.id.wrvHistoryData);
             //去除滑动到顶部或者是底部时会出现阴影的问题
 //            wrvHistoryData.setOverScrollMode(View.OVER_SCROLL_NEVER);

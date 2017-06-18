@@ -56,7 +56,7 @@ public class SportsScoreActivity extends BaseActivity implements LoadMoreHandler
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         ibBack.setOnClickListener(this);
 
-        load_more = (LoadMoreRecycleViewContainer) findViewById(R.id.load_more);
+        load_more = (LoadMoreRecycleViewContainer) findViewById(R.id.lrvLoadMore);
         wrvScore = (WrapRecyclerView) findViewById(R.id.wrvScore);
         wrvScore.setOverScrollMode(View.OVER_SCROLL_NEVER);
 

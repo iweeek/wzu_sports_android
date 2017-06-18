@@ -49,7 +49,7 @@
 
 
         <com.application.library.widget.loadmore.LoadMoreRecycleViewContainer
-            android:id="@+id/load_more"
+            android:id="@+id/lrvLoadMore"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

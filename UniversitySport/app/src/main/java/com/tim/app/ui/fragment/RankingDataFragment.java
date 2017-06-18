@@ -35,11 +35,11 @@ import java.util.List;
  */
 public class RankingDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
 
-    public static final String TAG = "HistoryDataFragment";
+    public static final String TAG = "RankingDataFragment";
     private static final int PAGE_SIZE = 20;
 
     private View rootView;
-    private LoadMoreRecycleViewContainer load_more;
+    private LoadMoreRecycleViewContainer lrvLoadMore;
     private WrapRecyclerView wrvHistoryData;
     private EmptyLayout emptyLayout;
 
@@ -49,6 +49,10 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     private RankingDataHeadView headView;
 
     int type;
+    private int universityId = 1;
+    private int pageNo = 1;
+    private int pageSize = 6;
+    private int pageCount = -1;
 
     public static RankingDataFragment newInstance(int type) {
         RankingDataFragment fragment = new RankingDataFragment();
@@ -64,15 +68,15 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
         if (null == rootView) {
             rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
-            load_more = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.load_more);
+            lrvLoadMore = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.lrvLoadMore);
             wrvHistoryData = (WrapRecyclerView) rootView.findViewById(R.id.wrvHistoryData);
             wrvHistoryData.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-            load_more.useDefaultFooter(View.GONE);
-            load_more.setAutoLoadMore(true);
-            load_more.setLoadMoreHandler(this);
+            lrvLoadMore.useDefaultFooter(View.GONE);
+            lrvLoadMore.setAutoLoadMore(true);
+            lrvLoadMore.setLoadMoreHandler(this);
 
-            emptyLayout = new EmptyLayout(getActivity(), load_more);
+            emptyLayout = new EmptyLayout(getActivity(), lrvLoadMore);
 //            emptyLayout.showLoading();
             emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
                 @Override
@@ -102,28 +106,26 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void initData() {
-        int universityId = 1;
-        int pageNo = 1;
-        int pageSize = 5;
-        ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSize, pageNo, new JsonResponseCallback() {
+
+        ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSize, pageNo++, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
+                        pageCount = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
+                                .optJSONObject("caloriesConsumptionRanking").getString("pagesCount"));
                         JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
                                 getJSONArray("data");
                         //TODO 这个地方写得太丑陋了，需要修改
-                        for (int i = 0; i < 2; i++) {
-                            headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(0).getString("caloriesConsumption")), "",
-                                    rankingDataArray.getJSONObject(1).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
-                                    rankingDataArray.getJSONObject(2).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
-                                    AppKey.TYPE_COST_ENERGY);
-                        }
+                        headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
+                                Integer.valueOf(rankingDataArray.getJSONObject(0).getString("caloriesConsumption")), "",
+                                rankingDataArray.getJSONObject(1).getString("studentName"),
+                                Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
+                                rankingDataArray.getJSONObject(2).getString("studentName"),
+                                Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
+                                AppKey.TYPE_COST_ENERGY);
 
-                        for (int i = 2; i < rankingDataArray.length(); i++) {
+                        for (int i = 3; i < rankingDataArray.length(); i++) {
                             RankingData data = new RankingData();
                             data.setAvatar("");
                             data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
@@ -142,15 +144,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             }
 
         });
-//        for (int i = 0; i < 5; i++) {
-//            RankingData data = new RankingData();
-//            data.setAvatar("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg");
-//            data.setUserName("学生" + (i + 1));
-//            data.setCostValue(1200);
-//            dataList.add(data);
-//        }
         adapter.notifyDataSetChanged();
-        headView.setData("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "新垣结衣", 3600, "http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "石原里美", 2400, "http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "佐佐木希", 1800, type);
     }
 
     @Override
@@ -197,6 +191,40 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+        ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSize, pageNo++, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    try {
+                        JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
+                                getJSONArray("data");
+                        //TODO 这个地方写得太丑陋了，需要修改
+                        for (int i = 0; i < rankingDataArray.length(); i++) {
+                            RankingData data = new RankingData();
+                            data.setAvatar("");
+                            data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                            data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                            dataList.add(data);
+                        }
+                        adapter.notifyDataSetChanged();
+                        return true;
+                    } catch (org.json.JSONException e) {
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        });
+        adapter.notifyDataSetChanged();
+
+        if (pageNo != pageCount) {
+            lrvLoadMore.loadMoreFinish(false, true);
+        } else {
+            lrvLoadMore.loadMoreFinish(false, false);
+        }
 
     }
 
