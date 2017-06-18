@@ -38,7 +38,7 @@ public class HistorSportActivity extends BaseActivity {
     @Override
     public void initView() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
-        tab_layout = (SmartTabLayout) findViewById(R.id.tab_layout);
+        tab_layout = (SmartTabLayout) findViewById(R.id.tabLayout);
         vpHistoryData = (ViewPager)findViewById(R.id.vpHistoryData);
 
         ibBack.setOnClickListener(this);

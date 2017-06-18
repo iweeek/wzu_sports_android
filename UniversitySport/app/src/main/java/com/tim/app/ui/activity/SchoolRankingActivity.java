@@ -20,8 +20,8 @@ public class SchoolRankingActivity extends BaseActivity {
     private static final String TAG = "SchoolRankingActivity";
 
     private ImageButton ibBack;
-    private SmartTabLayout tab_layout;
-    private ViewPager vpRank;
+    private SmartTabLayout tabLayout;
+    private ViewPager vpRanking;
     private TabAdapter pagerAdapter;
 
     @Override
@@ -32,14 +32,14 @@ public class SchoolRankingActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_school_rank;
+        return R.layout.activity_school_ranking;
     }
 
     @Override
     public void initView() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
-        tab_layout = (SmartTabLayout) findViewById(R.id.tab_layout);
-        vpRank = (ViewPager)findViewById(R.id.vpRank);
+        tabLayout = (SmartTabLayout) findViewById(R.id.tabLayout);
+        vpRanking = (ViewPager)findViewById(R.id.vpRanking);
 
         ibBack.setOnClickListener(this);
 
@@ -47,10 +47,10 @@ public class SchoolRankingActivity extends BaseActivity {
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(RankingDataFragment.newInstance(AppKey.TYPE_COST_ENERGY), "累计消耗热量");
         pagerAdapter.addFragment(RankingDataFragment.newInstance(AppKey.TYPE_COST_TIME), "累计锻炼时长");
-        vpRank.setOffscreenPageLimit(2);
-        vpRank.setAdapter(pagerAdapter);
-        vpRank.setCurrentItem(0);
-        tab_layout.setViewPager(vpRank);
+        vpRanking.setOffscreenPageLimit(2);
+        vpRanking.setAdapter(pagerAdapter);
+        vpRanking.setCurrentItem(0);
+        tabLayout.setViewPager(vpRanking);
     }
 
 

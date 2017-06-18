@@ -34,7 +34,7 @@
 
 
     <com.application.library.widget.smarttab.SmartTabLayout
-        android:id="@+id/tab_layout"
+        android:id="@+id/tabLayout"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_gravity="center_horizontal"
@@ -63,7 +63,7 @@
         app:stl_underlineThickness="0dp" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/vpRank"
+        android:id="@+id/vpRanking"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

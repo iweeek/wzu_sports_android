@@ -5,6 +5,7 @@ import android.util.Log;
 import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.cache.CacheMode;
 import com.lzy.okhttputils.model.HttpHeaders;
+import com.tim.app.constant.AppKey;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
 
@@ -25,6 +26,8 @@ public class ServerInterface {
     public static final String INIT_PUSH = "runningActivities";//
 
     public static final String QUERY_INTERFACE = "graphql/query";
+
+    private String queryStr;
 
     private ServerInterface() {
 
@@ -84,7 +87,7 @@ public class ServerInterface {
     }
 
     public void queryRunningProjects(int universityId, ResponseCallback callback) {
-        String queryStr = "{runningProjects(universityId:" + universityId + ")" +
+        queryStr = "{runningProjects(universityId:" + universityId + ")" +
                 "{id name qualifiedDistance qualifiedCostTime}}";
         query(queryStr, callback);
     }
@@ -106,19 +109,34 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryCollegeSportsRankingData(int universityId, int pageSize, int pageNo, ResponseCallback callback) {
-        String queryStr ="{    \n" +
-                "  university(id:1) {\n" +
-                "\t\tcaloriesConsumptionRanking (pageSize:"+pageSize+" pageNumber:"+pageNo+"){\n" +
-                "      pagesCount\n" +
-                "      data{\n" +
-                "      studentId\n" +
-                "      studentName\n" +
-                "      caloriesConsumption\n" +
-                "      }\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+    public void queryCollegeSportsRankingData(int universityId, int pageSize, int pageNo, int type, ResponseCallback callback) {
+        if (type == AppKey.TYPE_COST_ENERGY) {
+            queryStr = "{    \n" +
+                    "  university(id:1) {\n" +
+                    "\t\tcaloriesConsumptionRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
+                    "      pagesCount\n" +
+                    "      data{\n" +
+                    "      studentId\n" +
+                    "      studentName\n" +
+                    "      caloriesConsumption\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+        } else {
+            queryStr = "{    \n" +
+                    "  university(id:1) {\n" +
+                    "\t\ttimeCostedRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
+                    "      pagesCount\n" +
+                    "      data{\n" +
+                    "      studentId\n" +
+                    "      studentName\n" +
+                    "      timeCosted\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+        }
         query(queryStr, callback);
     }
 

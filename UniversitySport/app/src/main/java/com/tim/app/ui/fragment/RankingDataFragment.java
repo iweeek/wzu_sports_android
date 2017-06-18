@@ -50,9 +50,13 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     int type;
     private int universityId = 1;
-    private int pageNo = 1;
-    private int pageSize = 6;
-    private int pageCount = -1;
+    private int pageNoEnergy = 1;
+    private int pageSizeEnergy = 6;
+    private int pageCountEnergy = -1;
+
+    private int pageNoTime = 1;
+    private int pageSizeTime = 6;
+    private int pageCountTime = -1;
 
     public static RankingDataFragment newInstance(int type) {
         RankingDataFragment fragment = new RankingDataFragment();
@@ -106,44 +110,83 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void initData() {
+        if (type == AppKey.TYPE_COST_ENERGY) {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        try {
+                            pageCountEnergy = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
+                                    .optJSONObject("caloriesConsumptionRanking").getString("pagesCount"));
+                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
+                                    getJSONArray("data");
+                            //TODO 这个地方写得太丑陋了，需要修改
+                            headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(0).getString("caloriesConsumption")), "",
+                                    rankingDataArray.getJSONObject(1).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
+                                    rankingDataArray.getJSONObject(2).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
+                                    AppKey.TYPE_COST_ENERGY);
 
-        ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSize, pageNo++, new JsonResponseCallback() {
-            @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                if (errCode == 0) {
-                    try {
-                        pageCount = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
-                                .optJSONObject("caloriesConsumptionRanking").getString("pagesCount"));
-                        JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
-                                getJSONArray("data");
-                        //TODO 这个地方写得太丑陋了，需要修改
-                        headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
-                                Integer.valueOf(rankingDataArray.getJSONObject(0).getString("caloriesConsumption")), "",
-                                rankingDataArray.getJSONObject(1).getString("studentName"),
-                                Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
-                                rankingDataArray.getJSONObject(2).getString("studentName"),
-                                Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
-                                AppKey.TYPE_COST_ENERGY);
-
-                        for (int i = 3; i < rankingDataArray.length(); i++) {
-                            RankingData data = new RankingData();
-                            data.setAvatar("");
-                            data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                            data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
-                            dataList.add(data);
+                            for (int i = 3; i < rankingDataArray.length(); i++) {
+                                RankingData data = new RankingData();
+                                data.setAvatar("");
+                                data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            return false;
                         }
-                        adapter.notifyDataSetChanged();
-                        return true;
-                    } catch (org.json.JSONException e) {
-                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                    } else {
                         return false;
                     }
-                } else {
-                    return false;
                 }
-            }
 
-        });
+            });
+        } else {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime++, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        try {
+                            pageCountEnergy = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
+                                    .optJSONObject("timeCostedRanking").getString("pagesCount"));
+                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
+                                    getJSONArray("data");
+                            //TODO 这个地方写得太丑陋了，需要修改
+                            headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(0).getString("timeCosted")), "",
+                                    rankingDataArray.getJSONObject(1).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(1).getString("timeCosted")), "",
+                                    rankingDataArray.getJSONObject(2).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(2).getString("timeCosted")),
+                                    AppKey.TYPE_COST_TIME);
+
+                            for (int i = 3; i < rankingDataArray.length(); i++) {
+                                RankingData data = new RankingData();
+                                data.setAvatar("");
+                                data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+
+            });
+        }
         adapter.notifyDataSetChanged();
     }
 
@@ -191,40 +234,77 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-        ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSize, pageNo++, new JsonResponseCallback() {
-            @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                if (errCode == 0) {
-                    try {
-                        JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
-                                getJSONArray("data");
-                        //TODO 这个地方写得太丑陋了，需要修改
-                        for (int i = 0; i < rankingDataArray.length(); i++) {
-                            RankingData data = new RankingData();
-                            data.setAvatar("");
-                            data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                            data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
-                            dataList.add(data);
+        if (type == AppKey.TYPE_COST_ENERGY) {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        try {
+                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
+                                    getJSONArray("data");
+                            //TODO 这个地方写得太丑陋了，需要修改
+                            for (int i = 0; i < rankingDataArray.length(); i++) {
+                                RankingData data = new RankingData();
+                                data.setAvatar("");
+                                data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            return false;
                         }
-                        adapter.notifyDataSetChanged();
-                        return true;
-                    } catch (org.json.JSONException e) {
-                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                    } else {
                         return false;
                     }
-                } else {
-                    return false;
                 }
-            }
 
-        });
+            });
+
+            if (pageNoEnergy != pageCountEnergy) {
+                lrvLoadMore.loadMoreFinish(false, true);
+            } else {
+                lrvLoadMore.loadMoreFinish(false, false);
+            }
+        } else {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        try {
+                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
+                                    getJSONArray("data");
+                            //TODO 这个地方写得太丑陋了，需要修改
+                            for (int i = 0; i < rankingDataArray.length(); i++) {
+                                RankingData data = new RankingData();
+                                data.setAvatar("");
+                                data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+
+            });
+            if (pageNoTime != pageCountTime) {
+                lrvLoadMore.loadMoreFinish(false, true);
+            } else {
+                lrvLoadMore.loadMoreFinish(false, false);
+            }
+        }
         adapter.notifyDataSetChanged();
 
-        if (pageNo != pageCount) {
-            lrvLoadMore.loadMoreFinish(false, true);
-        } else {
-            lrvLoadMore.loadMoreFinish(false, false);
-        }
+
 
     }
 
