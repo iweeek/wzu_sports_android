@@ -91,7 +91,7 @@ public class PhoneInfoUtil {
 //        Class appOpsClass = null;
 //     /* Context.APP_OPS_MANAGER */
 //        try {
-//            appOpsClass = Class.forName(AppOpsManager.class.getName());
+//            appOpsClass = Class.forName(AppOpsManager.class.getDBName());
 //            Method checkOpNoThrowMethod = appOpsClass.getMethod(CHECK_OP_NO_THROW, Integer.TYPE, Integer.TYPE,
 //                    String.class);
 //            Field opPostNotificationValue = appOpsClass.getDeclaredField(OP_POST_NOTIFICATION);

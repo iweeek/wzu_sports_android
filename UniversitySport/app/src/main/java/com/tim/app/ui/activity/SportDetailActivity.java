@@ -44,14 +44,19 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.sport.Database;
+import com.tim.app.sport.RunningSportsCallback;
+import com.tim.app.sport.SQLite;
 import com.tim.app.sport.SensorListener;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 
 /**
@@ -120,6 +125,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
+    JsonResponseCallback callback;
+
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
         intent.putExtra("sport", sport);
@@ -163,11 +170,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         startService(new Intent(this, SensorListener.class));
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
 
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        int height = displayMetrics.heightPixels;
-//        int width = displayMetrics.widthPixels;
-
+        //        DisplayMetrics displayMetrics = new DisplayMetrics();
+        //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        //        int height = displayMetrics.heightPixels;
+        //        int width = displayMetrics.widthPixels;
     }
 
     private void initMap() {
@@ -226,14 +232,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_STARTED) {
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
                     float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    if (moveDistance > speedLimitation){
+                    if (moveDistance > speedLimitation) {
                         //位置漂移
                         return;
                     }
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
-                    tvInstantSpeed.setText(moveDistance / interval+"");
+                    tvInstantSpeed.setText(moveDistance / interval + "");
                 }
 
                 if (oldLatLng == null) {
@@ -285,7 +291,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
         if (sport.getTargetDistance() > 0) {
             tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
-//            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
+            //            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
         }
         if (sport.getTargetTime() > 0) {
             tvTargetTime.setText(String.valueOf(sport.getTargetTime()));
@@ -431,7 +437,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                tvInstantSpeed.setText(currentDistance / elapseTime +"");
+                tvInstantSpeed.setText(currentDistance / elapseTime + "");
 
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
@@ -458,8 +464,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void commmitSportData(final int projectId, final int studentId, int targetTime) {
-
+    private void commmitSportData(final int projectId, final int studentId, final int targetTime){
+        //必须先初始化。
+        SQLite.init(context, RunningSportsCallback.getInstance());
+        //提交本次运动数据，更新UI
         ServerInterface.instance().postRunningActDate(
                 TAG, projectId, studentId, currentDistance,
                 elapseTime, targetTime, startTime, new JsonResponseCallback() {
@@ -467,19 +475,36 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
 
-                        if (errCode == 0) {//todo
+                        if (errCode == 0) {
                             try {
                                 String curConsumeEnergy = json.getString("caloriesConsumed");
                                 rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                                 tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
-                            } catch (org.json.JSONException e) {
+                            } catch (JSONException e) {
                                 e.printStackTrace();
                                 Log.e(TAG, "commmitSportData onJsonResponse e: " + e);
                             }
+                            //提交成功，检查数据库是否有遗留为提交的数据记录。
+                            String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
+
+                            List<RunningSportsRecord> list = SQLite.query(
+                                    RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
+
+                            Log.d(TAG, "list:" + list);
+                            for(RunningSportsRecord record : list){
+                                Log.d(TAG, "record:" + record);
+                                ServerInterface.instance().postRunningActDate(
+                                        TAG, record.getProjectId(),
+                                        record.getStudentId(),
+                                        record.getCurrentDistance(),
+                                        record.getElapseTime(),
+                                        targetTime, record.getStartTime(), callback);
+                            }
+
                             return true;
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                            int result = Database.getInstance(context).saveRunningSportsRecord(
+                            int result = SQLite.getInstance(context).saveRunningSportsRecord(
                                     projectId, studentId, currentDistance,
                                     elapseTime, startTime, currentSteps, System.currentTimeMillis());
 
@@ -488,7 +513,71 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     }
                 });
+        //提交未数据库中为提交的记录 callback
+        callback = new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                Log.d(TAG, "errCode:" + errCode);
+
+                if (errCode == 0) {
+                    //提交成功，把数据库中记录删除。
+
+                    return true;
+                } else {
+                    //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
+                    int result = SQLite.getInstance(context).saveRunningSportsRecord(
+                            projectId, studentId, currentDistance,
+                            elapseTime, startTime, currentSteps, System.currentTimeMillis());
+
+                    Log.d(TAG, "result:" + result);
+                    return false;
+                }
+            }
+        };
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                //查询数据库中的记录。
+                String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
+
+                List<RunningSportsRecord> list = SQLite.query(
+                        RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
+
+                for(RunningSportsRecord record : list){
+                    Log.d(TAG, "record:" + record);
+                    ServerInterface.instance().postRunningActDate(
+                            TAG, record.getProjectId(),
+                            record.getStudentId(),
+                            record.getCurrentDistance(),
+                            record.getElapseTime(),
+                            targetTime, record.getStartTime(), new JsonResponseCallback() {
+                                @Override
+                                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                                    Log.d(TAG, "errCode:" + errCode);
+
+                                    if (errCode == 0) {
+                                        //提交成功，把数据库中记录删除。
+
+                                        return true;
+                                    } else {
+                                        //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
+                                        int result = SQLite.getInstance(context).saveRunningSportsRecord(
+                                                projectId, studentId, currentDistance,
+                                                elapseTime, startTime, currentSteps, System.currentTimeMillis());
+
+                                        Log.d(TAG, "result:" + result);
+                                        return false;
+                                    }
+                                }
+                            });
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
+
+
 
 
     @Override
