@@ -136,6 +136,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -174,6 +175,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                                data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -250,6 +252,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -283,6 +286,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                                data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
