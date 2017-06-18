@@ -11,7 +11,7 @@ import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
 import com.tim.app.constant.AppKey;
-import com.tim.app.server.entry.RankData;
+import com.tim.app.server.entry.RankingData;
 import com.tim.app.util.BitmapLoader;
 
 import java.util.List;
@@ -19,12 +19,12 @@ import java.util.List;
 /**
  * 排行榜
  */
-public class RankDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankData> {
+public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankingData> {
 
     private Context mContext;
     private int type;
 
-    public RankDataAdapter(Context mContext, List<RankData> mDataList, int type) {
+    public RankingDataAdapter(Context mContext, List<RankingData> mDataList, int type) {
         super(mDataList);
         this.mContext = mContext;
         this.type = type;
@@ -38,7 +38,7 @@ public class RankDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.Bas
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, RankData data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, RankingData data) {
         if (data == null) {
             return;
         }

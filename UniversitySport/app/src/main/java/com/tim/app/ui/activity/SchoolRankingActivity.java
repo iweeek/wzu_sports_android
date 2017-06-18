@@ -10,15 +10,14 @@ import com.application.library.widget.smarttab.SmartTabLayout;
 import com.tim.app.R;
 import com.tim.app.constant.AppKey;
 import com.tim.app.ui.adapter.TabAdapter;
-import com.tim.app.ui.fragment.HistoryDataFragment;
-import com.tim.app.ui.fragment.RankDataFragment;
+import com.tim.app.ui.fragment.RankingDataFragment;
 
 /**
  * 校园排行榜
  */
-public class SchoolRankActivity extends BaseActivity {
+public class SchoolRankingActivity extends BaseActivity {
 
-    private static final String TAG = "SchoolRankActivity";
+    private static final String TAG = "SchoolRankingActivity";
 
     private ImageButton ibBack;
     private SmartTabLayout tab_layout;
@@ -46,8 +45,8 @@ public class SchoolRankActivity extends BaseActivity {
 
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(RankDataFragment.newInstance(AppKey.TYPE_COST_ENERGY), "累计消耗热量");
-        pagerAdapter.addFragment(RankDataFragment.newInstance(AppKey.TYPE_COST_TIME), "累计锻炼时长");
+        pagerAdapter.addFragment(RankingDataFragment.newInstance(AppKey.TYPE_COST_ENERGY), "累计消耗热量");
+        pagerAdapter.addFragment(RankingDataFragment.newInstance(AppKey.TYPE_COST_TIME), "累计锻炼时长");
         vpRank.setOffscreenPageLimit(2);
         vpRank.setAdapter(pagerAdapter);
         vpRank.setCurrentItem(0);

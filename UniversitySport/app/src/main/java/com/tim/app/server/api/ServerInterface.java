@@ -106,5 +106,20 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+    public void queryCollegeSportsRankingData(int universityId, int pageSize, int pageNo, ResponseCallback callback) {
+        String queryStr ="{    \n" +
+                "  university(id:1) {\n" +
+                "\t\tcaloriesConsumptionRanking (pageSize:"+pageSize+" pageNumber:"+pageNo+"){\n" +
+                "      data{\n" +
+                "      studentId\n" +
+                "      studentName\n" +
+                "      caloriesConsumption\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        query(queryStr, callback);
+    }
+
 
 }

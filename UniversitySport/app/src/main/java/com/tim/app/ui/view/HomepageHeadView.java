@@ -3,7 +3,6 @@ package com.tim.app.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import com.tim.app.R;
 import com.tim.app.ui.activity.MainActivity;
-import com.tim.app.ui.activity.SchoolRankActivity;
+import com.tim.app.ui.activity.SchoolRankingActivity;
 
 /**
  * 首页的headerview
@@ -53,7 +52,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rlRank:
-                Intent intent = new Intent(getContext(), SchoolRankActivity.class);
+                Intent intent = new Intent(getContext(), SchoolRankingActivity.class);
                 getContext().startActivity(intent);
                 break;
         }

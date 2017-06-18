@@ -4,26 +4,28 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.application.library.base.BaseFragment;
+import com.application.library.net.JsonResponseCallback;
 import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.loadmore.LoadMoreContainer;
 import com.application.library.widget.loadmore.LoadMoreHandler;
 import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
-import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppKey;
-import com.tim.app.server.entry.HistoryData;
-import com.tim.app.server.entry.RankData;
-import com.tim.app.ui.adapter.HistoryDataAdapter;
-import com.tim.app.ui.adapter.RankDataAdapter;
-import com.tim.app.ui.view.HistoryDataHeadView;
-import com.tim.app.ui.view.RankDataHeadView;
+import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.RankingData;
+import com.tim.app.ui.adapter.RankingDataAdapter;
+import com.tim.app.ui.view.RankingDataHeadView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ import java.util.List;
 /**
  * 排行榜数据
  */
-public class RankDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
+public class RankingDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
 
     public static final String TAG = "HistoryDataFragment";
     private static final int PAGE_SIZE = 20;
@@ -41,15 +43,15 @@ public class RankDataFragment extends BaseFragment implements View.OnClickListen
     private WrapRecyclerView wrvHistoryData;
     private EmptyLayout emptyLayout;
 
-    private RankDataAdapter adapter;
-    private List<RankData> dataList;
+    private RankingDataAdapter adapter;
+    private List<RankingData> dataList;
 
-    private RankDataHeadView headView;
+    private RankingDataHeadView headView;
 
     int type;
 
-    public static RankDataFragment newInstance(int type) {
-        RankDataFragment fragment = new RankDataFragment();
+    public static RankingDataFragment newInstance(int type) {
+        RankingDataFragment fragment = new RankingDataFragment();
         Bundle args = new Bundle();
         args.putInt("type", type);
         fragment.setArguments(args);
@@ -84,15 +86,15 @@ public class RankDataFragment extends BaseFragment implements View.OnClickListen
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             wrvHistoryData.setLayoutManager(layoutManager);
 
-            headView = (RankDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.rankdata_head_view, null);
+            headView = (RankingDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.rankingdata_head_view, null);
             wrvHistoryData.addHeaderView(headView);
 
             if (getArguments() != null) {
                 type = getArguments().getInt("type");
             }
 
-            dataList = new ArrayList<>();
-            adapter = new RankDataAdapter(getActivity(), dataList, type);
+            dataList = new ArrayList<RankingData>();
+            adapter = new RankingDataAdapter(getActivity(), dataList, type);
             wrvHistoryData.setAdapter(adapter);
         }
         initData();
@@ -100,13 +102,53 @@ public class RankDataFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void initData() {
-        for (int i = 0; i < 5; i++) {
-            RankData data = new RankData();
-            data.setAvatar("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg");
-            data.setUserName("学生" + (i + 1));
-            data.setCostValue(1200);
-            dataList.add(data);
-        }
+        int universityId = 1;
+        int pageNo = 1;
+        int pageSize = 5;
+        ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSize, pageNo, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    try {
+                        JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
+                                getJSONArray("data");
+                        //TODO 这个地方写得太丑陋了，需要修改
+                        for (int i = 0; i < 2; i++) {
+                            headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(0).getString("caloriesConsumption")), "",
+                                    rankingDataArray.getJSONObject(1).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
+                                    rankingDataArray.getJSONObject(2).getString("studentName"),
+                                    Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
+                                    AppKey.TYPE_COST_ENERGY);
+                        }
+
+                        for (int i = 2; i < rankingDataArray.length(); i++) {
+                            RankingData data = new RankingData();
+                            data.setAvatar("");
+                            data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                            data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                            dataList.add(data);
+                        }
+                        adapter.notifyDataSetChanged();
+                        return true;
+                    } catch (org.json.JSONException e) {
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        });
+//        for (int i = 0; i < 5; i++) {
+//            RankingData data = new RankingData();
+//            data.setAvatar("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg");
+//            data.setUserName("学生" + (i + 1));
+//            data.setCostValue(1200);
+//            dataList.add(data);
+//        }
         adapter.notifyDataSetChanged();
         headView.setData("http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "新垣结衣", 3600, "http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "石原里美", 2400, "http://pic.58pic.com/58pic/17/41/38/88658PICNuP_1024.jpg", "佐佐木希", 1800, type);
     }

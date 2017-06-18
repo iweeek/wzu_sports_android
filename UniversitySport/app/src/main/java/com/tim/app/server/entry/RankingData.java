@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 排行榜数据
  */
-public class RankData implements Serializable {
+public class RankingData implements Serializable {
 
 
     private static final long serialVersionUID = 6187447685293862071L;
