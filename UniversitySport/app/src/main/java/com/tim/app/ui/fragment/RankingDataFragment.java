@@ -30,6 +30,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.data;
+
 /**
  * 排行榜数据
  */
@@ -120,14 +122,14 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                     .optJSONObject("caloriesConsumptionRanking").getString("pagesCount"));
                             JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
                                     getJSONArray("data");
-                            //TODO 这个地方写得太丑陋了，需要修改
-                            headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(0).getString("caloriesConsumption")), "",
-                                    rankingDataArray.getJSONObject(1).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(1).getString("caloriesConsumption")), "",
-                                    rankingDataArray.getJSONObject(2).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(2).getString("caloriesConsumption")),
-                                    AppConstant.TYPE_COST_ENERGY);
+                            RankingData headData[] = new RankingData[3];
+                            for (int i = 0; i < 3; i++) {
+                                headData[i] = new RankingData();
+                                headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
+                                headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                            }
+                            headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
 
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -139,7 +141,8 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            e.printStackTrace();
+                            Log.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
@@ -158,15 +161,14 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                     .optJSONObject("timeCostedRanking").getString("pagesCount"));
                             JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
                                     getJSONArray("data");
-                            //TODO 这个地方写得太丑陋了，需要修改
-                            headView.setData("", rankingDataArray.getJSONObject(0).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(0).getString("timeCosted")), "",
-                                    rankingDataArray.getJSONObject(1).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(1).getString("timeCosted")), "",
-                                    rankingDataArray.getJSONObject(2).getString("studentName"),
-                                    Integer.valueOf(rankingDataArray.getJSONObject(2).getString("timeCosted")),
-                                    AppConstant.TYPE_COST_TIME);
-
+                            RankingData headData[] = new RankingData[3];
+                            for (int i = 0; i < 3; i++) {
+                                headData[i] = new RankingData();
+                                headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
+                                headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                            }
+                            headView.setData(headData, AppConstant.TYPE_COST_TIME);
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
@@ -177,7 +179,8 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            e.printStackTrace();
+                            Log.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
@@ -242,7 +245,6 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
                                     getJSONArray("data");
-                            //TODO 这个地方写得太丑陋了，需要修改
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
@@ -276,7 +278,6 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
                                     getJSONArray("data");
-                            //TODO 这个地方写得太丑陋了，需要修改
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");

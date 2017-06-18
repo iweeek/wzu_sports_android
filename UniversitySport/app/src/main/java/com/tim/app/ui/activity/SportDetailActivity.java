@@ -285,7 +285,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
         }
         if (sport.getTargetTime() > 0) {
-            tvTargetTime.setText(sport.getTargetTime());
+            tvTargetTime.setText(String.valueOf(sport.getTargetTime()));
         }
 
         if (Sport.TYPE_FOUR == sport.getType()) {

@@ -118,6 +118,7 @@ public class ServerInterface {
                     "      data{\n" +
                     "      studentId\n" +
                     "      studentName\n" +
+                    "      avatarUrl\n" +
                     "      caloriesConsumption\n" +
                     "      }\n" +
                     "    }\n" +
@@ -132,6 +133,7 @@ public class ServerInterface {
                     "      studentId\n" +
                     "      studentName\n" +
                     "      timeCosted\n" +
+                    "      avatarUrl\n" +
                     "      }\n" +
                     "    }\n" +
                     "  }\n" +

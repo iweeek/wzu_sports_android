@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
+import com.tim.app.server.entry.RankingData;
 import com.tim.app.util.BitmapLoader;
 
 /**
@@ -50,43 +51,28 @@ public class RankingDataHeadView extends LinearLayout {
         tvThirdUnit = (TextView) findViewById(R.id.tvThirdUnit);
     }
 
-    /**
-     * 刷新界面
-     *
-     * @param firstAvatar
-     * @param firstName
-     * @param firstValue
-     * @param secondAvatar
-     * @param secondName
-     * @param secondValue
-     * @param thirdAvatar
-     * @param thirdName
-     * @param thirdValue
-     * @param type
-     */
-    public void setData(String firstAvatar, String firstName, int firstValue, String secondAvatar,
-                        String secondName, int secondValue, String thirdAvatar, String thirdName, int thirdValue, int type) {
-        tvFirstName.setText(firstName);
-        tvSecondName.setText(secondName);
-        tvThirdName.setText(thirdName);
+    public void setData(RankingData data[], int type) {
+        tvFirstName.setText(data[0].getUserName());
+        tvSecondName.setText(data[1].getUserName());
+        tvThirdName.setText(data[2].getUserName());
 
-        if (!TextUtils.isEmpty(firstAvatar)) {
-            BitmapLoader.ins().loadImage(firstAvatar, R.drawable.ic_default_avatar, rivFirstAvatar);
+        if (!TextUtils.isEmpty(data[0].getAvatar())) {
+            BitmapLoader.ins().loadImage(data[0].getAvatar(), R.drawable.ic_default_avatar, rivFirstAvatar);
         }
-        if (!TextUtils.isEmpty(secondAvatar)) {
-            BitmapLoader.ins().loadImage(secondAvatar, R.drawable.ic_default_avatar, rivSecondAvatar);
+        if (!TextUtils.isEmpty(data[1].getAvatar())) {
+            BitmapLoader.ins().loadImage(data[1].getAvatar(), R.drawable.ic_default_avatar, rivSecondAvatar);
         }
-        if (!TextUtils.isEmpty(thirdAvatar)) {
-            BitmapLoader.ins().loadImage(thirdAvatar, R.drawable.ic_default_avatar, rivThirdAvatar);
+        if (!TextUtils.isEmpty(data[2].getAvatar())) {
+            BitmapLoader.ins().loadImage(data[2].getAvatar(), R.drawable.ic_default_avatar, rivThirdAvatar);
         }
         if (AppConstant.TYPE_COST_TIME == type) {
-            tvFirstUnit.setText(firstValue +"分钟");
-            tvSecondUnit.setText(secondValue +"分钟");
-            tvThirdUnit.setText(thirdValue +"分钟");
+            tvFirstUnit.setText(data[0].getCostValue() +"分钟");
+            tvSecondUnit.setText(data[1].getCostValue() +"分钟");
+            tvThirdUnit.setText(data[2].getCostValue() +"分钟");
         } else {
-            tvFirstUnit.setText(firstValue +"千卡");
-            tvSecondUnit.setText(secondValue +"千卡");
-            tvThirdUnit.setText(thirdValue +"千卡");
+            tvFirstUnit.setText(data[0].getCostValue() +"千卡");
+            tvSecondUnit.setText(data[1].getCostValue() +"千卡");
+            tvThirdUnit.setText(data[2].getCostValue() +"千卡");
         }
     }
 
