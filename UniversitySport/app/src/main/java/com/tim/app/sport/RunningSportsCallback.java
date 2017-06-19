@@ -109,7 +109,7 @@ public class RunningSportsCallback implements SQLite.TableInterface {
                     values.put(KEY_RUNNING_STUDENTID,record.getStudentId());
                     values.put(KEY_RUNNING_CURRENTDISTANCE,record.getCurrentDistance());
                     values.put(KEY_RUNNING_ELAPSETIME,record.getElapseTime());
-                    values.put(KEY_RUNNING_STARTTIME,record.getStudentId());
+                    values.put(KEY_RUNNING_STARTTIME,record.getStartTime());
                     values.put(KEY_RUNNING_STEPS,record.getSteps());
                     values.put(KEY_RUNNING_DATE,record.getDate());
                 }
@@ -128,9 +128,9 @@ public class RunningSportsCallback implements SQLite.TableInterface {
                         c.getInt(2),
                         c.getInt(3),
                         c.getInt(4),
-                        c.getInt(5),
+                        c.getLong(5),
                         c.getInt(6),
-                        c.getInt(7));
+                        c.getLong(7));
         }
         return null;
     }

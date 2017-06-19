@@ -92,9 +92,9 @@ public class SQLite extends SQLiteOpenHelper {
 
 
     /**
-     * @return
+     * @return the insert raw ID
      * @SmartNi 2017-06-17
-     * save Running Sports Record to Database.
+     * save one Running Sports Record to Database.
      */
     public int saveRunningSportsRecord(int projectId, int studentId, int currentDistance,
                                        long elapaseTime, long startTime, int steps, long date) {
@@ -108,6 +108,14 @@ public class SQLite extends SQLiteOpenHelper {
         values.put("date", date);
         long result = getWritableDatabase().insert(RunningSportsCallback.TABLE_RUNNING_SPORTS, null, values);
         return (int) result;
+    }
+
+
+    public int deleteSportsRecord(String tableName, String whereClause, String[] whereArgs) {
+
+        int result = getWritableDatabase().delete(tableName, whereClause, whereArgs);
+        return result;
+
     }
 
     public int count() {

@@ -9,9 +9,9 @@ public class RunningSportsRecord extends SportsRecord {
     private int id;
     private Integer currentDistance;
     private Integer elapseTime;
-    private Integer startTime;
+    private Long startTime;
     private Integer steps;
-    private Integer date;
+    private Long date;
 
 
     public RunningSportsRecord() {
@@ -19,7 +19,7 @@ public class RunningSportsRecord extends SportsRecord {
 
     public RunningSportsRecord(int id, Integer projectId, Integer studentId,
                                Integer currentDistance, Integer elapseTime,
-                               Integer startTime, Integer steps, Integer date) {
+                               Long startTime, Integer steps, Long date) {
         this.id = id;
         this.projectId = projectId;
         this.studentId = studentId;
@@ -54,12 +54,20 @@ public class RunningSportsRecord extends SportsRecord {
         this.elapseTime = elapseTime;
     }
 
-    public Integer getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
+    }
+
+    public Long getDate() {
+        return date;
+    }
+
+    public void setDate(Long date) {
+        this.date = date;
     }
 
     public Integer getSteps() {
@@ -68,14 +76,6 @@ public class RunningSportsRecord extends SportsRecord {
 
     public void setSteps(Integer steps) {
         this.steps = steps;
-    }
-
-    public Integer getDate() {
-        return date;
-    }
-
-    public void setDate(Integer date) {
-        this.date = date;
     }
 
     @Override
