@@ -56,6 +56,7 @@ import com.tim.app.util.ToastUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -242,7 +243,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
-                    tvInstantSpeed.setText(String.format("%.1f", moveDistance / interval));
+                    BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
+                    double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    tvInstantSpeed.setText(String.format("%.1f", d));
 
                 }
 
@@ -441,7 +444,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                tvInstantSpeed.setText(String.format("%.1f", currentDistance / elapseTime));
+                BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
+                double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                tvInstantSpeed.setText(String.format("%.1f", d));
 
 
                 int studentId = 1;//学生的id
