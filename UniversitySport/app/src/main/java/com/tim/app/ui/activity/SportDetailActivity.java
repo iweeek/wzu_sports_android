@@ -201,15 +201,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Bundle bundle = location.getExtras();
         if (location != null) {
             //定位成功
-
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, "newLatLng: " + newLatLng);
             Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
-            //                Toast.makeText(this, amapLocation.getLatitude() + "," + amapLocation.getLongitude() , Toast.LENGTH_SHORT).show();
             if (Double.compare(location.getLatitude(), 0.0) == 0) {
                 String errText = "GPS信号弱";
-                Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;
+            } else {
+                if (oldLatLng == null) {
+                    String errText = "定位成功";
+                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                }
             }
 
             elapseTime += interval / 1000;
