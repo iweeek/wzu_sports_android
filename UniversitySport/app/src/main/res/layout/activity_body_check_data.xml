@@ -15,7 +15,7 @@
                   android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/rl_title"
+            android:id="@+id/rlTitle"
             style="@style/TitleBarStyle"
             android:layout_height="@dimen/title_height"
             android:background="@color/blue"
@@ -63,6 +63,7 @@
                 android:paddingRight="30dp">
 
                 <TextView
+                    android:id="@+id/tvHeightLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -94,6 +95,7 @@
                 android:paddingRight="30dp">
 
                 <TextView
+                    android:id="@+id/tvWeightLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -125,6 +127,7 @@
                 android:paddingRight="30dp">
 
                 <TextView
+                    android:id="@+id/tvVitalCapacityLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -156,6 +159,7 @@
                 android:paddingRight="30dp">
 
                 <TextView
+                    android:id="@+id/tvBMILabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"

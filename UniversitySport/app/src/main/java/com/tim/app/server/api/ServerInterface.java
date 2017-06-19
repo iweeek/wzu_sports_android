@@ -204,4 +204,18 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+    public void queryFitnessCheckData(int studentId, ResponseCallback callback) {
+        String queryStr = "{\n" +
+                "  student(id:" + studentId + ") {\n" +
+                "    fitnessCheckDatas {\n" +
+                "      height\n" +
+                "      weight\n" +
+                "      lungCapacity\n" +
+                "      bmi\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        query(queryStr, callback);
+    }
+
 }

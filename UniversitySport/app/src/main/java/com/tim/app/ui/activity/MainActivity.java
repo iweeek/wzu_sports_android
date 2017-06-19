@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     startActivity(intent);
                                     break;
                                 case R.id.nav_fitness_test://体测数据
-                                    Intent intentBodyTestData = new Intent(MainActivity.this, BodyTestDataActivity.class);
+                                    Intent intentBodyTestData = new Intent(MainActivity.this, BodyCheckDataActivity.class);
                                     startActivity(intentBodyTestData);
                                     break;
                                 case R.id.nav_sports_achievement://体育成绩

@@ -7,7 +7,7 @@
     android:padding="@dimen/padding">
 
     <RelativeLayout
-        android:id="@+id/rl_title"
+        android:id="@+id/rlTitle"
         style="@style/TitleBarStyle">
 
         <ImageButton

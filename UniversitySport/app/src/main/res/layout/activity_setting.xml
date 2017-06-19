@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rl_title"
+        android:id="@+id/rlTitle"
         style="@style/TitleBarStyle"
         android:layout_height="@dimen/title_height"
         android:background="@color/blue"

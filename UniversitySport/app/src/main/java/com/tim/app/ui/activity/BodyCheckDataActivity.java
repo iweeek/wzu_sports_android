@@ -3,21 +3,27 @@ package com.tim.app.ui.activity;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.tim.app.R;
+import com.tim.app.constant.AppConstant;
+import com.tim.app.server.api.ServerInterface;
+
+import org.json.JSONObject;
 
 /**
  * 体测数据
  */
-public class BodyTestDataActivity extends BaseActivity {
+public class BodyCheckDataActivity extends BaseActivity {
 
-    private static final String TAG = "BodyTestDataActivity";
+    private static final String TAG = "BodyCheckDataActivity";
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -26,6 +32,7 @@ public class BodyTestDataActivity extends BaseActivity {
     private TextView tvWeight;
     private TextView tvVitalCapacity;
     private TextView tvBMI;
+    private int studentId = 1;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -34,7 +41,7 @@ public class BodyTestDataActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_body_test_data;
+        return R.layout.activity_body_check_data;
     }
 
     @Override
@@ -117,10 +124,34 @@ public class BodyTestDataActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        tvHeight.setText("169cm");
-        tvWeight.setText("69KG");
-        tvVitalCapacity.setText("2000cc");
-        tvBMI.setText("23");
+        ServerInterface.instance().queryFitnessCheckData(studentId, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    try {
+                        tvHeight.setText(json.optJSONObject("data").optJSONObject("student")
+                                .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("height") + "m");
+                        tvWeight.setText(json.optJSONObject("data").optJSONObject("student")
+                                .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("weight") + "kg");
+                        tvVitalCapacity.setText(json.optJSONObject("data").optJSONObject("student")
+                                .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("lungCapacity") +"cm");
+                        tvBMI.setText(json.optJSONObject("data").optJSONObject("student")
+                                .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("bmi"));
+                        return true;
+                    } catch (org.json.JSONException e) {
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+        });
+//        tvHeight.setText("169cm");
+//        tvWeight.setText("69KG");
+//        tvVitalCapacity.setText("2000cc");
+//        tvBMI.setText("23");
     }
 
     @Override

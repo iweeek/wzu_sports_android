@@ -6,7 +6,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/rl_title"
+        android:id="@+id/rlTitle"
         style="@style/TitleBarStyle"
         android:layout_height="@dimen/title_height"
         android:background="@color/blue"
@@ -34,12 +34,12 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_title"/>
+        android:layout_below="@+id/rlTitle"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_title"
+        android:layout_below="@+id/rlTitle"
         android:layout_margin="30dp"
         android:orientation="vertical">
 
