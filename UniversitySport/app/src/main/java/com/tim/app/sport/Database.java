@@ -21,7 +21,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
+
+import com.tim.app.server.entry.RunningSportsRecord;
+import com.tim.app.server.entry.SportsRecord;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,14 +36,39 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Database extends SQLiteOpenHelper {
 
-    private final static String DB_NAME = "steps";
-    private final static int DB_VERSION = 2;
 
+
+    public interface TableInterface {
+        //DB NAME
+        String getName();
+
+        int getDBVersion();
+
+        void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
+
+        List<String> createTableSql();
+
+        <T> void assignValuesByEntity(String tableName, T t, ContentValues values);
+
+        <T> T getEntityByCursor(String tableName, Cursor c);
+
+    }
+
+    public static void init(Context context, TableInterface callBack) {
+        if (instance == null) {
+            instance = new Database(context, callBack);
+        }
+    }
+
+    public static final String ILLEGAL_OPREATION = "非法操作，请先执行初始化操作。 Database.init()";
+    private final static String TABLE_RUNNING_SPORTS = "wzu_sports_running_sports_record";
+    private final static int DB_VERSION = 2;
     private static Database instance;
+
     private static final AtomicInteger openCounter = new AtomicInteger();
 
     private Database(final Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
+        super(context, TABLE_RUNNING_SPORTS, null, DB_VERSION);
     }
 
     public static synchronized Database getInstance(final Context c) {
@@ -58,18 +88,21 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + DB_NAME + " (date INTEGER, steps INTEGER)");
+        db.execSQL("CREATE TABLE " + TABLE_RUNNING_SPORTS + " (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                " projectId INTEGER, studentId INTEGER," +
+                " currentDistance INTEGER, elapseTime INTEGER," +
+                " startTime INTEGER, steps INTEGER,date INTEGER)");
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 1) {
             // drop PRIMARY KEY constraint
-            db.execSQL("CREATE TABLE " + DB_NAME + "2 (date INTEGER, steps INTEGER)");
-            db.execSQL("INSERT INTO " + DB_NAME + "2 (date, steps) SELECT date, steps FROM " +
-                    DB_NAME);
-            db.execSQL("DROP TABLE " + DB_NAME);
-            db.execSQL("ALTER TABLE " + DB_NAME + "2 RENAME TO " + DB_NAME + "");
+            db.execSQL("CREATE TABLE " + TABLE_RUNNING_SPORTS + "2 (date INTEGER, steps INTEGER)");
+            db.execSQL("INSERT INTO " + TABLE_RUNNING_SPORTS + "2 (date, steps) SELECT date, steps FROM " +
+                    TABLE_RUNNING_SPORTS);
+            db.execSQL("DROP TABLE " + TABLE_RUNNING_SPORTS);
+            db.execSQL("ALTER TABLE " + TABLE_RUNNING_SPORTS + "2 RENAME TO " + TABLE_RUNNING_SPORTS + "");
         }
     }
 
@@ -88,7 +121,7 @@ public class Database extends SQLiteOpenHelper {
                         final String[] selectionArgs, final String groupBy, final String having,
                         final String orderBy, final String limit) {
         return getReadableDatabase()
-                .query(DB_NAME, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+                .query(TABLE_RUNNING_SPORTS, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
     /**
@@ -109,7 +142,7 @@ public class Database extends SQLiteOpenHelper {
     public void insertNewDay(long date, int steps) {
         getWritableDatabase().beginTransaction();
         try {
-            Cursor c = getReadableDatabase().query(DB_NAME, new String[]{"date"}, "date = ?",
+            Cursor c = getReadableDatabase().query(TABLE_RUNNING_SPORTS, new String[]{"date"}, "date = ?",
                     new String[]{String.valueOf(date)}, null, null, null);
             if (c.getCount() == 0 && steps >= 0) {
 
@@ -121,7 +154,7 @@ public class Database extends SQLiteOpenHelper {
                 values.put("date", date);
                 // use the negative steps as offset
                 values.put("steps", -steps);
-                getWritableDatabase().insert(DB_NAME, null, values);
+                getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
             }
             c.close();
             logState();
@@ -138,8 +171,8 @@ public class Database extends SQLiteOpenHelper {
      */
     public void addToLastEntry(int steps) {
         if (steps > 0) {
-            getWritableDatabase().execSQL("UPDATE " + DB_NAME + " SET steps = steps + " + steps +
-                    " WHERE date = (SELECT MAX(date) FROM " + DB_NAME + ")");
+            getWritableDatabase().execSQL("UPDATE " + TABLE_RUNNING_SPORTS + " SET steps = steps + " + steps +
+                    " WHERE date = (SELECT MAX(date) FROM " + TABLE_RUNNING_SPORTS + ")");
         }
     }
 
@@ -158,14 +191,14 @@ public class Database extends SQLiteOpenHelper {
         getWritableDatabase().beginTransaction();
         boolean re;
         try {
-            Cursor c = getReadableDatabase().query(DB_NAME, new String[]{"date"}, "date = ?",
+            Cursor c = getReadableDatabase().query(TABLE_RUNNING_SPORTS, new String[]{"date"}, "date = ?",
                     new String[]{String.valueOf(date)}, null, null, null);
             re = c.getCount() == 0 && steps >= 0;
             if (re) {
                 ContentValues values = new ContentValues();
                 values.put("date", date);
                 values.put("steps", steps);
-                getWritableDatabase().insert(DB_NAME, null, values);
+                getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
             }
             c.close();
             getWritableDatabase().setTransactionSuccessful();
@@ -180,7 +213,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public void logState() {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, null, null, null, null, null, "date DESC", "5");
+                .query(TABLE_RUNNING_SPORTS, null, null, null, null, null, "date DESC", "5");
         c.close();
     }
 
@@ -191,7 +224,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public int getTotalWithoutToday() {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"SUM(steps)"}, "steps > 0 AND date > 0 AND date < ?",
+                .query(TABLE_RUNNING_SPORTS, new String[]{"SUM(steps)"}, "steps > 0 AND date > 0 AND date < ?",
                         new String[]{String.valueOf(Util.getToday())}, null, null, null);
         c.moveToFirst();
         int re = c.getInt(0);
@@ -206,7 +239,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public int getRecord() {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"MAX(steps)"}, "date > 0", null, null, null, null);
+                .query(TABLE_RUNNING_SPORTS, new String[]{"MAX(steps)"}, "date > 0", null, null, null, null);
         c.moveToFirst();
         int re = c.getInt(0);
         c.close();
@@ -221,7 +254,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public Pair<Date, Integer> getRecordData() {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"date, steps"}, "date > 0", null, null, null,
+                .query(TABLE_RUNNING_SPORTS, new String[]{"date, steps"}, "date > 0", null, null, null,
                         "steps DESC", "1");
         c.moveToFirst();
         Pair<Date, Integer> p = new Pair<Date, Integer>(new Date(c.getLong(0)), c.getInt(1));
@@ -240,12 +273,14 @@ public class Database extends SQLiteOpenHelper {
      * exist in the database
      */
     public int getSteps(final long date) {
-        Cursor c = getReadableDatabase().query(DB_NAME, new String[]{"steps"}, "date = ?",
+        Cursor c = getReadableDatabase().query(TABLE_RUNNING_SPORTS, new String[]{"steps"}, "date = ?",
                 new String[]{String.valueOf(date)}, null, null, null);
         c.moveToFirst();
         int re;
-        if (c.getCount() == 0) re = Integer.MIN_VALUE;
-        else re = c.getInt(0);
+        if (c.getCount() == 0)
+            re = Integer.MIN_VALUE;
+        else
+            re = c.getInt(0);
         c.close();
         return re;
     }
@@ -258,7 +293,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public List<Pair<Long, Integer>> getLastEntries(int num) {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"date", "steps"}, "date > 0", null, null, null,
+                .query(TABLE_RUNNING_SPORTS, new String[]{"date", "steps"}, "date > 0", null, null, null,
                         "date DESC", String.valueOf(num));
         int max = c.getCount();
         List<Pair<Long, Integer>> result = new ArrayList<>(max);
@@ -283,7 +318,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public int getSteps(final long start, final long end) {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"SUM(steps)"}, "date >= ? AND date <= ?",
+                .query(TABLE_RUNNING_SPORTS, new String[]{"SUM(steps)"}, "date >= ? AND date <= ?",
                         new String[]{String.valueOf(start), String.valueOf(end)}, null, null, null);
         int re;
         if (c.getCount() == 0) {
@@ -303,7 +338,7 @@ public class Database extends SQLiteOpenHelper {
      * day as the current offset is likely to be negative
      */
     void removeNegativeEntries() {
-        getWritableDatabase().delete(DB_NAME, "steps < ?", new String[]{"0"});
+        getWritableDatabase().delete(TABLE_RUNNING_SPORTS, "steps < ?", new String[]{"0"});
     }
 
     /**
@@ -312,7 +347,7 @@ public class Database extends SQLiteOpenHelper {
      * Currently, an invalid input is such with steps >= 200,000
      */
     public void removeInvalidEntries() {
-        getWritableDatabase().delete(DB_NAME, "steps >= ?", new String[]{"200000"});
+        getWritableDatabase().delete(TABLE_RUNNING_SPORTS, "steps >= ?", new String[]{"200000"});
     }
 
     /**
@@ -328,7 +363,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public int getDays() {
         Cursor c = getReadableDatabase()
-                .query(DB_NAME, new String[]{"COUNT(*)"}, "steps > ? AND date < ? AND date > 0",
+                .query(TABLE_RUNNING_SPORTS, new String[]{"COUNT(*)"}, "steps > ? AND date < ? AND date > 0",
                         new String[]{String.valueOf(0), String.valueOf(Util.getToday())}, null,
                         null, null);
         c.moveToFirst();
@@ -346,9 +381,9 @@ public class Database extends SQLiteOpenHelper {
     public void saveCurrentSteps(int steps) {
         ContentValues values = new ContentValues();
         values.put("steps", steps);
-        if (getWritableDatabase().update(DB_NAME, values, "date = -1", null) == 0) {
+        if (getWritableDatabase().update(TABLE_RUNNING_SPORTS, values, "date = -1", null) == 0) {
             values.put("date", -1);
-            getWritableDatabase().insert(DB_NAME, null, values);
+            getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
         }
     }
 
@@ -362,4 +397,95 @@ public class Database extends SQLiteOpenHelper {
         int re = getSteps(-1);
         return re == Integer.MIN_VALUE ? 0 : re;
     }
+
+
+    /**
+     * @return
+     * @SmartNi 2017-06-17
+     * save Running Sports Record to Database.
+     */
+    public int saveRunningSportsRecord(int projectId, int studentId, int currentDistance,
+                                       long elapaseTime, long startTime, int steps, long date) {
+        ContentValues values = new ContentValues();
+        values.put("projectId", projectId);
+        values.put("studentId", studentId);
+        values.put("currentDistance", currentDistance);
+        values.put("elapseTime", elapaseTime);
+        values.put("startTime", startTime);
+        values.put("steps", steps);
+        values.put("date", date);
+        long result = getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
+        return (int) result;
+    }
+
+    public int count() {
+        Cursor cursor = getWritableDatabase().rawQuery("select count(*) from  " +
+                mCallBack.getName(), null);
+        return cursor.getCount();
+    }
+
+
+    public SportsRecord getEntityByCursor(String tableName, Cursor c) {
+        switch (tableName) {
+            case TABLE_RUNNING_SPORTS:
+                return new RunningSportsRecord(c.getInt(0),
+                        c.getInt(1), c.getInt(2),
+                        c.getInt(3), c.getInt(4),
+                        c.getInt(5), c.getInt(6),
+                        c.getInt(7));
+        }
+        return null;
+    }
+
+
+    public static <T> List<T> query(String tableName,
+                                    @Nullable String queryStr, @Nullable String[] whereArgs) {
+        if (instance == null) {
+            throw new IllegalStateException(ILLEGAL_OPREATION);
+        }
+
+        List<T> list = new ArrayList<>();
+        SQLiteDatabase db = instance.getReadableDatabase();
+        db.beginTransaction();
+        try {
+            db.setTransactionSuccessful();
+            Cursor c = db.rawQuery(queryStr, whereArgs);
+            if (c.moveToFirst()) {
+                do {
+                    T record = (T) instance.mCallBack
+                            .getEntityByCursor(TABLE_RUNNING_SPORTS, c);
+                    if (record != null) {
+                        list.add(record);
+                    }
+                } while (c.moveToNext());
+                c.close();
+            }
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+        return list;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Self
+    ///////////////////////////////////////////////////////////////////////////
+
+    private static final String TAG = "Database";
+
+    private static TableInterface mCallBack = null;
+
+    private Database(@NonNull Context context, @NonNull TableInterface callBack) {
+        super(context, callBack.getName(), null, callBack.getDBVersion());
+        mCallBack = callBack;
+    }
+
+    public Database(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
+    public static String getTableName(){
+        return mCallBack.getName();
+    }
+
 }

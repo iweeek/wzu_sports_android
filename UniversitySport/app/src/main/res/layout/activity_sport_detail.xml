@@ -5,12 +5,14 @@
                 android:layout_height="match_parent">
 
 
+
     <RelativeLayout
         android:id="@+id/rlTitle"
         style="@style/TitleBarStyle"
         android:layout_height="@dimen/title_height"
         android:background="@color/blue"
         android:paddingLeft="20dp">
+
 
         <ImageButton
             android:id="@+id/ibBack"
@@ -489,6 +491,5 @@
         android:textColor="@color/white"
         android:textSize="18dp"
         android:visibility="gone"/>
-
 
 </RelativeLayout>
