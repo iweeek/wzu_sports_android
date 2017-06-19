@@ -35,8 +35,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermTargetCount);
-        tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
+        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermAccuCount);
+//        tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
         tvSurplus = (TextView) findViewById(R.id.tvSurplus);
 
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
@@ -86,9 +86,9 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      * @param cost
      */
     public void setData(String count, String surplus, String cost) {
-        tvCurTermTargetCount.setText(getContext().getString(R.string.curTermTargetCount, count));
-        tvSurplus.setText(surplus);
-        tvAccumulCostEnergy.setText(getContext().getString(R.string.accumulCostEnergy, cost));
+//        tvCurTermTargetCount.setText(getContext().getString(R.string.curTermTargetCount, count));
+//        tvSurplus.setText(surplus);
+//        tvAccumulCostEnergy.setText(getContext().getString(R.string.accumulCostEnergy, cost));
     }
 
 }

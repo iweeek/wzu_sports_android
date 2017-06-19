@@ -149,6 +149,7 @@
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTitleStep">达标步数</string>
     <string name="curTermTargetCount">学期目标次数：%s次</string>
+    <string name="curTermAccuCountLabel">本学期累计运动（次）</string>
     <string name="accumulCostEnergy">累计消耗热量：%s千卡</string>
     <string name="totalCost">%s 千卡</string>
     <string name="completeCount">%s 段</string>
