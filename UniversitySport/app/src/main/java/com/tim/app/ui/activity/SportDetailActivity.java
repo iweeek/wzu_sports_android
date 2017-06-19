@@ -230,7 +230,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
-                    tvInstantSpeed.setText(moveDistance / interval+"");
+                    tvInstantSpeed.setText(String.format("%.1f", moveDistance / interval));
                 }
 
                 if (oldLatLng == null) {
@@ -428,7 +428,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                tvInstantSpeed.setText(currentDistance / elapseTime +"");
+                tvInstantSpeed.setText(String.format("%.1f", currentDistance / elapseTime));
 
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
