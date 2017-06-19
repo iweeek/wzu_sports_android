@@ -431,8 +431,8 @@ public class Database extends SQLiteOpenHelper {
                 return new RunningSportsRecord(c.getInt(0),
                         c.getInt(1), c.getInt(2),
                         c.getInt(3), c.getInt(4),
-                        c.getInt(5), c.getInt(6),
-                        c.getInt(7));
+                        c.getLong(5), c.getInt(6),
+                        c.getLong(7));
         }
         return null;
     }

@@ -441,7 +441,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                tvInstantSpeed.setText(String.format("%.1f", currentDistance / elapseTime));
+//                tvInstantSpeed.setText(String.format("%.1f", currentDistance / elapseTime));
 
 
                 int studentId = 1;//学生的id
@@ -469,7 +469,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void commmitSportData(final int projectId, final int studentId, final int targetTime){
+    private void commmitSportData(final int projectId, final int studentId, final int targetTime) {
         //必须先初始化。
         SQLite.init(context, RunningSportsCallback.getInstance());
         //提交本次运动数据，更新UI
@@ -489,23 +489,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 e.printStackTrace();
                                 Log.e(TAG, "commmitSportData onJsonResponse e: " + e);
                             }
-                            //提交成功，检查数据库是否有遗留为提交的数据记录。
-                            String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
-
-                            List<RunningSportsRecord> list = SQLite.query(
-                                    RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
-
-                            Log.d(TAG, "list:" + list);
-                            for(RunningSportsRecord record : list){
-                                Log.d(TAG, "record:" + record);
-                                ServerInterface.instance().postRunningActDate(
-                                        TAG, record.getProjectId(),
-                                        record.getStudentId(),
-                                        record.getCurrentDistance(),
-                                        record.getElapseTime(),
-                                        targetTime, record.getStartTime(), callback);
-                            }
-
                             return true;
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
@@ -518,27 +501,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     }
                 });
-        //提交未数据库中为提交的记录 callback
-        callback = new JsonResponseCallback() {
-            @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                Log.d(TAG, "errCode:" + errCode);
-
-                if (errCode == 0) {
-                    //提交成功，把数据库中记录删除。
-
-                    return true;
-                } else {
-                    //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                    int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                            projectId, studentId, currentDistance,
-                            elapseTime, startTime, currentSteps, System.currentTimeMillis());
-
-                    Log.d(TAG, "result:" + result);
-                    return false;
-                }
-            }
-        };
 
         Runnable runnable = new Runnable() {
             @Override
@@ -549,20 +511,28 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 List<RunningSportsRecord> list = SQLite.query(
                         RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
 
-                for(RunningSportsRecord record : list){
+                for (final RunningSportsRecord record : list) {
                     Log.d(TAG, "record:" + record);
                     ServerInterface.instance().postRunningActDate(
                             TAG, record.getProjectId(),
                             record.getStudentId(),
                             record.getCurrentDistance(),
                             record.getElapseTime(),
-                            targetTime, record.getStartTime(), new JsonResponseCallback() {
+                            targetTime,
+                            record.getStartTime(),
+                            new JsonResponseCallback() {
+                                //提交未数据库中为提交的记录
                                 @Override
                                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                                     Log.d(TAG, "errCode:" + errCode);
 
                                     if (errCode == 0) {
                                         //提交成功，把数据库中记录删除。
+                                        int result = SQLite.getInstance(context).deleteSportsRecord(
+                                                RunningSportsCallback.TABLE_RUNNING_SPORTS,
+                                                "startTime = ?", new String[]{record.getStartTime().toString()});
+                                        Log.d(TAG, "delete result:" + result);
+                                        Log.d(TAG, "record.getStartTime():" + record.getStartTime());
 
                                         return true;
                                     } else {
@@ -571,7 +541,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                 projectId, studentId, currentDistance,
                                                 elapseTime, startTime, currentSteps, System.currentTimeMillis());
 
-                                        Log.d(TAG, "result:" + result);
+                                        Log.d(TAG, "save result:" + result);
                                         return false;
                                     }
                                 }
@@ -581,8 +551,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         };
         new Thread(runnable).start();
     }
-
-
 
 
     @Override
