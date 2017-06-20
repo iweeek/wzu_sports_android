@@ -46,16 +46,17 @@ public class ServerInterface {
 
     /**
      * 提交运动数据
+     *
      * @param tag
-     * @param projectId 运动项目ID
-     * @param studentId 学生ID
-     * @param distance 距离
-     * @param costTime 花费时间
+     * @param projectId  运动项目ID
+     * @param studentId  学生ID
+     * @param distance   距离
+     * @param costTime   花费时间
      * @param targetTime 目标时间
-     * @param startTime 开始时间
+     * @param startTime  开始时间
      * @param callback
      */
-    public void postRunningActDate(String tag, int projectId , int studentId, int distance, long costTime, long targetTime,
+    public void postRunningActDate(String tag, int projectId, int studentId, int distance, long costTime, long targetTime,
                                    long startTime, ResponseCallback callback) {
         String url = API_SCHEME + INIT_PUSH;
         HashMap params = new HashMap();
@@ -75,37 +76,51 @@ public class ServerInterface {
         HashMap params = new HashMap();
         Log.d(TAG, "queryRunningProjects: headers.toString()" + headers.toString());
 
-//        headers.put("Content-Type", "application/json;charset=UTF-8");
-//        Log.d(TAG, "headers: " + headers);
-//        headers.remove("content-type");
-//        Log.d(TAG, "headers: " + headers);
-//        headers.put("content-type", "x-www-form-urlencoded");
-//        Log.d(TAG, "headers: " + headers);
+        //        headers.put("Content-Type", "application/json;charset=UTF-8");
+        //        Log.d(TAG, "headers: " + headers);
+        //        headers.remove("content-type");
+        //        Log.d(TAG, "headers: " + headers);
+        //        headers.put("content-type", "x-www-form-urlencoded");
+        //        Log.d(TAG, "headers: " + headers);
         params.put("query", queryStr);
         Log.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
+    //    public void queryRunningProjects(int universityId, ResponseCallback callback) {
+    //        queryStr = "{runningProjects(universityId:" + universityId + ")" +
+    //                "{id name qualifiedDistance qualifiedCostTime}}";
+    //        query(queryStr, callback);
+    //    }
     public void queryRunningProjects(int universityId, ResponseCallback callback) {
-        queryStr = "{runningProjects(universityId:" + universityId + ")" +
-                "{id name qualifiedDistance qualifiedCostTime}}";
+        queryStr = "{\n" +
+                "  runningProjects(universityId: 1) {\n" +
+                "    id\n" +
+                "    name\n" +
+                "    qualifiedDistance\n" +
+                "    qualifiedCostTime\n" +
+                "  }\n" +
+                "}\n";
         query(queryStr, callback);
     }
 
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
-        String queryStr = "{university(id:" + universityId +"){\n" +
-                "    currentTerm {\n" +
-                "      termSportsTask {\n" +
-                "        targetSportsTimes\n" +
+        String queryStr = "{\n" +
+                "\tuniversity(id:" + universityId + ") {\n" +
+                "       currentTerm {\n" +
+                "        termSportsTask {\n" +
+                "          targetSportsTimes\n" +
+                "        }\n" +
                 "      }\n" +
-                "    }\n" +
                 "  }\n" +
                 "  \n" +
-                "  student(id:" + studentId + ") {\n" +
-                "    currentTermQualifiedActivityCount\n" +
+                "  student(id:1) {\n" +
                 "    caloriesConsumption\n" +
+                "    timeCosted\n" +
+                "    currentTermQualifiedActivityCount\n" +
+                "    currentTermActivityCount\n" +
                 "  }\n" +
-                "}\n";
+                "}";
         query(queryStr, callback);
     }
 

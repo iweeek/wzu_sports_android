@@ -27,7 +27,7 @@ public class HistorySportActivity extends BaseActivity {
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
-        SmoothSwitchScreenUtil.smoothSwitchScreen(this);
+//        SmoothSwitchScreenUtil.smoothSwitchScreen(this);
     }
 
     @Override
