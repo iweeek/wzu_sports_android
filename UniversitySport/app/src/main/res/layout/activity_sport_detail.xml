@@ -125,7 +125,7 @@
                         android:id="@+id/tvCurrentDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetDistance"
+                        android:text="@string/percents"
                         android:textStyle="bold"
                         android:textColor="#868892"
                         android:textSize="20dp"/>
@@ -165,7 +165,7 @@
                         android:id="@+id/tvCurrentTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTime"
+                        android:text="@string/percents"
                         android:textStyle="bold"
                         android:textColor="#868892"
                         android:textSize="20dp"/>
@@ -206,7 +206,7 @@
                         android:id="@+id/tvCurrentValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTime"
+                        android:text="@string/percents"
                         android:textStyle="bold"
                         android:textColor="#868892"
                         android:textSize="20dp"/>
@@ -303,7 +303,7 @@
                         android:id="@+id/tvTargetDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetDistance"
+                        android:text="@string/percents"
                         android:textStyle="bold"
                         android:textColor="#000"
                         android:textSize="20dp"/>
@@ -344,7 +344,7 @@
                         android:id="@+id/tvTargetTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTime"
+                        android:text="@string/percents"
                         android:textStyle="bold"
                         android:textColor="#000"
                         android:textSize="20dp"/>
@@ -386,7 +386,7 @@
                         android:id="@+id/tvTargetValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTime"
+                        android:text="@string/percents"
                         android:textStyle="bold"
                         android:textColor="#000"
                         android:textSize="20dp"/>

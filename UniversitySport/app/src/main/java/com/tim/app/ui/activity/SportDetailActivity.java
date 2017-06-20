@@ -297,7 +297,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sport.getJoinNumber())));
         }
         if (sport.getTargetDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
+            tvTargetDistance.setText(getString(R.string.percents, String.valueOf(sport.getTargetDistance())));
             //            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
         }
         if (sport.getTargetTime() > 0) {
@@ -309,10 +309,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvTargetSpeed.setText(sport.getSteps());
         } else {
             tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-            tvTargetSpeed.setText(getString(R.string.targetSpeed, sport.getTargetSpeed()));
+            tvTargetSpeed.setText(getString(R.string.percents, sport.getTargetSpeed()));
         }
 
-        tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
+        tvCurrentDistance.setText(getString(R.string.percents, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
         tvCurrentStep.setText("0 步");
         tvInstantSpeed.setText("0.0");

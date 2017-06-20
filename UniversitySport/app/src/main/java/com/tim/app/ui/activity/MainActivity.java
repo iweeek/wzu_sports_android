@@ -257,7 +257,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         return false;
                     }
                 } else {
-                    homepageHeadView.displayBadNetworkLayout();
+//                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }
