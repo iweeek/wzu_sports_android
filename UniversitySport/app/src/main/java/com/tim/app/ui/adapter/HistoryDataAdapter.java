@@ -12,6 +12,7 @@ import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.server.entry.HistoryData;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -54,7 +55,14 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
 
         if (data.getSportTime() > 0 && data.getSportDistance() > 0) {
-            holder.tvLeft.setText(String.valueOf(data.getSportDistance() / (data.getSportTime() / 60)) + "米/分");
+
+            if(data.getSportTime() > 60){
+                BigDecimal bd = new BigDecimal(data.getSportTime() / 60);
+                bd.setScale(2);
+                holder.tvLeft.setText(String.valueOf(data.getSportDistance() / bd.doubleValue()) + "米/分");
+            }else if(data.getSportTime() < 60){
+                holder.tvLeft.setText(String.valueOf(data.getSportDistance() / (data.getSportTime())) + "米/秒");
+            }
         }
         if (data.getCostEnergy() > 0) {
             holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getCostEnergy())));
