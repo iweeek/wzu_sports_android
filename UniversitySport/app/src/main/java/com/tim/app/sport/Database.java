@@ -62,6 +62,7 @@ public class Database extends SQLiteOpenHelper {
 
     public static final String ILLEGAL_OPREATION = "非法操作，请先执行初始化操作。 Database.init()";
     private final static String TABLE_RUNNING_SPORTS = "wzu_sports_running_sports_record";
+    private final static String TABLE_DAY_STEPS = "day_steps";
     private final static int DB_VERSION = 2;
     private static Database instance;
 
@@ -88,10 +89,9 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_RUNNING_SPORTS + " (id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                " projectId INTEGER, studentId INTEGER," +
-                " currentDistance INTEGER, elapseTime INTEGER," +
-                " startTime INTEGER, steps INTEGER,date INTEGER)");
+        db.execSQL("CREATE TABLE " + TABLE_RUNNING_SPORTS + " (date INTEGER," + " steps INTEGER)");
+        db.execSQL("CREATE TABLE " + TABLE_DAY_STEPS + " (time INTEGER," + " steps INTEGER)");
+
     }
 
     @Override
@@ -385,6 +385,13 @@ public class Database extends SQLiteOpenHelper {
             values.put("date", -1);
             getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
         }
+    }
+
+    public void saveDaySteps(int steps) {
+        ContentValues values = new ContentValues();
+        values.put("steps", steps);
+        values.put("time",System.currentTimeMillis());
+        getWritableDatabase().insert(TABLE_DAY_STEPS, null, values);
     }
 
     /**

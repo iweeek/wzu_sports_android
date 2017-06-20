@@ -26,7 +26,7 @@ public class ShutdownRecevier extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
 
-        context.startService(new Intent(context, SensorListener.class));
+        context.startService(new Intent(context, SensorService.class));
 
         // if the user used a root script for shutdown, the DEVICE_SHUTDOWN
         // broadcast might not be send. Therefore, the app will check this

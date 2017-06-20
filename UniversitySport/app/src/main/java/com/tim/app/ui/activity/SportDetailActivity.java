@@ -49,7 +49,7 @@ import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
-import com.tim.app.sport.SensorListener;
+import com.tim.app.sport.SensorService;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 
@@ -167,7 +167,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
 
-        startService(new Intent(this, SensorListener.class));
+        startService(new Intent(this, SensorService.class));
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
