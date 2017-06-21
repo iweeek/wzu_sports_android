@@ -27,9 +27,12 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.Sport;
 import com.tim.app.ui.activity.setting.SettingActivity;
+import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
+import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.ToastUtil;
 
@@ -47,6 +50,7 @@ import java.util.Random;
 public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    private MainActivity context;
 
     private long last_back_time = 0;
     private DrawerLayout mDrawerLayout;
@@ -60,11 +64,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private WrapRecyclerView wrvSportType;
 
     private SportAdapter adapter;
-    private List<Sport> dataList;
+    private BadNetworkAdapter badNetworkAdapter;
+    private List<Sport> sportDataList;
+    private List<BadNetWork> networkDataList;
 
     NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
+    private BadNetworkView badNetworkView;
 
 
     public static void start(Context context) {
@@ -77,6 +84,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
+        context = this;
     }
 
     @Override
@@ -92,6 +100,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         ibMenu = (ImageView) findViewById(R.id.ibMenu);
         ibNotify = (ImageView) findViewById(R.id.ibNotify);
         tvLogout = (TextView) findViewById(R.id.tvLogout);
+        //        badNetworkView = (BadNetworkView) findViewById(R.id.bnvContainer);
         ibMenu.setOnClickListener(this);
         ibNotify.setOnClickListener(this);
         tvLogout.setOnClickListener(this);
@@ -147,11 +156,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         wrvSportType.setLayoutManager(layoutManager);
-        wrvSportType.addItemDecoration(new HorizontalDividerItemDecoration.Builder(MainActivity.this).color(getResources().getColor(R.color.transparent)).size((int) (RT.getDensity() * 2)).build());
+        wrvSportType.addItemDecoration(new HorizontalDividerItemDecoration.Builder(
+                MainActivity.this).color(getResources().getColor(R.color.transparent)).size((int) (RT.getDensity() * 2)).build());
 
         homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view, null);
         wrvSportType.addHeaderView(homepageHeadView);
-
+        badNetworkView = (BadNetworkView) LayoutInflater.from(this).inflate(R.layout.bad_network_view, null);
         /**
          * 添加底部留白
          */
@@ -160,21 +170,32 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         footerView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         wrvSportType.addFootView(footerView);
 
-        dataList = new ArrayList<>();
-        adapter = new SportAdapter(this, dataList);
-        adapter.setOnItemClickListener(this);
+        sportDataList = new ArrayList<>();
+        adapter = new SportAdapter(this, sportDataList);
         wrvSportType.setAdapter(adapter);
+
+
+        networkDataList = new ArrayList<>();
+        networkDataList.add(new BadNetWork());
+        badNetworkAdapter = new BadNetworkAdapter(this, networkDataList);
+        //        wrvSportType.invalidate();
     }
 
 
     @Override
     public void onItemClick(View view, int position, long id) {
-        Sport sport = dataList.get(position);
-        SportDetailActivity.start(this, sport);
+
+        if (BadNetworkAdapter.BAD_NETWORK.equals(view.getTag())) {
+            Log.d(TAG, "onItemClick: bad network!");
+            queryRunningProjects();
+        } else {
+            Sport sport = sportDataList.get(position);
+            SportDetailActivity.start(this, sport);
+        }
     }
 
-    @Override
-    public void initData() {
+
+    public void queryRunningProjects(){
         ServerInterface.instance().queryRunningProjects(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -221,8 +242,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
                             }
-                            dataList.add(sport);
+                            sportDataList.add(sport);
                         }
+
+//                        wrvSportType.invalidate();
+                        wrvSportType.setAdapter(adapter);
+                        adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         //TODO
@@ -231,12 +256,18 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     return true;
                 } else {
                     ToastUtil.showToast(errMsg);
+                    //网络不好
+                    wrvSportType.invalidate();
+                    wrvSportType.setAdapter(badNetworkAdapter);
+                    badNetworkAdapter.setOnItemClickListener(context);
                     return false;
                 }
             }
 
         });
+    }
 
+    public void queryCurTermData(){
         int studentId = 1;
         ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
             @Override
@@ -265,12 +296,17 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     }
                 } else {
                     Log.d(TAG, "onJsonResponse: errcode != 0");
-                    //                    homepageHeadView.displayBadNetworkLayout();
+                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }
 
         });
+    }
+    @Override
+    public void initData() {
+        queryRunningProjects();
+        queryCurTermData();
     }
 
     @Override
@@ -288,14 +324,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ibMenu:
+                Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.tvLogout:
                 finish();
                 break;
             case R.id.llBadNetworkFresh:
-                initData();
+                queryCurTermData();
                 Log.d(TAG, "onClick llBadNetworkFresh");
+                break;
+            case R.id.llBadNetworkContainer:
+                queryRunningProjects();
+                Log.d(TAG, "onClick llBadNetworkContainer");
                 break;
         }
     }

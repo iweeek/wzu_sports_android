@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tim.app.ui.view.BadNetworkView xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/llBadNetworkContainer"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="网络不好，请点击刷新"
+        android:textSize="14dp">
+    </TextView>
+</com.tim.app.ui.view.BadNetworkView>

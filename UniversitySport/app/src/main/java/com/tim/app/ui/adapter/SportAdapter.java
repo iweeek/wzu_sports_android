@@ -99,7 +99,5 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             rlContainer = (RelativeLayout) itemView.findViewById(R.id.rlContainer);
             rlContainer.setLayoutParams(new RelativeLayout.LayoutParams(RT.getScreenWidth(),(int)(RT.getScreenWidth()*0.43)));
         }
-
     }
-
 }

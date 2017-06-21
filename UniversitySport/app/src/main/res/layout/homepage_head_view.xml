@@ -90,7 +90,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:text="@string/percents"
                                 android:textColor="#000"
                                 android:textSize="20dp"/>
                         </LinearLayout>
@@ -115,7 +114,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:text="@string/percents"
                                 android:textColor="#000"
                                 android:textSize="20dp"/>
                         </LinearLayout>
@@ -148,17 +146,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:text="@string/percents"
                                     android:textColor="#000"
-                                    android:textSize="20dp"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:text="@string/slash"
-                                    android:textColor="#868892"
                                     android:textSize="20dp"/>
 
                                 <TextView
@@ -167,7 +155,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
-                                    android:text="@string/percents"
                                     android:textColor="#868892"
                                     android:textSize="20dp"/>
                             </LinearLayout>
@@ -209,15 +196,6 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:textColor="#000"
-                                    android:textSize="20dp"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_centerVertical="true"
-                                    android:text="@string/slash"
-                                    android:textColor="#868892"
                                     android:textSize="20dp"/>
 
                                 <TextView
