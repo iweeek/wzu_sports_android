@@ -120,7 +120,7 @@
                     android:id="@+id/tvTotalCostTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/targetTime"
+                    android:text="@string/percents"
                     android:textColor="#474b4f"
                     android:textSize="16dp" />
             </LinearLayout>

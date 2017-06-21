@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.tim.app.R;
-import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 
 import org.json.JSONObject;
@@ -55,13 +54,12 @@ public class BodyCheckDataActivity extends BaseActivity {
         mNavigationView = (NavigationView) findViewById(R.id.nv_body_test_data_navigation);
 
 
-
         //从服务器去的学生信息，计算显示的学期数
         Menu menu = mNavigationView.getMenu();
-        for(int i=1;i<=8;i++) {
-            if(i%2==0){
+        for (int i = 1; i <= 8; i++) {
+            if (i % 2 == 0) {
                 menu.add(Menu.NONE, i, i, "2016年~2017年 第二学期");
-            }else{
+            } else {
                 menu.add(Menu.NONE, i, i, "2016年~2017年 第一学期");
             }
         }
@@ -71,33 +69,33 @@ public class BodyCheckDataActivity extends BaseActivity {
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             menuItem.setChecked(true);
-                              mDrawerLayout.closeDrawers();
-//                            switch (menuItem.getItemId()) {
-//                                case R.id.nav_term_one:
-//                                    ToastUtil.showToast("第一学期");
-//                                    break;
-//                                case R.id.nav_term_two:
-//                                    ToastUtil.showToast("第二学期");
-//                                    break;
-//                                case R.id.nav_term_three:
-//                                    ToastUtil.showToast("第三学期");
-//                                    break;
-//                                case R.id.nav_term_four:
-//                                    ToastUtil.showToast("第四学期");
-//                                    break;
-//                                case R.id.nav_term_five:
-//                                    ToastUtil.showToast("第五学期");
-//                                    break;
-//                                case R.id.nav_term_six:
-//                                    ToastUtil.showToast("第六学期");
-//                                    break;
-//                                case R.id.nav_term_seven:
-//                                    ToastUtil.showToast("第七学期");
-//                                    break;
-//                                case R.id.nav_term_eight:
-//                                    ToastUtil.showToast("第八学期");
-//                                    break;
-//                            }
+                            mDrawerLayout.closeDrawers();
+                            //                            switch (menuItem.getItemId()) {
+                            //                                case R.id.nav_term_one:
+                            //                                    ToastUtil.showToast("第一学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_two:
+                            //                                    ToastUtil.showToast("第二学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_three:
+                            //                                    ToastUtil.showToast("第三学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_four:
+                            //                                    ToastUtil.showToast("第四学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_five:
+                            //                                    ToastUtil.showToast("第五学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_six:
+                            //                                    ToastUtil.showToast("第六学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_seven:
+                            //                                    ToastUtil.showToast("第七学期");
+                            //                                    break;
+                            //                                case R.id.nav_term_eight:
+                            //                                    ToastUtil.showToast("第八学期");
+                            //                                    break;
+                            //                            }
                             return true;
                         }
                     });
@@ -134,12 +132,12 @@ public class BodyCheckDataActivity extends BaseActivity {
                         tvWeight.setText(json.optJSONObject("data").optJSONObject("student")
                                 .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("weight") + "kg");
                         tvVitalCapacity.setText(json.optJSONObject("data").optJSONObject("student")
-                                .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("lungCapacity") +"cm");
+                                .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("lungCapacity") + "cm");
                         tvBMI.setText(json.optJSONObject("data").optJSONObject("student")
                                 .optJSONArray("fitnessCheckDatas").getJSONObject(0).getString("bmi"));
                         return true;
                     } catch (org.json.JSONException e) {
-                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: ");
                         return false;
                     }
                 } else {
@@ -148,10 +146,10 @@ public class BodyCheckDataActivity extends BaseActivity {
             }
 
         });
-//        tvHeight.setText("169cm");
-//        tvWeight.setText("69KG");
-//        tvVitalCapacity.setText("2000cc");
-//        tvBMI.setText("23");
+        //        tvHeight.setText("169cm");
+        //        tvWeight.setText("69KG");
+        //        tvVitalCapacity.setText("2000cc");
+        //        tvBMI.setText("23");
     }
 
     @Override

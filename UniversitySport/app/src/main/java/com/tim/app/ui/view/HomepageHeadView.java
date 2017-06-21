@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tim.app.R;
+import com.tim.app.ui.activity.HistorySportActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.activity.SchoolRankingActivity;
 
@@ -22,6 +23,11 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private TextView tvCurTermTargetCount;
     private TextView tvAccumulCostEnergy;
     private TextView tvSurplus;
+    private TextView tvAccumulCostTime;
+    private TextView tvCurQualifiedTimes;
+    private TextView tvTotalQualifiedTimes;
+
+    private RelativeLayout rlTop;
     private RelativeLayout rlRank;
     private RelativeLayout rlHeadView;
     private LinearLayout llBadNetworkFresh;
@@ -35,12 +41,17 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermAccuCount);
+//        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermAccuCount);
 //        tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
         tvSurplus = (TextView) findViewById(R.id.tvSurplus);
+        tvAccumulCostTime = (TextView) findViewById(R.id.tvAccumulCostTime);
+        tvCurQualifiedTimes = (TextView) findViewById(R.id.tvCurQualifiedTimes);
+        tvTotalQualifiedTimes = (TextView) findViewById(R.id.tvTotalQualifiedTimes);
 
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
         rlRank.setOnClickListener(this);
+        rlTop = (RelativeLayout) findViewById(R.id.rlTop);
+        rlTop.setOnClickListener(this);
 
         rlHeadView = (RelativeLayout) findViewById(R.id.rlHeadView);
 
@@ -54,6 +65,10 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
             case R.id.rlRank:
                 Intent intent = new Intent(getContext(), SchoolRankingActivity.class);
                 getContext().startActivity(intent);
+                break;
+            case R.id.rlTop:
+
+                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
         }
     }
@@ -70,7 +85,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     public void displayBadNetworkLayout() {
         rlHeadView.setVisibility(View.INVISIBLE);
         llBadNetworkFresh.setVisibility(View.VISIBLE);
-        llBadNetworkFresh.setOnClickListener((MainActivity)ctx);
+        llBadNetworkFresh.setOnClickListener((MainActivity) ctx);
     }
 
     public void displayNormalLayout() {
@@ -85,10 +100,15 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      * @param surplus
      * @param cost
      */
-    public void setData(String count, String surplus, String cost) {
-//        tvCurTermTargetCount.setText(getContext().getString(R.string.curTermTargetCount, count));
+
+    public void setData(String count, String surplus, String cost, String costTime,
+                        String currentTermQualifiedActivityCount,String currentTermActivityCount) {
+        tvCurTermTargetCount.setText(getContext().getString(R.string.percents, count));
 //        tvSurplus.setText(surplus);
-//        tvAccumulCostEnergy.setText(getContext().getString(R.string.accumulCostEnergy, cost));
+        tvAccumulCostEnergy.setText(getContext().getString(R.string.percents, cost));
+        tvAccumulCostTime.setText((getContext().getString(R.string.percents, costTime)));
+        tvCurQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermQualifiedActivityCount)));
+        tvTotalQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermActivityCount)));
     }
 
 }

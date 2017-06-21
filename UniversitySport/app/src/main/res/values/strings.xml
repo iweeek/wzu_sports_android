@@ -138,13 +138,9 @@
 
     <!-- 首页 -->
     <string name="joinPrompt">%s人正在参加</string>
-    <string name="targetDistance">%s</string>
     <string name="meter">米</string>
-    <string name="targetTime">%s</string>
     <string name="minute">分钟</string>
-    <string name="targetSpeed">%s</string>
     <string name="speed">米/秒</string>
-    <string name="targetStep">%s</string>
     <string name="step">步</string>
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTitleStep">达标步数</string>
@@ -157,7 +153,14 @@
     <string name="sportCostTime">本次运动时长:%s分钟</string>
     <string name="currentTermSurplus">本学期剩余次数:%s次</string>
     <string name="totalNumber">总目标次数:%s次</string>
-    <string name="sportCount">%s 次</string>
+    <string name="ReachTargetTimes">达标(次)</string>
+    <string name="curTermSportsCount">本学期累计运动(次)</string>
+    <string name="accumulEnergy">消耗(卡)</string>
+    <string name="accumulTime">耗时(分钟)</string>
+    <string name="outsideScore">课外成绩(分)</string>
+    <string name="percents">%s</string>
+    <string name="slash">/</string>
+
 
     <!-- -->
     <string name="score">得分:%s</string>

@@ -49,7 +49,7 @@ import com.tim.app.server.entry.Sport;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
-import com.tim.app.sport.SensorListener;
+import com.tim.app.sport.SensorService;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.ToastUtil;
 
@@ -168,7 +168,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
 
-        startService(new Intent(this, SensorListener.class));
+        startService(new Intent(this, SensorService.class));
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -297,7 +297,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sport.getJoinNumber())));
         }
         if (sport.getTargetDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.targetDistance, String.valueOf(sport.getTargetDistance())));
+            tvTargetDistance.setText(getString(R.string.percents, String.valueOf(sport.getTargetDistance())));
             //            tvTargetDistance.setText(getString(R.string.targetDistance,10000+""));
         }
         if (sport.getTargetTime() > 0) {
@@ -309,10 +309,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvTargetSpeed.setText(sport.getSteps());
         } else {
             tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-            tvTargetSpeed.setText(getString(R.string.targetSpeed, sport.getTargetSpeed()));
+            tvTargetSpeed.setText(getString(R.string.percents, sport.getTargetSpeed()));
         }
 
-        tvCurrentDistance.setText(getString(R.string.targetDistance, String.valueOf(currentDistance)));
+        tvCurrentDistance.setText(getString(R.string.percents, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
         tvCurrentStep.setText("0 步");
         tvInstantSpeed.setText("0.0");

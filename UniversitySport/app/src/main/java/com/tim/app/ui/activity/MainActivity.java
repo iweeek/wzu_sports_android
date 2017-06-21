@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
-                                sport.setTargetSpeed(speed+"");
+                                sport.setTargetSpeed(speed + "");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_jogging);
                             } else if (projectId == 2) {
@@ -201,7 +201,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
-                                sport.setTargetSpeed(speed+"");
+                                sport.setTargetSpeed(speed + "");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_run);
                             } else if (projectId == 3) {
@@ -209,7 +209,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
-                                sport.setTargetSpeed(speed+"");
+                                sport.setTargetSpeed(speed + "");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
                             } else if (projectId == 4) {
@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
-                                sport.setTargetSpeed(speed+"");
+                                sport.setTargetSpeed(speed + "");
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
                             }
@@ -243,21 +243,29 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
-                        String targetSportTimes = json.optJSONObject("data").optJSONObject("university").optJSONObject("currentTerm").
-                                optJSONObject("termSportsTask").getString("targetSportsTimes");
-                        String curQuaTimes = json.optJSONObject("data").optJSONObject("student").getString("currentTermQualifiedActivityCount");
-                        String totalConsumeEnergy = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
+                        String targetSportTimes = json.optJSONObject("data").optJSONObject("university").
+                                optJSONObject("currentTerm").optJSONObject("termSportsTask").
+                                getString("targetSportsTimes");
+                        String curQuaTimes = json.optJSONObject("data").optJSONObject("student").
+                                getString("currentTermQualifiedActivityCount");
+                        String totalTimes = json.optJSONObject("data").optJSONObject("student").
+                                getString("currentTermActivityCount");
+                        String totalConsumeEnergy = json.optJSONObject("data").optJSONObject("student").
+                                getString("caloriesConsumption");
+                        String timeCosted = json.optJSONObject("data").optJSONObject("student").
+                                getString("timeCosted");
                         String surplusTimes = String.valueOf(Integer.parseInt(targetSportTimes) - Integer.parseInt(curQuaTimes));
-                        homepageHeadView.setData(targetSportTimes, surplusTimes, totalConsumeEnergy);
+                        homepageHeadView.setData(targetSportTimes, surplusTimes, totalConsumeEnergy, timeCosted, curQuaTimes, totalTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
                         return true;
                     } catch (org.json.JSONException e) {
-                        Log.e(TAG, "queryCurTermData onJsonResponse e: " );
+                        Log.e(TAG, "queryCurTermData onJsonResponse e: ");
                         return false;
                     }
                 } else {
-                    homepageHeadView.displayBadNetworkLayout();
+                    Log.d(TAG, "onJsonResponse: errcode != 0");
+                    //                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }

@@ -27,12 +27,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.application.library.log.DLOG;
 import com.application.library.runtime.event.EventManager;
 import com.tim.app.constant.EventTag;
-
-import java.util.Date;
 
 
 /**
@@ -42,10 +41,12 @@ import java.util.Date;
  * This service won't be needed any more if there is a way to read the
  * step-value without waiting for a sensor event
  */
-public class SensorListener extends Service implements SensorEventListener {
+public class SensorService extends Service implements SensorEventListener {
+
+    private static final String TAG = "SensorService";
 
     private final static int NOTIFICATION_ID = 1;
-    private final static long MICROSECONDS_IN_ONE_MINUTE = 60000000;
+    private final static long MICROSECONDS_IN_ONE_MINUTE = 60000;
     //时间间隔
     private final static long SAVE_OFFSET_TIME = AlarmManager.INTERVAL_HOUR;
     private final static int SAVE_OFFSET_STEPS = 1;
@@ -55,7 +56,7 @@ public class SensorListener extends Service implements SensorEventListener {
     private static int steps;
     private static int lastSaveSteps;
     private static long lastSaveTime;
-
+    private static long lastTime;
 
     public final static String ACTION_UPDATE_NOTIFICATION = "updateNotificationState";
 
@@ -65,19 +66,30 @@ public class SensorListener extends Service implements SensorEventListener {
         // when this method is called...
     }
 
-    //这里的event中应该有最新的自启动以来的步数。
+    /**
+     * 这里的event中应该有最新的自启动以来的步数。
+     * @param event
+     */
     @Override
     public void onSensorChanged(final SensorEvent event) {
+        Toast.makeText(this,"onSensorChanged",Toast.LENGTH_SHORT);
         if (event.values[0] > Integer.MAX_VALUE) {
             return;
         } else {
             steps = (int) event.values[0];
             updateIfNecessary();
+            if(lastTime == 0 || System.currentTimeMillis() - lastTime > MICROSECONDS_IN_ONE_MINUTE ) {
+                Log.d(TAG, "lastSaveTime:" + lastTime);
+                Log.d(TAG, "60秒到了！！！！！！！");
+                Database.getInstance(this).saveDaySteps(steps);
+                lastTime = System.currentTimeMillis();
+            }
         }
     }
 
     /**
      * 获取上次暂停时记录的步数，根据当前步数计算得出暂停时走的步数。插入新的记录到数据库，并且更新SP。
+     * setps是自启动后的步数
      */
     private void updateIfNecessary() {
         if (steps > lastSaveSteps + SAVE_OFFSET_STEPS ||
@@ -96,6 +108,7 @@ public class SensorListener extends Service implements SensorEventListener {
                 }
             }
             //保存自系统启动时到现在的步数
+            Log.d(TAG, "自系统启动时到现在的步数steps:" + steps);
             db.saveCurrentSteps(steps);
             db.close();
             lastSaveSteps = steps;
@@ -117,6 +130,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand: ");
         if (intent != null && ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
             if (steps == 0) {
                 Database db = Database.getInstance(this);
@@ -125,6 +139,7 @@ public class SensorListener extends Service implements SensorEventListener {
             }
             SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_PRIVATE);
             if (prefs.contains("pauseCount")) { // resume counting
+                Log.d(TAG, "prefs.contains(pauseCount):" + prefs.contains("pauseCount"));
                 int difference = steps -
                         prefs.getInt("pauseCount", steps); // number of steps taken during the pause
                 Database db = Database.getInstance(this);
@@ -134,9 +149,11 @@ public class SensorListener extends Service implements SensorEventListener {
                 updateNotificationState();
             } else { // pause counting
                 // cancel restart
+                Log.d(TAG, "prefs.notcontains(pauseCount):" + prefs.contains("pauseCount"));
+
                 ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
                         .cancel(PendingIntent.getService(getApplicationContext(), 2,
-                                new Intent(this, SensorListener.class),
+                                new Intent(this, SensorService.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
                 prefs.edit().putInt("pauseCount", steps).apply();
                 updateNotificationState();
@@ -144,7 +161,7 @@ public class SensorListener extends Service implements SensorEventListener {
                 return START_NOT_STICKY;
             }
         }
-
+        //更新通知
         if (intent != null && intent.getBooleanExtra(ACTION_UPDATE_NOTIFICATION, false)) {
             updateNotificationState();
         } else {
@@ -156,7 +173,7 @@ public class SensorListener extends Service implements SensorEventListener {
                 .set(AlarmManager.RTC, Math.min(Util.getTomorrow(),
                         System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR), PendingIntent
                         .getService(getApplicationContext(), 2,
-                                new Intent(this, SensorListener.class),
+                                new Intent(this, SensorService.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
         return START_STICKY;
     }
@@ -174,7 +191,7 @@ public class SensorListener extends Service implements SensorEventListener {
         // Restart service in 500 ms
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE))
                 .set(AlarmManager.RTC, System.currentTimeMillis() + 500, PendingIntent
-                        .getService(this, 3, new Intent(this, SensorListener.class), 0));
+                        .getService(this, 3, new Intent(this, SensorService.class), 0));
     }
 
     @Override
@@ -189,7 +206,7 @@ public class SensorListener extends Service implements SensorEventListener {
     }
 
     private void updateNotificationState() {
-//        if (BuildConfig.DEBUG) Logger.log("SensorListener updateNotificationState");
+//        if (BuildConfig.DEBUG) Logger.log("SensorService updateNotificationState");
 //        SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_PRIVATE);
 //        NotificationManager nm =
 //                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -223,7 +240,7 @@ public class SensorListener extends Service implements SensorEventListener {
 //                    .setSmallIcon(R.drawable.ic_notification)
 //                    .addAction(isPaused ? R.drawable.ic_resume : R.drawable.ic_pause,
 //                            isPaused ? getString(R.string.resume) : getString(R.string.pause),
-//                            PendingIntent.getService(this, 4, new Intent(this, SensorListener.class)
+//                            PendingIntent.getService(this, 4, new Intent(this, SensorService.class)
 //                                            .putExtra("action", ACTION_PAUSE),
 //                                    PendingIntent.FLAG_UPDATE_CURRENT)).setOngoing(true);
 //            nm.notify(NOTIFICATION_ID, notificationBuilder.build());
