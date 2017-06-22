@@ -105,12 +105,9 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, long id);
-
     }
 
     public interface OnItemLongClickListener {
         boolean onItemLongClick(View view, int position, long id);
-
     }
-
 }

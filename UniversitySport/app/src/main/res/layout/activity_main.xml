@@ -61,11 +61,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
-            <com.tim.app.ui.view.BadNetworkView
-                android:id="@+id/bnvContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible"/>
         </FrameLayout>
 
 
