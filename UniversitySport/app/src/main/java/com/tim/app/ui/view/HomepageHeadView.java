@@ -41,8 +41,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-//        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermAccuCount);
-//        tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
+        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermTargetCount);
+        tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
         tvSurplus = (TextView) findViewById(R.id.tvSurplus);
         tvAccumulCostTime = (TextView) findViewById(R.id.tvAccumulCostTime);
         tvCurQualifiedTimes = (TextView) findViewById(R.id.tvCurQualifiedTimes);
@@ -102,12 +102,12 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
     public void setData(String count, String surplus, String cost, String costTime,
                         String currentTermQualifiedActivityCount,String currentTermActivityCount) {
-        tvCurTermTargetCount.setText(getContext().getString(R.string.percents, count));
+        tvCurTermTargetCount.setText(getContext().getString(R.string.percent, count));
 //        tvSurplus.setText(surplus);
-        tvAccumulCostEnergy.setText(getContext().getString(R.string.percents, cost));
-        tvAccumulCostTime.setText((getContext().getString(R.string.percents, costTime)));
-        tvCurQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermQualifiedActivityCount)) + "/");
-        tvTotalQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermActivityCount)));
+        tvAccumulCostEnergy.setText(getContext().getString(R.string.percent, cost));
+        tvAccumulCostTime.setText((getContext().getString(R.string.percent, costTime)));
+        tvCurQualifiedTimes.setText((getContext().getString(R.string.percent, currentTermQualifiedActivityCount)) + "/");
+        tvTotalQualifiedTimes.setText((getContext().getString(R.string.percent, currentTermActivityCount)));
     }
 
 }

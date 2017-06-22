@@ -158,7 +158,7 @@
     <string name="accumulEnergy">消耗(卡)</string>
     <string name="accumulTime">耗时(分钟)</string>
     <string name="outsideScore">课外成绩(分)</string>
-    <string name="percents">%s</string>
+    <string name="percent">%s</string>
     <string name="slash">/</string>
 
 

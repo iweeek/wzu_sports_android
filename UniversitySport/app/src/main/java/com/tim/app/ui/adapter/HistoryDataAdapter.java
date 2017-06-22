@@ -43,7 +43,7 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
         holder.tvSportTime.setText(TimeUtil.formatDate(mContext, data.getTime()));
         if (!TextUtils.isEmpty(data.getSpeed())) {
-            holder.tvLeft.setText(mContext.getString(R.string.percents, data.getSpeed()));
+            holder.tvLeft.setText(mContext.getString(R.string.percent, data.getSpeed()));
         }
 
         if (data.getSportTime() > 0) {

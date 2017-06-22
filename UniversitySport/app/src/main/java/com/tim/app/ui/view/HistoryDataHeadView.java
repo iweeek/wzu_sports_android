@@ -51,7 +51,7 @@ public class HistoryDataHeadView extends LinearLayout {
         tvTotalNumber.setText(getContext().getString(R.string.totalNumber, String.valueOf(total)));
         tvSurplus.setText(String.valueOf(sprotNumber));
         tvTotalCost.setText(getContext().getString(R.string.totalCost, String.valueOf(costQuantity)));
-        tvTotalCostTime.setText(getContext().getString(R.string.percents, String.valueOf(costTime)));
+        tvTotalCostTime.setText(getContext().getString(R.string.percent, String.valueOf(costTime)));
     }
 
 }

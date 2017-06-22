@@ -60,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/tvTargetDistance"
-                    android:text="@string/percents"
+                    android:text="@string/percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"
@@ -84,7 +84,7 @@
 
                 <TextView
                     android:id="@+id/tvTargetTime"
-                    android:text="@string/percents"
+                    android:text="@string/percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"
