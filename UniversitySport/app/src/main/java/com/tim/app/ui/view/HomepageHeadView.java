@@ -67,7 +67,6 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
                 getContext().startActivity(intent);
                 break;
             case R.id.rlTop:
-
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
         }
@@ -107,7 +106,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 //        tvSurplus.setText(surplus);
         tvAccumulCostEnergy.setText(getContext().getString(R.string.percents, cost));
         tvAccumulCostTime.setText((getContext().getString(R.string.percents, costTime)));
-        tvCurQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermQualifiedActivityCount)));
+        tvCurQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermQualifiedActivityCount)) + "/");
         tvTotalQualifiedTimes.setText((getContext().getString(R.string.percents, currentTermActivityCount)));
     }
 
