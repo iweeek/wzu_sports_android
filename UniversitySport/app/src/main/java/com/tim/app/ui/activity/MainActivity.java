@@ -174,7 +174,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         adapter = new SportAdapter(this, sportDataList);
         wrvSportType.setAdapter(adapter);
 
-
         networkDataList = new ArrayList<>();
         networkDataList.add(new BadNetWork());
         badNetworkAdapter = new BadNetworkAdapter(this, networkDataList);
@@ -210,7 +209,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             int speed = distance / time;
                             Sport sport = new Sport();
                             if (projectId == 1) {
-                                sport.setTitle(jsonObject.optString("name", "快走"));
+                                sport.setTitle(jsonObject.optString("name", "随机慢跑"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
@@ -218,7 +217,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_jogging);
                             } else if (projectId == 2) {
-                                sport.setTitle(jsonObject.optString("name", "随机慢跑"));
+                                sport.setTitle(jsonObject.optString("name", "快跑"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
@@ -226,7 +225,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setSteps(6000);
                                 sport.setBgDrawableId(R.drawable.ic_bg_run);
                             } else if (projectId == 3) {
-                                sport.setTitle(jsonObject.optString("name", "快跑"));
+                                sport.setTitle(jsonObject.optString("name", "快走"));
                                 sport.setJoinNumber(new Random().nextInt(100));
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
@@ -244,13 +243,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             }
                             sportDataList.add(sport);
                         }
-
-//                        wrvSportType.invalidate();
                         wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
-                        //TODO
                         e.printStackTrace();
                     }
                     return true;
@@ -361,6 +357,4 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
-
-
 }
