@@ -132,6 +132,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     JsonResponseCallback callback;
     private int screenOffTimeout;
+    private int screenKeepLightTime;
 
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -245,7 +246,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvElapseTime.setText(String.valueOf(elapseTime / 60));
 
             //屏幕到了锁屏的时间，调暗亮度
-            if (screenOffTimeout == elapseTime) {
+            screenKeepLightTime += interval / 1000;
+            if (screenOffTimeout == screenKeepLightTime) {
                 WindowManager.LayoutParams params = getWindow().getAttributes();
                 params.screenBrightness = (float) 0.1;
                 getWindow().setAttributes(params);
@@ -430,6 +432,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.screenBrightness = (float) 1;
         getWindow().setAttributes(params);
+        screenKeepLightTime = 0;
         Log.d(TAG, "onClick turn up light");
         switch (v.getId()) {
             case R.id.ibBack:
