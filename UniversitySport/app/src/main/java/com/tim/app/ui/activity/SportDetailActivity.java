@@ -9,11 +9,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -58,6 +60,8 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.List;
+
+import static com.amap.api.mapcore.util.cz.p;
 
 
 /**
@@ -127,6 +131,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
 
     JsonResponseCallback callback;
+    private int screenOffTimeout;
 
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -205,6 +210,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.screenBrightness = (float) 1;
+        getWindow().setAttributes(params);
+        Log.d(TAG, "onTouchEvent turn up light");
+        return false;
+    }
+
+    @Override
     public void onMyLocationChange(Location location) {
         Log.d(TAG, "onMyLocationChange location: " + location);
         Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
@@ -229,6 +243,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             elapseTime += interval / 1000;
             Log.d(TAG, "elapseTime: " + elapseTime);
             tvElapseTime.setText(String.valueOf(elapseTime / 60));
+
+            //屏幕到了锁屏的时间，调暗亮度
+            if (screenOffTimeout == elapseTime) {
+                WindowManager.LayoutParams params = getWindow().getAttributes();
+                params.screenBrightness = (float) 0.1;
+                getWindow().setAttributes(params);
+                Log.d(TAG, "onMyLocationChange turn down light");
+            }
 
             Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
             //位置有变化
@@ -290,6 +312,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initData() {
+        screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
+                Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
+
         sport = (Sport) getIntent().getSerializableExtra("sport");
         if (!TextUtils.isEmpty(sport.getTitle())) {
             tvSportName.setText(sport.getTitle());
@@ -351,6 +376,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         });
 
+
     }
 
     /**
@@ -401,6 +427,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void onClick(View v) {
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.screenBrightness = (float) 1;
+        getWindow().setAttributes(params);
+        Log.d(TAG, "onClick turn up light");
         switch (v.getId()) {
             case R.id.ibBack:
                 finish();
