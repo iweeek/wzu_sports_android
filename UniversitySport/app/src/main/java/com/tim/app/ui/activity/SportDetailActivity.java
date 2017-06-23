@@ -133,6 +133,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     JsonResponseCallback callback;
     private int screenOffTimeout;
     private int screenKeepLightTime;
+    private LinearLayout llLacationHint;
 
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -237,6 +238,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             } else {
                 if (oldLatLng == null) {
                     String errText = "定位成功";
+                    llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -464,10 +466,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 llBottom.setVisibility(View.GONE);
                 break;
             case R.id.btStop:
-                if (elapseTime == 0) {
-                    ToastUtil.showToast("运动时间太短，无法结束");
-                    return;
-                }
+//                if (elapseTime == 0) {
+//                    ToastUtil.showToast("运动时间太短，无法结束");
+//                    return;
+//                }
                 ibBack.setVisibility(View.VISIBLE);
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
@@ -607,6 +609,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initView() {
+        llLacationHint = (LinearLayout)findViewById(R.id.llLacationHint);
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);

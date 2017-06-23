@@ -41,10 +41,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rlTitle"
-        android:layout_margin="30dp"
-        android:orientation="vertical">
+        android:layout_marginLeft="50dp"
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <RelativeLayout
             android:id="@+id/rlContainer"
@@ -407,8 +408,21 @@
         </LinearLayout>
 
 
+    </LinearLayout>
 
-
+    <LinearLayout
+        android:id="@+id/llLacationHint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:background="@color/black_4"
+            android:text="正在定位中..."
+            android:textSize="16dp"
+            />
     </LinearLayout>
 
     <RelativeLayout
