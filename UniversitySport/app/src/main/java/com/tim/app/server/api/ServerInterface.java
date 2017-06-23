@@ -204,13 +204,36 @@ public class ServerInterface {
                     "    }\n" +
                     "  }\n" +
                     "}";
-        } else {
+        } else if (type == AppConstant.THIS_TERM) {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
                     "qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
                     "timeCosted(timeRange:CURRENT_TERM)\n" +
                     "caloriesConsumption(timeRange:CURRENT_TERM)\n" +
                     "    currentTermActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
+                    "      pagesCount\n" +
+                    "      dataCount\n" +
+                    "      data {\n" +
+                    "        projectId\n" +
+                    "        costTime\n" +
+                    "        caloriesConsumed\n" +
+                    "        startTime\n" +
+                    "        distance\n" +
+                    "        qualified\n" +
+                    "        runningProject{\n" +
+                    "          name\n" +
+                    "         }\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+        } else {
+            queryStr = "{    \n" +
+                    "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
+                    "timeCosted(timeRange:CURRENT_TERM)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_TERM)\n" +
+                    "    activities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
                     "      dataCount\n" +
                     "      data {\n" +

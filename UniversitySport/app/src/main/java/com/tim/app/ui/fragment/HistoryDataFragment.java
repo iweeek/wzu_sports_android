@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.application.library.base.BaseFragment;
 import com.application.library.net.JsonResponseCallback;
@@ -30,6 +31,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.amap.api.mapcore.util.cz.s;
+import static com.tim.app.R.id.tvLabel;
 
 /**
  * 历史数据
@@ -64,6 +68,10 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private int pageCountTerm;
     private int pageSizeTerm = 6;
     private int pageNoTerm = 1;
+
+    private int pageCountHistory;
+    private int pageSizeHistory = 6;
+    private int pageNoHistory = 1;
 
     private String accuTimes;
     private String qualifiedTime;
@@ -109,6 +117,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.view_background_color)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
 
             headView = (HistoryDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.history_data_head_view, null);
+
             wrvHistoryData.addHeaderView(headView);
 
             dataList = new ArrayList<>();
@@ -139,7 +148,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
-                            headView.setData(accuTimes, qualifiedTime, energyCost, timeCost);
+                            headView.setData("本周累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
@@ -178,7 +187,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
-                            headView.setData(accuTimes, qualifiedTime, energyCost, timeCost);
+                            headView.setData("本月累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
@@ -203,7 +212,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                 }
 
             });
-        } else {
+        } else if (type == AppConstant.THIS_TERM) {
             ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoTerm++, pageSizeTerm, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -217,8 +226,47 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
-                            headView.setData(accuTimes, qualifiedTime, energyCost, timeCost);
+                            headView.setData("本学期累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
+                                    getJSONArray("data");
+                            for (int i = 0; i < historyDataArray.length(); i++) {
+                                HistoryData data = new HistoryData();
+                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+
+            });
+        } else {
+            ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoHistory++, pageSizeHistory, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        try {
+                            pageCountTerm = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
+                                    getString("pagesCount"));
+                            accuTimes = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
+                                    getString("dataCount");
+                            qualifiedTime = json.optJSONObject("data").optJSONObject("student").getString("qualifiedActivityCount");
+                            energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
+                            timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
+
+                            headView.setData("历史累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
+                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
                                 HistoryData data = new HistoryData();
@@ -365,7 +413,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             } else {
                 lrvLoadMore.loadMoreFinish(false, false);
             }
-        } else {
+        } else if (type == AppConstant.THIS_TERM) {
             ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoTerm++, pageSizeTerm, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -399,6 +447,44 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             });
 
             if (pageNoTerm != pageCountTerm) {
+                lrvLoadMore.loadMoreFinish(false, true);
+            } else {
+                lrvLoadMore.loadMoreFinish(false, false);
+            }
+        } else {
+            ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoTerm++, pageSizeTerm, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        try {
+                            pageCountTerm = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
+                                    getString("pagesCount"));
+                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
+                                    getJSONArray("data");
+                            for (int i = 0; i < historyDataArray.length(); i++) {
+                                HistoryData data = new HistoryData();
+                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                dataList.add(data);
+                            }
+                            adapter.notifyDataSetChanged();
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+
+            });
+
+            if (pageNoHistory != pageCountHistory) {
                 lrvLoadMore.loadMoreFinish(false, true);
             } else {
                 lrvLoadMore.loadMoreFinish(false, false);
