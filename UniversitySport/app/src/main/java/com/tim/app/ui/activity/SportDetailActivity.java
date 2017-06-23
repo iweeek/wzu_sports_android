@@ -559,7 +559,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         new Thread(runnable).start();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (state == STATE_STARTED || state == STATE_PAUSE) {
+            Toast.makeText(this, "请先停止运动后，再点击返回键", Toast.LENGTH_LONG).show();
+        } else {
+            super.onBackPressed();
+        }
+    }
     @Override
     protected int getLayoutId() {
         return R.layout.activity_sport_detail;
