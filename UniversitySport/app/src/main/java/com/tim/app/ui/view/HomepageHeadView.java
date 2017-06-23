@@ -22,7 +22,6 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
     private TextView tvCurTermTargetCount;
     private TextView tvAccumulCostEnergy;
-    private TextView tvSurplus;
     private TextView tvAccumulCostTime;
     private TextView tvCurQualifiedTimes;
     private TextView tvTotalQualifiedTimes;
@@ -43,7 +42,6 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         super.onFinishInflate();
         tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermTargetCount);
         tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
-        tvSurplus = (TextView) findViewById(R.id.tvSurplus);
         tvAccumulCostTime = (TextView) findViewById(R.id.tvAccumulCostTime);
         tvCurQualifiedTimes = (TextView) findViewById(R.id.tvCurQualifiedTimes);
         tvTotalQualifiedTimes = (TextView) findViewById(R.id.tvTotalQualifiedTimes);

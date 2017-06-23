@@ -31,8 +31,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.amap.api.mapcore.util.cz.t;
-
 /**
  * 历史数据
  */
@@ -66,6 +64,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private int pageCountTerm;
     private int pageSizeTerm = 6;
     private int pageNoTerm = 1;
+
+    private String accuTimes;
+    private String qualifiedTime;
+    private String energyCost;
+    private String timeCost;
 
     public static HistoryDataFragment newInstance(int type) {
         HistoryDataFragment fragment = new HistoryDataFragment();
@@ -105,7 +108,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             wrvHistoryData.setLayoutManager(layoutManager);
             wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.view_background_color)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
 
-            headView = (HistoryDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.historydata_head_view, null);
+            headView = (HistoryDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.history_data_head_view, null);
             wrvHistoryData.addHeaderView(headView);
 
             dataList = new ArrayList<>();
@@ -130,6 +133,13 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountWeek = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getString("pagesCount"));
+                            accuTimes = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
+                                    getString("dataCount");
+                            qualifiedTime = json.optJSONObject("data").optJSONObject("student").getString("qualifiedActivityCount");
+                            energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
+                            timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
+
+                            headView.setData(accuTimes, qualifiedTime, energyCost, timeCost);
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
@@ -162,6 +172,13 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountMonth = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getString("pagesCount"));
+                            accuTimes = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
+                                    getString("dataCount");
+                            qualifiedTime = json.optJSONObject("data").optJSONObject("student").getString("qualifiedActivityCount");
+                            energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
+                            timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
+
+                            headView.setData(accuTimes, qualifiedTime, energyCost, timeCost);
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
@@ -194,6 +211,13 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountTerm = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getString("pagesCount"));
+                            accuTimes = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
+                                    getString("dataCount");
+                            qualifiedTime = json.optJSONObject("data").optJSONObject("student").getString("qualifiedActivityCount");
+                            energyCost = json.optJSONObject("data").optJSONObject("student").getString("caloriesConsumption");
+                            timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
+
+                            headView.setData(accuTimes, qualifiedTime, energyCost, timeCost);
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {

@@ -161,8 +161,12 @@ public class ServerInterface {
         if (type == AppConstant.THIS_WEEK) {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_WEEK)\n" +
+                    "timeCosted(timeRange:CURRENT_WEEK)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_WEEK)\n" +
                     "    currentWeekActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
+                    "      dataCount\n" +
                     "      data {\n" +
                     "        projectId\n" +
                     "        costTime\n" +
@@ -180,8 +184,12 @@ public class ServerInterface {
         } else if (type == AppConstant.THIS_MONTH) {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_MONTH)\n" +
+                    "timeCosted(timeRange:CURRENT_MONTH)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_MONTH)\n" +
                     "    currentMonthActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
+                    "      dataCount\n" +
                     "      data {\n" +
                     "        projectId\n" +
                     "        costTime\n" +
@@ -199,8 +207,12 @@ public class ServerInterface {
         } else {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
+                    "timeCosted(timeRange:CURRENT_TERM)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_TERM)\n" +
                     "    currentTermActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
+                    "      dataCount\n" +
                     "      data {\n" +
                     "        projectId\n" +
                     "        costTime\n" +
