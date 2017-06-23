@@ -20,7 +20,7 @@ public class HistorySportActivity extends BaseActivity {
     private static final String TAG = "HistorySportActivity";
 
     private ImageButton ibBack;
-    private SmartTabLayout tab_layout;
+    private SmartTabLayout stbNavBar;
     private ViewPager vpHistoryData;
     private TabAdapter pagerAdapter;
 
@@ -38,7 +38,7 @@ public class HistorySportActivity extends BaseActivity {
     @Override
     public void initView() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
-        tab_layout = (SmartTabLayout) findViewById(R.id.tabLayout);
+        stbNavBar = (SmartTabLayout) findViewById(R.id.stbNavBar);
         vpHistoryData = (ViewPager)findViewById(R.id.vpHistoryData);
 
         ibBack.setOnClickListener(this);
@@ -48,10 +48,11 @@ public class HistorySportActivity extends BaseActivity {
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK), "本周");
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH), "本月");
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_TERM), "本学期");
+        pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_HISTORY), "历史");
         vpHistoryData.setOffscreenPageLimit(2);//除去当前显示页面外，还需要预先加载的页面个数
         vpHistoryData.setAdapter(pagerAdapter);
         vpHistoryData.setCurrentItem(0);
-        tab_layout.setViewPager(vpHistoryData);
+        stbNavBar.setViewPager(vpHistoryData);
     }
 
 

@@ -17,6 +17,7 @@ public class AppConstant {
     public static final int TYPE_WEEK = 1;//周
     public static final int TYPE_MONTH = 2;//月
     public static final int TYPE_TERM = 3;//学期
+    public static final int TYPE_HISTORY = 4;//历史
 
     public static final int TYPE_COST_ENERGY = 1;//消耗热量
     public static final int TYPE_COST_TIME = 2;//消耗时长

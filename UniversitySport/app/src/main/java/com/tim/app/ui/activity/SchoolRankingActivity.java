@@ -38,7 +38,7 @@ public class SchoolRankingActivity extends BaseActivity {
     @Override
     public void initView() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
-        tabLayout = (SmartTabLayout) findViewById(R.id.tabLayout);
+        tabLayout = (SmartTabLayout) findViewById(R.id.stbNavBar);
         vpRanking = (ViewPager)findViewById(R.id.vpRanking);
 
         ibBack.setOnClickListener(this);
