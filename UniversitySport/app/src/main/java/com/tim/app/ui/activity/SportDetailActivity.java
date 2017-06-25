@@ -53,15 +53,12 @@ import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
 import com.tim.app.sport.SensorService;
 import com.tim.app.ui.view.SlideUnlockView;
-import com.tim.app.util.ToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static com.amap.api.mapcore.util.cz.p;
 
 
 /**
@@ -229,7 +226,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         elapseTime += interval / 1000;
         Log.d(TAG, "elapseTime: " + elapseTime);
-        tvElapseTime.setText(String.valueOf(elapseTime / 60));
+        long m = elapseTime / 60;
+        long s = elapseTime % 60;
+        String time = m + "\'" + s +"\"";
+        tvElapseTime.setText(time);
 
         //屏幕到了锁屏的时间，调暗亮度
         screenKeepLightTime += interval / 1000;
@@ -268,6 +268,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         return;
                     }
                     drawLine(oldLatLng, newLatLng);
+                    String text = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng;
+                    Toast.makeText(this, text, Toast.LENGTH_LONG);
+
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
                     double d = currentDistance;
@@ -293,6 +296,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 Log.d(TAG, "oldLatLng = newLatLng oldLatLng: " + oldLatLng);
             } else {
                 tvInstantSpeed.setText("0.0");
+                String text = "坐标没有发生变化，坐标： " + oldLatLng;
+                Toast.makeText(this, text, Toast.LENGTH_LONG);
             }
 
         } else {
@@ -367,21 +372,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
             @Override
             public void setUnLocked(boolean unLock) {
-                // 如果是true，证明解锁
-                if (unLock) {
-                    // 重置一下滑动解锁的控件
-                    slideUnlockView.reset();
-                    // 让滑动解锁控件消失
-                    slideUnlockView.setVisibility(View.GONE);
-                    tvPause.setVisibility(View.GONE);
-                    rlBottom.setVisibility(View.VISIBLE);
-                    btStart.setVisibility(View.GONE);
-                    llBottom.setVisibility(View.VISIBLE);
-                    if (state == STATE_STARTED) {
-                        state = STATE_PAUSE;
-                        ibBack.setVisibility(View.GONE);
-                    }
+            // 如果是true，证明解锁
+            if (unLock) {
+                // 重置一下滑动解锁的控件
+                slideUnlockView.reset();
+                // 让滑动解锁控件消失
+                slideUnlockView.setVisibility(View.GONE);
+                tvPause.setVisibility(View.GONE);
+                rlBottom.setVisibility(View.VISIBLE);
+                btStart.setVisibility(View.GONE);
+                llBottom.setVisibility(View.VISIBLE);
+                if (state == STATE_STARTED) {
+                    state = STATE_PAUSE;
+                    ibBack.setVisibility(View.GONE);
                 }
+            }
             }
         });
 
@@ -628,7 +633,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvInstantSpeed = (TextView) findViewById(R.id.tvCurrentValue);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvElapseTime = (TextView) findViewById(R.id.tvCurrentTime);
+        tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);
