@@ -60,6 +60,8 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static android.R.attr.data;
+
 
 /**
  * 运动详情
@@ -227,9 +229,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (state == STATE_STARTED) {
             elapseTime += interval / 1000;
             Log.d(TAG, "elapseTime: " + elapseTime);
-            long m = elapseTime / 60;
-            long s = elapseTime % 60;
-            String time = m + "\'" + s +"\"";
+            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
             tvElapseTime.setText(time);
         }
 

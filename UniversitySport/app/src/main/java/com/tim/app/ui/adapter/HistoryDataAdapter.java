@@ -63,9 +63,8 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (data.getSportTime() < 0) {
             data.setSportTime(0);
         }
-        int min = data.getSportTime() / 60;
-        int sec = data.getSportTime() % 60;
-        String time = min + "\'" + sec + "\"";
+
+        String time = com.tim.app.util.TimeUtil.formatMillisTime(data.getSportTime() * 1000);
         holder.tvMiddle.setText(time);
 
         //速度
