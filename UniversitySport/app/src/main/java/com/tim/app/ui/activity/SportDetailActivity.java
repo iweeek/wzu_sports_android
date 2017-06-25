@@ -270,10 +270,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng);
                     currentDistance += moveDistance;
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
-                    BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
-                    double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                    tvInstantSpeed.setText(String.format("%.1f", d));
-
+                    double d = currentDistance;
+                    double t = elapseTime;
+                    BigDecimal bd = new BigDecimal(d / t);
+                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                    tvInstantSpeed.setText(String.valueOf(bd));
                 }
 
                 if (oldLatLng == null) {
