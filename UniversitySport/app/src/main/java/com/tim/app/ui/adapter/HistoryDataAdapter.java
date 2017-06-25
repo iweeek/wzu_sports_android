@@ -16,8 +16,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-import static android.R.attr.data;
-
 
 public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryData> {
     private Context mContext;
@@ -44,7 +42,13 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (!TextUtils.isEmpty(data.getSportDesc())) {
             holder.tvSportDesc.setText(data.getSportDesc());
         }
-//        holder.tvSportTime.setText(TimeUtil.formatDate(mContext, data.getTime()));
+        holder.tvSportTime.setText(TimeUtil.formatDate(mContext, data.getTime()));
+
+        if (data.isQualified()) {
+            holder.tvSportQualified.setText("达标");
+        } else {
+            holder.tvSportQualified.setText("不达标");
+        }
 
         //异常数据处理，距离
         if (data.getSportDistance() < 0) {
@@ -88,6 +92,7 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
     public class ViewHolder extends BaseRecyclerViewHolder {
         TextView tvSportDesc;
         TextView tvSportTime;
+        TextView tvSportQualified;
 
         TextView tvLeftLabel;
         TextView tvMiddleLabel;
@@ -104,6 +109,7 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             super(itemView);
             tvSportDesc = (TextView) itemView.findViewById(R.id.tvSportDesc);
             tvSportTime = (TextView) itemView.findViewById(R.id.tvSportTime);
+            tvSportQualified = (TextView) itemView.findViewById(R.id.tvSportQualified);
 
             tvLeft = (TextView) itemView.findViewById(R.id.tvLeft);
             tvMiddle = (TextView) itemView.findViewById(R.id.tvMiddle);

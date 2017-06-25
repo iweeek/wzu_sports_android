@@ -158,6 +158,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -197,6 +198,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -236,6 +238,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -356,6 +359,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -392,6 +396,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -430,6 +435,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();

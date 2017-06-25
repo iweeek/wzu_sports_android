@@ -18,6 +18,15 @@ public class HistoryData implements Serializable {
     private int sportTime;
     private int costEnergy;
     private int sportDistance;
+    private boolean qualified;
+
+    public boolean isQualified() {
+        return qualified;
+    }
+
+    public void setQualified(boolean qualified) {
+        this.qualified = qualified;
+    }
 
     public String getSportDesc() {
         return sportDesc;

@@ -14,12 +14,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
         <TextView
             android:id="@+id/tvSportDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="随机慢跑"
             android:textColor="#66a7fe"
             android:textSize="18dp" />
+        <TextView
+            android:id="@+id/tvSportQualified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_5"
+            android:text="达标"
+            android:textColor="#66a7fe"
+            android:textSize="14dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvSportTime"
@@ -59,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="距离"
-                android:textColor="#d5dadb"
                 android:textSize="14dp" />
 
             <LinearLayout
@@ -71,13 +84,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="6000"
-                    android:textColor="#d5dadb"
                     android:textSize="16dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="米"
-                    android:textColor="#d5dadb"
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>
@@ -96,7 +107,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="耗时"
-                android:textColor="#d5dadb"
                 android:textSize="14dp" />
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -107,13 +117,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="120"
-                    android:textColor="#d5dadb"
                     android:textSize="16dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="#d5dadb"
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>
@@ -132,7 +140,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="平均速度"
-                android:textColor="#d5dadb"
                 android:textSize="14dp" />
 
             <LinearLayout
@@ -143,13 +150,11 @@
                     android:id="@+id/tvRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#d5dadb"
                     android:text=""
                     android:textSize="16dp" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#d5dadb"
                     android:text="米/秒"
                     android:textSize="12dp" />
             </LinearLayout>
@@ -171,7 +176,8 @@
             android:id="@+id/tvSportCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#979ea3"   android:text="@string/curConsumeEnergy"
+            android:textColor="#979ea3"
+            android:text="@string/curConsumeEnergy"
             android:textSize="14dp" />
 
         <TextView
