@@ -374,6 +374,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             public void setUnLocked(boolean unLock) {
             // 如果是true，证明解锁
             if (unLock) {
+                turnUpScreen();
                 // 重置一下滑动解锁的控件
                 slideUnlockView.reset();
                 // 让滑动解锁控件消失
@@ -439,13 +440,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
     }
 
-    @Override
-    public void onClick(View v) {
+    private void turnUpScreen() {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.screenBrightness = (float) 1;
         getWindow().setAttributes(params);
         screenKeepLightTime = 0;
         Log.d(TAG, "onClick turn up light");
+    }
+
+    @Override
+    public void onClick(View v) {
+        turnUpScreen();
         switch (v.getId()) {
             case R.id.ibBack:
                 finish();
