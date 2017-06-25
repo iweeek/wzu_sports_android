@@ -86,6 +86,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
 
+    private boolean isOpen;
+
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
@@ -163,11 +165,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                isOpen = false;
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                isOpen = true;
             }
         });
 
@@ -212,7 +216,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
 
-    public void queryRunningProjects(){
+    public void queryRunningProjects() {
         ServerInterface.instance().queryRunningProjects(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -265,12 +269,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
-                        if(sportDataList .size() == 0){
+                        if (sportDataList.size() == 0) {
                             emptyLayout.showEmpty();
-                        }else {
+                        } else {
                             emptyLayout.showContent();
                         }
-                    } catch (JSONException e) {  emptyLayout.showEmpty();
+                    } catch (JSONException e) {
+                        emptyLayout.showEmpty();
                         e.printStackTrace();
                     }
                     return true;
@@ -288,7 +293,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
     }
 
-    public void queryCurTermData(){
+    public void queryCurTermData() {
         int studentId = 1;
         ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
             @Override
@@ -326,6 +331,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         });
     }
+
     @Override
     public void initData() {
         queryRunningProjects();
@@ -371,6 +377,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     public void onBackPressed() {
+        if (isOpen) {
+            mDrawerLayout.closeDrawers();
+            return;
+        }
         long current_time = System.currentTimeMillis();
         if (current_time - last_back_time > 2000) {
             ToastUtil.showToast(getString(R.string.app_exit));
