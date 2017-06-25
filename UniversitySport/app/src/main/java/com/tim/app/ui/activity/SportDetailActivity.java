@@ -80,7 +80,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private AMap aMap;
 
     private LatLng oldLatLng = null;
-    private int interval = 3000;
+    private int interval = 0;
     private int speedLimitation = 10;//米
 
     private TextView tvSportName;
@@ -344,6 +344,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
             tvTargetSpeed.setText(getString(R.string.percent, sport.getTargetSpeed()));
         }
+
+        interval = sport.getInterval() * 1000;
 
         tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));

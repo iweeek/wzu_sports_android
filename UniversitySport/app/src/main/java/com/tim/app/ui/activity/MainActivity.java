@@ -209,6 +209,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             int distance = jsonObject.optInt("qualifiedDistance", 1000);
                             int time = jsonObject.optInt("qualifiedCostTime", 20);
                             int speed = distance / time;
+                            int interval = jsonObject.optInt("acquisitionInterval", 1);
                             Sport sport = new Sport();
                             if (projectId == 1) {
                                 sport.setTitle(jsonObject.optString("name", "随机慢跑"));
@@ -216,7 +217,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
                                 sport.setTargetSpeed(speed + "");
-                                sport.setSteps(6000);
+                                sport.setInterval(interval);
                                 sport.setBgDrawableId(R.drawable.ic_bg_jogging);
                             } else if (projectId == 2) {
                                 sport.setTitle(jsonObject.optString("name", "快跑"));
@@ -224,7 +225,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
                                 sport.setTargetSpeed(speed + "");
-                                sport.setSteps(6000);
+                                sport.setInterval(interval);
                                 sport.setBgDrawableId(R.drawable.ic_bg_run);
                             } else if (projectId == 3) {
                                 sport.setTitle(jsonObject.optString("name", "快走"));
@@ -232,7 +233,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
                                 sport.setTargetSpeed(speed + "");
-                                sport.setSteps(6000);
+                                sport.setInterval(interval);
                                 sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
                             } else if (projectId == 4) {
                                 sport.setTitle(jsonObject.optString("name", "累计步数"));
@@ -240,7 +241,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sport.setTargetDistance(distance);
                                 sport.setTargetTime(time / 60);
                                 sport.setTargetSpeed(speed + "");
-                                sport.setSteps(6000);
+                                sport.setInterval(interval);
                                 sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
                             }
                             sportDataList.add(sport);

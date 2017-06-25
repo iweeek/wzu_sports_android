@@ -96,6 +96,7 @@ public class ServerInterface {
     public void queryRunningProjects(int universityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  runningProjects(universityId: 1) {\n" +
+                "   acquisitionInterval\n" +
                 "    id\n" +
                 "    name\n" +
                 "    qualifiedDistance\n" +
