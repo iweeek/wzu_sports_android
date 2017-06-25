@@ -40,6 +40,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -270,19 +272,21 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
-                        String targetSportTimes = json.optJSONObject("data").optJSONObject("university").
-                                optJSONObject("currentTerm").optJSONObject("termSportsTask").
-                                getString("targetSportsTimes");
+                        String curTermAccuCounts = json.optJSONObject("data").optJSONObject("student").
+                                optString("currentTermActivityCount");
                         String curQuaTimes = json.optJSONObject("data").optJSONObject("student").
-                                getString("currentTermQualifiedActivityCount");
-                        String totalTimes = json.optJSONObject("data").optJSONObject("student").
-                                getString("currentTermActivityCount");
+                                getString("qualifiedActivityCount");
+                        String curTermTargetTimes = json.optJSONObject("data").optJSONObject("university").optJSONObject("currentTerm").optJSONObject("termSportsTask").
+                                getString("targetSportsTimes");
                         String totalConsumeEnergy = json.optJSONObject("data").optJSONObject("student").
                                 getString("caloriesConsumption");
-                        String timeCosted = json.optJSONObject("data").optJSONObject("student").
-                                getString("timeCosted");
-                        String surplusTimes = String.valueOf(Integer.parseInt(targetSportTimes) - Integer.parseInt(curQuaTimes));
-                        homepageHeadView.setData(targetSportTimes, surplusTimes, totalConsumeEnergy, timeCosted, curQuaTimes, totalTimes);
+                        double t = json.optJSONObject("data").optJSONObject("student").
+                                getLong("timeCosted");
+                        t = t / 60;
+                        BigDecimal bd = new BigDecimal(t);
+                        bd = bd.setScale(1, RoundingMode.HALF_UP);
+//                        String surplusTimes = String.valueOf(Integer.parseInt(curTermAccuCounts) - Integer.parseInt(curQuaTimes));
+                        homepageHeadView.setData(curTermAccuCounts, totalConsumeEnergy, String.valueOf(bd), curQuaTimes, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
                         return true;

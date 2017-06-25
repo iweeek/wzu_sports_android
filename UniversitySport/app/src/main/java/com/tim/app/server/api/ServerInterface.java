@@ -116,9 +116,9 @@ public class ServerInterface {
                 "  }\n" +
                 "  \n" +
                 "  student(id:1) {\n" +
-                "    caloriesConsumption\n" +
-                "    timeCosted\n" +
-                "    currentTermQualifiedActivityCount\n" +
+                "    caloriesConsumption(timeRange:CURRENT_TERM)\n" +
+                "    timeCosted(timeRange:CURRENT_TERM)\n" +
+                "    qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
                 "    currentTermActivityCount\n" +
                 "  }\n" +
                 "}";

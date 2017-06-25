@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,17 +21,18 @@ import com.tim.app.ui.activity.SchoolRankingActivity;
  */
 public class HomepageHeadView extends LinearLayout implements View.OnClickListener {
 
-    private TextView tvCurTermTargetCount;
+    private TextView tvCurTermAccuTimes;
     private TextView tvAccumulCostEnergy;
     private TextView tvAccumulCostTime;
     private TextView tvCurQualifiedTimes;
-    private TextView tvTotalQualifiedTimes;
+    private TextView tvCurTermTargetTimes;
 
     private RelativeLayout rlTop;
     private RelativeLayout rlRank;
     private RelativeLayout rlHeadView;
     private LinearLayout llBadNetworkFresh;
     private Context ctx;
+    private ProgressBar pbReachTargetTimes;
 
     public HomepageHeadView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -40,11 +42,12 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        tvCurTermTargetCount = (TextView) findViewById(R.id.tvCurTermTargetCount);
+        tvCurTermAccuTimes = (TextView) findViewById(R.id.tvCurTermAccuTimes);
         tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
         tvAccumulCostTime = (TextView) findViewById(R.id.tvAccumulCostTime);
         tvCurQualifiedTimes = (TextView) findViewById(R.id.tvCurQualifiedTimes);
-        tvTotalQualifiedTimes = (TextView) findViewById(R.id.tvTotalQualifiedTimes);
+        tvCurTermTargetTimes = (TextView) findViewById(R.id.tvCurTermTargetTimes);
+        pbReachTargetTimes = (ProgressBar) findViewById(R.id.pbReachTargetTimes);
 
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
         rlRank.setOnClickListener(this);
@@ -94,18 +97,18 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      * 刷新界面
      *
      * @param count
-     * @param surplus
      * @param cost
      */
 
-    public void setData(String count, String surplus, String cost, String costTime,
-                        String currentTermQualifiedActivityCount,String currentTermActivityCount) {
-        tvCurTermTargetCount.setText(getContext().getString(R.string.percent, count));
-//        tvSurplus.setText(surplus);
+    public void setData(String count, String cost, String costTime,
+                        String curTermQualifiedTimes,String curTermTargetTimes) {
+        tvCurTermAccuTimes.setText(getContext().getString(R.string.percent, count));
         tvAccumulCostEnergy.setText(getContext().getString(R.string.percent, cost));
         tvAccumulCostTime.setText((getContext().getString(R.string.percent, costTime)));
-        tvCurQualifiedTimes.setText((getContext().getString(R.string.percent, currentTermQualifiedActivityCount)) + "/");
-        tvTotalQualifiedTimes.setText((getContext().getString(R.string.percent, currentTermActivityCount)));
+        tvCurQualifiedTimes.setText((getContext().getString(R.string.percent, curTermQualifiedTimes)) + "/");
+        tvCurTermTargetTimes.setText((getContext().getString(R.string.percent, curTermTargetTimes)));
+
+        pbReachTargetTimes.setProgress(Integer.valueOf(curTermQualifiedTimes) / Integer.valueOf(curTermTargetTimes));
     }
 
 }
