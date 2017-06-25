@@ -78,8 +78,9 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
 
         if (data.getSportTime() >= 0) {
-            BigDecimal bd = new BigDecimal(data.getSportTime() / 60);
-            bd.setScale(1, RoundingMode.HALF_UP);
+            double t = data.getSportTime();
+            BigDecimal bd = new BigDecimal(t / 60);
+            bd = bd.setScale(1, RoundingMode.HALF_UP);
             holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));
         }
     }
