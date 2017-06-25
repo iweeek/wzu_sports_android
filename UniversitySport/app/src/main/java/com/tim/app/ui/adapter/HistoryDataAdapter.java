@@ -1,6 +1,7 @@
 package com.tim.app.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,8 +47,10 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
 
         if (data.isQualified()) {
             holder.tvSportQualified.setText("达标");
+            holder.tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
         } else {
             holder.tvSportQualified.setText("不达标");
+            holder.tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
         }
 
         //异常数据处理，距离
