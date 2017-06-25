@@ -133,7 +133,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             }
 
         }
-        headView.setData("", 0, 0, 0, 0, 0);
+        headView.setData("", "", "", "", "");
         initData();
         return rootView;
     }
