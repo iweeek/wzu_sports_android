@@ -57,7 +57,7 @@ public class ServerInterface {
      * @param callback
      */
     public void postRunningActDate(String tag, int projectId, int studentId, int distance, long costTime, long targetTime,
-                                   long startTime, ResponseCallback callback) {
+                                   long startTime, int stepCount, ResponseCallback callback) {
         String url = API_SCHEME + INIT_PUSH;
         HashMap params = new HashMap();
         params.put("projectId", projectId);
@@ -66,6 +66,7 @@ public class ServerInterface {
         params.put("costTime", costTime);
         params.put("targetTime", targetTime);
         params.put("startTime", startTime);
+        params.put("stepCount", stepCount);
         Log.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }

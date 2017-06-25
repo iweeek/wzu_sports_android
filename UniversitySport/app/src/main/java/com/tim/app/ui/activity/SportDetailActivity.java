@@ -80,7 +80,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private AMap aMap;
 
     private LatLng oldLatLng = null;
-    private int interval = 1000;
+    private int interval = 3000;
     private int speedLimitation = 10;//米
 
     private TextView tvSportName;
@@ -226,6 +226,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
         Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
         Bundle bundle = location.getExtras();
+
+        elapseTime += interval / 1000;
+        Log.d(TAG, "elapseTime: " + elapseTime);
+        tvElapseTime.setText(String.valueOf(elapseTime / 60));
+
+        //屏幕到了锁屏的时间，调暗亮度
+        screenKeepLightTime += interval / 1000;
+        if (screenOffTimeout == screenKeepLightTime) {
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            params.screenBrightness = (float) 0.1;
+            getWindow().setAttributes(params);
+            Log.d(TAG, "onMyLocationChange turn down light");
+        }
         if (location != null) {
             //定位成功
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -241,19 +254,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            elapseTime += interval / 1000;
-            Log.d(TAG, "elapseTime: " + elapseTime);
-            tvElapseTime.setText(String.valueOf(elapseTime / 60));
-
-            //屏幕到了锁屏的时间，调暗亮度
-            screenKeepLightTime += interval / 1000;
-            if (screenOffTimeout == screenKeepLightTime) {
-                WindowManager.LayoutParams params = getWindow().getAttributes();
-                params.screenBrightness = (float) 0.1;
-                getWindow().setAttributes(params);
-                Log.d(TAG, "onMyLocationChange turn down light");
             }
 
             Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
@@ -285,6 +285,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
                     aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                     aMap.moveCamera(cu);
+                    DLOG.d(TAG, "moveCamera zoomLevel: " + zoomLevel);
+                    DLOG.d(TAG, "moveCamera cu: " + cu);
                 }
                 oldLatLng = newLatLng;
                 Log.d(TAG, "oldLatLng = newLatLng oldLatLng: " + oldLatLng);
@@ -480,11 +482,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvResult.setText("不达标");
                 }
                 tvAverSpeedLabel.setText("平均速度");
-                BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
-                double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                tvInstantSpeed.setText(String.format("%.1f", d));
-
-
+                //做保护
+                if (elapseTime != 0) {
+                    BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
+                    double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    tvInstantSpeed.setText(String.format("%.1f", d));
+                } else {
+                    tvInstantSpeed.setText("0.0");
+                }
 
                 int studentId = 1;//学生的id
                 commmitSportData(sport.getId(), studentId, sport.getTargetTime());
@@ -517,7 +522,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //提交本次运动数据，更新UI
         ServerInterface.instance().postRunningActDate(
                 TAG, projectId, studentId, currentDistance,
-                elapseTime, targetTime, startTime, new JsonResponseCallback() {
+                elapseTime, targetTime, startTime, currentSteps, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
@@ -562,6 +567,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             record.getElapseTime(),
                             targetTime,
                             record.getStartTime(),
+                            record.getSteps(),
                             new JsonResponseCallback() {
                                 //提交未数据库中为提交的记录
                                 @Override
