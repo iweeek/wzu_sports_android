@@ -347,6 +347,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvTargetSpeed.setText(sport.getSteps());
         } else {
             tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
+
             tvTargetSpeed.setText(getString(R.string.percent, sport.getTargetSpeed()));
         }
 
