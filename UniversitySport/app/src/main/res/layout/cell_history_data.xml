@@ -58,17 +58,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="本次速度"
+                android:text="距离"
                 android:textColor="#d5dadb"
                 android:textSize="14dp" />
 
-            <TextView
-                android:id="@+id/tvLeft"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#d5dadb"
-                android:textSize="16dp" />
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6000"
+                    android:textColor="#d5dadb"
+                    android:textSize="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="米"
+                    android:textColor="#d5dadb"
+                    android:textSize="12dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -84,17 +95,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="消耗时间"
+                android:text="耗时"
                 android:textColor="#d5dadb"
                 android:textSize="14dp" />
-
-            <TextView
-                android:id="@+id/tvMiddle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textColor="#d5dadb"
-                android:textSize="16dp" />
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvMiddle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120"
+                    android:textColor="#d5dadb"
+                    android:textSize="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#d5dadb"
+                    android:textSize="12dp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -110,17 +131,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="运动距离"
+                android:text="平均速度"
                 android:textColor="#d5dadb"
                 android:textSize="14dp" />
 
-            <TextView
-                android:id="@+id/tvRight"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#d5dadb"
-                android:text=""
-                android:textSize="16dp" />
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#d5dadb"
+                    android:text=""
+                    android:textSize="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#d5dadb"
+                    android:text="米/秒"
+                    android:textSize="12dp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
