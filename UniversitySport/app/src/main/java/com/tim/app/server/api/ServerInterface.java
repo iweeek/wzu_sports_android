@@ -57,7 +57,7 @@ public class ServerInterface {
      * @param callback
      */
     public void postRunningActDate(String tag, int projectId, int studentId, int distance, long costTime, long targetTime,
-                                   long startTime, ResponseCallback callback) {
+                                   long startTime, int stepCount, ResponseCallback callback) {
         String url = API_SCHEME + INIT_PUSH;
         HashMap params = new HashMap();
         params.put("projectId", projectId);
@@ -66,6 +66,7 @@ public class ServerInterface {
         params.put("costTime", costTime);
         params.put("targetTime", targetTime);
         params.put("startTime", startTime);
+        params.put("stepCount", stepCount);
         Log.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
@@ -95,6 +96,7 @@ public class ServerInterface {
     public void queryRunningProjects(int universityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  runningProjects(universityId: 1) {\n" +
+                "   acquisitionInterval\n" +
                 "    id\n" +
                 "    name\n" +
                 "    qualifiedDistance\n" +
@@ -115,9 +117,9 @@ public class ServerInterface {
                 "  }\n" +
                 "  \n" +
                 "  student(id:1) {\n" +
-                "    caloriesConsumption\n" +
-                "    timeCosted\n" +
-                "    currentTermQualifiedActivityCount\n" +
+                "    caloriesConsumption(timeRange:CURRENT_TERM)\n" +
+                "    timeCosted(timeRange:CURRENT_TERM)\n" +
+                "    qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
                 "    currentTermActivityCount\n" +
                 "  }\n" +
                 "}";
@@ -161,8 +163,12 @@ public class ServerInterface {
         if (type == AppConstant.THIS_WEEK) {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_WEEK)\n" +
+                    "timeCosted(timeRange:CURRENT_WEEK)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_WEEK)\n" +
                     "    currentWeekActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
+                    "      dataCount\n" +
                     "      data {\n" +
                     "        projectId\n" +
                     "        costTime\n" +
@@ -180,8 +186,35 @@ public class ServerInterface {
         } else if (type == AppConstant.THIS_MONTH) {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_MONTH)\n" +
+                    "timeCosted(timeRange:CURRENT_MONTH)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_MONTH)\n" +
                     "    currentMonthActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
+                    "      dataCount\n" +
+                    "      data {\n" +
+                    "        projectId\n" +
+                    "        costTime\n" +
+                    "        caloriesConsumed\n" +
+                    "        startTime\n" +
+                    "        distance\n" +
+                    "        qualified\n" +
+                    "        runningProject{\n" +
+                    "          name\n" +
+                    "         }\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+        } else if (type == AppConstant.THIS_TERM) {
+            queryStr = "{    \n" +
+                    "\tstudent(id:" + studentId + ") {\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
+                    "timeCosted(timeRange:CURRENT_TERM)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_TERM)\n" +
+                    "    currentTermActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
+                    "      pagesCount\n" +
+                    "      dataCount\n" +
                     "      data {\n" +
                     "        projectId\n" +
                     "        costTime\n" +
@@ -199,8 +232,12 @@ public class ServerInterface {
         } else {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
-                    "    currentTermActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
+                    "qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
+                    "timeCosted(timeRange:CURRENT_TERM)\n" +
+                    "caloriesConsumption(timeRange:CURRENT_TERM)\n" +
+                    "    activities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
+                    "      dataCount\n" +
                     "      data {\n" +
                     "        projectId\n" +
                     "        costTime\n" +

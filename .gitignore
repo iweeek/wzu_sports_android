@@ -1,2 +1,8 @@
 UniversitySport/local.properties
 .*
+/UniversitySport/app/build
+/UniversitySport/app/app.iml
+/UniversitySport/build
+/UniversitySport/UniversitySport.iml
+/UniversitySport/BaseLibrary/BaseLibrary.iml
+/UniversitySport/BaseLibrary/build

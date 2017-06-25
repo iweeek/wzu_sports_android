@@ -24,6 +24,15 @@ public class Sport implements Serializable {
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
     private int id = 1;//运动id，默认值为1
+    private int interval;
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
 
     public String getTitle() {
         return title;

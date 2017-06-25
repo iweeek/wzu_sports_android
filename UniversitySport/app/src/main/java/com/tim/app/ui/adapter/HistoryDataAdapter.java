@@ -1,6 +1,7 @@
 package com.tim.app.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.tim.app.R;
 import com.tim.app.server.entry.HistoryData;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 
@@ -42,39 +44,58 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvSportDesc.setText(data.getSportDesc());
         }
         holder.tvSportTime.setText(TimeUtil.formatDate(mContext, data.getTime()));
-        if (!TextUtils.isEmpty(data.getSpeed())) {
-            holder.tvLeft.setText(mContext.getString(R.string.percent, data.getSpeed()));
+
+        if (data.isQualified()) {
+            holder.tvSportQualified.setText("达标");
+            holder.tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+        } else {
+            holder.tvSportQualified.setText("不达标");
+            holder.tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
         }
 
-        if (data.getSportTime() > 0) {
-            holder.tvMiddle.setText(String.valueOf(data.getSportTime() / 60) + "分");
+        //异常数据处理，距离
+        if (data.getSportDistance() < 0) {
+            data.setSportDistance(0);
+        }
+        holder.tvLeft.setText(String.valueOf(data.getSportDistance()));
+
+        //耗时
+        if (data.getSportTime() < 0) {
+            data.setSportTime(0);
+        }
+        int min = data.getSportTime() / 60;
+        int sec = data.getSportTime() % 60;
+        String time = min + "\'" + sec + "\"";
+        holder.tvMiddle.setText(time);
+
+        //速度
+        if (data.getSportDistance() == 0) {
+            holder.tvRight.setText("0.0");
+        } else {
+            double d = data.getSportDistance();
+            double t = data.getSportTime();
+            double v =  d / t;
+            BigDecimal bd = new BigDecimal(v);
+            bd = bd.setScale(1, RoundingMode.HALF_UP);
+            holder.tvRight.setText(String.valueOf(bd));
         }
 
-        if (data.getSportDistance() > 0) {
-            holder.tvRight.setText(String.valueOf(data.getSportDistance()) + "米");
-        }
-
-        if (data.getSportTime() > 0 && data.getSportDistance() > 0) {
-
-            if(data.getSportTime() > 60){
-                BigDecimal bd = new BigDecimal(data.getSportTime() / 60);
-                bd.setScale(2);
-                holder.tvLeft.setText(String.valueOf(data.getSportDistance() / bd.doubleValue()) + "米/分");
-            }else if(data.getSportTime() < 60){
-                holder.tvLeft.setText(String.valueOf(data.getSportDistance() / (data.getSportTime())) + "米/秒");
-            }
-        }
-        if (data.getCostEnergy() > 0) {
+        if (data.getCostEnergy() >= 0) {
             holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getCostEnergy())));
         }
-        if (data.getSportTime() > 0) {
-            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(data.getSportTime() / 60)));
+
+        if (data.getSportTime() >= 0) {
+            double t = data.getSportTime();
+            BigDecimal bd = new BigDecimal(t / 60);
+            bd = bd.setScale(1, RoundingMode.HALF_UP);
+            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));
         }
     }
 
     public class ViewHolder extends BaseRecyclerViewHolder {
         TextView tvSportDesc;
         TextView tvSportTime;
+        TextView tvSportQualified;
 
         TextView tvLeftLabel;
         TextView tvMiddleLabel;
@@ -91,6 +112,7 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             super(itemView);
             tvSportDesc = (TextView) itemView.findViewById(R.id.tvSportDesc);
             tvSportTime = (TextView) itemView.findViewById(R.id.tvSportTime);
+            tvSportQualified = (TextView) itemView.findViewById(R.id.tvSportQualified);
 
             tvLeft = (TextView) itemView.findViewById(R.id.tvLeft);
             tvMiddle = (TextView) itemView.findViewById(R.id.tvMiddle);
