@@ -50,11 +50,11 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvMiddle.setText(String.valueOf(data.getSportTime() / 60) + "分");
         }
 
-        if (data.getSportDistance() > 0) {
+        if (data.getSportDistance() >= 0) {
             holder.tvRight.setText(String.valueOf(data.getSportDistance()) + "米");
         }
 
-        if (data.getSportTime() > 0 && data.getSportDistance() > 0) {
+        if (data.getSportTime() > 0 && data.getSportDistance() >= 0) {
 
             if(data.getSportTime() > 60){
                 BigDecimal bd = new BigDecimal(data.getSportTime() / 60);
