@@ -235,7 +235,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         //屏幕到了锁屏的时间，调暗亮度
         screenKeepLightTime += interval / 1000;
-        if (screenOffTimeout == screenKeepLightTime) {
+        if (screenOffTimeout <= screenKeepLightTime) {
             WindowManager.LayoutParams params = getWindow().getAttributes();
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
@@ -497,6 +497,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else {
                     tvResult.setText("不达标");
                 }
+
                 tvAverSpeedLabel.setText("平均速度");
                 //做保护
                 if (elapseTime != 0) {
