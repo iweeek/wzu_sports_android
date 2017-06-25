@@ -85,7 +85,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvCurrentDistance;
     private TextView tvAverSpeedLabel;
     private TextView tvElapseTime;
-    private TextView tvInstantSpeed;
+    private TextView tvAverSpeed;
     private TextView tvTargetDistance;
     private TextView tvTargetTime;
     private TextView tvTargetSpeedLabel;
@@ -279,7 +279,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     double t = elapseTime;
                     BigDecimal bd = new BigDecimal(d / t);
                     bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                    tvInstantSpeed.setText(String.valueOf(bd));
+                    tvAverSpeed.setText(String.valueOf(bd));
                 }
 
                 if (oldLatLng == null) {
@@ -297,7 +297,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 oldLatLng = newLatLng;
                 Log.d(TAG, "oldLatLng = newLatLng oldLatLng: " + oldLatLng);
             } else {
-                tvInstantSpeed.setText("0.0");
+                tvAverSpeed.setText("0.0");
                 String text = "坐标没有发生变化，坐标： " + oldLatLng;
                 Toast.makeText(this, text, Toast.LENGTH_LONG);
             }
@@ -358,7 +358,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
         tvCurrentStep.setText("0 步");
-        tvInstantSpeed.setText("0.0");
+        tvAverSpeed.setText("0.0");
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
@@ -503,9 +503,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (elapseTime != 0) {
                     BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
                     double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                    tvInstantSpeed.setText(String.format("%.1f", d));
+                    tvAverSpeed.setText(String.format("%.1f", d));
                 } else {
-                    tvInstantSpeed.setText("0.0");
+                    tvAverSpeed.setText("0.0");
                 }
 
                 int studentId = 1;//学生的id
@@ -638,8 +638,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvSportName = (TextView) findViewById(R.id.tvSportName);
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
-        tvAverSpeedLabel = (TextView) findViewById(R.id.tvCurrentTitle);
-        tvInstantSpeed = (TextView) findViewById(R.id.tvCurrentValue);
+        tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
+        tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
