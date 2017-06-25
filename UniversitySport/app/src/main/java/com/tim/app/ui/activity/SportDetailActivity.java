@@ -224,12 +224,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
         Bundle bundle = location.getExtras();
 
-        elapseTime += interval / 1000;
-        Log.d(TAG, "elapseTime: " + elapseTime);
-        long m = elapseTime / 60;
-        long s = elapseTime % 60;
-        String time = m + "\'" + s +"\"";
-        tvElapseTime.setText(time);
+        if (state == STATE_STARTED) {
+            elapseTime += interval / 1000;
+            Log.d(TAG, "elapseTime: " + elapseTime);
+            long m = elapseTime / 60;
+            long s = elapseTime % 60;
+            String time = m + "\'" + s +"\"";
+            tvElapseTime.setText(time);
+        }
 
         //屏幕到了锁屏的时间，调暗亮度
         screenKeepLightTime += interval / 1000;
