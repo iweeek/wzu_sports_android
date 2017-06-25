@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.ActivityManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
+import com.application.library.widget.EmptyLayout;
+import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
@@ -54,19 +56,21 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private long last_back_time = 0;
     private DrawerLayout mDrawerLayout;
-    private FrameLayout flContainer;
-    private LinearLayout llContainer;
 
     private ImageView ibMenu;
     private ImageView ibNotify;
     private TextView tvLogout;
 
+    private LinearLayout llContainer;
     private WrapRecyclerView wrvSportType;
 
     private SportAdapter adapter;
     private BadNetworkAdapter badNetworkAdapter;
     private List<Sport> sportDataList;
     private List<BadNetWork> networkDataList;
+
+    private EmptyLayout emptyLayout;
+
 
     NavigationView navigationView;
 
@@ -95,8 +99,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main_drawer);
-        llContainer = (LinearLayout) findViewById(R.id.llContainer);
-        flContainer = (FrameLayout) findViewById(R.id.flContainer);
         ibMenu = (ImageView) findViewById(R.id.ibMenu);
         ibNotify = (ImageView) findViewById(R.id.ibNotify);
         tvLogout = (TextView) findViewById(R.id.tvLogout);
@@ -106,6 +108,21 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         tvLogout.setOnClickListener(this);
         navigationView =
                 (NavigationView) findViewById(R.id.nv_main_navigation);
+        llContainer = (LinearLayout) findViewById(R.id.llContainer);
+        wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
+        emptyLayout = new EmptyLayout(this, llContainer);
+        emptyLayout.showLoading();
+        emptyLayout.setEmptyButtonShow(false);
+        emptyLayout.setErrorButtonShow(true);
+        emptyLayout.setEmptyDrawable(R.drawable.ic_empty_sport_data);
+        emptyLayout.setEmptyText("当前没有数据");
+        emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                emptyLayout.showLoading();
+                initData();
+            }
+        });
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -152,7 +169,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             }
         });
 
-        wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         wrvSportType.setLayoutManager(layoutManager);
@@ -246,16 +262,22 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
+                        if(sportDataList .size() == 0){
+                            emptyLayout.showEmpty();
+                        }else {
+                            emptyLayout.showContent();
+                        }
+                    } catch (JSONException e) {  emptyLayout.showEmpty();
                         e.printStackTrace();
                     }
                     return true;
                 } else {
-                    ToastUtil.showToast(errMsg);
-                    //网络不好
-                    wrvSportType.invalidate();
-                    wrvSportType.setAdapter(badNetworkAdapter);
-                    badNetworkAdapter.setOnItemClickListener(context);
+                    emptyLayout.showEmptyOrError(errCode);
+//                    ToastUtil.showToast(errMsg);
+//                    //网络不好
+//                    wrvSportType.invalidate();
+//                    wrvSportType.setAdapter(badNetworkAdapter);
+//                    badNetworkAdapter.setOnItemClickListener(context);
                     return false;
                 }
             }
@@ -292,7 +314,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     }
                 } else {
                     Log.d(TAG, "onJsonResponse: errcode != 0");
-                    homepageHeadView.displayBadNetworkLayout();
+//                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }

@@ -31,8 +31,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.amap.api.mapcore.util.cz.t;
-
 /**
  * 历史数据
  */
@@ -91,12 +89,16 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             lrvLoadMore.setLoadMoreHandler(this);
 
             emptyLayout = new EmptyLayout(getActivity(), lrvLoadMore);
-//            emptyLayout.showLoading();
+            emptyLayout.showLoading();
+            emptyLayout.setEmptyButtonShow(false);
+            emptyLayout.setErrorButtonShow(true);
+            emptyLayout.setEmptyDrawable(R.drawable.ic_empty_hisorty_data);
+            emptyLayout.setEmptyText("当前没有运动记录");
             emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     emptyLayout.showLoading();
-
+                    initData();
                 }
             });
 
@@ -117,6 +119,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             }
 
         }
+        headView.setData("", 0, 0, 0, 0, 0);
         initData();
         return rootView;
     }
@@ -142,13 +145,20 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
                             return true;
                         } catch (org.json.JSONException e) {
+                            emptyLayout.showEmptyOrError(errCode);
                             e.printStackTrace();
                             Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
+                        emptyLayout.showEmptyOrError(errCode);
                         return false;
                     }
                 }
@@ -174,13 +184,20 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
                             return true;
                         } catch (org.json.JSONException e) {
+                            emptyLayout.showEmptyOrError(errCode);
                             e.printStackTrace();
                             Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
+                        emptyLayout.showEmptyOrError(errCode);
                         return false;
                     }
                 }
@@ -206,13 +223,20 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
                             return true;
                         } catch (org.json.JSONException e) {
+                            emptyLayout.showEmptyOrError(errCode);
                             e.printStackTrace();
                             Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
+                        emptyLayout.showEmptyOrError(errCode);
                         return false;
                     }
                 }

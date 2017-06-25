@@ -46,12 +46,6 @@ public class ModifyPasswordActivity extends BaseActivity {
     Bundle mBundle;
     int flag;
 
-
-    public static void startModifyPasswordActivity(Context context) {
-        Intent intent = new Intent(context, ModifyPasswordActivity.class);
-        context.startActivity(intent);
-    }
-
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();

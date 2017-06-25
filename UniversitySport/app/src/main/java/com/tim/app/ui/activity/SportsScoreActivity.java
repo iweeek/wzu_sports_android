@@ -65,12 +65,16 @@ public class SportsScoreActivity extends BaseActivity implements LoadMoreHandler
         load_more.setLoadMoreHandler(this);
 
         emptyLayout = new EmptyLayout(this, load_more);
-//            emptyLayout.showLoading();
+        emptyLayout.showLoading();
+        emptyLayout.setEmptyButtonShow(false);
+        emptyLayout.setErrorButtonShow(true);
+        emptyLayout.setEmptyDrawable(R.drawable.ic_empty_score_data);
+        emptyLayout.setEmptyText("你还没有体育成绩");
         emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 emptyLayout.showLoading();
-
+                initData();
             }
         });
 
@@ -89,10 +93,10 @@ public class SportsScoreActivity extends BaseActivity implements LoadMoreHandler
 
         //从服务器去的学生信息，计算显示的学期数
         Menu menu = mNavigationView.getMenu();
-        for(int i=1;i<=8;i++) {
-            if(i%2==0){
+        for (int i = 1; i <= 8; i++) {
+            if (i % 2 == 0) {
                 menu.add(Menu.NONE, i, i, "2016年~2017年 第二学期");
-            }else{
+            } else {
                 menu.add(Menu.NONE, i, i, "2016年~2017年 第一学期");
             }
         }
@@ -103,7 +107,7 @@ public class SportsScoreActivity extends BaseActivity implements LoadMoreHandler
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             menuItem.setChecked(true);
                             mDrawerLayout.closeDrawers();
-                            ToastUtil.showToast(menuItem.getItemId()+"："+menuItem.getTitle().toString());
+                            ToastUtil.showToast(menuItem.getItemId() + "：" + menuItem.getTitle().toString());
                            /* switch (menuItem.getItemId()) {
                                 case R.id.nav_term_one:
                                     ToastUtil.showToast("第一学期");
@@ -155,14 +159,15 @@ public class SportsScoreActivity extends BaseActivity implements LoadMoreHandler
 
     @Override
     public void initData() {
-       for(int i = 0;i< 5;i++){
-           Score score = new Score();
-           score.setSportDesc("50米");
-           score.setScore(80);
-           score.setScoreDesc("8秒");
-           dataList.add(score);
-       }
-       adapter.notifyDataSetChanged();
+        for (int i = 0; i < 5; i++) {
+            Score score = new Score();
+            score.setSportDesc("50米");
+            score.setScore(80);
+            score.setScoreDesc("8秒");
+            dataList.add(score);
+        }
+        adapter.notifyDataSetChanged();
+        emptyLayout.showEmpty();
     }
 
     @Override

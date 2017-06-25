@@ -30,8 +30,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.data;
-
 /**
  * 排行榜数据
  */
@@ -83,12 +81,16 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             lrvLoadMore.setLoadMoreHandler(this);
 
             emptyLayout = new EmptyLayout(getActivity(), lrvLoadMore);
-//            emptyLayout.showLoading();
+            emptyLayout.showLoading();
+            emptyLayout.setEmptyButtonShow(false);
+            emptyLayout.setErrorButtonShow(true);
+            emptyLayout.setEmptyDrawable(R.drawable.ic_empty_rank_data);
+            emptyLayout.setEmptyText("当前没有排行榜数据");
             emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     emptyLayout.showLoading();
-
+                    initData();
                 }
             });
 
@@ -140,13 +142,20 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
                             return true;
                         } catch (org.json.JSONException e) {
+                            emptyLayout.showEmpty();
                             e.printStackTrace();
                             Log.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
+                        emptyLayout.showEmptyOrError(errCode);
                         return false;
                     }
                 }
@@ -179,13 +188,20 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
                             return true;
                         } catch (org.json.JSONException e) {
+                            emptyLayout.showEmpty();
                             e.printStackTrace();
                             Log.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
+                        emptyLayout.showEmptyOrError(errCode);
                         return false;
                     }
                 }
@@ -308,7 +324,6 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             }
         }
         adapter.notifyDataSetChanged();
-
 
 
     }

@@ -125,16 +125,19 @@ public class EmptyLayout {
 
     public void setEmptyButtonClickListener(View.OnClickListener emptyButtonClickListener) {
         this.mEmptyButtonClickListener = emptyButtonClickListener;
-//        this.mErrorButtonClickListener = emptyButtonClickListener;
-//        if (btn_empty != null) {
-//            btn_empty.setOnClickListener(emptyButtonClickListener);
-//        }
-//        if (mEmptyView != null) {
-//            mEmptyView.setOnClickListener(emptyButtonClickListener);
-//        }
-//        if (mErrorView != null) {
-//            mErrorView.setOnClickListener(emptyButtonClickListener);
-//        }
+        this.mErrorButtonClickListener = emptyButtonClickListener;
+        if (btn_empty != null) {
+            btn_empty.setOnClickListener(emptyButtonClickListener);
+        }
+        if (btn_error != null) {
+            btn_error.setOnClickListener(emptyButtonClickListener);
+        }
+        if (mEmptyView != null) {
+            mEmptyView.setOnClickListener(emptyButtonClickListener);
+        }
+        if (mErrorView != null) {
+            mErrorView.setOnClickListener(emptyButtonClickListener);
+        }
         if (iv_empty != null) {
             iv_empty.setOnClickListener(emptyButtonClickListener);
         }
@@ -145,10 +148,10 @@ public class EmptyLayout {
 
     public void setErrorButtonClickListener(View.OnClickListener errorButtonClickListener) {
         this.mErrorButtonClickListener = errorButtonClickListener;
-//        this.mEmptyButtonClickListener = errorButtonClickListener;
-//        if (btn_error != null) {
-//            btn_error.setOnClickListener(errorButtonClickListener);
-//        }
+        this.mEmptyButtonClickListener = errorButtonClickListener;
+        if (btn_error != null) {
+            btn_error.setOnClickListener(errorButtonClickListener);
+        }
         if (iv_error != null) {
             iv_error.setOnClickListener(errorButtonClickListener);
         }
@@ -194,8 +197,8 @@ public class EmptyLayout {
      */
     private void initDefaultValues() {
         bg_color = Color.TRANSPARENT;
-        emptyDrawable = R.drawable.ic_def_empty;
-        errorDrawable = R.drawable.ic_def_empty;
+        emptyDrawable = R.drawable.icon_default_network;
+        errorDrawable = R.drawable.icon_default_network;
         loadingStr = mContext.getString(R.string.def_data_loading);
         emptyStr = mContext.getString(R.string.def_empty_data_text);
         errorStr = mContext.getString(R.string.def_net_error_text);
@@ -224,7 +227,7 @@ public class EmptyLayout {
             empty_temp_view = mEmptyView.findViewById(R.id.empty_temp_view);
 
             if (mEmptyButtonClickListener != null) {
-//                btn_empty.setOnClickListener(mEmptyButtonClickListener);
+                btn_empty.setOnClickListener(mEmptyButtonClickListener);
 //                mEmptyView.setOnClickListener(mEmptyButtonClickListener);
                 iv_empty.setOnClickListener(mEmptyButtonClickListener);
             }
@@ -275,15 +278,14 @@ public class EmptyLayout {
         btn_error.setText(errorButtonTitle);
 
         if (isShowEmptyButton) {
-//            btn_empty.setVisibility(View.VISIBLE);
-            btn_empty.setVisibility(View.GONE);
+            btn_empty.setVisibility(View.VISIBLE);
         } else {
             btn_empty.setVisibility(View.GONE);
         }
 
         if (isShowErrorButton) {
-//            btn_error.setVisibility(View.VISIBLE);
-            btn_error.setVisibility(View.GONE);
+            btn_error.setVisibility(View.VISIBLE);
+//            btn_error.setVisibility(View.GONE);
         } else {
             btn_error.setVisibility(View.GONE);
         }

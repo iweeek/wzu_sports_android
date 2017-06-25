@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.tim.app.ui.view.HomepageHeadView xmlns:android="http://schemas.android.com/apk/res/android"
-                                      android:layout_width="match_parent"
-                                      android:layout_height="match_parent"
-                                      android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="@string/curTermSportsCount"
                     android:textColor="#868892"
-                    android:textSize="16dp"/>
+                    android:textSize="16dp" />
 
 
                 <ImageView
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/ic_right_arrow"/>
+                    android:background="@drawable/ic_right_arrow" />
 
             </RelativeLayout>
 
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10"
-                    android:textSize="@dimen/text_size_36"/>
+                    android:textSize="@dimen/text_size_36" />
 
             </LinearLayout>
 
@@ -68,8 +68,7 @@
                     android:id="@+id/trTotal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:stretchColumns="0,1"
-                    >
+                    android:stretchColumns="0,1">
 
                     <TableRow>
 
@@ -85,7 +84,7 @@
                                 android:layout_centerVertical="true"
                                 android:text="@string/accumulEnergy"
                                 android:textColor="#868892"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:id="@+id/tvAccumulCostEnergy"
@@ -94,7 +93,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:textColor="#000"
-                                android:textSize="20dp"/>
+                                android:textSize="20dp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -109,7 +108,7 @@
                                 android:layout_centerVertical="true"
                                 android:text="@string/accumulTime"
                                 android:textColor="#868892"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <TextView
                                 android:id="@+id/tvAccumulCostTime"
@@ -118,7 +117,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:textColor="#000"
-                                android:textSize="20dp"/>
+                                android:textSize="20dp" />
                         </LinearLayout>
                     </TableRow>
 
@@ -136,7 +135,7 @@
                                 android:layout_centerVertical="true"
                                 android:text="@string/ReachTargetTimes"
                                 android:textColor="#868892"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -150,7 +149,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:textColor="#000"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20dp" />
 
                                 <TextView
                                     android:id="@+id/tvTotalQualifiedTimes"
@@ -159,7 +158,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:textColor="#868892"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20dp" />
                             </LinearLayout>
 
                             <ProgressBar
@@ -170,7 +169,7 @@
                                 android:layout_marginRight="30dp"
                                 android:max="100"
                                 android:progress="69"
-                                android:progressDrawable="@drawable/layer_pd"/>
+                                android:progressDrawable="@drawable/layer_pd" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -185,7 +184,7 @@
                                 android:layout_centerVertical="true"
                                 android:text="@string/outsideScore"
                                 android:textColor="#868892"
-                                android:textSize="14dp"/>
+                                android:textSize="14dp" />
 
                             <LinearLayout
                                 android:layout_width="wrap_content"
@@ -199,7 +198,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:textColor="#000"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20dp" />
 
                                 <TextView
                                     android:id="@+id/tvTargetOutsideScore"
@@ -208,7 +207,7 @@
                                     android:layout_alignParentRight="true"
                                     android:layout_centerVertical="true"
                                     android:textColor="#868892"
-                                    android:textSize="20dp"/>
+                                    android:textSize="20dp" />
 
 
                             </LinearLayout>
@@ -221,7 +220,7 @@
                                 android:layout_marginRight="30dp"
                                 android:max="100"
                                 android:progress="40"
-                                android:progressDrawable="@drawable/layer_pd"/>
+                                android:progressDrawable="@drawable/layer_pd" />
                         </LinearLayout>
                     </TableRow>
                 </TableLayout>
@@ -236,7 +235,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:background="@color/def_line_color"/>
+                    android:background="@color/def_line_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -246,14 +245,14 @@
                     android:drawablePadding="10dp"
                     android:text="校园排行榜"
                     android:textColor="#868892"
-                    android:textSize="16dp"/>
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/ic_right_arrow"/>
+                    android:background="@drawable/ic_right_arrow" />
             </RelativeLayout>
 
         </RelativeLayout>
@@ -269,15 +268,14 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="网络不好，请点击刷新"
-                android:textSize="14dp">
-            </TextView>
+                android:textSize="14dp"></TextView>
         </LinearLayout>
     </FrameLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp"
-        android:background="@color/view_background_color"/>
+        android:background="@color/view_background_color" />
 
     <TextView
         android:layout_width="match_parent"
@@ -285,7 +283,7 @@
         android:gravity="center"
         android:text="运动方式"
         android:textColor="@color/black"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
 
 
 </com.tim.app.ui.view.HomepageHeadView>

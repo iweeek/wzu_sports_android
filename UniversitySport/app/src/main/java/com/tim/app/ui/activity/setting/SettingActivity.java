@@ -2,12 +2,14 @@ package com.tim.app.ui.activity.setting;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.application.library.util.PackageUtil;
 import com.tim.app.R;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.BaseActivity;
 
@@ -63,6 +65,9 @@ public class SettingActivity extends BaseActivity {
             finish();
         } else if (v.getId() == R.id.rlModtifyPassword) {
             Intent intent = new Intent(this, ModifyPasswordActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
+            intent.putExtras(bundle);
             startActivity(intent);
         } else if (v.getId() == R.id.rlAboutUS) {
             Intent aboutIntent = new Intent(this, AboutActivity.class);

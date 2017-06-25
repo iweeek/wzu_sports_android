@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:clickable="true"
-            android:src="@drawable/ic_def_empty" />
+            android:src="@drawable/icon_default_network" />
 
         <TextView
             android:id="@+id/tv_error_desc"
