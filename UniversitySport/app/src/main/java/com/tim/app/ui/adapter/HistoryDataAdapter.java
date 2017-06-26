@@ -15,6 +15,8 @@ import com.tim.app.server.entry.HistoryData;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -43,7 +45,10 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (!TextUtils.isEmpty(data.getSportDesc())) {
             holder.tvSportDesc.setText(data.getSportDesc());
         }
-        holder.tvSportTime.setText(TimeUtil.formatDate(mContext, data.getTime()));
+
+        Date date = new Date(data.getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
+        holder.tvSportTime.setText(sdf.format(date));
 
         if (data.isQualified()) {
             holder.tvSportQualified.setText("达标");
