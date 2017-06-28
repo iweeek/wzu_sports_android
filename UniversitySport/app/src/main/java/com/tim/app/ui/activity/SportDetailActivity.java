@@ -170,6 +170,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
+
+        sport = (Sport) getIntent().getSerializableExtra("sport");
+        interval = sport.getInterval() * 1000;
+
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
@@ -203,7 +207,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private void setupLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
         myLocationStyle.interval(interval);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.drawable.navi_map_gps_locked));
@@ -224,7 +228,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Log.d(TAG, "onMyLocationChange location: " + location);
         Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
         Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
+        int errorCode = -1;
+        String errorInfo = "";
+        int locationType = -1;
+
         Bundle bundle = location.getExtras();
+        if (bundle != null) {
+            errorCode = bundle.getInt(MyLocationStyle.ERROR_CODE);
+            errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
+            // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
+            locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
+        }
 
         if (state == STATE_STARTED) {
             elapseTime += interval / 1000;
@@ -246,11 +260,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, "newLatLng: " + newLatLng);
             Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
-            if (Double.compare(location.getLatitude(), 0.0) == 0) {
+            if (errorCode != 0 && locationType != -1 && locationType != 1) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;
             } else {
+                // 判断第一次，第一次会提示
                 if (oldLatLng == null) {
                     String errText = "定位成功";
                     llLacationHint.setVisibility(View.GONE);
@@ -258,9 +273,23 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
             }
 
+            //  定位成功，切换屏幕视角，仅切换一次
+//            if (oldLatLng == null) {
+//                Log.d(TAG, "oldLatLng == null");
+//                Log.d(TAG, "newLatLng: " + newLatLng);
+//                //修改地图的中心点位置
+//                CameraPosition cp = aMap.getCameraPosition();
+//                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//                aMap.moveCamera(cu);
+//                DLOG.d(TAG, "moveCamera zoomLevel: " + zoomLevel);
+//                DLOG.d(TAG, "moveCamera cu: " + cu);
+//            }
+
             Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
             //位置有变化
-            if (oldLatLng != newLatLng) {
+//            if (oldLatLng != newLatLng) {
                 DLOG.d(TAG, location.getLatitude() + "," + location.getLongitude());
                 if (state == STATE_STARTED) {
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
@@ -282,38 +311,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvAverSpeed.setText(String.valueOf(bd));
                 }
 
-                if (oldLatLng == null) {
-                    Log.d(TAG, "oldLatLng == null");
-                    Log.d(TAG, "newLatLng: " + newLatLng);
-                    //修改地图的中心点位置
-                    CameraPosition cp = aMap.getCameraPosition();
-                    CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-                    aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                    aMap.moveCamera(cu);
-                    DLOG.d(TAG, "moveCamera zoomLevel: " + zoomLevel);
-                    DLOG.d(TAG, "moveCamera cu: " + cu);
-                }
+
                 oldLatLng = newLatLng;
                 Log.d(TAG, "oldLatLng = newLatLng oldLatLng: " + oldLatLng);
-            } else {
-                tvAverSpeed.setText("0.0");
-                String text = "坐标没有发生变化，坐标： " + oldLatLng;
-                Toast.makeText(this, text, Toast.LENGTH_LONG);
-            }
+//            } else {
+//                tvAverSpeed.setText("0.0");
+//                String text = "坐标没有发生变化，坐标： " + oldLatLng;
+//                Toast.makeText(this, text, Toast.LENGTH_LONG);
+//            }
 
         } else {
-            if (bundle != null) {
-                int errorCode = bundle.getInt(MyLocationStyle.ERROR_CODE);
-                String errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
-                // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
-                int locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
-                String errText = "定位失败," + errorCode + ": " + errorInfo;
+                String errText = "定位失败";
                 Log.e(TAG, errText);
-                if (oldLatLng == null) {
-                    Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
-                }
-            }
+                Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -329,7 +339,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        sport = (Sport) getIntent().getSerializableExtra("sport");
         if (!TextUtils.isEmpty(sport.getTitle())) {
             tvSportName.setText(sport.getTitle());
         }
@@ -352,8 +361,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
             tvTargetSpeed.setText(getString(R.string.percent, sport.getTargetSpeed()));
         }
-
-        interval = sport.getInterval() * 1000;
 
         tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
@@ -501,8 +508,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 tvAverSpeedLabel.setText("平均速度");
                 //做保护
                 if (elapseTime != 0) {
-                    BigDecimal bd = new BigDecimal(currentDistance / elapseTime);
-                    double d = bd.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    double d = currentDistance;
+                    double t = elapseTime;
+                    BigDecimal bd = new BigDecimal(d / t);
+                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
                     tvAverSpeed.setText(String.format("%.1f", d));
                 } else {
                     tvAverSpeed.setText("0.0");
