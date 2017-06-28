@@ -273,6 +273,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             getWindow().setAttributes(params);
             Log.d(TAG, "onMyLocationChange turn down light");
         }
+
         if (location != null) {
             //定位成功
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -308,30 +309,32 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
             //位置有变化
 //            if (oldLatLng != newLatLng) {
-                DLOG.d(TAG, location.getLatitude() + "," + location.getLongitude());
+            String text = "";
                 if (state == STATE_STARTED) {
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
                     float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    if (moveDistance > speedLimitation) {
-                        //位置漂移
-                        return;
-                    }
-                    drawLine(oldLatLng, newLatLng);
-                    String text = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng;
-                    Toast.makeText(this, text, Toast.LENGTH_LONG);
+                    text = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
+                            + "， 本次移动距离： " + moveDistance;
+                    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 
-                    currentDistance += moveDistance;
-                    tvCurrentDistance.setText(String.valueOf(currentDistance));
-                    double d = currentDistance;
-                    double t = elapseTime;
-                    BigDecimal bd = new BigDecimal(d / t);
-                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                    tvAverSpeed.setText(String.valueOf(bd));
+                    if (moveDistance / interval > speedLimitation) {
+                        //位置漂移
+//                        return;
+                        drawLine(oldLatLng, newLatLng, false);
+                    } else {
+                        drawLine(oldLatLng, newLatLng, true);
+                        currentDistance += moveDistance;
+                        tvCurrentDistance.setText(String.valueOf(currentDistance));
+                        double d = currentDistance;
+                        double t = elapseTime;
+                        BigDecimal bd = new BigDecimal(d / t);
+                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                        tvAverSpeed.setText(String.valueOf(bd));
+                    }
                 }
 
-
                 oldLatLng = newLatLng;
-                Log.d(TAG, "oldLatLng = newLatLng oldLatLng: " + oldLatLng);
+                DLOG.d(TAG, text);
 //            } else {
 //                tvAverSpeed.setText("0.0");
 //                String text = "坐标没有发生变化，坐标： " + oldLatLng;
@@ -462,11 +465,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
      */
-    private void drawLine(LatLng oldData, LatLng newData) {
-        // 绘制一个大地曲线
-        aMap.addPolyline((new PolylineOptions())
-                .add(oldData, newData)
-                .geodesic(true).color(Color.GREEN));
+    private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
+        // 绘制曲线
+        if (isNormal) {
+            aMap.addPolyline((new PolylineOptions())
+                    .add(oldData, newData)
+                    .geodesic(true).color(Color.GREEN));
+        } else  {
+            aMap.addPolyline((new PolylineOptions())
+                    .add(oldData, newData)
+                    .geodesic(true).color(Color.RED));
+        }
 
     }
 
