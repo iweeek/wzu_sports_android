@@ -59,6 +59,10 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import static android.R.attr.data;
 
@@ -134,6 +138,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int screenKeepLightTime;
     private LinearLayout llLacationHint;
 
+    private final ScheduledExecutorService scheduler =
+            Executors.newScheduledThreadPool(1);
+    private Runnable elapseTimeRunnable;
+    private ScheduledFuture<?> timerHandler;
+    private long timerInterval = 1000;
+
     public static void start(Context context, Sport sport) {
         Intent intent = new Intent(context, SportDetailActivity.class);
         intent.putExtra("sport", sport);
@@ -166,6 +176,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         }
     };
+
+    private void startTimer() {
+        timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
+    }
+
+    private void stopTimer() {
+        timerHandler.cancel(true);
+    }
 
     @Override
     protected void init(Bundle savedInstanceState) {
@@ -240,12 +258,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
         }
 
-        if (state == STATE_STARTED) {
-            elapseTime += interval / 1000;
-            Log.d(TAG, "elapseTime: " + elapseTime);
-            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-            tvElapseTime.setText(time);
-        }
+//        if (state == STATE_STARTED) {
+//            elapseTime += interval / 1000;
+//            Log.d(TAG, "elapseTime: " + elapseTime);
+//            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+//            tvElapseTime.setText(time);
+//        }
 
         //屏幕到了锁屏的时间，调暗亮度
         screenKeepLightTime += interval / 1000;
@@ -396,12 +414,26 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_STARTED) {
                     state = STATE_PAUSE;
                     ibBack.setVisibility(View.GONE);
+                    stopTimer();
                 }
             }
             }
         });
 
-
+        elapseTimeRunnable = new Runnable() {
+            public void run() {
+                // If you need update UI, simply do this:
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        // update your UI component here.
+                        elapseTime += timerInterval / 1000;
+                        Log.d(TAG, "elapseTime: " + elapseTime);
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(time);
+                    }
+                });
+            }
+        };
     }
 
     /**
@@ -480,6 +512,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 tvPause.setVisibility(View.VISIBLE);
 
                 initData();
+                startTimer();
                 break;
             case R.id.btContinue:
                 if (state == STATE_PAUSE) {
@@ -525,6 +558,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 rlBottom.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.GONE);
                 btStart.setVisibility(View.VISIBLE);
+
+                stopTimer();
 
                 break;
             case R.id.ivLocation:
