@@ -131,7 +131,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
 
-    private int zoomLevel = 18;//地图缩放级别，范围0-20,越大越精细
+    private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
 
     JsonResponseCallback callback;
     private int screenOffTimeout;
@@ -203,6 +203,31 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         //        int height = displayMetrics.heightPixels;
         //        int width = displayMetrics.widthPixels;
+
+        aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+
+            }
+
+            @Override
+            public void onCameraChangeFinish(CameraPosition cameraPosition) {
+                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+            @Override
+            public void onMapLoaded() {
+                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                text = "调整屏幕缩放比例：" + zoomLevel;
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void initMap() {
@@ -246,6 +271,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Log.d(TAG, "onMyLocationChange location: " + location);
         Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
         Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
+        String toastText = "";
         int errorCode = -1;
         String errorInfo = "";
         int locationType = -1;
@@ -278,7 +304,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //定位成功
             LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, "newLatLng: " + newLatLng);
-            Log.d(TAG, location.getLatitude() + "," + location.getLongitude());
             if (errorCode != 0 && locationType != -1 && locationType != 1) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
@@ -289,37 +314,47 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     String errText = "定位成功";
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+
+//                    aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//                    toastText = "调整屏幕缩放比例：" + zoomLevel;
+//                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                    aMap.moveCamera(cu);
+                    toastText = "移动屏幕，当前位置居中";
+                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 }
             }
 
-            //  定位成功，切换屏幕视角，仅切换一次
+            //TODO 待删除
+////              定位成功，切换屏幕视角，仅切换一次
 //            if (oldLatLng == null) {
-//                Log.d(TAG, "oldLatLng == null");
 //                Log.d(TAG, "newLatLng: " + newLatLng);
 //                //修改地图的中心点位置
-//                CameraPosition cp = aMap.getCameraPosition();
-//                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+////                CameraPosition cp = aMap.getCameraPosition();
+////                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
+//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
 //                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 //                aMap.moveCamera(cu);
-//                DLOG.d(TAG, "moveCamera zoomLevel: " + zoomLevel);
-//                DLOG.d(TAG, "moveCamera cu: " + cu);
+//                toastText = "移动屏幕，进行缩放，比例：" + zoomLevel;
+//                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 //            }
 
-            Log.d(TAG, "onMyLocationChange oldLatLng: " + oldLatLng);
             //位置有变化
 //            if (oldLatLng != newLatLng) {
-            String text = "";
+
                 if (state == STATE_STARTED) {
                     Log.d(TAG, "oldLatLng: " + oldLatLng);
                     float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    text = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
+                    toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
                             + "， 本次移动距离： " + moveDistance;
-                    Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                    if (moveDistance / interval > speedLimitation) {
+                    if (moveDistance / sport.getInterval() > speedLimitation) {
                         //位置漂移
 //                        return;
+                        toastText = "异常移动，每秒位移：" + moveDistance / sport.getInterval();
+                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                         drawLine(oldLatLng, newLatLng, false);
                     } else {
                         drawLine(oldLatLng, newLatLng, true);
@@ -334,7 +369,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
 
                 oldLatLng = newLatLng;
-                DLOG.d(TAG, text);
+                DLOG.d(TAG, toastText);
 //            } else {
 //                tvAverSpeed.setText("0.0");
 //                String text = "坐标没有发生变化，坐标： " + oldLatLng;
@@ -573,11 +608,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 break;
             case R.id.ivLocation:
                 //修改地图的中心点位置
-                CameraPosition cp = aMap.getCameraPosition();
-                CameraPosition cpNew = CameraPosition.fromLatLngZoom(oldLatLng, cp.zoom);
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//                CameraPosition cp = aMap.getCameraPosition();
+//                CameraPosition cpNew = CameraPosition.fromLatLngZoom(oldLatLng, cp.zoom);
+//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//                aMap.moveCamera(cu);
+
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
+                String toastText = "移动屏幕，当前位置居中";
+                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
         }
 
