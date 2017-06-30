@@ -167,13 +167,12 @@ public class SportResultActivity extends BaseActivity {
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-
+                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
-                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -186,6 +185,11 @@ public class SportResultActivity extends BaseActivity {
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                 text = "调整屏幕缩放比例：" + zoomLevel;
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+                //TODO test
+                oldLatLng = new LatLng(40.004156, 116.406305);//测试坐标
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+                aMap.moveCamera(cu);
             }
         });
     }
@@ -201,10 +205,10 @@ public class SportResultActivity extends BaseActivity {
      * 设置一些amap的属性
      */
     private void setUpMap() {
-        setupLocationStyle();
+//        setupLocationStyle();
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setCompassEnabled(true);
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
+//        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
     }
 
     private void setupLocationStyle() {
@@ -512,6 +516,8 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void initView() {
         llLacationHint = (LinearLayout)findViewById(R.id.llLacationHint);
+        llLacationHint.setVisibility(View.GONE);
+
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
