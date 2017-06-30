@@ -307,13 +307,20 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
                             return true;
                         } catch (org.json.JSONException e) {
+                            emptyLayout.showEmptyOrError(errCode);
                             e.printStackTrace();
                             Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
+                        emptyLayout.showEmptyOrError(errCode);
                         return false;
                     }
                 }

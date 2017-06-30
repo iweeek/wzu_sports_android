@@ -232,9 +232,9 @@ public class ServerInterface {
         } else {
             queryStr = "{    \n" +
                     "\tstudent(id:" + studentId + ") {\n" +
-                    "qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
-                    "timeCosted(timeRange:CURRENT_TERM)\n" +
-                    "caloriesConsumption(timeRange:CURRENT_TERM)\n" +
+                    "qualifiedActivityCount\n" +
+                    "timeCosted\n" +
+                    "caloriesConsumption\n" +
                     "    activities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
                     "      pagesCount\n" +
                     "      dataCount\n" +
