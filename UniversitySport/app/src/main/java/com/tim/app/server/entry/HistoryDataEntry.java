@@ -6,11 +6,11 @@ import java.io.Serializable;
 /**
  * 运动数据
  */
-public class HistoryData implements Serializable {
+public class HistoryDataEntry implements Serializable {
 
 
     private static final long serialVersionUID = 6187447685293862071L;
-    private String sportDesc;//运动描述
+    private String sportName;//运动描述
     private long time;
     private String speed;//速度
     private int completeCount;//完成段数
@@ -28,12 +28,12 @@ public class HistoryData implements Serializable {
         this.qualified = qualified;
     }
 
-    public String getSportDesc() {
-        return sportDesc;
+    public String getSportName() {
+        return sportName;
     }
 
-    public void setSportDesc(String sportDesc) {
-        this.sportDesc = sportDesc;
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
     }
 
     public long getTime() {

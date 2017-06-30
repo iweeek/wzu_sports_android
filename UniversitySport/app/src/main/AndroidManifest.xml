@@ -100,6 +100,9 @@
             android:name="com.tim.app.ui.activity.SportDetailActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name="com.tim.app.ui.activity.SportResultActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.tim.app.ui.activity.AboutActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -140,24 +143,24 @@
         <service android:name="com.amap.api.location.APSService"></service>
 
 
-        <receiver android:name=".sport.BootReceiver">
+        <receiver android:name=".sportEntry.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".sport.SensorService"/>
+            android:name=".sportEntry.SensorService"/>
 
         <receiver
-            android:name=".sport.ShutdownRecevier">
+            android:name=".sportEntry.ShutdownRecevier">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="de.j4velin.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".sport.PowerReceiver"
+            android:name=".sportEntry.PowerReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>

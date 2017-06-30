@@ -12,7 +12,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.ActivityManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.EmptyLayout;
-import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
@@ -30,7 +28,7 @@ import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
-import com.tim.app.server.entry.Sport;
+import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
@@ -68,7 +66,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private SportAdapter adapter;
     private BadNetworkAdapter badNetworkAdapter;
-    private List<Sport> sportDataList;
+    private List<SportEntry> sportEntryDataList;
     private List<BadNetWork> networkDataList;
 
     private EmptyLayout emptyLayout;
@@ -192,8 +190,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         footerView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         wrvSportType.addFootView(footerView);
 
-        sportDataList = new ArrayList<>();
-        adapter = new SportAdapter(this, sportDataList);
+        sportEntryDataList = new ArrayList<>();
+        adapter = new SportAdapter(this, sportEntryDataList);
         wrvSportType.setAdapter(adapter);
 
         networkDataList = new ArrayList<>();
@@ -210,8 +208,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             Log.d(TAG, "onItemClick: bad network!");
             queryRunningProjects();
         } else {
-            Sport sport = sportDataList.get(position);
-            SportDetailActivity.start(this, sport);
+            SportEntry sportEntry = sportEntryDataList.get(position);
+            SportDetailActivity.start(this, sportEntry);
         }
     }
 
@@ -233,46 +231,46 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             BigDecimal bd = new BigDecimal(s);
                             bd = bd.setScale(1, RoundingMode.HALF_UP);
                             int interval = jsonObject.optInt("acquisitionInterval", 1);
-                            Sport sport = new Sport();
+                            SportEntry sportEntry = new SportEntry();
                             if (projectId == 1) {
-                                sport.setTitle(jsonObject.optString("name", "随机慢跑"));
-                                sport.setJoinNumber(new Random().nextInt(100));
-                                sport.setTargetDistance(distance);
-                                sport.setTargetTime((int) (time / 60));
-                                sport.setTargetSpeed(bd + "");
-                                sport.setInterval(interval);
-                                sport.setBgDrawableId(R.drawable.ic_bg_jogging);
+                                sportEntry.setSportName(jsonObject.optString("name", "随机慢跑"));
+                                sportEntry.setJoinNumber(new Random().nextInt(100));
+                                sportEntry.setTargetDistance(distance);
+                                sportEntry.setTargetTime((int) (time / 60));
+                                sportEntry.setTargetSpeed(bd + "");
+                                sportEntry.setInterval(interval);
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
                             } else if (projectId == 2) {
-                                sport.setTitle(jsonObject.optString("name", "快跑"));
-                                sport.setJoinNumber(new Random().nextInt(100));
-                                sport.setTargetDistance(distance);
-                                sport.setTargetTime((int) (time / 60));
-                                sport.setTargetSpeed(bd + "");
-                                sport.setInterval(interval);
-                                sport.setBgDrawableId(R.drawable.ic_bg_run);
+                                sportEntry.setSportName(jsonObject.optString("name", "快跑"));
+                                sportEntry.setJoinNumber(new Random().nextInt(100));
+                                sportEntry.setTargetDistance(distance);
+                                sportEntry.setTargetTime((int) (time / 60));
+                                sportEntry.setTargetSpeed(bd + "");
+                                sportEntry.setInterval(interval);
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                             } else if (projectId == 3) {
-                                sport.setTitle(jsonObject.optString("name", "快走"));
-                                sport.setJoinNumber(new Random().nextInt(100));
-                                sport.setTargetDistance(distance);
-                                sport.setTargetTime((int) (time / 60));
-                                sport.setTargetSpeed(bd + "");
-                                sport.setInterval(interval);
-                                sport.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
+                                sportEntry.setSportName(jsonObject.optString("name", "快走"));
+                                sportEntry.setJoinNumber(new Random().nextInt(100));
+                                sportEntry.setTargetDistance(distance);
+                                sportEntry.setTargetTime((int) (time / 60));
+                                sportEntry.setTargetSpeed(bd + "");
+                                sportEntry.setInterval(interval);
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
                             } else if (projectId == 4) {
-                                sport.setTitle(jsonObject.optString("name", "累计步数"));
-                                sport.setJoinNumber(new Random().nextInt(100));
-                                sport.setTargetDistance(distance);
-                                sport.setTargetTime((int) (time / 60));
-                                sport.setTargetSpeed(bd + "");
-                                sport.setInterval(interval);
-                                sport.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
+                                sportEntry.setSportName(jsonObject.optString("name", "累计步数"));
+                                sportEntry.setJoinNumber(new Random().nextInt(100));
+                                sportEntry.setTargetDistance(distance);
+                                sportEntry.setTargetTime((int) (time / 60));
+                                sportEntry.setTargetSpeed(bd + "");
+                                sportEntry.setInterval(interval);
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
                             }
-                            sportDataList.add(sport);
+                            sportEntryDataList.add(sportEntry);
                         }
                         wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
-                        if (sportDataList.size() == 0) {
+                        if (sportEntryDataList.size() == 0) {
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();

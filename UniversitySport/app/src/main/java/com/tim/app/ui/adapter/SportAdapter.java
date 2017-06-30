@@ -12,17 +12,17 @@ import com.application.library.widget.RatioImageView;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.Sport;
+import com.tim.app.server.entry.SportEntry;
 import com.tim.app.util.BitmapLoader;
 
 import java.util.List;
 
-public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, Sport> {
+public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportEntry> {
     private Context mContext;
 
     private boolean isShowSection;
 
-    public SportAdapter(Context mContext, List<Sport> mDataList) {
+    public SportAdapter(Context mContext, List<SportEntry> mDataList) {
         super(mDataList);
         this.mContext = mContext;
     }
@@ -43,7 +43,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, Sport data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, SportEntry data) {
         if (data == null) {
             return;
         }
@@ -54,8 +54,8 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder.rivSportBg.setBackground(mContext.getResources().getDrawable(data.getBgDrawableId()));
         }
 
-        if (!TextUtils.isEmpty(data.getTitle())) {
-            holder.tvSportName.setText(data.getTitle());
+        if (!TextUtils.isEmpty(data.getSportName())) {
+            holder.tvSportName.setText(data.getSportName());
         }
         if (data.getJoinNumber() > 0) {
             holder.tvSportJoinNumber.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getJoinNumber())));
@@ -66,7 +66,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         if (data.getTargetTime() > 0) {
             holder.tvTargetTime.setText(mContext.getString(R.string.percent, String.valueOf(data.getTargetTime()))+"分");
         }
-        if (Sport.TYPE_FOUR == data.getType()) {
+        if (SportEntry.TYPE_FOUR == data.getType()) {
             holder.tvTargetTitle.setText(mContext.getString(R.string.targetTitleStep));
             holder.tvTargetValue.setText(mContext.getString(R.string.percent,String.valueOf(data.getSteps())));
         } else {

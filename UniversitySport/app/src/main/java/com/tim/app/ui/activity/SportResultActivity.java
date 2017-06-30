@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -28,7 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
@@ -38,7 +36,6 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
-import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
@@ -46,6 +43,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.HistoryDataEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
@@ -68,13 +66,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * 运动详情
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
+public class SportResultActivity extends BaseActivity {
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
     private CoordinateConverter converter;
 
-    private SportEntry sportEntry;
+    private HistoryDataEntry entry;
     private ImageButton ibBack;
 
     private MapView mapView;
@@ -112,90 +110,54 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private LinearLayout llCurrentInfo;
     private RelativeLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
-    private TextView tvPause;
+    private TextView tvTitle;
 
+    private TextView tvPause;
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
+
     static final int STATE_PAUSE = 2;//暂停
 
     static final int STATE_END = 3;//结束
 
     private int state = STATE_NORMAL;
-
     private int currentDistance = 0;
     private long elapseTime = 0;
     private int currentSteps = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
+
     private int initSteps = 0;//初始化的步数
 
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
-
     JsonResponseCallback callback;
     private int screenOffTimeout;
     private int screenKeepLightTime;
-    private LinearLayout llLacationHint;
 
+    private LinearLayout llLacationHint;
     private final ScheduledExecutorService scheduler =
             Executors.newScheduledThreadPool(1);
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
 
-    public static void start(Context context, SportEntry sportEntry) {
-        Intent intent = new Intent(context, SportDetailActivity.class);
-        intent.putExtra("sportEntry", sportEntry);
+    public static void start(Context context, HistoryDataEntry data) {
+        Intent intent = new Intent(context, SportResultActivity.class);
+        intent.putExtra("historyData", data);
         context.startActivity(intent);
-    }
-
-    private int pauseStateSteps = 0;
-
-    EventListener eventListener = new EventListener() {
-        @Override
-        public void handleMessage(int what, int arg1, int arg2, Object dataobj) {
-            switch (what) {
-                case EventTag.ON_STEP_CHANGE:
-                    int steps = (int) dataobj;
-                    Log.d(TAG, "steps: " + steps);
-                    if (state == STATE_STARTED) {
-                        Log.d(TAG, "state: " + state);
-                        if (initSteps == 0) {
-                            initSteps = steps;
-                        } else {
-                            currentSteps = steps - initSteps - pauseStateSteps;
-                            tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
-                        }
-                    } else {
-                        if (initSteps != 0) {
-                            pauseStateSteps = steps - initSteps - currentSteps;
-                        }
-                    }
-                    break;
-            }
-        }
-    };
-
-    private void startTimer() {
-        timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
-    }
-
-    private void stopTimer() {
-        timerHandler.cancel(true);
     }
 
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
-        interval = sportEntry.getInterval() * 1000;
+        entry = (HistoryDataEntry) getIntent().getSerializableExtra("historyData");
+        //TODO
+//        interval = entry.getInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
-
-        startService(new Intent(this, SensorService.class));
-        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
         //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -205,13 +167,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
             }
 
             @Override
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
-
+                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -233,7 +195,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             aMap = mapView.getMap();
             setUpMap();
         }
-        aMap.setOnMyLocationChangeListener(this);
     }
 
     /**
@@ -256,137 +217,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.screenBrightness = (float) 1;
-        getWindow().setAttributes(params);
-        Log.d(TAG, "onTouchEvent turn up light");
-        return false;
-    }
-
-    @Override
-    public void onMyLocationChange(Location location) {
-        Log.d(TAG, "onMyLocationChange location: " + location);
-        Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
-        Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
-        String toastText = "";
-        int errorCode = -1;
-        String errorInfo = "";
-        int locationType = -1;
-        LatLng newLatLng;
-
-        Bundle bundle = location.getExtras();
-        if (bundle != null) {
-            errorCode = bundle.getInt(MyLocationStyle.ERROR_CODE);
-            errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
-            // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
-            locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
-        }
-
-        //TODO 待删除
-//        if (state == STATE_STARTED) {
-//            elapseTime += interval / 1000;
-//            Log.d(TAG, "elapseTime: " + elapseTime);
-//            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-//            tvElapseTime.setText(time);
-//        }
-
-        //屏幕到了锁屏的时间，调暗亮度
-        screenKeepLightTime += interval / 1000;
-        if (screenOffTimeout <= screenKeepLightTime) {
-            WindowManager.LayoutParams params = getWindow().getAttributes();
-            params.screenBrightness = (float) 0.1;
-            getWindow().setAttributes(params);
-            Log.d(TAG, "onMyLocationChange turn down light");
-        }
-
-        if (location != null) {
-            //定位成功
-            if (errorCode != 0 && locationType != -1 && locationType != 1) {
-                String errText = "正在定位中，GPS信号弱";
-                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.d(TAG, "newLatLng: " + newLatLng);
-                // 判断第一次，第一次会提示
-                if (oldLatLng == null) {
-                    String errText = "定位成功";
-                    llLacationHint.setVisibility(View.GONE);
-                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-
-                    //TODO 待删除
-//                    aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//                    toastText = "调整屏幕缩放比例：" + zoomLevel;
-//                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                    aMap.moveCamera(cu);
-                    toastText = "移动屏幕，当前位置居中";
-                    Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
-
-                    btStart.setVisibility(View.VISIBLE);
-                }
-            }
-
-            //TODO 待删除
-////              定位成功，切换屏幕视角，仅切换一次
-//            if (oldLatLng == null) {
-//                Log.d(TAG, "newLatLng: " + newLatLng);
-//                //修改地图的中心点位置
-////                CameraPosition cp = aMap.getCameraPosition();
-////                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//                aMap.moveCamera(cu);
-//                toastText = "移动屏幕，进行缩放，比例：" + zoomLevel;
-//                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-//            }
-
-            //位置有变化
-//            if (oldLatLng != newLatLng) {
-
-                if (state == STATE_STARTED) {
-                    Log.d(TAG, "oldLatLng: " + oldLatLng);
-                    float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
-                            + "， 本次移动距离： " + moveDistance;
-                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-
-                    if (moveDistance / sportEntry.getInterval() > speedLimitation) {
-                        //位置漂移
-//                        return;
-                        toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getInterval();
-                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                        drawLine(oldLatLng, newLatLng, false);
-                    } else {
-                        drawLine(oldLatLng, newLatLng, true);
-                        currentDistance += moveDistance;
-                        tvCurrentDistance.setText(String.valueOf(currentDistance));
-                        double d = currentDistance;
-                        double t = elapseTime;
-                        BigDecimal bd = new BigDecimal(d / t);
-                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                        tvAverSpeed.setText(String.valueOf(bd));
-                    }
-                }
-
-                oldLatLng = newLatLng;
-                DLOG.d(TAG, toastText);
-//            } else {
-//                tvAverSpeed.setText("0.0");
-//                String text = "坐标没有发生变化，坐标： " + oldLatLng;
-//                Toast.makeText(this, text, Toast.LENGTH_LONG);
-//            }
-
-        } else {
-                String errText = "定位失败";
-                Log.e(TAG, errText);
-                Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -395,27 +225,25 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initData() {
-        screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
+        screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(sportEntry.getSportName())) {
-            tvSportName.setText(sportEntry.getSportName());
+        if (!TextUtils.isEmpty(entry.getSportName())) {
+            tvSportName.setText(entry.getSportName());
         }
 
-        if (sportEntry.getJoinNumber() > 0) {
-            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getJoinNumber())));
-        }
-
-        if (sportEntry.getTargetDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getTargetDistance())));
-        }
-
-        if (sportEntry.getTargetTime() > 0) {
-            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
-        }
+        //TODO
+//        if (entry.getTargetDistance() > 0) {
+//            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(entry.getTargetDistance())));
+//        }
+//
+//        if (entry.getTargetTime() > 0) {
+//            tvTargetTime.setText(String.valueOf(entry.getTargetTime()));
+//        }
 
         tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvTargetSpeed.setText(getString(R.string.percent, sportEntry.getTargetSpeed()));
+        //TODO
+//        tvTargetSpeed.setText(getString(R.string.percent, entry.getTargetSpeed()));
 
         tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
@@ -423,7 +251,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvAverSpeed.setText("0.0");
         initSteps = 0;
         currentSteps = 0;
-        pauseStateSteps = 0;
         currentDistance = 0;
         elapseTime = 0;
 
@@ -432,45 +259,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.ins().cleanCache();
         }
-
-        // 设置滑动解锁-解锁的监听
-        slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
-            @Override
-            public void setUnLocked(boolean unLock) {
-            // 如果是true，证明解锁
-            if (unLock) {
-                turnUpScreen();
-                // 重置一下滑动解锁的控件
-                slideUnlockView.reset();
-                // 让滑动解锁控件消失
-                slideUnlockView.setVisibility(View.GONE);
-                tvPause.setVisibility(View.GONE);
-                rlBottom.setVisibility(View.VISIBLE);
-                btStart.setVisibility(View.GONE);
-                llBottom.setVisibility(View.VISIBLE);
-                if (state == STATE_STARTED) {
-                    state = STATE_PAUSE;
-                    ibBack.setVisibility(View.GONE);
-                    stopTimer();
-                }
-            }
-            }
-        });
-
-        elapseTimeRunnable = new Runnable() {
-            public void run() {
-                // If you need update UI, simply do this:
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        // update your UI component here.
-                        elapseTime += timerInterval / 1000;
-                        Log.d(TAG, "elapseTime: " + elapseTime);
-                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-                        tvElapseTime.setText(time);
-                    }
-                });
-            }
-        };
     }
 
     /**
@@ -555,7 +343,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 tvPause.setVisibility(View.VISIBLE);
 
                 initData();
-                startTimer();
                 break;
             case R.id.btContinue:
                 if (state == STATE_PAUSE) {
@@ -575,11 +362,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
                 }
-                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
-                    tvResult.setText("达标");
-                } else {
-                    tvResult.setText("不达标");
-                }
+                //TODO 要不要保留一个开始按钮，来展示用户运动轨迹
+//                if (currentDistance > entry.getTargetDistance() && elapseTime / 60 > entry.getTargetTime()) {
+//                    tvResult.setText("达标");
+//                } else {
+//                    tvResult.setText("不达标");
+//                }
 
                 tvAverSpeedLabel.setText("平均速度");
                 //做保护
@@ -593,16 +381,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvAverSpeed.setText("0.0");
                 }
 
+                //TODO
                 int studentId = 1;//学生的id
-                commmitSportData(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+//                commmitSportData(entry.getId(), studentId, entry.getTargetTime());
 
                 tvResult.setVisibility(View.VISIBLE);
                 tvSportJoinNumber.setVisibility(View.GONE);
                 rlBottom.setVisibility(View.VISIBLE);
                 llBottom.setVisibility(View.GONE);
                 btStart.setVisibility(View.VISIBLE);
-
-                stopTimer();
 
                 break;
             case R.id.ivLocation:
@@ -749,6 +536,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
         tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
+        tvTitle = (TextView) findViewById(R.id.tvTitle);
+        tvTitle.setText("锻炼成果");
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
@@ -790,6 +579,5 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
-        EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
     }
 }

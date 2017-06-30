@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 首页的运动对象
  */
-public class Sport implements Serializable {
+public class SportEntry implements Serializable {
 
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;
@@ -14,7 +14,7 @@ public class Sport implements Serializable {
     public static final int TYPE_FOUR = 3;
 
     private static final long serialVersionUID = 6187447685293862071L;
-    private String title;//名称
+    private String sportName;//名称
     private int joinNumber;//参加人数
     private int targetDistance;//目标距离
     private String targetSpeed;//目标速度
@@ -34,12 +34,12 @@ public class Sport implements Serializable {
         this.interval = interval;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSportName() {
+        return sportName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
     }
 
     public int getJoinNumber() {

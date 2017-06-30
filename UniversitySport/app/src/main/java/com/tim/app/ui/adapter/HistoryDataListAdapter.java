@@ -8,10 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.application.library.util.TimeUtil;
+import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
-import com.tim.app.server.entry.HistoryData;
+import com.tim.app.server.entry.HistoryDataEntry;
+import com.tim.app.ui.activity.SportResultActivity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -20,12 +21,16 @@ import java.util.Date;
 import java.util.List;
 
 
-public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryData> {
+public class HistoryDataListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryDataEntry>
+        implements  BaseRecyclerAdapter.OnItemClickListener{
     private Context mContext;
+    private static final String TAG = "HistoryDataListAdapter";
 
-    public HistoryDataAdapter(Context mContext, List<HistoryData> mDataList) {
+    public HistoryDataListAdapter(Context mContext, List<HistoryDataEntry> mDataList) {
         super(mDataList);
         this.mContext = mContext;
+
+        this.setOnItemClickListener(this);
     }
 
     @Override
@@ -36,14 +41,14 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistoryData data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistoryDataEntry data) {
         if (data == null) {
             return;
         }
         final ViewHolder holder = (ViewHolder) mHolder;
 
-        if (!TextUtils.isEmpty(data.getSportDesc())) {
-            holder.tvSportDesc.setText(data.getSportDesc());
+        if (!TextUtils.isEmpty(data.getSportName())) {
+            holder.tvSportDesc.setText(data.getSportName());
         }
 
         Date date = new Date(data.getTime());
@@ -94,6 +99,13 @@ public class HistoryDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             bd = bd.setScale(1, RoundingMode.HALF_UP);
             holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position, long id) {
+        DLOG.d(TAG, "onItemClick");
+        SportResultActivity.start(mContext, getDataList().get(position));
+
     }
 
     public class ViewHolder extends BaseRecyclerViewHolder {

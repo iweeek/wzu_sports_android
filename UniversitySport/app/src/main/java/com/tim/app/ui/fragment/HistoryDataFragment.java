@@ -8,9 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.application.library.base.BaseFragment;
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.loadmore.LoadMoreContainer;
@@ -22,8 +22,8 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryData;
-import com.tim.app.ui.adapter.HistoryDataAdapter;
+import com.tim.app.server.entry.HistoryDataEntry;
+import com.tim.app.ui.adapter.HistoryDataListAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
 
 import org.json.JSONArray;
@@ -31,9 +31,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.amap.api.mapcore.util.cz.s;
-import static com.tim.app.R.id.tvLabel;
 
 /**
  * 历史数据
@@ -48,8 +45,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private WrapRecyclerView wrvHistoryData;
     private EmptyLayout emptyLayout;
 
-    private HistoryDataAdapter adapter;
-    private List<HistoryData> dataList;
+    private HistoryDataListAdapter adapter;
+    private List<HistoryDataEntry> dataList;
 
     private HistoryDataHeadView headView;
 
@@ -125,7 +122,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             wrvHistoryData.addHeaderView(headView);
 
             dataList = new ArrayList<>();
-            adapter = new HistoryDataAdapter(getActivity(), dataList);
+            adapter = new HistoryDataListAdapter(getActivity(), dataList);
             wrvHistoryData.setAdapter(adapter);
 
             if (getArguments() != null) {
@@ -157,8 +154,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -204,8 +201,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -251,8 +248,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -298,8 +295,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -367,6 +364,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        DLOG.d(TAG, "onClick");
         switch (v.getId()) {
             default:
                 break;
@@ -386,8 +384,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -423,8 +421,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -462,8 +460,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
@@ -501,8 +499,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryData data = new HistoryData();
-                                data.setSportDesc(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                HistoryDataEntry data = new HistoryDataEntry();
+                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
                                 data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
