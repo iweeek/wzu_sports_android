@@ -250,7 +250,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private void setupLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
-//        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
         myLocationStyle.interval(interval);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.drawable.navi_map_gps_locked));
@@ -275,6 +275,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         int errorCode = -1;
         String errorInfo = "";
         int locationType = -1;
+        LatLng newLatLng;
 
         Bundle bundle = location.getExtras();
         if (bundle != null) {
@@ -284,6 +285,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
         }
 
+        //TODO 待删除
 //        if (state == STATE_STARTED) {
 //            elapseTime += interval / 1000;
 //            Log.d(TAG, "elapseTime: " + elapseTime);
@@ -302,19 +304,20 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         if (location != null) {
             //定位成功
-            LatLng newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            Log.d(TAG, "newLatLng: " + newLatLng);
             if (errorCode != 0 && locationType != -1 && locationType != 1) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;
             } else {
+                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.d(TAG, "newLatLng: " + newLatLng);
                 // 判断第一次，第一次会提示
                 if (oldLatLng == null) {
                     String errText = "定位成功";
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
 
+                    //TODO 待删除
 //                    aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 //                    toastText = "调整屏幕缩放比例：" + zoomLevel;
 //                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
@@ -323,6 +326,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     aMap.moveCamera(cu);
                     toastText = "移动屏幕，当前位置居中";
                     Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+                    btStart.setVisibility(View.VISIBLE);
                 }
             }
 

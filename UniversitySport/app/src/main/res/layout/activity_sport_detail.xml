@@ -437,9 +437,10 @@
             android:layout_height="match_parent"
             android:background="#cc66A6FE"
             android:gravity="center"
-            android:text="开始"
+            android:text="开始运动"
             android:textColor="@color/white"
-            android:textSize="18dp"/>
+            android:textSize="18dp"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/llBottom"
