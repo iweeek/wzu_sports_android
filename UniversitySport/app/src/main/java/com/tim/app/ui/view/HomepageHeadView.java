@@ -16,6 +16,8 @@ import com.tim.app.ui.activity.HistorySportActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.activity.SchoolRankingActivity;
 
+import java.math.BigDecimal;
+
 /**
  * 首页的headerview
  */
@@ -108,7 +110,11 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         tvCurQualifiedTimes.setText((getContext().getString(R.string.percent, curTermQualifiedTimes)) + "/");
         tvCurTermTargetTimes.setText((getContext().getString(R.string.percent, curTermTargetTimes)));
 
-        pbReachTargetTimes.setProgress(Integer.valueOf(curTermQualifiedTimes) / Integer.valueOf(curTermTargetTimes));
+        float q = Float.valueOf(curTermQualifiedTimes);
+        float t = Float.valueOf(curTermTargetTimes);
+        float r = q / t;
+
+        pbReachTargetTimes.setProgress((int)(r * 100));
     }
 
 }
