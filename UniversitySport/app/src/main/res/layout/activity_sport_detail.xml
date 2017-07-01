@@ -503,7 +503,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="85dp"
-        android:text="滑动暂停"
+        android:text="滑动停止"
         android:textColor="@color/white"
         android:textSize="18dp"
         android:visibility="gone"/>

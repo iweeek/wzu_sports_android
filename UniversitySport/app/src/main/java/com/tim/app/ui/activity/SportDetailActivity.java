@@ -46,6 +46,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.HistoryDataEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
@@ -444,14 +445,41 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 slideUnlockView.reset();
                 // 让滑动解锁控件消失
                 slideUnlockView.setVisibility(View.GONE);
-                tvPause.setVisibility(View.GONE);
-                rlBottom.setVisibility(View.VISIBLE);
-                btStart.setVisibility(View.GONE);
-                llBottom.setVisibility(View.VISIBLE);
+
                 if (state == STATE_STARTED) {
-                    state = STATE_PAUSE;
+                    state = STATE_END;
                     ibBack.setVisibility(View.GONE);
                     stopTimer();
+                    if (state == STATE_PAUSE) {
+                        state = STATE_END;
+                    }
+                    if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
+                        tvResult.setText("达标");
+                    } else {
+                        tvResult.setText("不达标");
+                    }
+
+                    tvAverSpeedLabel.setText("平均速度");
+                    //做保护
+                    if (elapseTime != 0) {
+                        double d = currentDistance;
+                        double t = elapseTime;
+                        BigDecimal bd = new BigDecimal(d / t);
+                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                        tvAverSpeed.setText(String.format("%.1f", d));
+                    } else {
+                        tvAverSpeed.setText("0.0");
+                    }
+
+                    int studentId = 1;//学生的id
+                    commmitSportData(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+
+                    tvResult.setVisibility(View.VISIBLE);
+                    tvSportJoinNumber.setVisibility(View.GONE);
+                    rlBottom.setVisibility(View.VISIBLE);
+                    llBottom.setVisibility(View.GONE);
+                    btStart.setVisibility(View.VISIBLE);
+                    btStart.setText("查看锻炼结果");
                 }
             }
             }
@@ -541,21 +569,24 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 finish();
                 break;
             case R.id.btStart:
-                startTime = System.currentTimeMillis();
-                ibBack.setVisibility(View.GONE);
-                llCurrentInfo.setVisibility(View.VISIBLE);
-                rlCurConsumeEnergy.setVisibility(View.GONE);
-                llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
-                if (state == STATE_NORMAL || state == STATE_END) {
+                if (state == STATE_NORMAL) {
                     state = STATE_STARTED;
-                }
-                btStart.setVisibility(View.GONE);
-                rlBottom.setVisibility(View.GONE);
-                slideUnlockView.setVisibility(View.VISIBLE);
-                tvPause.setVisibility(View.VISIBLE);
+                    startTime = System.currentTimeMillis();
+                    ibBack.setVisibility(View.GONE);
+                    llCurrentInfo.setVisibility(View.VISIBLE);
+                    rlCurConsumeEnergy.setVisibility(View.GONE);
+                    llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
+                    btStart.setVisibility(View.GONE);
+                    rlBottom.setVisibility(View.GONE);
+                    slideUnlockView.setVisibility(View.VISIBLE);
+                    tvPause.setVisibility(View.VISIBLE);
 
-                initData();
-                startTimer();
+                    initData();
+                    startTimer();
+                } else if (state == STATE_END) {
+                    HistoryDataEntry entry = new HistoryDataEntry();
+                    SportResultActivity.start(this, entry);
+                }
                 break;
             case R.id.btContinue:
                 if (state == STATE_PAUSE) {
