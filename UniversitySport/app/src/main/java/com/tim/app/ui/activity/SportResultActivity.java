@@ -42,9 +42,15 @@ import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+
+import static com.tim.app.ui.activity.SportDetailActivity.STATE_END;
+import static com.tim.app.ui.activity.SportDetailActivity.STATE_NORMAL;
+import static com.tim.app.ui.activity.SportDetailActivity.STATE_PAUSE;
 
 
 /**
@@ -98,12 +104,6 @@ public class SportResultActivity extends BaseActivity {
 
     private TextView tvPause;
 
-    static final int STATE_NORMAL = 0;//初始状态
-    static final int STATE_STARTED = 1;//已开始
-    static final int STATE_PAUSE = 2;//暂停
-    static final int STATE_END = 3;//结束
-
-    private int state = STATE_NORMAL;
     private int currentDistance = 0;
     private long elapseTime = 0;
     private int currentSteps = 0;
@@ -123,6 +123,7 @@ public class SportResultActivity extends BaseActivity {
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
+    private ArrayList<LatLng> latLngs = new ArrayList<LatLng>();;
 
     public static void start(Context context, HistorySportEntry data) {
         Intent intent = new Intent(context, SportResultActivity.class);
@@ -162,58 +163,10 @@ public class SportResultActivity extends BaseActivity {
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-                //TODO test
-                llCurrentInfo.setVisibility(View.VISIBLE);
-                tvCurrentDistance.setText("4000");
-                tvElapseTime.setText("50:00");
-                tvAverSpeed.setText("1.1");
+//                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                initData();
 
-                tvTargetDistance.setText("4000");
-                tvTargetTime.setText("60");
-                tvTargetSpeed.setText("1.1");
-
-                rlCurConsumeEnergy.setVisibility(View.VISIBLE);
-
-                String curConsumeEnergy = "100";
-                tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
-
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                text = "调整屏幕缩放比例：" + zoomLevel;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
-                //TODO test
-                oldLatLng = new LatLng(40.004156, 116.406305);//测试坐标
-                Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
-
-                LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
-                drawLine(oldLatLng, secLL, true);
-                int moveDistance = (int)AMapUtils.calculateLineDistance(oldLatLng, secLL);
-                marker = aMap.addMarker(new MarkerOptions().position(secLL).title("运动距离（米）： " + moveDistance));
-
-                LatLng thirdLL = new LatLng(40.004556, 116.406505);//测试坐标
-                drawLine(secLL, thirdLL, false);
-//                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).snippet(thirdLL.toString()));
-                moveDistance = (int)AMapUtils.calculateLineDistance(secLL, thirdLL);
-                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).title("运动距离（米）： " + moveDistance));
-
-                LatLng fourthLL = new LatLng(40.004756, 116.406305);//测试坐标
-                drawLine(thirdLL, fourthLL, true);
-//                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).snippet(fourthLL.toString()));
-                moveDistance = (int)AMapUtils.calculateLineDistance(thirdLL, fourthLL);
-                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).title("运动距离（米）： " + moveDistance));
-
-//                List<LatLng> latLngs = new ArrayList<LatLng>();
-//                latLngs.add(new LatLng(40.004156,116.406305));
-//                latLngs.add(new LatLng(40.004356,116.406305));
-//                latLngs.add(new LatLng(40.004556,116.406505));
-//                latLngs.add(new LatLng(40.004756,116.406305));
-//                aMap.addPolyline(new PolylineOptions().
-//                        addAll(latLngs).width(10).color(Color.argb(255, 1, 1, 1)));
-
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
-                aMap.moveCamera(cu);
             }
         });
     }
@@ -254,6 +207,48 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void initData() {
         //TODO 请求数据
+        //TODO test
+        llCurrentInfo.setVisibility(View.VISIBLE);
+        tvCurrentDistance.setText("4000");
+        tvElapseTime.setText("50:00");
+        tvAverSpeed.setText("1.1");
+
+        tvTargetDistance.setText("4000");
+        tvTargetTime.setText("60");
+        tvTargetSpeed.setText("1.1");
+
+        rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+
+        String curConsumeEnergy = "100";
+        tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
+
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+//        String text = "调整屏幕缩放比例：" + zoomLevel;
+//        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+        //TODO test
+        oldLatLng = new LatLng(40.004156, 116.406305);//测试坐标
+        Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+
+        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+        aMap.moveCamera(cu);
+
+//        LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
+//        drawLine(oldLatLng, secLL, true);
+//        int moveDistance = (int)AMapUtils.calculateLineDistance(oldLatLng, secLL);
+//        marker = aMap.addMarker(new MarkerOptions().position(secLL).title("运动距离（米）： " + moveDistance));
+//
+//        LatLng thirdLL = new LatLng(40.004556, 116.406505);//测试坐标
+//        drawLine(secLL, thirdLL, false);
+////                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).snippet(thirdLL.toString()));
+//        moveDistance = (int)AMapUtils.calculateLineDistance(secLL, thirdLL);
+//        marker = aMap.addMarker(new MarkerOptions().position(thirdLL).title("运动距离（米）： " + moveDistance));
+//
+//        LatLng fourthLL = new LatLng(40.004756, 116.406305);//测试坐标
+//        drawLine(thirdLL, fourthLL, true);
+////                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).snippet(fourthLL.toString()));
+//        moveDistance = (int)AMapUtils.calculateLineDistance(thirdLL, fourthLL);
+//        marker = aMap.addMarker(new MarkerOptions().position(fourthLL).title("运动距离（米）： " + moveDistance));
     }
 
     /**
@@ -307,93 +302,35 @@ public class SportResultActivity extends BaseActivity {
         }
     }
 
-    private void turnUpScreen() {
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.screenBrightness = (float) 1;
-        getWindow().setAttributes(params);
-        screenKeepLightTime = 0;
-        Log.d(TAG, "onClick turn up light");
-    }
-
     @Override
     public void onClick(View v) {
-        turnUpScreen();
         switch (v.getId()) {
             case R.id.ibBack:
                 finish();
                 break;
             case R.id.btStart:
-                startTime = System.currentTimeMillis();
-                ibBack.setVisibility(View.GONE);
-                llCurrentInfo.setVisibility(View.VISIBLE);
-                rlCurConsumeEnergy.setVisibility(View.GONE);
-                llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
-                if (state == STATE_NORMAL || state == STATE_END) {
-                    state = STATE_STARTED;
-                }
+                //TODO test
+                latLngs.add(new LatLng(40.004156,116.406305));
+                latLngs.add(new LatLng(40.004356,116.406305));
+                latLngs.add(new LatLng(40.004556,116.406505));
+                latLngs.add(new LatLng(40.004756,116.406305));
                 btStart.setVisibility(View.GONE);
-                rlBottom.setVisibility(View.GONE);
-                slideUnlockView.setVisibility(View.VISIBLE);
-                tvPause.setVisibility(View.VISIBLE);
+                aMap.addPolyline(new PolylineOptions().
+                        addAll(latLngs).width(10).color(Color.argb(255, 1, 1, 1)));
 
-                initData();
-                break;
-            case R.id.btContinue:
-                if (state == STATE_PAUSE) {
-                    state = STATE_STARTED;
-                }
-                slideUnlockView.setVisibility(View.VISIBLE);
-                tvPause.setVisibility(View.VISIBLE);
-                rlBottom.setVisibility(View.GONE);
-                llBottom.setVisibility(View.GONE);
-                break;
-            case R.id.btStop:
-//                if (elapseTime == 0) {
-//                    ToastUtil.showToast("运动时间太短，无法结束");
-//                    return;
+//                LatLng last = oldLatLng;
+//                for (LatLng ll : latLngs) {
+//                    drawLine(ll, last, true);
+//                    last = ll;
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
 //                }
-                ibBack.setVisibility(View.VISIBLE);
-                if (state == STATE_PAUSE) {
-                    state = STATE_END;
-                }
-                //TODO 要不要保留一个开始按钮，来展示用户运动轨迹
-//                if (currentDistance > entry.getTargetDistance() && elapseTime / 60 > entry.getTargetTime()) {
-//                    tvResult.setText("达标");
-//                } else {
-//                    tvResult.setText("不达标");
-//                }
-
-                tvAverSpeedLabel.setText("平均速度");
-                //做保护
-                if (elapseTime != 0) {
-                    double d = currentDistance;
-                    double t = elapseTime;
-                    BigDecimal bd = new BigDecimal(d / t);
-                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                    tvAverSpeed.setText(String.format("%.1f", d));
-                } else {
-                    tvAverSpeed.setText("0.0");
-                }
-
-                //TODO
-                int studentId = 1;//学生的id
-//                commmitSportData(entry.getId(), studentId, entry.getTargetTime());
-
-                tvResult.setVisibility(View.VISIBLE);
-                tvSportJoinNumber.setVisibility(View.GONE);
-                rlBottom.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.GONE);
-                btStart.setVisibility(View.VISIBLE);
 
                 break;
             case R.id.ivLocation:
-                //修改地图的中心点位置
-//                CameraPosition cp = aMap.getCameraPosition();
-//                CameraPosition cpNew = CameraPosition.fromLatLngZoom(oldLatLng, cp.zoom);
-//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//                aMap.moveCamera(cu);
-
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
                 String toastText = "移动屏幕，当前位置居中";
@@ -405,11 +342,7 @@ public class SportResultActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (state == STATE_STARTED || state == STATE_PAUSE) {
-            Toast.makeText(this, "请先停止运动后，再点击返回键", Toast.LENGTH_LONG).show();
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
     @Override
     protected int getLayoutId() {
@@ -453,7 +386,11 @@ public class SportResultActivity extends BaseActivity {
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
         tvCurConsumeEnergy = (TextView) findViewById(R.id.tvCurConsumeEnergy);
+
         btStart.setOnClickListener(this);
+        btStart.setText("绘制运动轨迹");
+        btStart.setVisibility(View.VISIBLE);
+
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
