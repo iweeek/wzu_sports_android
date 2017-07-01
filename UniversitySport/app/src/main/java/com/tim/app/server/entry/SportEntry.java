@@ -7,12 +7,6 @@ import java.io.Serializable;
  * 首页的运动对象
  */
 public class SportEntry implements Serializable {
-
-    public static final int TYPE_ONE = 0;
-    public static final int TYPE_TWO = 1;
-    public static final int TYPE_THREE = 2;
-    public static final int TYPE_FOUR = 3;
-
     private static final long serialVersionUID = 6187447685293862071L;
     private String sportName;//名称
     private int joinNumber;//参加人数

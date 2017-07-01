@@ -48,7 +48,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryDataEntry;
+import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
@@ -601,7 +601,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     initData();
                     startTimer();
                 } else if (state == STATE_END) {
-                    HistoryDataEntry entry = new HistoryDataEntry();
+                    HistorySportEntry entry = new HistorySportEntry();
                     SportResultActivity.start(this, entry);
                 }
                 break;

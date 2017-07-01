@@ -1,6 +1,5 @@
 package com.tim.app.ui.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,13 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -40,33 +35,16 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.net.JsonResponseCallback;
-import com.application.library.runtime.event.EventListener;
-import com.application.library.runtime.event.EventManager;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
-import com.tim.app.constant.EventTag;
-import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryDataEntry;
-import com.tim.app.server.entry.RunningSportsRecord;
-import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.sport.RunningSportsCallback;
-import com.tim.app.sport.SQLite;
-import com.tim.app.sport.SensorService;
 import com.tim.app.ui.view.SlideUnlockView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-
-import static com.tim.app.R.string.curConsumeEnergy;
 
 
 /**
@@ -78,7 +56,7 @@ public class SportResultActivity extends BaseActivity {
     private Context context = this;
     private CoordinateConverter converter;
 
-    private HistoryDataEntry entry;
+    private HistorySportEntry entry;
     private ImageButton ibBack;
 
     private MapView mapView;
@@ -119,11 +97,10 @@ public class SportResultActivity extends BaseActivity {
     private TextView tvTitle;
 
     private TextView tvPause;
+
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
-
     static final int STATE_PAUSE = 2;//暂停
-
     static final int STATE_END = 3;//结束
 
     private int state = STATE_NORMAL;
@@ -147,7 +124,7 @@ public class SportResultActivity extends BaseActivity {
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
 
-    public static void start(Context context, HistoryDataEntry data) {
+    public static void start(Context context, HistorySportEntry data) {
         Intent intent = new Intent(context, SportResultActivity.class);
         intent.putExtra("historyData", data);
         context.startActivity(intent);
@@ -157,7 +134,7 @@ public class SportResultActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        entry = (HistoryDataEntry) getIntent().getSerializableExtra("historyData");
+        entry = (HistorySportEntry) getIntent().getSerializableExtra("historyData");
         //TODO
 //        interval = entry.getInterval() * 1000;
 
@@ -300,7 +277,6 @@ public class SportResultActivity extends BaseActivity {
 
         return screenBitmap;
     }
-
 
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置

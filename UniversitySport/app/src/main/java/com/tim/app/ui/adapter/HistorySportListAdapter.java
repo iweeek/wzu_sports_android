@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
-import com.tim.app.server.entry.HistoryDataEntry;
+import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.SportResultActivity;
 
 import java.math.BigDecimal;
@@ -21,12 +21,12 @@ import java.util.Date;
 import java.util.List;
 
 
-public class HistoryDataListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryDataEntry>
+public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistorySportEntry>
         implements  BaseRecyclerAdapter.OnItemClickListener{
     private Context mContext;
-    private static final String TAG = "HistoryDataListAdapter";
+    private static final String TAG = "HistorySportListAdapter";
 
-    public HistoryDataListAdapter(Context mContext, List<HistoryDataEntry> mDataList) {
+    public HistorySportListAdapter(Context mContext, List<HistorySportEntry> mDataList) {
         super(mDataList);
         this.mContext = mContext;
 
@@ -41,7 +41,7 @@ public class HistoryDataListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistoryDataEntry data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistorySportEntry data) {
         if (data == null) {
             return;
         }
@@ -51,7 +51,7 @@ public class HistoryDataListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdap
             holder.tvSportDesc.setText(data.getSportName());
         }
 
-        Date date = new Date(data.getTime());
+        Date date = new Date(data.getStartTime());
         SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
         holder.tvSportTime.setText(sdf.format(date));
 

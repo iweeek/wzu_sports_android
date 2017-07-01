@@ -22,8 +22,8 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryDataEntry;
-import com.tim.app.ui.adapter.HistoryDataListAdapter;
+import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.ui.adapter.HistorySportListAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
 
 import org.json.JSONArray;
@@ -45,8 +45,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private WrapRecyclerView wrvHistoryData;
     private EmptyLayout emptyLayout;
 
-    private HistoryDataListAdapter adapter;
-    private List<HistoryDataEntry> dataList;
+    private HistorySportListAdapter adapter;
+    private List<HistorySportEntry> dataList;
 
     private HistoryDataHeadView headView;
 
@@ -122,7 +122,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             wrvHistoryData.addHeaderView(headView);
 
             dataList = new ArrayList<>();
-            adapter = new HistoryDataListAdapter(getActivity(), dataList);
+            adapter = new HistorySportListAdapter(getActivity(), dataList);
             wrvHistoryData.setAdapter(adapter);
 
             if (getArguments() != null) {
@@ -151,16 +151,16 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
                             headView.setData("本周累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
-                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
+                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getJSONArray("data");
-                            for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
-                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
-                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
-                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
-                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
-                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
+                            for (int i = 0; i < historySportArray.length(); i++) {
+                                HistorySportEntry data = new HistorySportEntry();
+                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historySportArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historySportArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -198,16 +198,16 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
                             headView.setData("本月累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
-                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
+                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getJSONArray("data");
-                            for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
-                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
-                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
-                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
-                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
-                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
+                            for (int i = 0; i < historySportArray.length(); i++) {
+                                HistorySportEntry data = new HistorySportEntry();
+                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historySportArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historySportArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -245,16 +245,16 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
                             headView.setData("本学期累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
-                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
+                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getJSONArray("data");
-                            for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
-                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
-                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
-                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
-                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
-                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
+                            for (int i = 0; i < historySportArray.length(); i++) {
+                                HistorySportEntry data = new HistorySportEntry();
+                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historySportArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historySportArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -292,15 +292,15 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             timeCost = json.optJSONObject("data").optJSONObject("student").getString("timeCosted");
 
                             headView.setData("历史累计次数（次）", accuTimes, qualifiedTime, energyCost, timeCost);
-                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
+                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
                                     getJSONArray("data");
-                            for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
-                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
-                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
-                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
-                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                            for (int i = 0; i < historySportArray.length(); i++) {
+                                HistorySportEntry data = new HistorySportEntry();
+                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historySportArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -384,9 +384,9 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
+                                HistorySportEntry data = new HistorySportEntry();
                                 data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
+                                data.setStartTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
@@ -421,9 +421,9 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentMonthActivities").
                                     getJSONArray("data");
                             for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
+                                HistorySportEntry data = new HistorySportEntry();
                                 data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
+                                data.setStartTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
                                 data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
                                 data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
                                 data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
@@ -457,16 +457,16 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountTerm = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getString("pagesCount"));
-                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
+                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentTermActivities").
                                     getJSONArray("data");
-                            for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
-                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
-                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
-                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
-                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
-                                data.setQualified(historyDataArray.getJSONObject(i).getBoolean("qualified"));
+                            for (int i = 0; i < historySportArray.length(); i++) {
+                                HistorySportEntry data = new HistorySportEntry();
+                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historySportArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
+                                data.setQualified(historySportArray.getJSONObject(i).getBoolean("qualified"));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
@@ -496,15 +496,15 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountTerm = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
                                     getString("pagesCount"));
-                            JSONArray historyDataArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
+                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("activities").
                                     getJSONArray("data");
-                            for (int i = 0; i < historyDataArray.length(); i++) {
-                                HistoryDataEntry data = new HistoryDataEntry();
-                                data.setSportName(historyDataArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
-                                data.setTime(Long.valueOf(historyDataArray.getJSONObject(i).getString("startTime")));
-                                data.setCostEnergy(Integer.valueOf(historyDataArray.getJSONObject(i).getString("caloriesConsumed")));
-                                data.setSportTime(Integer.valueOf(historyDataArray.getJSONObject(i).getString("costTime")));
-                                data.setSportDistance(Integer.valueOf(historyDataArray.getJSONObject(i).getString("distance")));
+                            for (int i = 0; i < historySportArray.length(); i++) {
+                                HistorySportEntry data = new HistorySportEntry();
+                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningProject").getString("name"));
+                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
+                                data.setCostEnergy(Integer.valueOf(historySportArray.getJSONObject(i).getString("caloriesConsumed")));
+                                data.setSportTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
+                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
