@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
@@ -34,6 +35,8 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.net.JsonResponseCallback;
@@ -56,11 +59,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.tim.app.R.string.curConsumeEnergy;
 
 
 /**
@@ -167,8 +173,8 @@ public class SportResultActivity extends BaseActivity {
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+//                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -181,6 +187,20 @@ public class SportResultActivity extends BaseActivity {
             public void onMapLoaded() {
                 String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                //TODO test
+                llCurrentInfo.setVisibility(View.VISIBLE);
+                tvCurrentDistance.setText("4000");
+                tvElapseTime.setText("50:00");
+                tvAverSpeed.setText("1.1");
+
+                tvTargetDistance.setText("4000");
+                tvTargetTime.setText("60");
+                tvTargetSpeed.setText("1.1");
+
+                rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+
+                String curConsumeEnergy = "100";
+                tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
 
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                 text = "调整屏幕缩放比例：" + zoomLevel;
@@ -188,6 +208,33 @@ public class SportResultActivity extends BaseActivity {
 
                 //TODO test
                 oldLatLng = new LatLng(40.004156, 116.406305);//测试坐标
+                Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+
+                LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
+                drawLine(oldLatLng, secLL, true);
+                int moveDistance = (int)AMapUtils.calculateLineDistance(oldLatLng, secLL);
+                marker = aMap.addMarker(new MarkerOptions().position(secLL).title("运动距离（米）： " + moveDistance));
+
+                LatLng thirdLL = new LatLng(40.004556, 116.406505);//测试坐标
+                drawLine(secLL, thirdLL, false);
+//                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).snippet(thirdLL.toString()));
+                moveDistance = (int)AMapUtils.calculateLineDistance(secLL, thirdLL);
+                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).title("运动距离（米）： " + moveDistance));
+
+                LatLng fourthLL = new LatLng(40.004756, 116.406305);//测试坐标
+                drawLine(thirdLL, fourthLL, true);
+//                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).snippet(fourthLL.toString()));
+                moveDistance = (int)AMapUtils.calculateLineDistance(thirdLL, fourthLL);
+                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).title("运动距离（米）： " + moveDistance));
+
+//                List<LatLng> latLngs = new ArrayList<LatLng>();
+//                latLngs.add(new LatLng(40.004156,116.406305));
+//                latLngs.add(new LatLng(40.004356,116.406305));
+//                latLngs.add(new LatLng(40.004556,116.406505));
+//                latLngs.add(new LatLng(40.004756,116.406305));
+//                aMap.addPolyline(new PolylineOptions().
+//                        addAll(latLngs).width(10).color(Color.argb(255, 1, 1, 1)));
+
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
             }
@@ -229,40 +276,7 @@ public class SportResultActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        screenOffTimeout = Settings.System.getInt(getContentResolver(),
-                Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
-
-        if (!TextUtils.isEmpty(entry.getSportName())) {
-            tvSportName.setText(entry.getSportName());
-        }
-
-        //TODO
-//        if (entry.getTargetDistance() > 0) {
-//            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(entry.getTargetDistance())));
-//        }
-//
-//        if (entry.getTargetTime() > 0) {
-//            tvTargetTime.setText(String.valueOf(entry.getTargetTime()));
-//        }
-
-        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        //TODO
-//        tvTargetSpeed.setText(getString(R.string.percent, entry.getTargetSpeed()));
-
-        tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
-        tvElapseTime.setText(String.valueOf(elapseTime / 60));
-        tvCurrentStep.setText("0 步");
-        tvAverSpeed.setText("0.0");
-        initSteps = 0;
-        currentSteps = 0;
-        currentDistance = 0;
-        elapseTime = 0;
-
-        if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } else {// PackageManager.PERMISSION_DENIED
-            UserManager.ins().cleanCache();
-        }
+        //TODO 请求数据
     }
 
     /**
@@ -413,93 +427,6 @@ public class SportResultActivity extends BaseActivity {
 
     }
 
-    /**
-     * 提交运动数据
-     */
-    private void commmitSportData(final int projectId, final int studentId, final int targetTime) {
-        //必须先初始化。
-        SQLite.init(context, RunningSportsCallback.getInstance());
-        //提交本次运动数据，更新UI
-        ServerInterface.instance().postRunningActDate(
-                TAG, projectId, studentId, currentDistance,
-                elapseTime, targetTime, startTime, currentSteps, new JsonResponseCallback() {
-                    @Override
-                    public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                        Log.d(TAG, "errCode:" + errCode);
-
-                        if (errCode == 0) {
-                            try {
-                                String curConsumeEnergy = json.getString("caloriesConsumed");
-                                rlCurConsumeEnergy.setVisibility(View.VISIBLE);
-                                tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Log.e(TAG, "commmitSportData onJsonResponse e: " + e);
-                            }
-                            return true;
-                        } else {
-                            //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                            int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                    projectId, studentId, currentDistance,
-                                    elapseTime, startTime, currentSteps, System.currentTimeMillis());
-
-                            Log.d(TAG, "result:" + result);
-                            return false;
-                        }
-                    }
-                });
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                //查询数据库中的记录。
-                String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
-
-                List<RunningSportsRecord> list = SQLite.query(
-                        RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
-
-                for (final RunningSportsRecord record : list) {
-                    Log.d(TAG, "record:" + record);
-                    ServerInterface.instance().postRunningActDate(
-                            TAG, record.getProjectId(),
-                            record.getStudentId(),
-                            record.getCurrentDistance(),
-                            record.getElapseTime(),
-                            targetTime,
-                            record.getStartTime(),
-                            record.getSteps(),
-                            new JsonResponseCallback() {
-                                //提交未数据库中为提交的记录
-                                @Override
-                                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                                    Log.d(TAG, "errCode:" + errCode);
-
-                                    if (errCode == 0) {
-                                        //提交成功，把数据库中记录删除。
-                                        int result = SQLite.getInstance(context).deleteSportsRecord(
-                                                RunningSportsCallback.TABLE_RUNNING_SPORTS,
-                                                "startTime = ?", new String[]{record.getStartTime().toString()});
-                                        Log.d(TAG, "delete result:" + result);
-                                        Log.d(TAG, "record.getStartTime():" + record.getStartTime());
-
-                                        return true;
-                                    } else {
-                                        //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                                        int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                                projectId, studentId, currentDistance,
-                                                elapseTime, startTime, currentSteps, System.currentTimeMillis());
-
-                                        Log.d(TAG, "save result:" + result);
-                                        return false;
-                                    }
-                                }
-                            });
-                }
-            }
-        };
-        new Thread(runnable).start();
-    }
-
     @Override
     public void onBackPressed() {
         if (state == STATE_STARTED || state == STATE_PAUSE) {
@@ -522,6 +449,8 @@ public class SportResultActivity extends BaseActivity {
         ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
+        tvSportJoinNumber.setVisibility(View.GONE);
+
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
