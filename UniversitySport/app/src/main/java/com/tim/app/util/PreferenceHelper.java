@@ -283,11 +283,11 @@ public class PreferenceHelper {
     }
 
     /**
-     * Gets the int share data.
+     * Gets the hide_anim share data.
      *
      * @param key      the key
      * @param defValue the def value
-     * @return the int share data
+     * @return the hide_anim share data
      */
     public int getIntShareData(String key, int defValue) {
         if (getMCtx() == null)
@@ -309,7 +309,7 @@ public class PreferenceHelper {
     }
 
     /**
-     * Store int share data.
+     * Store hide_anim share data.
      *
      * @param key   the key
      * @param value the value

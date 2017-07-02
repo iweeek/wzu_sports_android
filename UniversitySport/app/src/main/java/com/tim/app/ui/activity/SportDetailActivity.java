@@ -21,6 +21,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -35,6 +37,7 @@ import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -145,6 +148,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
 
+    private View rlAnimView;
+    private View ivShowSportInfo;
+    private View ivHideSportInfo;
+
+    private Animation showAnimation;
+    private Animation hideAnimation;
+
+    UiSettings uiSettings;
+
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
         intent.putExtra("sportEntry", sportEntry);
@@ -202,8 +214,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
         //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        //        int height = displayMetrics.heightPixels;
-        //        int width = displayMetrics.widthPixels;
+        //        hide_anim height = displayMetrics.heightPixels;
+        //        hide_anim width = displayMetrics.widthPixels;
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
@@ -237,6 +249,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             setUpMap();
         }
         aMap.setOnMyLocationChangeListener(this);
+        uiSettings = aMap.getUiSettings();
     }
 
     /**
@@ -349,33 +362,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //位置有变化
 //            if (oldLatLng != newLatLng) {
 
-                if (state == STATE_STARTED) {
-                    Log.d(TAG, "oldLatLng: " + oldLatLng);
-                    float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-                    toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
-                            + "， 本次移动距离： " + moveDistance;
-                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+            if (state == STATE_STARTED) {
+                Log.d(TAG, "oldLatLng: " + oldLatLng);
+                float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
+                        + "， 本次移动距离： " + moveDistance;
+                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                    if (moveDistance / sportEntry.getInterval() > speedLimitation) {
-                        //位置漂移
+                if (moveDistance / sportEntry.getInterval() > speedLimitation) {
+                    //位置漂移
 //                        return;
-                        toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getInterval();
-                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                        drawLine(oldLatLng, newLatLng, false);
-                    } else {
-                        drawLine(oldLatLng, newLatLng, true);
-                        currentDistance += moveDistance;
-                        tvCurrentDistance.setText(String.valueOf(currentDistance));
-                        double d = currentDistance;
-                        double t = elapseTime;
-                        BigDecimal bd = new BigDecimal(d / t);
-                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                        tvAverSpeed.setText(String.valueOf(bd));
-                    }
+                    toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getInterval();
+                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    drawLine(oldLatLng, newLatLng, false);
+                } else {
+                    drawLine(oldLatLng, newLatLng, true);
+                    currentDistance += moveDistance;
+                    tvCurrentDistance.setText(String.valueOf(currentDistance));
+                    double d = currentDistance;
+                    double t = elapseTime;
+                    BigDecimal bd = new BigDecimal(d / t);
+                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                    tvAverSpeed.setText(String.valueOf(bd));
                 }
+            }
 
-                oldLatLng = newLatLng;
-                DLOG.d(TAG, toastText);
+            oldLatLng = newLatLng;
+            DLOG.d(TAG, toastText);
 //            } else {
 //                tvAverSpeed.setText("0.0");
 //                String text = "坐标没有发生变化，坐标： " + oldLatLng;
@@ -383,9 +396,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //            }
 
         } else {
-                String errText = "定位失败";
-                Log.e(TAG, errText);
-                Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
+            String errText = "定位失败";
+            Log.e(TAG, errText);
+            Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -401,11 +414,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
         // Error checking that probably isn't needed but I added just in case.
-        if(level == -1 || scale == -1) {
+        if (level == -1 || scale == -1) {
             return 50.0f;
         }
 
-        return ((float)level / (float)scale) * 100.0f;
+        return ((float) level / (float) scale) * 100.0f;
     }
 
     @Override
@@ -455,50 +468,50 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
             @Override
             public void setUnLocked(boolean unLock) {
-            // 如果是true，证明解锁
-            if (unLock) {
-                turnUpScreen();
-                // 重置一下滑动解锁的控件
-                slideUnlockView.reset();
-                // 让滑动解锁控件消失
-                slideUnlockView.setVisibility(View.GONE);
+                // 如果是true，证明解锁
+                if (unLock) {
+                    turnUpScreen();
+                    // 重置一下滑动解锁的控件
+                    slideUnlockView.reset();
+                    // 让滑动解锁控件消失
+                    slideUnlockView.setVisibility(View.GONE);
 
-                if (state == STATE_STARTED) {
-                    state = STATE_END;
-                    ibBack.setVisibility(View.GONE);
-                    stopTimer();
-                    if (state == STATE_PAUSE) {
+                    if (state == STATE_STARTED) {
                         state = STATE_END;
-                    }
-                    if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
-                        tvResult.setText("达标");
-                    } else {
-                        tvResult.setText("不达标");
-                    }
+                        ibBack.setVisibility(View.GONE);
+                        stopTimer();
+                        if (state == STATE_PAUSE) {
+                            state = STATE_END;
+                        }
+                        if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
+                            tvResult.setText("达标");
+                        } else {
+                            tvResult.setText("不达标");
+                        }
 
-                    tvAverSpeedLabel.setText("平均速度");
-                    //做保护
-                    if (elapseTime != 0) {
-                        double d = currentDistance;
-                        double t = elapseTime;
-                        BigDecimal bd = new BigDecimal(d / t);
-                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                        tvAverSpeed.setText(String.format("%.1f", d));
-                    } else {
-                        tvAverSpeed.setText("0.0");
+                        tvAverSpeedLabel.setText("平均速度");
+                        //做保护
+                        if (elapseTime != 0) {
+                            double d = currentDistance;
+                            double t = elapseTime;
+                            BigDecimal bd = new BigDecimal(d / t);
+                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            tvAverSpeed.setText(String.format("%.1f", d));
+                        } else {
+                            tvAverSpeed.setText("0.0");
+                        }
+
+                        int studentId = 1;//学生的id
+                        commmitSportData(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+
+                        tvResult.setVisibility(View.VISIBLE);
+                        tvSportJoinNumber.setVisibility(View.GONE);
+                        rlBottom.setVisibility(View.VISIBLE);
+                        llBottom.setVisibility(View.GONE);
+                        btStart.setVisibility(View.VISIBLE);
+                        btStart.setText("查看锻炼结果");
                     }
-
-                    int studentId = 1;//学生的id
-                    commmitSportData(sportEntry.getId(), studentId, sportEntry.getTargetTime());
-
-                    tvResult.setVisibility(View.VISIBLE);
-                    tvSportJoinNumber.setVisibility(View.GONE);
-                    rlBottom.setVisibility(View.VISIBLE);
-                    llBottom.setVisibility(View.GONE);
-                    btStart.setVisibility(View.VISIBLE);
-                    btStart.setText("查看锻炼结果");
                 }
-            }
             }
         });
 
@@ -550,7 +563,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
                     .geodesic(true).color(Color.GREEN));
-        } else  {
+        } else {
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
                     .geodesic(true).color(Color.RED));
@@ -666,6 +679,54 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 String toastText = "移动屏幕，当前位置居中";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
+            case R.id.ivShowSportInfo:
+                //TODO 指南针的位置要变化，UiSettings 中寻找方法
+                if (null == showAnimation) {
+                    showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
+                }
+                ivShowSportInfo.setSelected(false);
+                showAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        rlAnimView.setVisibility(View.VISIBLE);
+                        ivShowSportInfo.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                rlAnimView.startAnimation(showAnimation);
+                break;
+            case R.id.ivHideSportInfo:
+                if (null == hideAnimation) {
+                    hideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
+                }
+                hideAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        rlAnimView.setVisibility(View.GONE);
+                        ivShowSportInfo.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                rlAnimView.startAnimation(hideAnimation);
+                break;
         }
 
     }
@@ -765,6 +826,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             super.onBackPressed();
         }
     }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_sport_detail;
@@ -772,7 +834,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initView() {
-        llLacationHint = (LinearLayout)findViewById(R.id.llLacationHint);
+        llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
@@ -801,10 +863,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
         tvCurConsumeEnergy = (TextView) findViewById(R.id.tvCurConsumeEnergy);
+
+        rlAnimView = findViewById(R.id.rlAnimView);
+        ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
+        ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
         btStart.setOnClickListener(this);
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
+        ivShowSportInfo.setOnClickListener(this);
+        ivHideSportInfo.setOnClickListener(this);
     }
 
 
