@@ -867,6 +867,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         rlAnimView = findViewById(R.id.rlAnimView);
         ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
         ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
+
         btStart.setOnClickListener(this);
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);

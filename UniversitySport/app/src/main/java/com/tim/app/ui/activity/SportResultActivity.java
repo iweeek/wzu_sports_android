@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -48,6 +50,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import static com.tim.app.R.id.ivHideSportInfo;
+import static com.tim.app.R.id.ivShowSportInfo;
 import static com.tim.app.ui.activity.SportDetailActivity.STATE_END;
 import static com.tim.app.ui.activity.SportDetailActivity.STATE_NORMAL;
 import static com.tim.app.ui.activity.SportDetailActivity.STATE_PAUSE;
@@ -123,7 +127,14 @@ public class SportResultActivity extends BaseActivity {
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
-    private ArrayList<LatLng> latLngs = new ArrayList<LatLng>();;
+    private ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
+
+    private View rlAnimView;
+    private View ivShowSportInfo;
+    private View ivHideSportInfo;
+
+    private Animation showAnimation;
+    private Animation hideAnimation;
 
     public static void start(Context context, HistorySportEntry data) {
         Intent intent = new Intent(context, SportResultActivity.class);
@@ -336,6 +347,54 @@ public class SportResultActivity extends BaseActivity {
                 String toastText = "移动屏幕，当前位置居中";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
+            case R.id.ivShowSportInfo:
+                //TODO 指南针的位置要变化，UiSettings 中寻找方法
+                if (null == showAnimation) {
+                    showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
+                }
+                ivShowSportInfo.setSelected(false);
+                showAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        rlAnimView.setVisibility(View.VISIBLE);
+                        ivShowSportInfo.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                rlAnimView.startAnimation(showAnimation);
+                break;
+            case R.id.ivHideSportInfo:
+                if (null == hideAnimation) {
+                    hideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
+                }
+                hideAnimation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        rlAnimView.setVisibility(View.GONE);
+                        ivShowSportInfo.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                rlAnimView.startAnimation(hideAnimation);
+                break;
         }
 
     }
@@ -354,8 +413,8 @@ public class SportResultActivity extends BaseActivity {
         llLacationHint = (LinearLayout)findViewById(R.id.llLacationHint);
         llLacationHint.setVisibility(View.GONE);
 
-        ibBack = (ImageButton) findViewById(R.id.ibBack);
-        ibBack.setOnClickListener(this);
+//        ibBack = (ImageButton) findViewById(R.id.ibBack);
+//        ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
         tvSportJoinNumber.setVisibility(View.GONE);
@@ -380,12 +439,16 @@ public class SportResultActivity extends BaseActivity {
         tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
         tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvTitle.setText("锻炼成果");
+//        tvTitle = (TextView) findViewById(R.id.tvTitle);
+//        tvTitle.setText("锻炼成果");
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
         tvCurConsumeEnergy = (TextView) findViewById(R.id.tvCurConsumeEnergy);
+
+        rlAnimView = findViewById(R.id.rlAnimView);
+        ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
+        ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
 
         btStart.setOnClickListener(this);
         btStart.setText("绘制运动轨迹");
@@ -394,6 +457,9 @@ public class SportResultActivity extends BaseActivity {
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
+
+        ivShowSportInfo.setOnClickListener(this);
+        ivHideSportInfo.setOnClickListener(this);
     }
 
 
