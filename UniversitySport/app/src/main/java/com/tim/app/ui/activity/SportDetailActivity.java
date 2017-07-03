@@ -835,8 +835,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void initView() {
         llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
-        ibBack = (ImageButton) findViewById(R.id.ibBack);
-        ibBack.setOnClickListener(this);
+//        ibBack = (ImageButton) findViewById(R.id.ibBack);
+//        ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
