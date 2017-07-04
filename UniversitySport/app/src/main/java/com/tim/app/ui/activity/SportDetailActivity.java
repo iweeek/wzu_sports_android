@@ -27,7 +27,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -48,6 +47,8 @@ import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
+import com.application.library.net.ResponseCallback;
+import com.application.library.net.StringResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -72,8 +73,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import static com.tim.app.R.id.ibBack;
 
 
 /**
@@ -161,6 +160,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private Animation hideAnimation;
 
     UiSettings uiSettings;
+    private long targetFinishedTime;
+    private int activityId;
+    private int studentId = 1;//TODO 需要从认证信息中获取
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -327,6 +329,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         String errorInfo = "";
         int locationType = -1;
         LatLng newLatLng;
+        Boolean isNormal = true;
 
         Bundle bundle = location.getExtras();
         if (bundle != null) {
@@ -411,10 +414,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                        return;
                     toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getInterval();
                     Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                    drawLine(oldLatLng, newLatLng, false);
+                    isNormal = false;
+                    drawLine(oldLatLng, newLatLng, isNormal);
                 } else {
-                    drawLine(oldLatLng, newLatLng, true);
+                    isNormal = true;
+                    drawLine(oldLatLng, newLatLng, isNormal);
                     currentDistance += moveDistance;
+
+                    if (currentDistance > sportEntry.getTargetDistance() && targetFinishedTime == 0) {
+                        targetFinishedTime = elapseTime;
+                    }
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
                     double d = currentDistance;
                     double t = elapseTime;
@@ -422,10 +431,25 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
                     tvAverSpeed.setText(String.valueOf(bd));
                 }
+
+                ServerInterface.instance().runningActivityData(TAG, activityId, System.currentTimeMillis(), currentSteps, currentDistance,
+                        location.getLongitude(), location.getLatitude(), locationType, isNormal, new ResponseCallback() {
+                            @Override
+                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                if (status == 0) {
+                                    DLOG.d(TAG, "runningActivityData succeed");
+                                    return true;
+                                } else {
+                                    DLOG.d(TAG, "runningActivityData failed, errmsg: " + errmsg);
+                                    return false;
+                                }
+                            }
+                        });
             }
 
             oldLatLng = newLatLng;
             DLOG.d(TAG, toastText);
+
 //            } else {
 //                tvAverSpeed.setText("0.0");
 //                String text = "坐标没有发生变化，坐标： " + oldLatLng;
@@ -538,8 +562,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvAverSpeed.setText("0.0");
                         }
 
-                        int studentId = 1;//学生的id
-                        commmitSportData(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+//                        int studentId = 1;//学生的id
+                        runningActivitiesEnd(sportEntry.getId(), studentId, targetFinishedTime);
 
                         tvResult.setVisibility(View.VISIBLE);
                         tvSportJoinNumber.setVisibility(View.GONE);
@@ -634,9 +658,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     public void onClick(View v) {
         turnUpScreen();
         switch (v.getId()) {
-            case ibBack:
-                finish();
-                break;
+//            case ibBack:
+//                finish();
+//                break;
             case R.id.btStart:
                 if (state == STATE_NORMAL) {
                     state = STATE_STARTED;
@@ -652,60 +676,79 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     initData();
                     startTimer();
-                } else if (state == STATE_END) {
+                    ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
+                        @Override
+                        public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                            Log.d(TAG, "errCode:" + errCode);
+                            if (errCode == 0) {
+                                try {
+                                    activityId = json.getInt("id");
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
+                                }
+                                return true;
+                            } else {
+                                //TODO 网络请求失败
+                                Log.d(TAG, "errMsg:" + errMsg);
+                                return false;
+                            }
+                        }
+                    });
+                } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     HistorySportEntry entry = new HistorySportEntry();
                     SportResultActivity.start(this, entry);
                 }
                 break;
-            case R.id.btContinue:
-                if (state == STATE_PAUSE) {
-                    state = STATE_STARTED;
-                }
-                slideUnlockView.setVisibility(View.VISIBLE);
-                tvPause.setVisibility(View.VISIBLE);
-                rlBottom.setVisibility(View.GONE);
-                llBottom.setVisibility(View.GONE);
-                break;
-            case R.id.btStop:
-//                if (elapseTime == 0) {
-//                    ToastUtil.showToast("运动时间太短，无法结束");
-//                    return;
+//            case R.id.btContinue:
+//                if (state == STATE_PAUSE) {
+//                    state = STATE_STARTED;
 //                }
-//                ibBack.setVisibility(View.VISIBLE);
-                if (state == STATE_PAUSE) {
-                    state = STATE_END;
-                }
-
-                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
-                    tvResult.setText("达标");
-                } else {
-                    tvResult.setText("不达标");
-                }
-
-                tvAverSpeedLabel.setText("平均速度");
-                //做保护
-                if (elapseTime != 0) {
-                    double d = currentDistance;
-                    double t = elapseTime;
-                    BigDecimal bd = new BigDecimal(d / t);
-                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                    tvAverSpeed.setText(String.valueOf(bd));
-                } else {
-                    tvAverSpeed.setText("0.0");
-                }
-
-                int studentId = 1;//学生的id
-                commmitSportData(sportEntry.getId(), studentId, sportEntry.getTargetTime());
-
-                tvResult.setVisibility(View.VISIBLE);
-                tvSportJoinNumber.setVisibility(View.GONE);
-                rlBottom.setVisibility(View.VISIBLE);
-                llBottom.setVisibility(View.GONE);
-                btStart.setVisibility(View.VISIBLE);
-
-                stopTimer();
-
-                break;
+//                slideUnlockView.setVisibility(View.VISIBLE);
+//                tvPause.setVisibility(View.VISIBLE);
+//                rlBottom.setVisibility(View.GONE);
+//                llBottom.setVisibility(View.GONE);
+//                break;
+//            case R.id.btStop:
+////                if (elapseTime == 0) {
+////                    ToastUtil.showToast("运动时间太短，无法结束");
+////                    return;
+////                }
+////                ibBack.setVisibility(View.VISIBLE);
+//                if (state == STATE_PAUSE) {
+//                    state = STATE_END;
+//                }
+//
+//                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
+//                    tvResult.setText("达标");
+//                } else {
+//                    tvResult.setText("不达标");
+//                }
+//
+//                tvAverSpeedLabel.setText("平均速度");
+//                //做保护
+//                if (elapseTime != 0) {
+//                    double d = currentDistance;
+//                    double t = elapseTime;
+//                    BigDecimal bd = new BigDecimal(d / t);
+//                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+//                    tvAverSpeed.setText(String.valueOf(bd));
+//                } else {
+//                    tvAverSpeed.setText("0.0");
+//                }
+//
+//                int studentId = 1;//学生的id
+//                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+//
+//                tvResult.setVisibility(View.VISIBLE);
+//                tvSportJoinNumber.setVisibility(View.GONE);
+//                rlBottom.setVisibility(View.VISIBLE);
+//                llBottom.setVisibility(View.GONE);
+//                btStart.setVisibility(View.VISIBLE);
+//
+//                stopTimer();
+//
+//                break;
             case R.id.ivLocation:
                 //修改地图的中心点位置
 //                CameraPosition cp = aMap.getCameraPosition();
@@ -774,13 +817,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void commmitSportData(final int projectId, final int studentId, final int targetTime) {
+    private void runningActivitiesEnd(final int projectId, final int studentId, final long targetFinishedTime) {
         //必须先初始化。
         SQLite.init(context, RunningSportsCallback.getInstance());
         //提交本次运动数据，更新UI
-        ServerInterface.instance().postRunningActDate(
-                TAG, projectId, studentId, currentDistance,
-                elapseTime, targetTime, startTime, currentSteps, new JsonResponseCallback() {
+        ServerInterface.instance().runningActivitiesEnd(
+                TAG, activityId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
@@ -792,13 +834,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Log.e(TAG, "commmitSportData onJsonResponse e: " + e);
+                                Log.e(TAG, "runningActivitiesEnd onJsonResponse e: " + e);
                             }
                             return true;
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
                             int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                    projectId, studentId, currentDistance,
+                                    projectId, activityId, studentId, currentDistance,
                                     elapseTime, startTime, currentSteps, System.currentTimeMillis());
 
                             Log.d(TAG, "result:" + result);
@@ -818,20 +860,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                 for (final RunningSportsRecord record : list) {
                     Log.d(TAG, "record:" + record);
-                    ServerInterface.instance().postRunningActDate(
-                            TAG, record.getProjectId(),
-                            record.getStudentId(),
+                    ServerInterface.instance().runningActivitiesEnd(
+                            TAG, record.getAcitivityId(),
                             record.getCurrentDistance(),
-                            record.getElapseTime(),
-                            targetTime,
-                            record.getStartTime(),
                             record.getSteps(),
+                            record.getElapseTime(),
+                            targetFinishedTime,
                             new JsonResponseCallback() {
                                 //提交未数据库中为提交的记录
                                 @Override
                                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                                     Log.d(TAG, "errCode:" + errCode);
-
                                     if (errCode == 0) {
                                         //提交成功，把数据库中记录删除。
                                         int result = SQLite.getInstance(context).deleteSportsRecord(
@@ -844,7 +883,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     } else {
                                         //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
                                         int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                                projectId, studentId, currentDistance,
+                                                projectId, activityId, studentId, currentDistance,
                                                 elapseTime, startTime, currentSteps, System.currentTimeMillis());
 
                                         Log.d(TAG, "save result:" + result);

@@ -38,20 +38,26 @@ public class Database extends SQLiteOpenHelper {
 
 
 
-    public interface TableInterface {
-        //DB NAME
-        String getName();
+    public static final String ILLEGAL_OPREATION = "非法操作，请先执行初始化操作。 Database.init()";
+    private final static String TABLE_RUNNING_SPORTS = "wzu_sports_running_sports_record";
+    private final static String TABLE_DAY_STEPS = "day_steps";
+    private final static int DB_VERSION = 2;
+    private static final AtomicInteger openCounter = new AtomicInteger();
+    private static final String TAG = "Database";
+    private static Database instance;
+    private static TableInterface mCallBack = null;
 
-        int getDBVersion();
+    private Database(final Context context) {
+        super(context, TABLE_RUNNING_SPORTS, null, DB_VERSION);
+    }
 
-        void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
+    private Database(@NonNull Context context, @NonNull TableInterface callBack) {
+        super(context, callBack.getName(), null, callBack.getDBVersion());
+        mCallBack = callBack;
+    }
 
-        List<String> createTableSql();
-
-        <T> void assignValuesByEntity(String tableName, T t, ContentValues values);
-
-        <T> T getEntityByCursor(String tableName, Cursor c);
-
+    public Database(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
     }
 
     public static void init(Context context, TableInterface callBack) {
@@ -60,24 +66,45 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public static final String ILLEGAL_OPREATION = "非法操作，请先执行初始化操作。 Database.init()";
-    private final static String TABLE_RUNNING_SPORTS = "wzu_sports_running_sports_record";
-    private final static String TABLE_DAY_STEPS = "day_steps";
-    private final static int DB_VERSION = 2;
-    private static Database instance;
-
-    private static final AtomicInteger openCounter = new AtomicInteger();
-
-    private Database(final Context context) {
-        super(context, TABLE_RUNNING_SPORTS, null, DB_VERSION);
-    }
-
     public static synchronized Database getInstance(final Context c) {
         if (instance == null) {
             instance = new Database(c.getApplicationContext());
         }
         openCounter.incrementAndGet();
         return instance;
+    }
+
+    public static <T> List<T> query(String tableName,
+                                    @Nullable String queryStr, @Nullable String[] whereArgs) {
+        if (instance == null) {
+            throw new IllegalStateException(ILLEGAL_OPREATION);
+        }
+
+        List<T> list = new ArrayList<>();
+        SQLiteDatabase db = instance.getReadableDatabase();
+        db.beginTransaction();
+        try {
+            db.setTransactionSuccessful();
+            Cursor c = db.rawQuery(queryStr, whereArgs);
+            if (c.moveToFirst()) {
+                do {
+                    T record = (T) instance.mCallBack
+                            .getEntityByCursor(TABLE_RUNNING_SPORTS, c);
+                    if (record != null) {
+                        list.add(record);
+                    }
+                } while (c.moveToNext());
+                c.close();
+            }
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+        return list;
+    }
+
+    public static String getTableName(){
+        return mCallBack.getName();
     }
 
     @Override
@@ -394,6 +421,10 @@ public class Database extends SQLiteOpenHelper {
         getWritableDatabase().insert(TABLE_DAY_STEPS, null, values);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Self
+    ///////////////////////////////////////////////////////////////////////////
+
     /**
      * Reads the latest saved value for the 'steps since boot' sensor value.
      *
@@ -404,7 +435,6 @@ public class Database extends SQLiteOpenHelper {
         int re = getSteps(-1);
         return re == Integer.MIN_VALUE ? 0 : re;
     }
-
 
     /**
      * @return
@@ -431,68 +461,33 @@ public class Database extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
-
     public SportsRecord getEntityByCursor(String tableName, Cursor c) {
         switch (tableName) {
             case TABLE_RUNNING_SPORTS:
                 return new RunningSportsRecord(c.getInt(0),
                         c.getInt(1), c.getInt(2),
                         c.getInt(3), c.getInt(4),
-                        c.getLong(5), c.getInt(6),
-                        c.getLong(7));
+                        c.getInt(5),
+                        c.getLong(6), c.getInt(7),
+                        c.getLong(8));
         }
         return null;
     }
 
+    public interface TableInterface {
+        //DB NAME
+        String getName();
 
-    public static <T> List<T> query(String tableName,
-                                    @Nullable String queryStr, @Nullable String[] whereArgs) {
-        if (instance == null) {
-            throw new IllegalStateException(ILLEGAL_OPREATION);
-        }
+        int getDBVersion();
 
-        List<T> list = new ArrayList<>();
-        SQLiteDatabase db = instance.getReadableDatabase();
-        db.beginTransaction();
-        try {
-            db.setTransactionSuccessful();
-            Cursor c = db.rawQuery(queryStr, whereArgs);
-            if (c.moveToFirst()) {
-                do {
-                    T record = (T) instance.mCallBack
-                            .getEntityByCursor(TABLE_RUNNING_SPORTS, c);
-                    if (record != null) {
-                        list.add(record);
-                    }
-                } while (c.moveToNext());
-                c.close();
-            }
-        } finally {
-            db.endTransaction();
-            db.close();
-        }
-        return list;
-    }
+        void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Self
-    ///////////////////////////////////////////////////////////////////////////
+        List<String> createTableSql();
 
-    private static final String TAG = "Database";
+        <T> void assignValuesByEntity(String tableName, T t, ContentValues values);
 
-    private static TableInterface mCallBack = null;
+        <T> T getEntityByCursor(String tableName, Cursor c);
 
-    private Database(@NonNull Context context, @NonNull TableInterface callBack) {
-        super(context, callBack.getName(), null, callBack.getDBVersion());
-        mCallBack = callBack;
-    }
-
-    public Database(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
-
-    public static String getTableName(){
-        return mCallBack.getName();
     }
 
 }

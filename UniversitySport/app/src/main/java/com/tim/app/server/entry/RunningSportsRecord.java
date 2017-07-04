@@ -12,16 +12,18 @@ public class RunningSportsRecord extends SportsRecord {
     private Long startTime;
     private Integer steps;
     private Long date;
+    private Integer acitivityId;
 
 
     public RunningSportsRecord() {
     }
 
-    public RunningSportsRecord(int id, Integer projectId, Integer studentId,
+    public RunningSportsRecord(int id, Integer projectId, Integer activityId, Integer studentId,
                                Integer currentDistance, Integer elapseTime,
                                Long startTime, Integer steps, Long date) {
         this.id = id;
         this.projectId = projectId;
+        this.acitivityId = activityId;
         this.studentId = studentId;
         this.currentDistance = currentDistance;
         this.elapseTime = elapseTime;
@@ -90,5 +92,13 @@ public class RunningSportsRecord extends SportsRecord {
                 ", steps=" + steps +
                 ", date=" + date +
                 '}';
+    }
+
+    public Integer getAcitivityId() {
+        return acitivityId;
+    }
+
+    public void setAcitivityId(Integer acitivityId) {
+        this.acitivityId = acitivityId;
     }
 }

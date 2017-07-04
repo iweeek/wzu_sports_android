@@ -11,6 +11,7 @@ import com.tim.app.server.net.NetworkInterface;
 
 import java.util.HashMap;
 
+import static android.R.attr.id;
 import static com.lzy.okhttputils.utils.OkLogger.tag;
 
 /**
@@ -23,7 +24,9 @@ public class ServerInterface {
 
     private static final String API_SCHEME = "api/";//扩展字段
 
-    public static final String INIT_PUSH = "runningActivities";//
+    public static final String RUNNING_ACTIVITIES = "runningActivities";//
+
+    public static final String RUNNING_ACTIVITY_DATA = "runningActivityData";
 
     public static final String QUERY_INTERFACE = "graphql/query";
 
@@ -44,30 +47,50 @@ public class ServerInterface {
         return instance;
     }
 
+    public void runningActivitiesStart(String tag, int projectId, int studentId, long startTime, ResponseCallback callback) {
+        String url = API_SCHEME + RUNNING_ACTIVITIES + "/start";
+        HashMap params = new HashMap();
+        params.put("projectId", projectId);
+
+        params.put("studentId", studentId);
+        params.put("startTime", startTime);
+        Log.d(TAG, "params: " + params);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
+
     /**
      * 提交运动数据
      *
      * @param tag
-     * @param projectId  运动项目ID
-     * @param studentId  学生ID
      * @param distance   距离
      * @param costTime   花费时间
-     * @param targetTime 目标时间
-     * @param startTime  开始时间
+     * @param targetFinishedTime 目标时间
      * @param callback
      */
-    public void postRunningActDate(String tag, int projectId, int studentId, int distance, long costTime, long targetTime,
-                                   long startTime, int stepCount, ResponseCallback callback) {
-        String url = API_SCHEME + INIT_PUSH;
+    public void runningActivitiesEnd(String tag, int id, int distance, int stepCount, long costTime, long targetFinishedTime,
+                                     ResponseCallback callback) {
+        String url = API_SCHEME + RUNNING_ACTIVITIES + "/end";
         HashMap params = new HashMap();
-        params.put("projectId", projectId);
-        params.put("studentId", studentId);
+        params.put("id", id);
         params.put("distance", distance);
-        params.put("costTime", costTime);
-        params.put("targetTime", targetTime);
-        params.put("startTime", startTime);
         params.put("stepCount", stepCount);
-        Log.d(TAG, "params: " + params);
+        params.put("costTime", costTime);
+        params.put("targetFinishedTime", targetFinishedTime);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
+
+    public void runningActivityData(String tag, int activityId, long acquisitionTime, int stepCount, int distance, double longitude,
+                                    double latitude, int locationType, boolean isNormal, ResponseCallback callback) {
+        String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
+        HashMap params = new HashMap();
+        params.put("activityId", activityId);
+        params.put("acquisitionTime", acquisitionTime);
+        params.put("stepCount", stepCount);
+        params.put("distance", distance);
+        params.put("longitude", longitude);
+        params.put("latitude", latitude);
+        params.put("locationType", locationType);
+        params.put("isNormal", isNormal);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 

@@ -39,15 +39,18 @@ public class RunningSportsCallback implements SQLite.TableInterface {
     public static final String TABLE_RUNNING_SPORTS = "running_sports_record";
     public static final String KEY_RUNNING_ID = "id";
     public static final String KEY_RUNNING_PROJECTID = "projectId";
+    public static final String KEY_RUNNING_ACTIVITY_ID = "activityId";
     public static final String KEY_RUNNING_STUDENTID = "studentId";
     public static final String KEY_RUNNING_CURRENTDISTANCE = "currentDistance";
     public static final String KEY_RUNNING_ELAPSETIME = "elapseTime";
     public static final String KEY_RUNNING_STARTTIME = "startTime";
     public static final String KEY_RUNNING_STEPS = "steps";
     public static final String KEY_RUNNING_DATE = "date";
+
     public static final String TABLE_RUNNING_SQL = "CREATE TABLE " + TABLE_RUNNING_SPORTS + " (" +
             KEY_RUNNING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             KEY_RUNNING_PROJECTID + " INTEGER, " +
+            KEY_RUNNING_ACTIVITY_ID + " INTEGER, " +
             KEY_RUNNING_STUDENTID + " INTEGER, " +
             KEY_RUNNING_CURRENTDISTANCE + " INTEGER, " +
             KEY_RUNNING_ELAPSETIME + " INTEGER, " +
@@ -104,14 +107,15 @@ public class RunningSportsCallback implements SQLite.TableInterface {
             case TABLE_RUNNING_SPORTS:
                 if(t instanceof  RunningSportsRecord){
                     RunningSportsRecord record = (RunningSportsRecord) t;
-                    values.put(KEY_RUNNING_ID,record.getId());
-                    values.put(KEY_RUNNING_PROJECTID,record.getProjectId());
-                    values.put(KEY_RUNNING_STUDENTID,record.getStudentId());
-                    values.put(KEY_RUNNING_CURRENTDISTANCE,record.getCurrentDistance());
-                    values.put(KEY_RUNNING_ELAPSETIME,record.getElapseTime());
-                    values.put(KEY_RUNNING_STARTTIME,record.getStartTime());
-                    values.put(KEY_RUNNING_STEPS,record.getSteps());
-                    values.put(KEY_RUNNING_DATE,record.getDate());
+                    values.put(KEY_RUNNING_ID, record.getId());
+                    values.put(KEY_RUNNING_PROJECTID, record.getAcitivityId());
+                    values.put(KEY_RUNNING_ACTIVITY_ID, record.getProjectId());
+                    values.put(KEY_RUNNING_STUDENTID, record.getStudentId());
+                    values.put(KEY_RUNNING_CURRENTDISTANCE, record.getCurrentDistance());
+                    values.put(KEY_RUNNING_ELAPSETIME, record.getElapseTime());
+                    values.put(KEY_RUNNING_STARTTIME, record.getStartTime());
+                    values.put(KEY_RUNNING_STEPS, record.getSteps());
+                    values.put(KEY_RUNNING_DATE, record.getDate());
                 }
                 break;
 
@@ -128,9 +132,10 @@ public class RunningSportsCallback implements SQLite.TableInterface {
                         c.getInt(2),
                         c.getInt(3),
                         c.getInt(4),
-                        c.getLong(5),
-                        c.getInt(6),
-                        c.getLong(7));
+                        c.getInt(5),
+                        c.getLong(6),
+                        c.getInt(7),
+                        c.getLong(8));
         }
         return null;
     }
