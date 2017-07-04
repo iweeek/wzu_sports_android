@@ -129,6 +129,24 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+    public void queryRunningActivity(int activityId, ResponseCallback callback) {
+        queryStr = "{\n" +
+                "\trunningActivity(id:" + activityId + ") {\n" +
+                "    data{\n" +
+                "      longitude\n" +
+                "      latitude\n" +
+                "      normal\n" +
+                "      locationType\n" +
+                "      stepCount\n" +
+                "      distance\n" +
+                "      acquisitionTime\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        query(queryStr, callback);
+    }
+
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
         String queryStr = "{\n" +
                 "\tuniversity(id:" + universityId + ") {\n" +

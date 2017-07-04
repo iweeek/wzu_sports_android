@@ -8,7 +8,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
@@ -37,24 +35,24 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.net.JsonResponseCallback;
+import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
 
-import java.math.BigDecimal;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
-import static com.tim.app.R.id.ivHideSportInfo;
-import static com.tim.app.R.id.ivShowSportInfo;
-import static com.tim.app.ui.activity.SportDetailActivity.STATE_END;
-import static com.tim.app.ui.activity.SportDetailActivity.STATE_NORMAL;
-import static com.tim.app.ui.activity.SportDetailActivity.STATE_PAUSE;
+import static com.amap.api.mapcore.util.cz.J;
 
 
 /**
@@ -66,7 +64,7 @@ public class SportResultActivity extends BaseActivity {
     private Context context = this;
     private CoordinateConverter converter;
 
-    private HistorySportEntry entry;
+    private HistorySportEntry historyEntry;
     private ImageButton ibBack;
 
     private MapView mapView;
@@ -135,10 +133,11 @@ public class SportResultActivity extends BaseActivity {
 
     private Animation showAnimation;
     private Animation hideAnimation;
+    private JSONArray actArray;
 
     public static void start(Context context, HistorySportEntry data) {
         Intent intent = new Intent(context, SportResultActivity.class);
-        intent.putExtra("historyData", data);
+        intent.putExtra("historyEntry", data);
         context.startActivity(intent);
     }
 
@@ -146,9 +145,9 @@ public class SportResultActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        entry = (HistorySportEntry) getIntent().getSerializableExtra("historyData");
+        historyEntry = (HistorySportEntry) getIntent().getSerializableExtra("historyEntry");
         //TODO
-//        interval = entry.getInterval() * 1000;
+//        interval = historyEntry.getInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -218,6 +217,31 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void initData() {
         //TODO 请求数据
+        ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
+
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    try {
+                        actArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
+                        for (int i = 0; i < actArray.length(); i++) {
+                            latLngs.add(new LatLng(actArray.getJSONObject(i).getDouble("latitude"),
+                                    actArray.getJSONObject(i).getDouble("longitude")));
+                        }
+
+                        oldLatLng = latLngs.get(0);//起始坐标
+                        Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+
+                        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+                        aMap.moveCamera(cu);
+                        return true;
+                    } catch (JSONException e) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+        });
         //TODO test
         llCurrentInfo.setVisibility(View.VISIBLE);
         tvCurrentDistance.setText("4000");
@@ -237,12 +261,7 @@ public class SportResultActivity extends BaseActivity {
 //        String text = "调整屏幕缩放比例：" + zoomLevel;
 //        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
-        //TODO test
-        oldLatLng = new LatLng(40.004156, 116.406305);//测试坐标
-        Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
 
-        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
-        aMap.moveCamera(cu);
 
 //        LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
 //        drawLine(oldLatLng, secLL, true);
@@ -321,10 +340,10 @@ public class SportResultActivity extends BaseActivity {
                 break;
             case R.id.btStart:
                 //TODO test
-                latLngs.add(new LatLng(40.004156,116.406305));
-                latLngs.add(new LatLng(40.004356,116.406305));
-                latLngs.add(new LatLng(40.004556,116.406505));
-                latLngs.add(new LatLng(40.004756,116.406305));
+//                latLngs.add(new LatLng(40.004156,116.406305));
+//                latLngs.add(new LatLng(40.004356,116.406305));
+//                latLngs.add(new LatLng(40.004556,116.406505));
+//                latLngs.add(new LatLng(40.004756,116.406305));
                 btStart.setVisibility(View.GONE);
                 aMap.addPolyline(new PolylineOptions().
                         addAll(latLngs).width(10).color(Color.argb(255, 1, 1, 1)));

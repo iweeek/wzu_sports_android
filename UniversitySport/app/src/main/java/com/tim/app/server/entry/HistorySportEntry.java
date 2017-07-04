@@ -17,6 +17,15 @@ public class HistorySportEntry implements Serializable {
     private int costEnergy;
     private int sportDistance;
     private boolean qualified;
+    private  int activityId;
+
+    public int getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(int activityId) {
+        this.activityId = activityId;
+    }
 
     public boolean isQualified() {
         return qualified;
