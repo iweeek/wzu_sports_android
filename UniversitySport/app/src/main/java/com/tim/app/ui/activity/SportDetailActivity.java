@@ -2,6 +2,7 @@ package com.tim.app.ui.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -9,12 +10,14 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -200,9 +203,41 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         timerHandler.cancel(true);
     }
 
+    private void initGPS() {
+        LocationManager locationManager = (LocationManager) this
+                .getSystemService(Context.LOCATION_SERVICE);
+        // 判断GPS模块是否开启，如果没有则开启
+        if (!locationManager
+                .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+//            Toast.makeText(this, "定位服务未打开，请打开定位服务",
+//                    Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+            dialog.setMessage("定位服务未打开，请打开定位服务");
+            dialog.setPositiveButton("确定",
+                    new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            // 转到手机设置界面，用户设置GPS
+                            Intent intent = new Intent(
+                                    Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
+                        }
+                    });
+//            dialog.setNeutralButton("取消", new android.content.DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface arg0, int arg1) {
+//                    arg0.dismiss();
+//                }
+//            });
+            dialog.show();
+        }
+    }
+
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
+
+        initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
         interval = sportEntry.getInterval() * 1000;
