@@ -132,6 +132,11 @@ public class ServerInterface {
     public void queryRunningActivity(int activityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "\trunningActivity(id:" + activityId + ") {\n" +
+                "   distance\n" +
+                "   costTime" +
+                "   qualifiedDistance" +
+                "   qualifiedCostTime" +
+                "   kcalConsumed" +
                 "    data{\n" +
                 "      longitude\n" +
                 "      latitude\n" +

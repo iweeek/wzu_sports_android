@@ -47,12 +47,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
 import static com.amap.api.mapcore.util.cz.J;
+import static com.amap.api.mapcore.util.cz.s;
 
 
 /**
@@ -134,6 +137,8 @@ public class SportResultActivity extends BaseActivity {
     private Animation showAnimation;
     private Animation hideAnimation;
     private JSONArray actArray;
+    private int targetDistance;
+    private long targetTime;
 
     public static void start(Context context, HistorySportEntry data) {
         Intent intent = new Intent(context, SportResultActivity.class);
@@ -234,28 +239,51 @@ public class SportResultActivity extends BaseActivity {
 
                         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                         aMap.moveCamera(cu);
+
+                        llCurrentInfo.setVisibility(View.VISIBLE);
+                        currentDistance = json.getJSONObject("data").getJSONObject("runningActivity").getInt("distance");
+                        tvCurrentDistance.setText(String.valueOf(currentDistance));
+
+                        elapseTime = json.getJSONObject("data").getJSONObject("runningActivity").getLong("costTime");
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(time);
+
+                        if (elapseTime != 0) {
+                            double d = currentDistance;
+                            double t = elapseTime;
+                            BigDecimal bd = new BigDecimal(d / t);
+                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            tvAverSpeed.setText(String.valueOf(bd));
+                        }
+
+                        targetDistance = json.getJSONObject("data").getJSONObject("runningActivity").getInt("qualifiedDistance");
+                        tvTargetDistance.setText(String.valueOf(targetDistance));
+
+                        targetTime = json.getJSONObject("data").getJSONObject("runningActivity").getInt("qualifiedCostTime");
+                        tvTargetTime.setText(String.valueOf(targetTime));
+
+                        if (targetTime != 0) {
+                            double t = targetTime;
+                            double d = targetDistance;
+                            double s = d / t;
+                            BigDecimal bd = new BigDecimal(s);
+                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            tvTargetSpeed.setText(String.valueOf(bd));
+                        }
+
+                        String curConsumeEnergy = json.getJSONObject("data").getJSONObject("runningActivity").getString("kcalConsumed");
+                        tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
+                        rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         return true;
                     } catch (JSONException e) {
+                        //TODO
                         return false;
                     }
                 }
                 return false;
             }
         });
-        //TODO test
-        llCurrentInfo.setVisibility(View.VISIBLE);
-        tvCurrentDistance.setText("4000");
-        tvElapseTime.setText("50:00");
-        tvAverSpeed.setText("1.1");
 
-        tvTargetDistance.setText("4000");
-        tvTargetTime.setText("60");
-        tvTargetSpeed.setText("1.1");
-
-        rlCurConsumeEnergy.setVisibility(View.VISIBLE);
-
-        String curConsumeEnergy = "100";
-        tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
 
         aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 //        String text = "调整屏幕缩放比例：" + zoomLevel;
