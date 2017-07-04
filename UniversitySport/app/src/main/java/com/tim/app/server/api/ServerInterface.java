@@ -216,9 +216,10 @@ public class ServerInterface {
                     "      pagesCount\n" +
                     "      dataCount\n" +
                     "      data {\n" +
+                    "        id\n" +
                     "        projectId\n" +
                     "        costTime\n" +
-                    "        caloriesConsumed\n" +
+                    "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
@@ -239,9 +240,10 @@ public class ServerInterface {
                     "      pagesCount\n" +
                     "      dataCount\n" +
                     "      data {\n" +
+                    "        id\n" +
                     "        projectId\n" +
                     "        costTime\n" +
-                    "        caloriesConsumed\n" +
+                    "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
@@ -262,9 +264,10 @@ public class ServerInterface {
                     "      pagesCount\n" +
                     "      dataCount\n" +
                     "      data {\n" +
+                    "        id\n" +
                     "        projectId\n" +
                     "        costTime\n" +
-                    "        caloriesConsumed\n" +
+                    "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
@@ -285,9 +288,10 @@ public class ServerInterface {
                     "      pagesCount\n" +
                     "      dataCount\n" +
                     "      data {\n" +
+                    "        id\n" +
                     "        projectId\n" +
                     "        costTime\n" +
-                    "        caloriesConsumed\n" +
+                    "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
