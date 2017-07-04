@@ -496,7 +496,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             double t = elapseTime;
                             BigDecimal bd = new BigDecimal(d / t);
                             bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                            tvAverSpeed.setText(String.format("%.1f", d));
+                            tvAverSpeed.setText(String.valueOf(bd));
                         } else {
                             tvAverSpeed.setText("0.0");
                         }
@@ -510,6 +510,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         llBottom.setVisibility(View.GONE);
                         btStart.setVisibility(View.VISIBLE);
                         btStart.setText("查看锻炼结果");
+
+                        stopTimer();
                     }
                 }
             }
@@ -636,7 +638,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
                 }
-                
+
                 if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
                     tvResult.setText("达标");
                 } else {
