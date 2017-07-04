@@ -70,6 +70,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.tim.app.R.id.ibBack;
+
 
 /**
  * 运动详情
@@ -81,7 +83,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private CoordinateConverter converter;
 
     private SportEntry sportEntry;
-    private ImageButton ibBack;
+//    private ImageButton ibBack;
 
     private MapView mapView;
     private AMap aMap;
@@ -220,8 +222,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+//                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -233,12 +235,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+//                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                text = "调整屏幕缩放比例：" + zoomLevel;
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+//                text = "调整屏幕缩放比例：" + zoomLevel;
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -478,7 +480,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
-                        ibBack.setVisibility(View.GONE);
+//                        ibBack.setVisibility(View.GONE);
                         stopTimer();
                         if (state == STATE_PAUSE) {
                             state = STATE_END;
@@ -597,14 +599,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     public void onClick(View v) {
         turnUpScreen();
         switch (v.getId()) {
-            case R.id.ibBack:
+            case ibBack:
                 finish();
                 break;
             case R.id.btStart:
                 if (state == STATE_NORMAL) {
                     state = STATE_STARTED;
                     startTime = System.currentTimeMillis();
-                    ibBack.setVisibility(View.GONE);
+//                    ibBack.setVisibility(View.GONE);
                     llCurrentInfo.setVisibility(View.VISIBLE);
                     rlCurConsumeEnergy.setVisibility(View.GONE);
                     llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
@@ -634,7 +636,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                    ToastUtil.showToast("运动时间太短，无法结束");
 //                    return;
 //                }
-                ibBack.setVisibility(View.VISIBLE);
+//                ibBack.setVisibility(View.VISIBLE);
                 if (state == STATE_PAUSE) {
                     state = STATE_END;
                 }
