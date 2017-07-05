@@ -34,8 +34,8 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
-import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
@@ -44,7 +44,6 @@ import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
@@ -53,9 +52,6 @@ import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-
-import static com.amap.api.mapcore.util.cz.J;
-import static com.amap.api.mapcore.util.cz.s;
 
 
 /**
@@ -128,7 +124,25 @@ public class SportResultActivity extends BaseActivity {
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
-    private ArrayList<LatLng> latLngs = new ArrayList<LatLng>();
+
+    class DrawPoint {
+        LatLng ll;
+        Boolean isNormal;
+
+        DrawPoint(LatLng llOut, boolean isNormalOut) {
+            ll = llOut;
+            isNormal = isNormalOut;
+        }
+
+        LatLng getLL() {
+            return ll;
+        }
+
+        Boolean isNormal() {
+            return isNormal;
+        }
+    }
+    private ArrayList<DrawPoint> drawPoints = new ArrayList<DrawPoint>();
 
     private View rlAnimView;
     private View ivShowSportInfo;
@@ -179,8 +193,6 @@ public class SportResultActivity extends BaseActivity {
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-//                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
-//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
                 initData();
 
             }
@@ -223,20 +235,23 @@ public class SportResultActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        //TODO 请求数据
+        DLOG.d(TAG, "initData");
         ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
 
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
+                        drawPoints.clear();
                         actArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
                         for (int i = 0; i < actArray.length(); i++) {
-                            latLngs.add(new LatLng(actArray.getJSONObject(i).getDouble("latitude"),
-                                    actArray.getJSONObject(i).getDouble("longitude")));
+                            LatLng ll = new LatLng(actArray.getJSONObject(i).getDouble("latitude"),
+                                    actArray.getJSONObject(i).getDouble("longitude"));
+                            DrawPoint dp = new DrawPoint(ll, actArray.getJSONObject(i).getBoolean("isNormal"));
+                            drawPoints.add(dp);
                         }
 
-                        oldLatLng = latLngs.get(0);//起始坐标
+                        oldLatLng = drawPoints.get(0).getLL();//起始坐标
                         Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
 
                         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
@@ -371,25 +386,18 @@ public class SportResultActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btStart:
-                //TODO test
-//                latLngs.add(new LatLng(40.004156,116.406305));
-//                latLngs.add(new LatLng(40.004356,116.406305));
-//                latLngs.add(new LatLng(40.004556,116.406505));
-//                latLngs.add(new LatLng(40.004756,116.406305));
                 btStart.setVisibility(View.GONE);
-                aMap.addPolyline(new PolylineOptions().
-                        addAll(latLngs).width(10).color(Color.argb(255, 1, 1, 1)));
+//                aMap.addPolyline(new PolylineOptions().
+//                        addAll(drawPoints.get).width(10).color(Color.argb(255, 1, 1, 1)));
 
-//                LatLng last = oldLatLng;
-//                for (LatLng ll : latLngs) {
-//                    drawLine(ll, last, true);
-//                    last = ll;
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
+                LatLng ll = oldLatLng;
+                for (int i = 1; i < drawPoints.size(); i++) {
+                    drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
+                    ll = drawPoints.get(i).getLL();
+                    DLOG.d(TAG, "onClick drawLine ll: " + ll);
+                }
+
+                Marker marker = aMap.addMarker(new MarkerOptions().position(ll).title("终点"));
 
                 break;
             case R.id.ivLocation:

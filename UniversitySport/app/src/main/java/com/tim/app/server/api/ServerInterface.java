@@ -133,7 +133,8 @@ public class ServerInterface {
         queryStr = "{\n" +
                 "\trunningActivity(id:" + activityId + ") {\n" +
                 "   distance\n" +
-                "   costTime" +
+                "   costTime\n" +
+                "   qualified\n" +
                 "   qualifiedDistance" +
                 "   qualifiedCostTime" +
                 "   kcalConsumed" +
