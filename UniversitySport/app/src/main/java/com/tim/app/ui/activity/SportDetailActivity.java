@@ -872,23 +872,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 //提交未数据库中为提交的记录
                                 @Override
                                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                                    Log.d(TAG, "errCode:" + errCode);
+                                    Log.d(TAG, "errCode: " + errCode);
                                     if (errCode == 0) {
                                         //提交成功，把数据库中记录删除。
                                         int result = SQLite.getInstance(context).deleteSportsRecord(
                                                 RunningSportsCallback.TABLE_RUNNING_SPORTS,
                                                 "startTime = ?", new String[]{record.getStartTime().toString()});
-                                        Log.d(TAG, "delete result:" + result);
-                                        Log.d(TAG, "record.getStartTime():" + record.getStartTime());
+                                        Log.d(TAG, "delete result: " + result);
+                                        Log.d(TAG, "record.getStartTime(): " + record.getStartTime());
 
                                         return true;
                                     } else {
-                                        //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                                        int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                                projectId, activityId, studentId, currentDistance,
-                                                elapseTime, startTime, currentSteps, System.currentTimeMillis());
-
-                                        Log.d(TAG, "save result:" + result);
+                                        Log.d(TAG, "onJsonResponse errMsg: " + errMsg);
                                         return false;
                                     }
                                 }

@@ -136,31 +136,33 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="dc491b1897d885b9e941db22041bf3a9"/>
 
-        <service android:name="com.amap.api.location.APSService"></service>
+        <!--<service android:name="com.amap.api.location.APSService"></service>-->
 
 
-        <receiver android:name=".sportEntry.BootReceiver">
+        <receiver android:name=".sport.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <service
-            android:name=".sportEntry.SensorService"/>
+            android:name=".sport.SensorService"/>
 
         <receiver
-            android:name=".sportEntry.ShutdownRecevier">
+            android:name=".sport.ShutdownRecevier">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="de.j4velin.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".sportEntry.PowerReceiver"
+            android:name=".sport.PowerReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
