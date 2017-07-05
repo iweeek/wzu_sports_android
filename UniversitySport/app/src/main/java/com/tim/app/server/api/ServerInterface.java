@@ -140,7 +140,7 @@ public class ServerInterface {
                 "    data{\n" +
                 "      longitude\n" +
                 "      latitude\n" +
-                "      normal\n" +
+                "      isNormal\n" +
                 "      locationType\n" +
                 "      stepCount\n" +
                 "      distance\n" +

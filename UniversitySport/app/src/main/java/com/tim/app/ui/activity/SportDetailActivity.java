@@ -222,7 +222,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             // 转到手机设置界面，用户设置GPS
                             Intent intent = new Intent(
                                     Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
+                             startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
                         }
                     });
 //            dialog.setNeutralButton("取消", new android.content.DialogInterface.OnClickListener() {
@@ -378,8 +378,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
                     aMap.moveCamera(cu);
-                    toastText = "移动屏幕，当前位置居中";
-                    Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
+//                    toastText = "移动屏幕，当前位置居中";
+//                    Toast.makeText(this, toastText, Toast.LENGTH_SHORT).show();
 
                     btStart.setVisibility(View.VISIBLE);
                 }
@@ -696,6 +696,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     });
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
+                    finish();
                     HistorySportEntry entry = new HistorySportEntry();
                     entry.setActivityId(activityId);
                     SportResultActivity.start(this, entry);
@@ -760,8 +761,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
-                String toastText = "移动屏幕，当前位置居中";
-                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+//                String toastText = "移动屏幕，当前位置居中";
+//                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
             case R.id.ivShowSportInfo:
                 //TODO 指南针的位置要变化，UiSettings 中寻找方法
@@ -830,7 +831,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         if (errCode == 0) {
                             try {
-                                String curConsumeEnergy = json.getString("caloriesConsumed");
+                                String curConsumeEnergy = json.getString("kcalConsumed");
                                 rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                                 tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                             } catch (JSONException e) {

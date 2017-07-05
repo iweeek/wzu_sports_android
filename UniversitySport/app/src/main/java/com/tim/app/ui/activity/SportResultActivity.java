@@ -139,10 +139,11 @@ public class SportResultActivity extends BaseActivity {
     private JSONArray actArray;
     private int targetDistance;
     private long targetTime;
+    private String netErrMsg = "数据获取失败，请检查网络连接";
 
-    public static void start(Context context, HistorySportEntry data) {
+    public static void start(Context context, HistorySportEntry entry) {
         Intent intent = new Intent(context, SportResultActivity.class);
-        intent.putExtra("historyEntry", data);
+        intent.putExtra("historyEntry", entry);
         context.startActivity(intent);
     }
 
@@ -275,8 +276,10 @@ public class SportResultActivity extends BaseActivity {
                         tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         return true;
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         //TODO
+                        Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
+                        rlAnimView.setVisibility(View.GONE);
                         return false;
                     }
                 }
