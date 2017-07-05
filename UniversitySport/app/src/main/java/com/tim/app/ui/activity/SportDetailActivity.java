@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,7 +49,6 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.net.ResponseCallback;
-import com.application.library.net.StringResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -163,6 +163,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long targetFinishedTime;
     private int activityId;
     private int studentId = 1;//TODO 需要从认证信息中获取
+
+    private final String LOW_BATTERY_ACTION = "android.intent.action.ACTION_BATTERY_LOW";
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -280,6 +282,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(LOW_BATTERY_ACTION);
+        registerReceiver(lowBatteryReceiver, filter);
     }
 
     private void initMap() {
@@ -984,5 +990,23 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
         EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
+
+        unregisterReceiver(lowBatteryReceiver);
     }
+
+    private BroadcastReceiver lowBatteryReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(LOW_BATTERY_ACTION)) {
+                if (state == STATE_STARTED) {
+                    String msg = "电量不足，请尽快完成运动";
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }
+
+                //TODO
+                float batteryLevel = getBatteryLevel();
+                Toast.makeText(SportDetailActivity.this, "当前电量： " + batteryLevel + "%", Toast.LENGTH_LONG).show();
+            }
+        }
+    };
 }
