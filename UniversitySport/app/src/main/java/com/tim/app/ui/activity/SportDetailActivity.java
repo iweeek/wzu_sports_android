@@ -410,10 +410,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //            if (oldLatLng != newLatLng) {
 
             if (state == STATE_STARTED) {
+                float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
                 float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
                 toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
-                        + "， 本次移动距离： " + moveDistance;
+                        + "， 本次移动距离： " + moveDistance + "， 当前步数： " + currentSteps +
+                "， 当前电量: " + batteryLevel + "%";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                 if (moveDistance / sportEntry.getInterval() > speedLimitation) {

@@ -53,6 +53,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import static android.R.attr.type;
+
 
 /**
  * 运动详情
@@ -124,14 +126,17 @@ public class SportResultActivity extends BaseActivity {
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
+    private LinearLayout llFloatingWindow;
 
     class DrawPoint {
         LatLng ll;
         Boolean isNormal;
+        int locationType;
 
-        DrawPoint(LatLng llOut, boolean isNormalOut) {
+        DrawPoint(LatLng llOut, boolean isNormalOut, int type) {
             ll = llOut;
             isNormal = isNormalOut;
+            locationType = type;
         }
 
         LatLng getLL() {
@@ -140,6 +145,10 @@ public class SportResultActivity extends BaseActivity {
 
         Boolean isNormal() {
             return isNormal;
+        }
+
+        int getLocationType() {
+            return locationType;
         }
     }
     private ArrayList<DrawPoint> drawPoints = new ArrayList<DrawPoint>();
@@ -247,7 +256,8 @@ public class SportResultActivity extends BaseActivity {
                         for (int i = 0; i < actArray.length(); i++) {
                             LatLng ll = new LatLng(actArray.getJSONObject(i).getDouble("latitude"),
                                     actArray.getJSONObject(i).getDouble("longitude"));
-                            DrawPoint dp = new DrawPoint(ll, actArray.getJSONObject(i).getBoolean("isNormal"));
+                            DrawPoint dp = new DrawPoint(ll, actArray.getJSONObject(i).getBoolean("isNormal"),
+                                    actArray.getJSONObject(i).getInt("locationType"));
                             drawPoints.add(dp);
                         }
 
@@ -291,6 +301,8 @@ public class SportResultActivity extends BaseActivity {
                         String curConsumeEnergy = json.getJSONObject("data").getJSONObject("runningActivity").getString("kcalConsumed");
                         tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+                        llFloatingWindow.setVisibility(View.VISIBLE);
+
                         return true;
                     } catch (Exception e) {
                         //TODO
@@ -391,10 +403,15 @@ public class SportResultActivity extends BaseActivity {
 //                        addAll(drawPoints.get).width(10).color(Color.argb(255, 1, 1, 1)));
 
                 LatLng ll = oldLatLng;
+
+                DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 for (int i = 1; i < drawPoints.size(); i++) {
-                    drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
-                    ll = drawPoints.get(i).getLL();
-                    DLOG.d(TAG, "onClick drawLine ll: " + ll);
+                    if (drawPoints.get(i).getLocationType() == 1) {
+                        drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
+                        ll = drawPoints.get(i).getLL();
+                        DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
+                        ", i: " + i);
+                    }
                 }
 
                 Marker marker = aMap.addMarker(new MarkerOptions().position(ll).title("终点"));
@@ -471,6 +488,9 @@ public class SportResultActivity extends BaseActivity {
     public void initView() {
         llLacationHint = (LinearLayout)findViewById(R.id.llLacationHint);
         llLacationHint.setVisibility(View.GONE);
+
+        llFloatingWindow = (LinearLayout)findViewById(R.id.llFloatingWindow);
+        llFloatingWindow.setVisibility(View.GONE);
 
 //        ibBack = (ImageButton) findViewById(R.id.ibBack);
 //        ibBack.setOnClickListener(this);

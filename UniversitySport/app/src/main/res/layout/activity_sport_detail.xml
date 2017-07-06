@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <com.amap.api.maps.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
@@ -42,9 +41,9 @@
         <!--</RelativeLayout>-->
 
         <LinearLayout
+            android:id="@+id/llFloatingWindow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rlTitle"
             android:layout_marginLeft="50dp"
             android:orientation="vertical"
             android:weightSum="1">
