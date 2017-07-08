@@ -18,10 +18,10 @@ public class UserManager {
 
     private static final String KEY_USER_INFO = "key_user_info";//缓存用户信息
     private static final String KEY_PHONE = "key_phone";//手机号
-    private static final String KEY_PASSWORD = "key_password";//登陆密码
-    private static final String KEY_LOGIN_TOKEN = "key_login_token";//登陆token
+    private static final String KEY_PASSWORD = "key_password";//登录密码
+    private static final String KEY_LOGIN_TOKEN = "key_login_token";//登录token
     private static final String KEY_UNIONID = "key_unionid"; //第三方登录唯一id
-    private static final String KEY_LOGIN_TYPE = "key_login_type"; //登陆方式
+    private static final String KEY_LOGIN_TYPE = "key_login_type"; //登录方式
     private static final String KEY_IS_THIRD = "isThirdLogin";//第三方登录的标识
     private static final String PUSH_CHANNEL_ID = "push_channel_id";//推送绑定id的值
     private static final String HTTP_SERVER_DOMAIN = "http_domain";//http的服务器域名
@@ -40,7 +40,7 @@ public class UserManager {
     private UserManager() {
     }
 
-    public static UserManager ins() {
+    public static UserManager instance() {
         if (mUserManager == null) {
             mUserManager = new UserManager();
         }
@@ -142,7 +142,7 @@ public class UserManager {
     }
 
     /**
-     * 保存登陆token
+     * 保存登录token
      *
      * @param token
      */
@@ -304,7 +304,7 @@ public class UserManager {
 
 
     /**
-     * 检测登陆参数
+     * 检测登录参数
      *
      * @param phone
      * @param password
@@ -363,7 +363,7 @@ public class UserManager {
 //    }
 
     /**
-     * 显示登陆提示弹窗
+     * 显示登录提示弹窗
      *
      * @param context
      */

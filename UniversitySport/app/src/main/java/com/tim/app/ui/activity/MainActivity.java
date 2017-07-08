@@ -295,7 +295,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
     public void queryCurTermData() {
-        int studentId = 1;
+        int studentId = 2;
         ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

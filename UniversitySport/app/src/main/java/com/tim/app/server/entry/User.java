@@ -12,6 +12,15 @@ public class User implements Serializable {
     private String password;
     private String headpicthumb;
     private String headpic;
+    private int studentId;
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
+    }
 
     public User() {
     }

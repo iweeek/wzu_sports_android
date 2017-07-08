@@ -43,7 +43,6 @@ public class HistorySportActivity extends BaseActivity {
 
         ibBack.setOnClickListener(this);
 
-
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK), "本周");
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH), "本月");

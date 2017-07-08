@@ -31,7 +31,7 @@ public class BodyCheckDataActivity extends BaseActivity {
     private TextView tvWeight;
     private TextView tvVitalCapacity;
     private TextView tvBMI;
-    private int studentId = 1;
+    private int studentId = 2;
 
     @Override
     protected void onBeforeSetContentLayout() {

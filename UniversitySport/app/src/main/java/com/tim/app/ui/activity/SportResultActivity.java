@@ -53,8 +53,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
-import static android.R.attr.type;
-
 
 /**
  * 运动详情
@@ -386,7 +384,7 @@ public class SportResultActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                UserManager.ins().cleanCache();
+                UserManager.instance().cleanCache();
             }
         }
     }
@@ -479,6 +477,7 @@ public class SportResultActivity extends BaseActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_sport_detail;

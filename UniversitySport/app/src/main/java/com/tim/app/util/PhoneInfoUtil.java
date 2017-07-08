@@ -582,7 +582,7 @@ public class PhoneInfoUtil {
             params.put(NetWorkRequestParams.LOCATION, getLocation(context));
             params.put(NetWorkRequestParams.CHANNEL, getAppChannel(context));
             params.put(NetWorkRequestParams.VERSION, getAppVersion(context));
-            params.put(NetWorkRequestParams.CHANNEL_ID, UserManager.ins().getPushChannelId());
+            params.put(NetWorkRequestParams.CHANNEL_ID, UserManager.instance().getPushChannelId());
         } catch (Exception e) {
             e.printStackTrace();
         }

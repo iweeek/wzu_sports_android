@@ -162,7 +162,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     UiSettings uiSettings;
     private long targetFinishedTime;
     private int activityId;
-    private int studentId = 1;//TODO 需要从认证信息中获取
+    private int studentId = 2;//TODO 需要从认证信息中获取
 
     private final String LOW_BATTERY_ACTION = "android.intent.action.ACTION_BATTERY_LOW";
 
@@ -495,7 +495,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     public void initData() {
         float batteryLevel = getBatteryLevel();
         Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
-
         screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
@@ -531,7 +530,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {// PackageManager.PERMISSION_DENIED
-            UserManager.ins().cleanCache();
+            UserManager.instance().cleanCache();
         }
 
         // 设置滑动解锁-解锁的监听
@@ -650,7 +649,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                UserManager.ins().cleanCache();
+                UserManager.instance().cleanCache();
             }
         }
     }

@@ -22,6 +22,8 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
+import com.tim.app.server.entry.User;
+import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -267,6 +269,11 @@ public class LoginActivity extends BaseActivity {
         //        });
 
         //        MainActivity.start(this);
+        //TODO test
+        User user = new User();
+        user.setStudentId(2);
+        UserManager.instance().saveUserInfo(user);
+
         SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
         String password1 = sharedPreferences.getString(sNo, "");
 

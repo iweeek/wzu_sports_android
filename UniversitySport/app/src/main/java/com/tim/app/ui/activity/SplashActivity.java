@@ -50,7 +50,7 @@ public class SplashActivity extends BaseActivity {
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {
-            UserManager.ins().cleanCache();
+            UserManager.instance().cleanCache();
         }
 
     }
@@ -62,7 +62,7 @@ public class SplashActivity extends BaseActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                UserManager.ins().cleanCache();
+                UserManager.instance().cleanCache();
             }
         }
     }
@@ -82,7 +82,7 @@ public class SplashActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MESSAGE_WHAT_GOTO_MAINACTIVITY:
-                    if (UserManager.ins().isLogin()) {
+                    if (UserManager.instance().isLogin()) {
                         Intent main_intent = new Intent(SplashActivity.this, MainActivity.class);
                         main_intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
                         startActivity(main_intent);

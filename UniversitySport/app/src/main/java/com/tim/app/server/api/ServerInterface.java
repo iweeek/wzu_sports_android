@@ -163,7 +163,7 @@ public class ServerInterface {
                 "      }\n" +
                 "  }\n" +
                 "  \n" +
-                "  student(id:1) {\n" +
+                "  student(id:" + studentId + ") {\n" +
                 "    caloriesConsumption(timeRange:CURRENT_TERM)\n" +
                 "    timeCosted(timeRange:CURRENT_TERM)\n" +
                 "    qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
