@@ -72,7 +72,7 @@
                     android:id="@+id/tvSportJoinNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/ivHideSportInfo"
+                    android:layout_toLeftOf="@+id/llRightTitle"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:text="20人正在参加"
@@ -80,6 +80,7 @@
                     android:textSize="12dp" />
 
                 <LinearLayout
+                    android:id="@+id/llRightTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -224,7 +225,7 @@
                             android:id="@+id/tvAverSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/percent"
+                            android:text=""
                             android:textColor="#868892"
                             android:textSize="20dp"
                             android:textStyle="bold" />

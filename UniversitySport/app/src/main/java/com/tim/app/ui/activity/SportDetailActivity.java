@@ -601,7 +601,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         runningActivitiesEnd(sportEntry.getId(), studentId, targetFinishedTime);
 
-                        tvResult.setVisibility(View.VISIBLE);
                         tvSportJoinNumber.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
@@ -871,13 +870,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         Log.d(TAG, "errCode:" + errCode);
                         if (errCode == 0) {
                             try {
-                                String curConsumeEnergy = json.getString("kclConsumed");
+                                String curConsumeEnergy = json.getString("kcalConsumed");
                                 boolean qualified = json.getBoolean("qualified");
                                 if (qualified) {
                                     tvResult.setText("达标");
                                 } else {
                                     tvResult.setText("未达标");
                                 }
+                                tvResult.setVisibility(View.VISIBLE);
                                 rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                                 tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                             } catch (JSONException e) {

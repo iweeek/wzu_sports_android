@@ -447,7 +447,7 @@ public class SportResultActivity extends BaseActivity {
 
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 for (int i = 1; i < drawPoints.size(); i++) {
-                    if (true /*drawPoints.get(i).getLocationType() == 1*/) {
+                    if (drawPoints.get(i).getLocationType() == 1 && drawPoints.get(i).isNormal()) {
                         drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
                         ll = drawPoints.get(i).getLL();
                         DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
@@ -543,6 +543,8 @@ public class SportResultActivity extends BaseActivity {
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
+        tvAverSpeed.setText("0.0");
+
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
