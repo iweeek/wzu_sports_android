@@ -35,6 +35,7 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
+import com.application.library.log.FileLog;
 import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
@@ -246,27 +247,28 @@ public class SportResultActivity extends BaseActivity {
     public void initData() {
         DLOG.d(TAG, "initData");
 
-        try {
-            InputStream inputStream = context.openFileInput("log_file");
-
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String logFileLine = "";
-
-                while ( (logFileLine = bufferedReader.readLine()) != null ) {
-                    DLOG.d(TAG, "logFileLine: " + logFileLine);
-                }
-
-                inputStream.close();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e(TAG, "Can not read file: " + e.toString());
-        }
-
+        String msg = DLOG.readFromInternalFile(this, SportDetailActivity.logFileName);
+        DLOG.d(TAG, "log_file: " + msg);
+//        try {
+//            InputStream inputStream = context.openFileInput("log_file");
+//
+//            if (inputStream != null) {
+//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+//                String logFileLine = "";
+//
+//                while ( (logFileLine = bufferedReader.readLine()) != null ) {
+//                    DLOG.d(TAG, "logFileLine: " + logFileLine);
+//                }
+//
+//                inputStream.close();
+//            }
+//        }
+//        catch (FileNotFoundException e) {
+//            Log.e(TAG, "File not found: " + e.toString());
+//        } catch (IOException e) {
+//            Log.e(TAG, "Can not read file: " + e.toString());
+//        }
 
         ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
 

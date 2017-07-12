@@ -1,7 +1,11 @@
 package com.application.library.log;
 
 
+import android.content.Context;
+
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 public class DLOG {
 
@@ -116,6 +120,16 @@ public class DLOG {
 //        printLog(XML, tag, xml);
 //    }
 
+    public static boolean writeToInternalFile(Context context, String fileName, String tag, String msg) {
+        return FileLog.writeToInternalFile(context, fileName, msg);
+    }
+
+    public static String readFromInternalFile(Context context, String fileName) {
+        String content = "";
+        FileLog.readFromInternalFile(context, fileName, content);
+        return content;
+    }
+
     public static void file(File targetDirectory, Object msg) {
         printFile(null, targetDirectory, null, msg);
     }
@@ -169,7 +183,7 @@ public class DLOG {
         String msg = contents[1];
         String headString = contents[2];
 
-        FileLog.printFile(tag, targetDirectory, fileName, headString, msg);
+        FileLog.writeToFile(tag, targetDirectory, fileName, headString, msg);
     }
 
     private static String[] wrapperContent(String tagStr, Object... objects) {

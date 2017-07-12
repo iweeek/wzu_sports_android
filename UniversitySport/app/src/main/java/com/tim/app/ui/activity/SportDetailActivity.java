@@ -177,8 +177,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int pauseStateSteps = 0;
 
     private LocationService.MyBinder myBinder = null;
-
-    private String logFileName = "log_file";
+    //TODO
+    public static final String logFileName = "log_file";
+//    private FileOutputStream outputStream;
 
     private ServiceConnection connection = new ServiceConnection() {
 
@@ -193,7 +194,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             myBinder.startLocationInService(interval);
         }
     };
-    private FileOutputStream outputStream;
+
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -269,11 +270,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         super.init(savedInstanceState);
         DLOG.d(TAG, "init");
 
-        try {
-            outputStream = openFileOutput(logFileName, Context.MODE_PRIVATE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //TODO
+//        try {
+//            outputStream = openFileOutput(logFileName, Context.MODE_PRIVATE);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         initGPS();
 
@@ -397,15 +399,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             if (errorCode != 0 & locationType != -1 && locationType != 1 && state != STATE_STARTED) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                try {
-                    String time = TimeUtil.getDateToString(System.currentTimeMillis());
-                    outputStream.write(time.getBytes());
-                    outputStream.write("\r\n".getBytes());
-                    outputStream.write(location.toString().getBytes());
-                    outputStream.write("\r\n".getBytes());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                //TODO
+//                try {
+//                    String time = TimeUtil.getDateToString(System.currentTimeMillis());
+//                    outputStream.write(time.getBytes());
+//                    outputStream.write("\r\n".getBytes());
+//                    outputStream.write(location.toString().getBytes());
+//                    outputStream.write("\r\n".getBytes());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+
                 return;
             } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -431,15 +435,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
 
             if (state == STATE_STARTED) {
-                try {
-                    String time = TimeUtil.getDateToString(System.currentTimeMillis());
-                    outputStream.write(time.getBytes());
-                    outputStream.write("\r\n".getBytes());
-                    outputStream.write(location.toString().getBytes());
-                    outputStream.write("\r\n".getBytes());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    String time = TimeUtil.getDateToString(System.currentTimeMillis());
+//                    outputStream.write(time.getBytes());
+//                    outputStream.write("\r\n".getBytes());
+//                    outputStream.write(location.toString().getBytes());
+//                    outputStream.write("\r\n".getBytes());
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+                String msg = TimeUtil.getDateToString(System.currentTimeMillis()) + ": ";
+                msg += location;
+                DLOG.writeToInternalFile(SportDetailActivity.this, logFileName, TAG, msg);
+
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
                 float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
@@ -479,19 +487,20 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     DLOG.d(TAG, "runningActivityData succeed");
                                     return true;
                                 } else {
-                                    String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                    String msg = TimeUtil.getDateToString(System.currentTimeMillis()) + " runningActivityData failed, errmsg: " + errmsg + "\r\n";
                                     msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
                                     msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                    DLOG.d(TAG, msg);
-                                    try {
-                                        String time = TimeUtil.getDateToString(System.currentTimeMillis());
-                                        outputStream.write(time.getBytes());
-                                        outputStream.write("\r\n".getBytes());
-                                        outputStream.write(msg.getBytes());
-                                        outputStream.write("\r\n".getBytes());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    DLOG.writeToInternalFile(SportDetailActivity.this, logFileName, TAG, msg);
+                                    //TODO
+//                                    try {
+//                                        String time = TimeUtil.getDateToString(System.currentTimeMillis());
+//                                        outputStream.write(time.getBytes());
+//                                        outputStream.write("\r\n".getBytes());
+//                                        outputStream.write(msg.getBytes());
+//                                        outputStream.write("\r\n".getBytes());
+//                                    } catch (Exception e) {
+//                                        e.printStackTrace();
+//                                    }
                                     return false;
                                 }
                             }
@@ -1028,11 +1037,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mapView.onDestroy();
         Log.d(TAG, "onDestroy");
 
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //TODO
+//        try {
+//            outputStream.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
