@@ -210,7 +210,7 @@ public class SportResultActivity extends BaseActivity {
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                initData();
+//                initData();
 
             }
         });

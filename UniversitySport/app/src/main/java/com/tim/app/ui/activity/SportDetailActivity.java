@@ -267,6 +267,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
+        DLOG.d(TAG, "init");
 
         try {
             outputStream = openFileOutput(logFileName, Context.MODE_PRIVATE);
