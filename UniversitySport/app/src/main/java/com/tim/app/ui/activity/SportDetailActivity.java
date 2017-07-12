@@ -82,6 +82,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.amap.api.mapcore.util.cz.B;
 import static com.amap.api.mapcore.util.cz.s;
 import static com.autonavi.ae.search.log.GLog.filename;
 
@@ -585,11 +586,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         if (state == STATE_PAUSE) {
                             state = STATE_END;
                         }
-                        if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
-                            tvResult.setText("达标");
-                        } else {
-                            tvResult.setText("不达标");
-                        }
 
                         tvAverSpeedLabel.setText("平均速度");
                         //做保护
@@ -873,10 +869,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
-
                         if (errCode == 0) {
                             try {
-                                String curConsumeEnergy = json.getString("kcalConsumed");
+                                String curConsumeEnergy = json.getString("kclConsumed");
+                                boolean qualified = json.getBoolean("qualified");
+                                if (qualified) {
+                                    tvResult.setText("达标");
+                                } else {
+                                    tvResult.setText("未达标");
+                                }
                                 rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                                 tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                             } catch (JSONException e) {

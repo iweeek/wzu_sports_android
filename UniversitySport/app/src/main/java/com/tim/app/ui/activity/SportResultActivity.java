@@ -46,6 +46,13 @@ import com.tim.app.ui.view.SlideUnlockView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -217,21 +224,13 @@ public class SportResultActivity extends BaseActivity {
      * 设置一些amap的属性
      */
     private void setUpMap() {
-//        setupLocationStyle();
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setCompassEnabled(true);
         aMap.getUiSettings().setZoomControlsEnabled(false);
-//        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
+        aMap.setMyLocationEnabled(false);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
     }
 
-    private void setupLocationStyle() {
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-        myLocationStyle.interval(interval);
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.drawable.navi_map_gps_locked));
-        aMap.setMyLocationStyle(myLocationStyle);
-    }
+
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -243,6 +242,29 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void initData() {
         DLOG.d(TAG, "initData");
+
+        try {
+            InputStream inputStream = context.openFileInput("log_file");
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String logFileLine = "";
+
+                while ( (logFileLine = bufferedReader.readLine()) != null ) {
+                    DLOG.d(TAG, "logFileLine: " + logFileLine);
+                }
+
+                inputStream.close();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e(TAG, "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e(TAG, "Can not read file: " + e.toString());
+        }
+
+
         ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
 
             @Override
@@ -269,6 +291,17 @@ public class SportResultActivity extends BaseActivity {
                         currentDistance = json.getJSONObject("data").getJSONObject("runningActivity").getInt("distance");
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
 
+                        boolean qualified = json.getJSONObject("data").getJSONObject("runningActivity").getBoolean("qualified");
+                        if (qualified) {
+                            tvResult.setText("达标");
+                        } else {
+                            tvResult.setText("未达标");
+                        }
+                        tvResult.setVisibility(View.VISIBLE);
+
+                        tvSportName.setText(json.getJSONObject("data").getJSONObject("runningActivity").getJSONObject("runningProject")
+                                .getString("name"));
+
                         elapseTime = json.getJSONObject("data").getJSONObject("runningActivity").getLong("costTime");
                         String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
                         tvElapseTime.setText(time);
@@ -285,7 +318,7 @@ public class SportResultActivity extends BaseActivity {
                         tvTargetDistance.setText(String.valueOf(targetDistance));
 
                         targetTime = json.getJSONObject("data").getJSONObject("runningActivity").getInt("qualifiedCostTime");
-                        tvTargetTime.setText(String.valueOf(targetTime));
+                        tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
                             double t = targetTime;
@@ -404,7 +437,7 @@ public class SportResultActivity extends BaseActivity {
 
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 for (int i = 1; i < drawPoints.size(); i++) {
-                    if (drawPoints.get(i).getLocationType() == 1) {
+                    if (true /*drawPoints.get(i).getLocationType() == 1*/) {
                         drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
                         ll = drawPoints.get(i).getLL();
                         DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
