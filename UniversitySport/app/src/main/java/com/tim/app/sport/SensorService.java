@@ -89,7 +89,7 @@ public class SensorService extends Service implements SensorEventListener {
 
     /**
      * 获取上次暂停时记录的步数，根据当前步数计算得出暂停时走的步数。插入新的记录到数据库，并且更新SP。
-     * setps是自启动后的步数
+     * steps是自启动后的步数
      */
     private void updateIfNecessary() {
         if (steps > lastSaveSteps + SAVE_OFFSET_STEPS ||

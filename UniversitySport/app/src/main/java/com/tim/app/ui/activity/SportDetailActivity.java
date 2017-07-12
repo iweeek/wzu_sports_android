@@ -2,10 +2,12 @@ package com.tim.app.ui.activity;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,6 +16,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -51,6 +54,8 @@ import com.application.library.net.JsonResponseCallback;
 import com.application.library.net.ResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
+import com.application.library.util.NetUtils;
+import com.application.library.util.TimeUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
@@ -67,12 +72,18 @@ import com.tim.app.ui.view.SlideUnlockView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
+import static com.amap.api.mapcore.util.cz.s;
+import static com.autonavi.ae.search.log.GLog.filename;
 
 
 /**
@@ -127,9 +138,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
     static final int STATE_PAUSE = 2;//暂停
-
     static final int STATE_END = 3;//结束
-
     private int state = STATE_NORMAL;
 
     private int currentDistance = 0;
@@ -164,15 +173,32 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int activityId;
     private int studentId = 2;//TODO 需要从认证信息中获取
 
-    private final String LOW_BATTERY_ACTION = "android.intent.action.ACTION_BATTERY_LOW";
+    private int pauseStateSteps = 0;
+
+    private LocationService.MyBinder myBinder = null;
+
+    private String logFileName = "log_file";
+
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DLOG.d(TAG, "onServiceConnected name: " + name + ", service: " + service);
+            myBinder = (LocationService.MyBinder) service;
+            myBinder.startLocationInService(interval);
+        }
+    };
+    private FileOutputStream outputStream;
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
         intent.putExtra("sportEntry", sportEntry);
         context.startActivity(intent);
     }
-
-    private int pauseStateSteps = 0;
 
     EventListener eventListener = new EventListener() {
         @Override
@@ -241,9 +267,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
+        try {
+            outputStream = openFileOutput(logFileName, Context.MODE_PRIVATE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
+        //TODO test
         interval = sportEntry.getInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
@@ -252,6 +285,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         startService(new Intent(this, SensorService.class));
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
+
+        startService(new Intent(this, LocationService.class));
+
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
         //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -276,15 +312,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             public void onMapLoaded() {
 //                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
 //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 //                text = "调整屏幕缩放比例：" + zoomLevel;
 //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(LOW_BATTERY_ACTION);
+        filter.addAction(Intent.ACTION_BATTERY_LOW);
         registerReceiver(lowBatteryReceiver, filter);
     }
 
@@ -329,8 +364,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void onMyLocationChange(Location location) {
         Log.d(TAG, "onMyLocationChange location: " + location);
-        Log.d(TAG, "onMyLocationChange accuracy: " + location.getAccuracy());
-        Log.d(TAG, "onMyLocationChange speed: " + location.getSpeed());
+
         String toastText = "";
         int errorCode = -1;
         String errorInfo = "";
@@ -346,18 +380,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
         }
 
-        //TODO 待删除
-//        if (state == STATE_STARTED) {
-//            elapseTime += interval / 1000;
-//            Log.d(TAG, "elapseTime: " + elapseTime);
-//            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-//            tvElapseTime.setText(time);
-//        }
-
         //屏幕到了锁屏的时间，调暗亮度
+        WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
-        if (screenOffTimeout <= screenKeepLightTime) {
-            WindowManager.LayoutParams params = getWindow().getAttributes();
+        DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
+        if (screenOffTimeout <= screenKeepLightTime && Double.compare(params.screenBrightness, 0.1) == 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
             Log.d(TAG, "onMyLocationChange turn down light");
@@ -365,9 +392,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         if (location != null) {
             //定位成功
-            if (errorCode != 0 && locationType != -1 && locationType != 1) {
+            if (errorCode != 0 & locationType != -1 && locationType != 1 && state != STATE_STARTED) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                try {
+                    String time = TimeUtil.getDateToString(System.currentTimeMillis());
+                    outputStream.write(time.getBytes());
+                    outputStream.write("\r\n".getBytes());
+                    outputStream.write(location.toString().getBytes());
+                    outputStream.write("\r\n".getBytes());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return;
             } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -392,24 +428,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
             }
 
-            //TODO 待删除
-////              定位成功，切换屏幕视角，仅切换一次
-//            if (oldLatLng == null) {
-//                Log.d(TAG, "newLatLng: " + newLatLng);
-//                //修改地图的中心点位置
-////                CameraPosition cp = aMap.getCameraPosition();
-////                CameraPosition cpNew = CameraPosition.fromLatLngZoom(newLatLng, cp.zoom);
-//                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-//                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//                aMap.moveCamera(cu);
-//                toastText = "移动屏幕，进行缩放，比例：" + zoomLevel;
-//                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-//            }
-
-            //位置有变化
-//            if (oldLatLng != newLatLng) {
-
             if (state == STATE_STARTED) {
+                try {
+                    String time = TimeUtil.getDateToString(System.currentTimeMillis());
+                    outputStream.write(time.getBytes());
+                    outputStream.write("\r\n".getBytes());
+                    outputStream.write(location.toString().getBytes());
+                    outputStream.write("\r\n".getBytes());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
                 float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
@@ -449,7 +477,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     DLOG.d(TAG, "runningActivityData succeed");
                                     return true;
                                 } else {
-                                    DLOG.d(TAG, "runningActivityData failed, errmsg: " + errmsg);
+                                    String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                    msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                    msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                    DLOG.d(TAG, msg);
+                                    try {
+                                        String time = TimeUtil.getDateToString(System.currentTimeMillis());
+                                        outputStream.write(time.getBytes());
+                                        outputStream.write("\r\n".getBytes());
+                                        outputStream.write(msg.getBytes());
+                                        outputStream.write("\r\n".getBytes());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     return false;
                                 }
                             }
@@ -458,15 +498,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
             oldLatLng = newLatLng;
             DLOG.d(TAG, toastText);
-
-//            } else {
-//                tvAverSpeed.setText("0.0");
-//                String text = "坐标没有发生变化，坐标： " + oldLatLng;
-//                Toast.makeText(this, text, Toast.LENGTH_LONG);
-//            }
-
         } else {
-            String errText = "定位失败";
+            String errText = "定位失败：" + errorInfo;
             Log.e(TAG, errText);
             Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
         }
@@ -570,7 +603,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvAverSpeed.setText("0.0");
                         }
 
-//                        int studentId = 1;//学生的id
                         runningActivitiesEnd(sportEntry.getId(), studentId, targetFinishedTime);
 
                         tvResult.setVisibility(View.VISIBLE);
@@ -580,7 +612,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         btStart.setVisibility(View.VISIBLE);
                         btStart.setText("查看锻炼结果");
 
-                        stopTimer();
+                        myBinder.stopLocationInService();
+                        aMap.setOnMyLocationChangeListener(null);
                     }
                 }
             }
@@ -684,6 +717,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     initData();
                     startTimer();
+                    Intent bindIntent = new Intent(this, LocationService.class);
+                    bindService(bindIntent, connection, BIND_AUTO_CREATE);
+
                     ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -703,6 +739,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             }
                         }
                     });
+
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
                     HistorySportEntry entry = new HistorySportEntry();
@@ -989,17 +1026,27 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mapView.onDestroy();
         Log.d(TAG, "onDestroy");
 
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
         EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
 
+        if (myBinder != null) {
+            unbindService(connection);
+        }
         unregisterReceiver(lowBatteryReceiver);
+
     }
 
     private BroadcastReceiver lowBatteryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(LOW_BATTERY_ACTION)) {
+            if (intent.getAction().equals(Intent.ACTION_BATTERY_LOW)) {
                 if (state == STATE_STARTED) {
                     String msg = "电量不足，请尽快完成运动";
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();

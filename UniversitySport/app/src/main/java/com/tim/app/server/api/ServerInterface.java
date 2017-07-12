@@ -12,6 +12,7 @@ import com.tim.app.server.net.NetworkInterface;
 import java.util.HashMap;
 
 import static android.R.attr.id;
+import static android.R.attr.name;
 import static com.lzy.okhttputils.utils.OkLogger.tag;
 
 /**
@@ -138,6 +139,9 @@ public class ServerInterface {
                 "   qualifiedDistance" +
                 "   qualifiedCostTime" +
                 "   kcalConsumed" +
+                "   runningProject {\n" +
+                "       name\n" +
+                "    }\n" +
                 "    data{\n" +
                 "      longitude\n" +
                 "      latitude\n" +

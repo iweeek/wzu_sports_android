@@ -34,6 +34,7 @@
     <!--用于申请获取蓝牙信息进行室内定位-->
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -142,9 +143,6 @@
             android:name="com.amap.api.v2.apikey"
             android:value="dc491b1897d885b9e941db22041bf3a9"/>
 
-        <!--<service android:name="com.amap.api.location.APSService"></service>-->
-
-
         <receiver android:name=".sport.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -153,6 +151,10 @@
 
         <service
             android:name=".sport.SensorService"/>
+
+        <service android:name="com.amap.api.location.APSService"></service>
+
+        <service android:name=".ui.activity.LocationService"></service>
 
         <receiver
             android:name=".sport.ShutdownRecevier">

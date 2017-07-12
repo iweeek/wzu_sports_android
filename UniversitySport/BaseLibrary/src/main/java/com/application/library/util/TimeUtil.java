@@ -450,7 +450,7 @@ public abstract class TimeUtil {
     /*时间戳转换成字符窜*/
     public static String getDateToString(long time) {
         Date d = new Date(time);
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss.SSS");
         return sf.format(d);
     }
 
