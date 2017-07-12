@@ -133,6 +133,7 @@ public class SportResultActivity extends BaseActivity {
     private long timerInterval = 1000;
     private LinearLayout llFloatingWindow;
 
+
     class DrawPoint {
         LatLng ll;
         Boolean isNormal;
@@ -167,7 +168,9 @@ public class SportResultActivity extends BaseActivity {
     private JSONArray actArray;
     private int targetDistance;
     private long targetTime;
-    private String netErrMsg = "数据获取失败，请检查网络连接";
+    private final static String netErrMsg = "数据获取失败，请检查网络连接";
+    private final static String parseErrMsg = "数据解析失败，请联系客服";
+    private final static String noSportTrackMsg = "本次运动没有运动轨迹";
 
     public static void start(Context context, HistorySportEntry entry) {
         Intent intent = new Intent(context, SportResultActivity.class);
@@ -281,11 +284,15 @@ public class SportResultActivity extends BaseActivity {
                             drawPoints.add(dp);
                         }
 
-                        oldLatLng = drawPoints.get(0).getLL();//起始坐标
-                        Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+                        if (drawPoints.size() > 0) {
+                            oldLatLng = drawPoints.get(0).getLL();//起始坐标
+                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
 
-                        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
-                        aMap.moveCamera(cu);
+                            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+                            aMap.moveCamera(cu);
+                        } else {
+                            Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
+                        }
 
                         llCurrentInfo.setVisibility(View.VISIBLE);
                         currentDistance = json.getJSONObject("data").getJSONObject("runningActivity").getInt("distance");
@@ -337,12 +344,15 @@ public class SportResultActivity extends BaseActivity {
                         return true;
                     } catch (Exception e) {
                         //TODO
-                        Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
-                        rlAnimView.setVisibility(View.GONE);
+                        e.printStackTrace();
+                        Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
+//                        rlAnimView.setVisibility(View.GONE);
                         return false;
                     }
+                } else {
+                    Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
+                    return false;
                 }
-                return false;
             }
         });
 
@@ -445,7 +455,7 @@ public class SportResultActivity extends BaseActivity {
                     }
                 }
 
-                Marker marker = aMap.addMarker(new MarkerOptions().position(ll).title("终点"));
+                Marker marker = aMap.addMarker(new MarkerOptions().position(drawPoints.get(drawPoints.size() - 1).getLL()).title("终点"));
 
                 break;
             case R.id.ivLocation:
