@@ -177,9 +177,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int pauseStateSteps = 0;
 
     private LocationService.MyBinder myBinder = null;
-    //TODO
-    public static final String logFileName = "log_file";
-//    private FileOutputStream outputStream;
 
     private ServiceConnection connection = new ServiceConnection() {
 
@@ -368,6 +365,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void onMyLocationChange(Location location) {
         Log.d(TAG, "onMyLocationChange location: " + location);
+        DLOG.openInternalFile(this);
 
         String toastText = "";
         int errorCode = -1;
@@ -446,7 +444,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                }
                 String msg = TimeUtil.getDateToString(System.currentTimeMillis()) + ": ";
                 msg += location;
-                DLOG.writeToInternalFile(SportDetailActivity.this, logFileName, TAG, msg);
+                DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
@@ -490,7 +488,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     String msg = TimeUtil.getDateToString(System.currentTimeMillis()) + " runningActivityData failed, errmsg: " + errmsg + "\r\n";
                                     msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
                                     msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                    DLOG.writeToInternalFile(SportDetailActivity.this, logFileName, TAG, msg);
+                                    DLOG.writeToInternalFile(msg);
                                     //TODO
 //                                    try {
 //                                        String time = TimeUtil.getDateToString(System.currentTimeMillis());
@@ -1052,6 +1050,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             unbindService(connection);
         }
         unregisterReceiver(lowBatteryReceiver);
+
+        DLOG.closeInternalFile();
 
     }
 

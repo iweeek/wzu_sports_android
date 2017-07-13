@@ -247,7 +247,9 @@ public class SportResultActivity extends BaseActivity {
     public void initData() {
         DLOG.d(TAG, "initData");
 
-        String msg = DLOG.readFromInternalFile(this, SportDetailActivity.logFileName);
+        DLOG.openInternalFile(this);
+        String msg = DLOG.readFromInternalFile();
+        DLOG.closeInternalFile();
         DLOG.d(TAG, "log_file: " + msg);
 //        try {
 //            InputStream inputStream = context.openFileInput("log_file");

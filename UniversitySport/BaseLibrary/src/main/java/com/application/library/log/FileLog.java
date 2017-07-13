@@ -25,6 +25,13 @@ import static com.lzy.okhttputils.utils.OkLogger.tag;
 public class FileLog {
     private static final String TAG = "FileLog";
     private static FileOutputStream outputStream = null;
+    private static Context context;
+    private static FileOutputStream outputStreamInteralFile = null;
+    private static OutputStreamWriter outputStreamWriterInternalFile = null;
+    private static InputStream inputStreamInternalFile = null;
+    private static InputStreamReader inputStreamReaderInternalFile = null;
+    private static String internalLogFileName = "log_file";
+
 
     public static void writeToFile(String tag, File targetDirectory, String fileName, String headString, String msg) {
 
@@ -36,15 +43,58 @@ public class FileLog {
         }
     }
 
-    public static Boolean writeToInternalFile(Context context, String fileName, String msg) {
+    public static boolean openStreamInternalFile(Context context) {
         try {
-            FileOutputStream outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE | Context.MODE_APPEND);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, "UTF-8");
-            outputStreamWriter.write(msg);
-            outputStreamWriter.write(System.getProperty("line.separator"));
-            outputStreamWriter.flush();
+            if (outputStreamInteralFile == null) {
+                outputStreamInteralFile = context.openFileOutput(internalLogFileName, Context.MODE_PRIVATE);
+            }
+
+            if (outputStreamWriterInternalFile == null) {
+                outputStreamWriterInternalFile = new OutputStreamWriter(outputStreamInteralFile, "UTF-8");
+            }
+
+            if (inputStreamInternalFile == null) {
+                inputStreamInternalFile = context.openFileInput(internalLogFileName);
+            }
+
+            if (inputStreamReaderInternalFile == null) {
+                inputStreamReaderInternalFile = new InputStreamReader(inputStreamInternalFile);
+            }
+
+            return true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean closeStreamInternalFile() {
+        try {
+            if (outputStreamInteralFile != null) {
+                outputStreamInteralFile.close();
+                outputStreamInteralFile = null;
+            }
+
+            if (inputStreamInternalFile != null) {
+                inputStreamInternalFile.close();
+                inputStreamInternalFile = null;
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static Boolean writeToInternalFile(String msg) {
+        try {
+            outputStreamWriterInternalFile.write(msg);
+            outputStreamWriterInternalFile.write(System.getProperty("line.separator"));
+            outputStreamWriterInternalFile.flush();
             DLOG.d(TAG, "writeToInternalFile: " + msg);
-            outputStream.close();
             return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -61,11 +111,9 @@ public class FileLog {
         }
     }
 
-    public static boolean readFromInternalFile(Context context, String fileName, String content) {
+    public static boolean readFromInternalFile(String content) {
         try {
-            InputStream inputStream = context.openFileInput(fileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReaderInternalFile);
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -73,7 +121,7 @@ public class FileLog {
                 content += line;
             }
             DLOG.d(TAG, "content: " + content);
-            inputStream.close();
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;

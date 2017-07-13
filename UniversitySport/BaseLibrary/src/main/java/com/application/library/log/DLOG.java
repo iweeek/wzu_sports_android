@@ -120,13 +120,21 @@ public class DLOG {
 //        printLog(XML, tag, xml);
 //    }
 
-    public static boolean writeToInternalFile(Context context, String fileName, String tag, String msg) {
-        return FileLog.writeToInternalFile(context, fileName, msg);
+    public static boolean openInternalFile(Context context) {
+        return FileLog.openStreamInternalFile(context);
     }
 
-    public static String readFromInternalFile(Context context, String fileName) {
+    public static boolean closeInternalFile() {
+        return FileLog.closeStreamInternalFile();
+    }
+
+    public static boolean writeToInternalFile(String msg) {
+        return FileLog.writeToInternalFile(msg);
+    }
+
+    public static String readFromInternalFile() {
         String content = "";
-        FileLog.readFromInternalFile(context, fileName, content);
+        FileLog.readFromInternalFile(content);
         return content;
     }
 
