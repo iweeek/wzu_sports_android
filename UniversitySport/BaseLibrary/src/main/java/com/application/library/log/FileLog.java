@@ -3,6 +3,8 @@ package com.application.library.log;
 import android.content.Context;
 import android.util.Log;
 
+import com.application.library.util.TimeUtil;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -91,6 +93,7 @@ public class FileLog {
 
     public static Boolean writeToInternalFile(String msg) {
         try {
+            outputStreamWriterInternalFile.write(TimeUtil.getDateToString(System.currentTimeMillis()) + ": ");
             outputStreamWriterInternalFile.write(msg);
             outputStreamWriterInternalFile.write(System.getProperty("line.separator"));
             outputStreamWriterInternalFile.flush();
