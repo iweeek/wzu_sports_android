@@ -59,8 +59,8 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder.tvSportName.setText(data.getSportName());
         }
 
-        if (data.getJoinNumber() > 0) {
-            holder.tvSportJoinNumber.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getJoinNumber())));
+        if (data.getParticipantNum() > 0) {
+            holder.tvSportJoinNumber.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
         }
 
 

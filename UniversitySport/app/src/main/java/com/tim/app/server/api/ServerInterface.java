@@ -121,6 +121,7 @@ public class ServerInterface {
         queryStr = "{\n" +
                 "  runningProjects(universityId: 1) {\n" +
                 "   acquisitionInterval\n" +
+                "   participantNum\n" +
                 "    id\n" +
                 "    name\n" +
                 "    qualifiedDistance\n" +

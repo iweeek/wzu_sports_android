@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class SportEntry implements Serializable {
     private static final long serialVersionUID = 6187447685293862071L;
     private String sportName;//名称
-    private int joinNumber;//参加人数
+    private int participantNum;//参加人数
     private int targetDistance;//目标距离
     private String targetSpeed;//目标速度
     private int targetTime;//目标时间
@@ -36,12 +36,12 @@ public class SportEntry implements Serializable {
         this.sportName = sportName;
     }
 
-    public int getJoinNumber() {
-        return joinNumber;
+    public int getParticipantNum() {
+        return participantNum;
     }
 
-    public void setJoinNumber(int joinNumber) {
-        this.joinNumber = joinNumber;
+    public void setParticiNum(int num) {
+        this.participantNum = num;
     }
 
     public int getTargetDistance() {

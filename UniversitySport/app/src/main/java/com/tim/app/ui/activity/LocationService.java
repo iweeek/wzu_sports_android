@@ -133,7 +133,10 @@ public class LocationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         DLOG.d(TAG, "onDestroy");
-        mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
+        if (mLocationClient != null) {
+            mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
+            mLocationClient = null;
+        }
     }
 
     @Override

@@ -41,7 +41,10 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
+import com.tim.app.sport.RunningSportsCallback;
+import com.tim.app.sport.SQLite;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONArray;
@@ -57,6 +60,7 @@ import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -251,26 +255,17 @@ public class SportResultActivity extends BaseActivity {
         String msg = DLOG.readFromInternalFile();
         DLOG.closeInternalFile();
         DLOG.d(TAG, "log_file: " + msg);
-//        try {
-//            InputStream inputStream = context.openFileInput("log_file");
-//
-//            if (inputStream != null) {
-//                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-//                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-//                String logFileLine = "";
-//
-//                while ( (logFileLine = bufferedReader.readLine()) != null ) {
-//                    DLOG.d(TAG, "logFileLine: " + logFileLine);
-//                }
-//
-//                inputStream.close();
-//            }
-//        }
-//        catch (FileNotFoundException e) {
-//            Log.e(TAG, "File not found: " + e.toString());
-//        } catch (IOException e) {
-//            Log.e(TAG, "Can not read file: " + e.toString());
-//        }
+
+        String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
+
+        //TODO test
+        SQLite.init(context, RunningSportsCallback.getInstance());
+        List<RunningSportsRecord> list = SQLite.query(
+                RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
+
+        for (final RunningSportsRecord record : list) {
+            Log.d(TAG, "record: " + record);
+        }
 
         ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
 

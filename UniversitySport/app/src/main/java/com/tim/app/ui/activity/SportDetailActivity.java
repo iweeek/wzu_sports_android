@@ -55,7 +55,6 @@ import com.application.library.net.ResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
-import com.application.library.util.TimeUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
@@ -72,19 +71,12 @@ import com.tim.app.ui.view.SlideUnlockView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import static com.amap.api.mapcore.util.cz.B;
-import static com.amap.api.mapcore.util.cz.s;
-import static com.autonavi.ae.search.log.GLog.filename;
 
 
 /**
@@ -505,8 +497,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportName.setText(sportEntry.getSportName());
         }
 
-        if (sportEntry.getJoinNumber() > 0) {
-            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getJoinNumber())));
+        if (sportEntry.getParticipantNum() > 0) {
+            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
         }
 
         if (sportEntry.getTargetDistance() > 0) {
