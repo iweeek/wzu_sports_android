@@ -74,6 +74,7 @@
     <string name="bt_get_verification_code">获取验证码</string>
     <string name="new_password">新密码</string>
     <string name="submit">提交</string>
+    <string name="bindStudentNumber">绑定学号</string>
 
     <!--安全中心-->
     <string name="bound_phone">已绑定手机</string>
@@ -160,6 +161,8 @@
     <string name="outsideScore">课外成绩(分)</string>
     <string name="percent">%s</string>
     <string name="slash">/</string>
+
+    <string name="targetTime">达标时间 ： %s分钟   </string>
 
 
     <!-- -->

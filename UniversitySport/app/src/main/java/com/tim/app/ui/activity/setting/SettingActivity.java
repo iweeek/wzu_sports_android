@@ -10,8 +10,14 @@ import android.widget.TextView;
 import com.application.library.util.PackageUtil;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
+import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.BaseActivity;
+import com.tim.app.ui.activity.SportPrepareActivity;
+import com.tim.app.ui.activity.SportsAreaListActivity;
+import com.tim.app.ui.activity.SportsClockListActivity;
+
+import java.util.Random;
 
 public class SettingActivity extends BaseActivity {
 
@@ -22,6 +28,7 @@ public class SettingActivity extends BaseActivity {
     private RelativeLayout rlModtifyPassword;
     private RelativeLayout rlAboutUS;
     private RelativeLayout rlCheckUpdate;
+    private RelativeLayout rlTest;
 
     /**
      * 启动设置界面的统一接口
@@ -44,12 +51,14 @@ public class SettingActivity extends BaseActivity {
         rlModtifyPassword = (RelativeLayout) findViewById(R.id.rlModtifyPassword);
         rlAboutUS = (RelativeLayout) findViewById(R.id.rlAboutUS);
         rlCheckUpdate = (RelativeLayout) findViewById(R.id.rlCheckUpdate);
+        rlTest = (RelativeLayout) findViewById(R.id.rlTest);
 
         tvVersionCode = (TextView) findViewById(R.id.tvVersionCode);
         findViewById(R.id.ibBack).setOnClickListener(this);
         rlModtifyPassword.setOnClickListener(this);
         rlAboutUS.setOnClickListener(this);
         rlCheckUpdate.setOnClickListener(this);
+        rlTest.setOnClickListener(this);
     }
 
 
@@ -73,6 +82,15 @@ public class SettingActivity extends BaseActivity {
             Intent aboutIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutIntent);
         } else if (v.getId() == R.id.rlCheckUpdate) {
+
+        } else if (v.getId() == R.id.rlTest) {
+            boolean value = new Random().nextBoolean();
+            if (value) {
+                Intent intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
+                startActivity(intent);
+            } else {
+                SportPrepareActivity.start(SettingActivity.this,new SportEntry(),new Random().nextBoolean());
+            }
 
         }
     }

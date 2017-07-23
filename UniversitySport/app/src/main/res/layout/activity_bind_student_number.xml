@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        style="@style/TitleBarStyle"
+        android:layout_height="@dimen/title_height"
+        android:paddingLeft="20dp">
+
+        <ImageButton
+            android:id="@+id/ibClose"
+            android:layout_width="@dimen/btn_close_size"
+            android:layout_height="@dimen/btn_close_size"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:src="@drawable/btn_close" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/TitleTextStyle"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@id/ibClose"
+            android:text="@string/bindStudentNumber" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/inputContentTitle"
+            android:gravity="center"
+            android:text="学校" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:id="@+id/etSchool"
+                style="@style/inputContentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="请输入您所在的学校"
+                android:inputType="number"
+                android:textColorHint="@color/white_80" />
+
+        </RelativeLayout>
+
+        <View style="@style/vLine" />
+
+        <TextView
+            android:id="@+id/tvSchoolErrorPrmpt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/errorTextColor"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/inputContentTitle"
+            android:gravity="center"
+            android:text="学号" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:id="@+id/etNo"
+                style="@style/inputContentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="请输入您的学号"
+                android:inputType="number"
+                android:textColorHint="@color/white_80" />
+
+        </RelativeLayout>
+
+        <View style="@style/vLine" />
+
+        <TextView
+            android:id="@+id/tvNoErrorPrmpt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/errorTextColor"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/inputContentTitle"
+            android:gravity="center"
+            android:text="姓名" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp">
+
+            <EditText
+                android:id="@+id/etName"
+                style="@style/inputContentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="请输入您的姓名"
+                android:inputType="number"
+                android:textColorHint="@color/white_80" />
+
+        </RelativeLayout>
+
+        <View style="@style/vLine" />
+
+        <TextView
+            android:id="@+id/tvNameErrorPrmpt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:textColor="@color/errorTextColor"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btBind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="28dp"
+        android:layout_marginRight="28dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_shape_button_round_white"
+        android:gravity="center"
+        android:text="立即绑定"
+        android:textColor="@color/login_btn_text_color"
+        android:textSize="@dimen/text_size_18" />
+
+</LinearLayout>

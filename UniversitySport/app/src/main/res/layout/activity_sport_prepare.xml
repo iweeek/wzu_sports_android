@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="20dp">
+
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true" />
+
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        style="@style/TitleBarStyle"
+        android:layout_height="@dimen/title_height"
+        android:background="@color/blue"
+        android:paddingLeft="20dp">
+
+        <ImageButton
+            android:id="@+id/ibBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_back_white" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/TitleTextStyle"
+            android:layout_marginLeft="50dp"
+            android:text="选择锻炼区域" />
+
+        <TextView
+            android:id="@+id/tvList"
+            style="@style/TitleTextStyle"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="20dp"
+            android:text="列表" />
+
+    </RelativeLayout>
+
+    <com.application.library.widget.recycle.WrapRecyclerView
+        android:id="@+id/wrvInfo"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

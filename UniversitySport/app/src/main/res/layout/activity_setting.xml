@@ -107,4 +107,30 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="30dp" />
+
+    <RelativeLayout
+        android:id="@+id/rlTest"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="测试"
+            android:textColor="#878e94"
+            android:textSize="16dp" />
+
+
+    </RelativeLayout>
+
 </LinearLayout>

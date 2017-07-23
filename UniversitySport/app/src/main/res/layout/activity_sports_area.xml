@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dl_sports_score_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -33,17 +34,7 @@
                 android:id="@+id/tvTitle"
                 style="@style/TitleTextStyle"
                 android:layout_marginLeft="50dp"
-                android:text="体育成绩" />
-
-            <ImageView
-                android:id="@+id/ivSelectTerm"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="12dp"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_notify" />
+                android:text="锻炼区域列表" />
 
         </RelativeLayout>
 
@@ -54,7 +45,7 @@
             android:layout_height="match_parent">
 
             <com.application.library.widget.recycle.WrapRecyclerView
-                android:id="@+id/wrvScore"
+                android:id="@+id/wrvArea"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.application.library.widget.loadmore.LoadMoreRecycleViewContainer>
@@ -62,25 +53,4 @@
     </LinearLayout>
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:background="@color/white">
-
-        <android.support.design.widget.NavigationView
-            android:id="@+id/nv_sports_score_navigation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginBottom="50dp"
-            app:headerLayout="@layout/navigation_term_select_header"
-            app:itemTextColor="@color/menu_text_color_selector"
-            app:menu="@menu/drawer_term_select_view">
-
-
-        </android.support.design.widget.NavigationView>
-
-    </RelativeLayout>
-
-</android.support.v4.widget.DrawerLayout>
+</LinearLayout>
