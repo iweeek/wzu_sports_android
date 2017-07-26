@@ -115,21 +115,25 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     private void initData() {
         if (type == AppConstant.TYPE_COST_ENERGY) {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
+
+                        Log.d(TAG, "pageNoEnergy:" + pageNoEnergy);
+
                         try {
                             pageCountEnergy = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
-                                    .optJSONObject("caloriesConsumptionRanking").getString("pagesCount"));
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
+                                    .optJSONObject("kcalConsumptionRanking").getString("pagesCount"));
+                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("kcalConsumptionRanking").
                                     getJSONArray("data");
                             RankingData headData[] = new RankingData[3];
                             for (int i = 0; i < 3; i++) {
                                 headData[i] = new RankingData();
                                 headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
+                                Log.d(TAG, "headData[i]:" + headData[i].toString());
                             }
                             headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
 
@@ -137,7 +141,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
                                 data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
                             }
@@ -162,7 +166,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
             });
         } else {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -261,15 +265,16 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         try {
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("caloriesConsumptionRanking").
+                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("kcalConsumptionRanking").
                                     getJSONArray("data");
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("caloriesConsumption")));
+                                data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
                                 data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
+                                Log.d(TAG, "onLoadMore  :    data:" + data);
                             }
                             adapter.notifyDataSetChanged();
                             return true;

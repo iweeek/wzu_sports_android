@@ -134,7 +134,7 @@ public class ServerInterface {
                 "   qualifiedDistance" +
                 "   qualifiedCostTime" +
                 "   kcalConsumed" +
-                "   runningProject {\n" +
+                "   runningSport {\n" +
                 "       name\n" +
                 "    }\n" +
                 "    data{\n" +
@@ -176,13 +176,13 @@ public class ServerInterface {
         if (type == AppConstant.TYPE_COST_ENERGY) {
             queryStr = "{    \n" +
                     "  university(id:1) {\n" +
-                    "\t\tcaloriesConsumptionRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
+                    "\t\tkcalConsumptionRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
                     "      pagesCount\n" +
                     "      data{\n" +
                     "      studentId\n" +
                     "      studentName\n" +
                     "      avatarUrl\n" +
-                    "      caloriesConsumption\n" +
+                    "      kcalConsumption\n" +
                     "      }\n" +
                     "    }\n" +
                     "  }\n" +

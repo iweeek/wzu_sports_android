@@ -37,4 +37,13 @@ public class RankingData implements Serializable {
     public void setCostValue(int costValue) {
         this.costValue = costValue;
     }
+
+    @Override
+    public String toString() {
+        return "RankingData{" +
+                "userName='" + userName + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", costValue=" + costValue +
+                '}';
+    }
 }
