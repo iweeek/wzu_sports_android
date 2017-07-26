@@ -3,17 +3,13 @@ package com.tim.app;
 import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.Environment;
-import android.widget.TextView;
 
 import com.application.library.log.DLOG;
 import com.application.library.util.ChannelUtil;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.model.HttpHeaders;
-import com.tim.app.receiver.LSReceiver;
-import com.tim.app.server.net.NetworkHost;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
@@ -22,6 +18,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.tim.app.receiver.LSReceiver;
+import com.tim.app.server.net.NetworkHost;
 
 import java.io.File;
 
@@ -38,7 +36,7 @@ public class RT {
 
     public static Application application = null;
 
-    public static final NetworkHost HOST = NetworkHost.DEVELOP;
+    public static final NetworkHost HOST = NetworkHost.DEBUG;
 
     /**
      * The m local external path.

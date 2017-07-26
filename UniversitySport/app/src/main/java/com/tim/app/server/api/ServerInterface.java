@@ -11,8 +11,6 @@ import com.tim.app.server.net.NetworkInterface;
 
 import java.util.HashMap;
 
-import static android.R.attr.id;
-import static android.R.attr.name;
 import static com.lzy.okhttputils.utils.OkLogger.tag;
 
 /**
@@ -112,14 +110,10 @@ public class ServerInterface {
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
-    //    public void queryRunningProjects(int universityId, ResponseCallback callback) {
-    //        queryStr = "{runningProjects(universityId:" + universityId + ")" +
-    //                "{id name qualifiedDistance qualifiedCostTime}}";
-    //        query(queryStr, callback);
-    //    }
+
     public void queryRunningProjects(int universityId, ResponseCallback callback) {
         queryStr = "{\n" +
-                "  runningProjects(universityId: 1) {\n" +
+                "  runningSports(universityId: 1) {\n" +
                 "   acquisitionInterval\n" +
                 "   participantNum\n" +
                 "    id\n" +
@@ -223,13 +217,13 @@ public class ServerInterface {
                     "      dataCount\n" +
                     "      data {\n" +
                     "        id\n" +
-                    "        projectId\n" +
+                    "        runningSportId\n" +
                     "        costTime\n" +
                     "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
-                    "        runningProject{\n" +
+                    "        runningSport{\n" +
                     "          name\n" +
                     "         }\n" +
                     "      }\n" +
@@ -247,13 +241,13 @@ public class ServerInterface {
                     "      dataCount\n" +
                     "      data {\n" +
                     "        id\n" +
-                    "        projectId\n" +
+                    "        runningSportId\n" +
                     "        costTime\n" +
                     "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
-                    "        runningProject{\n" +
+                    "        runningSport{\n" +
                     "          name\n" +
                     "         }\n" +
                     "      }\n" +
@@ -271,13 +265,13 @@ public class ServerInterface {
                     "      dataCount\n" +
                     "      data {\n" +
                     "        id\n" +
-                    "        projectId\n" +
+                    "        runningSportId\n" +
                     "        costTime\n" +
                     "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
-                    "        runningProject{\n" +
+                    "        runningSport{\n" +
                     "          name\n" +
                     "         }\n" +
                     "      }\n" +
@@ -295,13 +289,13 @@ public class ServerInterface {
                     "      dataCount\n" +
                     "      data {\n" +
                     "        id\n" +
-                    "        projectId\n" +
+                    "        runningSportId\n" +
                     "        costTime\n" +
                     "        kcalConsumed\n" +
                     "        startTime\n" +
                     "        distance\n" +
                     "        qualified\n" +
-                    "        runningProject{\n" +
+                    "        runningSport{\n" +
                     "          name\n" +
                     "         }\n" +
                     "      }\n" +

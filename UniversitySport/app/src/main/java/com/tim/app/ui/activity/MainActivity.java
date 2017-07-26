@@ -44,7 +44,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * 首页
@@ -219,7 +218,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningProjects");
+                    JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
                     try {
                         for (int i = 0; i < 4; i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
