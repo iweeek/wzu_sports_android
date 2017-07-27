@@ -108,6 +108,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             dataList = new ArrayList<RankingData>();
             adapter = new RankingDataAdapter(getActivity(), dataList, type);
             wrvHistoryData.setAdapter(adapter);
+
         }
         initData();
         return rootView;
@@ -137,8 +138,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             }
                             headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
 
-                            //// TODO: 2017/7/27  There's a bug here
-                            for (int i = 3; i < rankingDataArray.length(); i++) {
+                            for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
@@ -148,11 +148,15 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 Log.d(TAG, "dataList:" + data);
                             }
                             adapter.notifyDataSetChanged();
-                            if (dataList.size() == 0) {
-                                emptyLayout.showEmpty();
-                            } else {
+                            //see #663_1
+                            if (dataList.size() > 3) {
                                 emptyLayout.showContent();
+                            } else if (dataList.size() > 0) {
+                                emptyLayout.showContent();
+                            }else{
+                                emptyLayout.showEmpty();
                             }
+
                             return true;
                         } catch (org.json.JSONException e) {
                             emptyLayout.showEmpty();

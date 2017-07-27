@@ -24,10 +24,13 @@ public class EmptyLayout {
     public static final int STATE_CONTENT = 4;
 
     private Context mContext;
+    //意外情况显示的视图。
     private FrameLayout mBackgroundView;
+    //下面三个都是 mBackgroundView 的子类
     private ViewGroup mLoadingView;
     private ViewGroup mEmptyView;
     private ViewGroup mErrorView;
+    //正常视图
     private View mContentView;
     private ImageView iv_loading, iv_empty, iv_error;
     private TextView tv_empty, tv_error, tv_status;
@@ -304,7 +307,7 @@ public class EmptyLayout {
             empty_temp_view.setVisibility(View.GONE);
             error_temp_view.setVisibility(View.GONE);
         }
-
+        //添加主要 view
         if (!mViewsAdded) {
             mBackgroundView = new FrameLayout(mContext);
             LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);

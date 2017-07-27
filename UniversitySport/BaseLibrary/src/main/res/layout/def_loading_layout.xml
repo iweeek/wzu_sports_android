@@ -7,12 +7,12 @@
     android:orientation="vertical">
 
 
-    <!--
-    <ProgressBar
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:indeterminateDrawable="@drawable/progressbar_gray_rotate" />
-    -->
+    <!---->
+    <!--<ProgressBar-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:indeterminateDrawable="@drawable/progressbar_gray_rotate" />-->
+    <!---->
 
     <com.application.library.widget.ProgressBarCircular
         android:layout_width="35dp"
