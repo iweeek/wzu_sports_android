@@ -33,7 +33,7 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder
-                holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_rank_data, null));
+                holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_rank_data, parent,false));
         return holder;
     }
 
@@ -66,6 +66,10 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
     }
 
+
+    /**
+     * todo 这个ViewHolder有待改进
+     */
     public class ViewHolder extends BaseRecyclerViewHolder {
         TextView tvCostNumber;
         TextView tvCostUnit;

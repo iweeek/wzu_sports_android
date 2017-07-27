@@ -14,8 +14,6 @@ import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.SportPrepareActivity;
-import com.tim.app.ui.activity.SportsAreaListActivity;
-import com.tim.app.ui.activity.SportsClockListActivity;
 
 import java.util.Random;
 
@@ -91,7 +89,6 @@ public class SettingActivity extends BaseActivity {
             } else {
                 SportPrepareActivity.start(SettingActivity.this,new SportEntry(),new Random().nextBoolean());
             }
-
         }
     }
 

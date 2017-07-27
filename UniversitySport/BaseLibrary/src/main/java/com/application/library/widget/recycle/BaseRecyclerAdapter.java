@@ -22,6 +22,13 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         return mDataList;
     }
 
+
+    /**
+     * 这段代码基本没用返回的都是null ， 所以需要子类重写
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @Override
     public T onCreateViewHolder(ViewGroup parent, int viewType) {
         T holder;
@@ -29,14 +36,13 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         if (holder == null) {
             holder = createViewHolder(LayoutInflater.from(parent.getContext()), viewType);
         }
-
         return holder;
     }
 
 
     @Override
     public void onBindViewHolder(final BaseRecyclerViewHolder holder, final int position) {
-
+        //提供点击事件
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +60,7 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
                 return false;
             }
         });
+        //调用子类重写的
         onBindViewHolder((T) holder, position, mDataList.get(position));
     }
 
@@ -74,6 +81,9 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         }
     }
 
+    /**
+     * 可以利用 SparseArray 创建一个保存 findViewById 出来的 view 的数组集合，下次取的时候先从这个数组中查找。
+     */
     static public class BaseRecyclerViewHolder extends RecyclerView.ViewHolder {
         public BaseRecyclerViewHolder(View itemView) {
             super(itemView);

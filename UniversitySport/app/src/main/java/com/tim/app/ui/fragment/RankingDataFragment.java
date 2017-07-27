@@ -137,6 +137,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             }
                             headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
 
+                            //// TODO: 2017/7/27  There's a bug here
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
@@ -144,6 +145,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
                                 data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
+                                Log.d(TAG, "dataList:" + data);
                             }
                             adapter.notifyDataSetChanged();
                             if (dataList.size() == 0) {

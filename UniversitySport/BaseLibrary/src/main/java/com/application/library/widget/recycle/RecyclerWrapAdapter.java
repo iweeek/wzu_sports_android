@@ -81,7 +81,7 @@ public class RecyclerWrapAdapter extends RecyclerView.Adapter implements Wrapper
         if (mAdapter != null) {
             adapterCount = mAdapter.getItemCount();
             if (adjPosition < adapterCount) {
-                mAdapter.onBindViewHolder(holder, adjPosition);
+                mAdapter.onBindViewHolder(holder, adjPosition);//调整过的位置，为了跳过头 header 。
                 return;
             }
         }
@@ -94,8 +94,8 @@ public class RecyclerWrapAdapter extends RecyclerView.Adapter implements Wrapper
                 return getHeadersCount() + getFootersCount() + 1;
             }
             return getHeadersCount() + getFootersCount() + mAdapter.getItemCount();
-        } else {
-            if (emptyView != null) {
+        } else {//除了头和尾没有其他数据元素
+            if (emptyView != null) {  //有一个空的元素
                 return getHeadersCount() + getFootersCount() + 1;
             }
             return getHeadersCount() + getFootersCount();
@@ -106,7 +106,7 @@ public class RecyclerWrapAdapter extends RecyclerView.Adapter implements Wrapper
     public int getItemViewType(int position) {
         mCurrentPosition = position;
         int numHeaders = getHeadersCount();
-        if (position < numHeaders) {
+        if (position < numHeaders) {//位置小于 header 的数量，返回为 header
             return RecyclerView.INVALID_TYPE;
         }
         int adjPosition = position - numHeaders;
@@ -114,33 +114,46 @@ public class RecyclerWrapAdapter extends RecyclerView.Adapter implements Wrapper
         if (mAdapter != null) {
             adapterCount = mAdapter.getItemCount();
             if (emptyView != null && adapterCount == 0 && position == getHeadersCount()) {
+                //位置在 header 数量的后一个，但是又没有实体数据，empty不为空，说明需要显示 emptyView
                 return RecyclerView.INVALID_TYPE - 2;
             }
             if (adjPosition < adapterCount) {
+                //否则说明有要显示的数据。 返回正常的 itemView
                 return mAdapter.getItemViewType(adjPosition);
             }
         } else {
             if (emptyView != null && position == getHeadersCount()) {
+                // 适配器直接为 null ，emptyView 不为空，而且在header 的后一个位置
                 return RecyclerView.INVALID_TYPE - 2;
             }
         }
+        //都不满足就返回 footer
         return RecyclerView.INVALID_TYPE - 1;
     }
 
 
+    /**
+     * todo 这里好像有问题
+     * @param position
+     * @return
+     */
     @Override
     public long getItemId(int position) {
         int numHeaders = getHeadersCount();
         if (mAdapter != null && position >= numHeaders) {
+            //越过 header 的位置，并且有要显示的数据
             int adjPosition = position - numHeaders;
             int adapterCount = mAdapter.getItemCount();
+            //显示 emptyView
             if (emptyView != null && adapterCount == 0 && position == numHeaders) {
                 return -1;
             }
+            //递归调用 getItemId
             if (adjPosition < adapterCount) {
                 return mAdapter.getItemId(adjPosition);
             }
         } else {
+            //显示 emptyView
             if (emptyView != null && position == numHeaders) {
                 return -1;
             }
