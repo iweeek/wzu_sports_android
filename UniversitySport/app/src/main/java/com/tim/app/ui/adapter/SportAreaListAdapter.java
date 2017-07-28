@@ -43,8 +43,8 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
         }
         final ViewHolder holder = (ViewHolder) mHolder;
 
-        if (!TextUtils.isEmpty(data.getDesc())) {
-            holder.tvAreaDesc.setText(data.getDesc());
+        if (!TextUtils.isEmpty(data.getAreaName())) {
+            holder.tvAreaName.setText(data.getAreaName());
         }
 
         if (!TextUtils.isEmpty(data.getAddress())) {
@@ -66,7 +66,7 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
     }
 
     public class ViewHolder extends BaseRecyclerViewHolder {
-        TextView tvAreaDesc;
+        TextView tvAreaName;
         TextView tvTargetTime;
         TextView tvAddress;
 
@@ -74,7 +74,7 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
 
         public ViewHolder(View itemView) {
             super(itemView);
-            tvAreaDesc = (TextView) itemView.findViewById(R.id.tvAreaDesc);
+            tvAreaName = (TextView) itemView.findViewById(R.id.tvAreaName);
             tvTargetTime = (TextView) itemView.findViewById(R.id.tvTargetTime);
             tvAddress = (TextView) itemView.findViewById(R.id.tvAddress);
             ivSelectIcon = (ImageView) itemView.findViewById(R.id.ivSelectIcon);

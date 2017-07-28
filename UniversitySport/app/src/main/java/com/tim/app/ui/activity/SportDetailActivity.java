@@ -762,8 +762,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //点击定位图标 实现定位到当前位置
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
-//                String toastText = "移动屏幕，当前位置居中";
-//                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
             case R.id.ivShowSportInfo:
                 //TODO 指南针的位置要变化，UiSettings 中寻找方法

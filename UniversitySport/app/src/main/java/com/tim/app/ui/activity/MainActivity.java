@@ -200,19 +200,33 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
 
+    /**
+     * 首页底部运动方式Item点击事件
+     *
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemClick(View view, int position, long id) {
+        SportEntry sportEntry = sportEntryDataList.get(position);
 
         if (BadNetworkAdapter.BAD_NETWORK.equals(view.getTag())) {
             Log.d(TAG, "onItemClick: bad network!");
             queryRunningProjects();
-        } else {
-            SportEntry sportEntry = sportEntryDataList.get(position);
-            SportDetailActivity.start(this, sportEntry);
         }
+        if (position == 0) {
+            SportDetailActivity.start(this, sportEntry);
+        } else if (position == 3) {
+            SportsAreaListActivity.start(this,sportEntry);
+        }
+        Log.d(TAG, "position:" + position);
+        Log.d(TAG, "view.getId():" + view.getId());
     }
 
-
+    /**
+     * 查询首页底部运动方式
+     */
     public void queryRunningProjects() {
         ServerInterface.instance().queryRunningSports(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
@@ -257,7 +271,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sportEntry.setInterval(interval);
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
                             } else if (runningSportId == 4) {
-                                sportEntry.setSportName(jsonObject.optString("name", "累计步数"));
+                                sportEntry.setSportName(jsonObject.optString("name", "区域锻炼"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);
                                 sportEntry.setTargetTime((int) (time / 60));
@@ -282,11 +296,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     return true;
                 } else {
                     emptyLayout.showEmptyOrError(errCode);
-//                    ToastUtil.showToast(errMsg);
-//                    //网络不好
-//                    wrvSportType.invalidate();
-//                    wrvSportType.setAdapter(badNetworkAdapter);
-//                    badNetworkAdapter.setOnItemClickListener(context);
+                    //                    ToastUtil.showToast(errMsg);
+                    //                    //网络不好
+                    //                    wrvSportType.invalidate();
+                    //                    wrvSportType.setAdapter(badNetworkAdapter);
+                    //                    badNetworkAdapter.setOnItemClickListener(context);
                     return false;
                 }
             }
@@ -294,6 +308,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
     }
 
+    /**
+     * 查询首页顶部本学期运动记录
+     */
     public void queryCurTermData() {
         int studentId = 2;
         ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
@@ -314,7 +331,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         t = t / 60;
                         BigDecimal bd = new BigDecimal(t);
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
-//                        String surplusTimes = String.valueOf(Integer.parseInt(curTermAccuCounts) - Integer.parseInt(curQuaTimes));
+                        //                        String surplusTimes = String.valueOf(Integer.parseInt(curTermAccuCounts) - Integer.parseInt(curQuaTimes));
                         homepageHeadView.setData(curTermAccuCounts, totalConsumeEnergy, String.valueOf(bd), curQuaTimes, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
@@ -325,13 +342,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     }
                 } else {
                     Log.d(TAG, "onJsonResponse: errcode != 0");
-//                    homepageHeadView.displayBadNetworkLayout();
+                    //                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }
 
         });
     }
+
 
     @Override
     public void initData() {

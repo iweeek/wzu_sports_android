@@ -320,8 +320,19 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-//    public void queryAreaSportData(int ){
-//
-//    }
+    public void queryAreaSportData(int universityId, ResponseCallback callback){
+        String queryStr ="{\n" +
+                "  fixLocationOutdoorSportPoints(universityId: 1)  {\n" +
+                "    id\n" +
+                "    name\n" +
+                "    latitude\n" +
+                "    longitude\n" +
+                "    radius\n" +
+                "    qualifiedCostTime\n" +
+                "    universityId\n" +
+                "  }\n" +
+                "}\n";
+        query(queryStr,callback);
+    }
 
 }

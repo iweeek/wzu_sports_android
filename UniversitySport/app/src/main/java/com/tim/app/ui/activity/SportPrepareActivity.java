@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,7 +26,6 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
-import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.VerticalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -37,7 +35,6 @@ import com.tim.app.server.entry.SportArea;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.entry.SportInfo;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.ui.adapter.SportAreaListAdapter;
 import com.tim.app.ui.adapter.SportInfoListAdapter;
 
 import java.util.ArrayList;
@@ -50,11 +47,12 @@ import static com.tim.app.R.id.ibBack;
 /**
  * 准备运动页面
  */
-public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocationChangeListener,BaseRecyclerAdapter.OnItemClickListener {
+public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, BaseRecyclerAdapter.OnItemClickListener {
 
     private static final String TAG = "SportPrepareActivity";
     private Context context = this;
 
+    private SportArea sportArea;
     private SportEntry sportEntry;
 
     private MapView mapView;
@@ -75,9 +73,10 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
     boolean isOutDoor;
 
-    public static void start(Context context, SportEntry sportEntry,boolean isOutDoor) {
+    public static void start(Context context, SportArea sportArea, SportEntry sportEntry, boolean isOutDoor) {
         Intent intent = new Intent(context, SportPrepareActivity.class);
-        intent.putExtra("sportEntry", sportEntry);
+        intent.putExtra("sportArea", sportArea);
+        intent.putExtra("sportEntry",sportEntry);
         intent.putExtra("isOutDoor", isOutDoor);
         context.startActivity(intent);
     }
@@ -89,8 +88,8 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         // 判断GPS模块是否开启，如果没有则开启
         if (!locationManager
                 .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//            Toast.makeText(this, "定位服务未打开，请打开定位服务",
-//                    Toast.LENGTH_SHORT).show();
+            //            Toast.makeText(this, "定位服务未打开，请打开定位服务",
+            //                    Toast.LENGTH_SHORT).show();
             AlertDialog.Builder dialog = new AlertDialog.Builder(this);
             dialog.setMessage("定位服务未打开，请打开定位服务");
             dialog.setPositiveButton("确定",
@@ -114,9 +113,10 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
         initGPS();
 
+        sportArea = (SportArea) getIntent().getSerializableExtra("sportArea");
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
-        isOutDoor = getIntent().getBooleanExtra("isOutDoor",false);
-        interval = sportEntry.getInterval() * 1000;
+        isOutDoor = getIntent().getBooleanExtra("isOutDoor", false);
+        //        interval = sportArea.getInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -129,7 +129,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        wrvInfo.addHeaderView( new View(this));
+        wrvInfo.addHeaderView(new View(this));
         wrvInfo.setLayoutManager(layoutManager);
 
         wrvInfo.addItemDecoration((new VerticalDividerItemDecoration.Builder(
@@ -145,8 +145,8 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-//                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
-//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                //                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+                //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -158,11 +158,11 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-//                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
-//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                //                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
+                //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
                 aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//                text = "调整屏幕缩放比例：" + zoomLevel;
-//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                //                text = "调整屏幕缩放比例：" + zoomLevel;
+                //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -256,9 +256,9 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
                 break;
             case R.id.tvList:
                 Intent intent = null;
-                if(isOutDoor){
+                if (isOutDoor) {
                     intent = new Intent(SportPrepareActivity.this, SportsAreaListActivity.class);
-                }else{
+                } else {
                     intent = new Intent(SportPrepareActivity.this, SportsClockListActivity.class);
                 }
                 startActivity(intent);
@@ -270,6 +270,11 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
     @Override
     public void onItemClick(View view, int position, long id) {
         //TODO 跳转运动详情
+        switch (position) {
+            default:
+                SportDetailActivity.start(this,sportEntry);
+                break;
+        }
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.tim.app.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.loadmore.LoadMoreContainer;
@@ -19,24 +20,26 @@ import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.Score;
+import com.tim.app.constant.AppConstant;
+import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportArea;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.ui.adapter.ScoreDataAdapter;
 import com.tim.app.ui.adapter.SportAreaListAdapter;
-import com.tim.app.util.ToastUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * 运动区域
  */
-public class SportsAreaListActivity extends BaseActivity implements LoadMoreHandler,BaseRecyclerAdapter.OnItemClickListener {
+public class SportsAreaListActivity extends BaseActivity implements LoadMoreHandler, BaseRecyclerAdapter.OnItemClickListener {
 
     private static final String TAG = "SportsAreaListActivity";
-
+    private SportsAreaListActivity context;
     private ImageButton ibBack;
 
     private LoadMoreRecycleViewContainer load_more;
@@ -45,15 +48,29 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     private SportAreaListAdapter adapter;
     private List<SportArea> dataList;
+    private SportEntry sportEntry;
 
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
+        context = this;
     }
 
+
+    public static void start(Context context, SportEntry  sportEntry){
+        Intent  intent = new Intent(context,SportsAreaListActivity.class);
+        intent.putExtra("sportEntry",sportEntry);
+        context.startActivity(intent);
+    }
     @Override
     protected int getLayoutId() {
         return R.layout.activity_sports_area;
+    }
+
+    @Override
+    protected void init(Bundle savedInstanceState) {
+        super.init(savedInstanceState);
+        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
     }
 
     @Override
@@ -99,18 +116,56 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     @Override
     public void initData() {
-        for (int i = 0; i < 10; i++) {
-            SportArea area = new SportArea();
-            area.setAddress("浙江省温州市瓯海区夏鼎路与承筹路交叉路口东100米");
-            area.setDesc("温州大学体育馆");
-            area.setTargetTime(new Random().nextInt(100));
-            if (i == 0) {
-                area.setSelected(true);
+        queryAreaSportData();
+    }
+
+
+    /**
+     * 查询区域运动记录
+     */
+    public void queryAreaSportData() {
+        ServerInterface.instance().queryAreaSportData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache)
+            {
+                if (errCode == 0)
+                {
+                    JSONArray sportArray = json.optJSONObject("data").optJSONArray("fixLocationOutdoorSportPoints");
+                    try
+                    {
+                        for (int i = 0; i < sportArray.length(); i++)
+                        {
+                            JSONObject jsonObject = sportArray.getJSONObject(i);
+                            SportArea sportArea = new SportArea();
+                            sportArea.setId(jsonObject.optInt("id"));
+                            sportArea.setAreaName(jsonObject.optString("name"));
+                            sportArea.setLatitude(jsonObject.optDouble("latitude"));
+                            sportArea.setLongitude(jsonObject.optDouble("longitude"));
+                            sportArea.setRadius(jsonObject.optDouble("radius"));
+                            sportArea.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
+                            //                            int universityId = jsonObject.optInt("universityId");
+                            //还差 isSelected desc
+                            dataList.add(sportArea);
+                            wrvArea.setAdapter(adapter);
+                            adapter.setOnItemClickListener(context);
+                            adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
+                        }
+                    } catch (JSONException e) {
+                        emptyLayout.showEmpty();
+                        e.printStackTrace();
+                    }
+                    return true;
+                } else {
+                    Log.d(TAG, "onJsonResponse: errcode != 0");
+                    return false;
+                }
             }
-            dataList.add(area);
-        }
-        adapter.notifyDataSetChanged();
-        emptyLayout.showContent();
+        });
     }
 
     @Override
@@ -151,6 +206,6 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     @Override
     public void onItemClick(View view, int position, long id) {
-        //TODO items
+        SportPrepareActivity.start(this,dataList.get(position),sportEntry,true);
     }
 }
