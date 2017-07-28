@@ -27,7 +27,6 @@ import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
@@ -35,7 +34,6 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
-import com.application.library.log.FileLog;
 import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
@@ -50,13 +48,6 @@ import com.tim.app.ui.view.SlideUnlockView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -305,7 +296,7 @@ public class SportResultActivity extends BaseActivity {
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
-                        tvSportName.setText(json.getJSONObject("data").getJSONObject("runningActivity").getJSONObject("runningProject")
+                        tvSportName.setText(json.getJSONObject("data").getJSONObject("runningActivity").getJSONObject("runningSport")
                                 .getString("name"));
 
                         elapseTime = json.getJSONObject("data").getJSONObject("runningActivity").getLong("costTime");

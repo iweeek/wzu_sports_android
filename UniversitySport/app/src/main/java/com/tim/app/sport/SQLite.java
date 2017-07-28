@@ -96,10 +96,10 @@ public class SQLite extends SQLiteOpenHelper {
      * @SmartNi 2017-06-17
      * save one Running Sports Record to Database.
      */
-    public int saveRunningSportsRecord(int projectId, int activityId, int studentId, int currentDistance,
+    public int saveRunningSportsRecord(int runningSportId, int activityId, int studentId, int currentDistance,
                                        long elapaseTime, long startTime, int steps, long date) {
         ContentValues values = new ContentValues();
-        values.put("projectId", projectId);
+        values.put("runningSportId", runningSportId);
         values.put("studentId", studentId);
         values.put("currentDistance", currentDistance);
         values.put("elapseTime", elapaseTime);

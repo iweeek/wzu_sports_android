@@ -11,7 +11,7 @@ public class CommitResult {
     private String message;
     private String developerMessage;
     private int id;
-    private int projectId;
+    private int runningSportId;
     private int studentId;
     private int distance;
     private int costTime;
@@ -63,12 +63,12 @@ public class CommitResult {
         this.id = id;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public int getRunningSportId() {
+        return runningSportId;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setRunningSportId(int runningSportId) {
+        this.runningSportId = runningSportId;
     }
 
     public int getStudentId() {
@@ -151,7 +151,7 @@ public class CommitResult {
                 ", message='" + message + '\'' +
                 ", developerMessage='" + developerMessage + '\'' +
                 ", id=" + id +
-                ", projectId=" + projectId +
+                ", runningSportId=" + runningSportId +
                 ", studentId=" + studentId +
                 ", distance=" + distance +
                 ", costTime=" + costTime +

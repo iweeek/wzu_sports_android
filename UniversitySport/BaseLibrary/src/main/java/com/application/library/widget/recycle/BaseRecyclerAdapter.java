@@ -64,13 +64,6 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         onBindViewHolder((T) holder, position, mDataList.get(position));
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mListener = listener;
-    }
-
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
-        mLongListener = listener;
-    }
 
     @Override
     public int getItemCount() {
@@ -119,5 +112,13 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
 
     public interface OnItemLongClickListener {
         boolean onItemLongClick(View view, int position, long id);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        mLongListener = listener;
     }
 }

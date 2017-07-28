@@ -46,10 +46,10 @@ public class ServerInterface {
         return instance;
     }
 
-    public void runningActivitiesStart(String tag, int projectId, int studentId, long startTime, ResponseCallback callback) {
+    public void runningActivitiesStart(String tag, int runningSportId, int studentId, long startTime, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITIES + "/start";
         HashMap params = new HashMap();
-        params.put("projectId", projectId);
+        params.put("runningSportId", runningSportId);
 
         params.put("studentId", studentId);
         params.put("startTime", startTime);
@@ -97,7 +97,7 @@ public class ServerInterface {
         String url = API_SCHEME + QUERY_INTERFACE;
         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
         HashMap params = new HashMap();
-        Log.d(TAG, "queryRunningProjects: headers.toString()" + headers.toString());
+        Log.d(TAG, "queryRunningSports: headers.toString()" + headers.toString());
 
         //        headers.put("Content-Type", "application/json;charset=UTF-8");
         //        Log.d(TAG, "headers: " + headers);
@@ -111,7 +111,7 @@ public class ServerInterface {
     }
 
 
-    public void queryRunningProjects(int universityId, ResponseCallback callback) {
+    public void queryRunningSports(int universityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  runningSports(universityId: 1) {\n" +
                 "   acquisitionInterval\n" +
@@ -319,5 +319,9 @@ public class ServerInterface {
                 "}";
         query(queryStr, callback);
     }
+
+//    public void queryAreaSportData(int ){
+//
+//    }
 
 }

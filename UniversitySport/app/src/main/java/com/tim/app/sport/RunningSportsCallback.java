@@ -38,7 +38,7 @@ public class RunningSportsCallback implements SQLite.TableInterface {
     ///////////////////////////////////////////////////////////////////////////
     public static final String TABLE_RUNNING_SPORTS = "running_sports_record";
     public static final String KEY_RUNNING_ID = "id";
-    public static final String KEY_RUNNING_PROJECTID = "projectId";
+    public static final String KEY_RUNNING_PROJECTID = "runningSportId";
     public static final String KEY_RUNNING_ACTIVITY_ID = "activityId";
     public static final String KEY_RUNNING_STUDENTID = "studentId";
     public static final String KEY_RUNNING_CURRENTDISTANCE = "currentDistance";

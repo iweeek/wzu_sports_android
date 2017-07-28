@@ -6,16 +6,16 @@ package com.tim.app.server.entry;
 
 public class SportsRecord {
 
-    protected Integer projectId;
+    protected Integer runningSportId;
     protected Integer studentId;
 
 
     public Integer getProjectId() {
-        return projectId;
+        return runningSportId;
     }
 
-    public void setProjectId(Integer projectId) {
-        this.projectId = projectId;
+    public void setRunningSportId(Integer runningSportId) {
+        this.runningSportId = runningSportId;
     }
 
     public Integer getStudentId() {

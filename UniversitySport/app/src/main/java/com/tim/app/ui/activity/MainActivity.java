@@ -214,7 +214,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
 
     public void queryRunningProjects() {
-        ServerInterface.instance().queryRunningProjects(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningSports(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -222,7 +222,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     try {
                         for (int i = 0; i < 4; i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
-                            int projectId = jsonObject.getInt("id");
+                            int runningSportId = jsonObject.getInt("id");
                             int distance = jsonObject.optInt("qualifiedDistance", 1000);
                             int participantNum = jsonObject.getInt("participantNum");
                             double time = jsonObject.optDouble("qualifiedCostTime");
@@ -232,7 +232,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             bd = bd.setScale(1, RoundingMode.HALF_UP);
                             int interval = jsonObject.optInt("acquisitionInterval", 1);
                             SportEntry sportEntry = new SportEntry();
-                            if (projectId == 1) {
+                            if (runningSportId == 1) {
                                 sportEntry.setSportName(jsonObject.optString("name", "随机慢跑"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);
@@ -240,7 +240,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sportEntry.setTargetSpeed(bd + "");
                                 sportEntry.setInterval(interval);
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
-                            } else if (projectId == 2) {
+                            } else if (runningSportId == 2) {
                                 sportEntry.setSportName(jsonObject.optString("name", "快跑"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);
@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sportEntry.setTargetSpeed(bd + "");
                                 sportEntry.setInterval(interval);
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                            } else if (projectId == 3) {
+                            } else if (runningSportId == 3) {
                                 sportEntry.setSportName(jsonObject.optString("name", "快走"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);
@@ -256,7 +256,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sportEntry.setTargetSpeed(bd + "");
                                 sportEntry.setInterval(interval);
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                            } else if (projectId == 4) {
+                            } else if (runningSportId == 4) {
                                 sportEntry.setSportName(jsonObject.optString("name", "累计步数"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);

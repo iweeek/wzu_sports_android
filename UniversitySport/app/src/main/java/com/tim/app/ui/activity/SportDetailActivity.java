@@ -759,7 +759,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
 //                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
 //                aMap.moveCamera(cu);
-
+                //点击定位图标 实现定位到当前位置
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
 //                String toastText = "移动屏幕，当前位置居中";
@@ -820,7 +820,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void runningActivitiesEnd(final int projectId, final int studentId, final long targetFinishedTime) {
+    private void runningActivitiesEnd(final int runningSportId, final int studentId, final long targetFinishedTime) {
         //必须先初始化。
         SQLite.init(context, RunningSportsCallback.getInstance());
         //提交本次运动数据，更新UI
@@ -849,7 +849,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
                             int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                    projectId, activityId, studentId, currentDistance,
+                                    runningSportId, activityId, studentId, currentDistance,
                                     elapseTime, startTime, currentSteps, System.currentTimeMillis());
 
                             Log.d(TAG, "result:" + result);

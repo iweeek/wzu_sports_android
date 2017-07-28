@@ -18,11 +18,11 @@ public class RunningSportsRecord extends SportsRecord {
     public RunningSportsRecord() {
     }
 
-    public RunningSportsRecord(int id, Integer projectId, Integer activityId, Integer studentId,
+    public RunningSportsRecord(int id, Integer runningSportId, Integer activityId, Integer studentId,
                                Integer currentDistance, Integer elapseTime,
                                Long startTime, Integer steps, Long date) {
         this.id = id;
-        this.projectId = projectId;
+        this.runningSportId = runningSportId;
         this.acitivityId = activityId;
         this.studentId = studentId;
         this.currentDistance = currentDistance;
@@ -83,7 +83,7 @@ public class RunningSportsRecord extends SportsRecord {
     @Override
     public String toString() {
         return "RunningSportsRecord{" +
-                "projectId=" + projectId +
+                "runningSportId=" + runningSportId +
                 ", id=" + id +
                 ", studentId=" + studentId +
                 ", currentDistance=" + currentDistance +

@@ -61,7 +61,9 @@ public class NetworkInterface {
      * @param isSign   是否加密
      * @param callback 回调接口
      */
-    public void connected(final HttpMethod method, final String request, final String apiTag, final HashMap<String, Object> params, final CacheMode cache, boolean isSign, final ResponseCallback callback) {
+    public void connected(final HttpMethod method, final String request, final String apiTag,
+                          final HashMap<String, Object> params, final CacheMode cache,
+                          boolean isSign, final ResponseCallback callback) {
         final String url = getRequsetUrl(request);
         if (!url.contains("http://")) {
             DLOG.e(AppConstant.HTTP_TAG, "Bad request url ==" + url);
@@ -76,7 +78,6 @@ public class NetworkInterface {
                 connectedByGet(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);
             }
         }
-
     }
 
     /**
@@ -96,6 +97,7 @@ public class NetworkInterface {
             }
 
             post(requestUrl).params(params).cacheMode(cache).cacheTime(cacheTime).tag(apiTag).execute(new StringCallback() {
+                //CacheMode#DEFAULT
                 @Override
                 public void onBefore(BaseRequest request) {
                     super.onBefore(request);
