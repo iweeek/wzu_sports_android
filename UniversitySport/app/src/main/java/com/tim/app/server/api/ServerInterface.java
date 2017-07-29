@@ -50,7 +50,6 @@ public class ServerInterface {
         String url = API_SCHEME + RUNNING_ACTIVITIES + "/start";
         HashMap params = new HashMap();
         params.put("runningSportId", runningSportId);
-
         params.put("studentId", studentId);
         params.put("startTime", startTime);
         Log.d(TAG, "params: " + params);
