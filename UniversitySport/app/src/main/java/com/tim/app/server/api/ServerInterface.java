@@ -49,7 +49,7 @@ public class ServerInterface {
     public void runningActivitiesStart(String tag, int projectId, int studentId, long startTime, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITIES + "/start";
         HashMap params = new HashMap();
-        params.put("projectId", projectId);
+        params.put("runningSportId", projectId);
 
         params.put("studentId", studentId);
         params.put("startTime", startTime);
