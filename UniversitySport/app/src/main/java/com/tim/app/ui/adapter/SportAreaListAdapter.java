@@ -51,12 +51,12 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
             holder.tvAddress.setText(data.getAddress());
         }
 
-        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getQualifiedCostTime())));
-        if (data.isSelected()) {
-            holder.ivSelectIcon.setVisibility(View.VISIBLE);
-        } else {
-            holder.ivSelectIcon.setVisibility(View.INVISIBLE);
-        }
+//        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getQualifiedCostTime())));
+//        if (data.isSelected()) {
+//            holder.ivSelectIcon.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.ivSelectIcon.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override

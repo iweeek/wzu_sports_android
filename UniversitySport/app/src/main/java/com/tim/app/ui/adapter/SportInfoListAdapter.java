@@ -53,7 +53,7 @@ public class SportInfoListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
             holder.tvDesc.setText(data.getDesc());
         }
 
-        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getQualifiedCostTime())));
+//        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getQualifiedCostTime())));
         holder.tvSportCount.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getSportCount())));
     }
 

@@ -89,6 +89,9 @@ public class SportAreaEntry implements Parcelable {
                 '}';
     }
 
+    public SportAreaEntry() {
+    }
+
     @Override
     public int describeContents() {
         return 0;

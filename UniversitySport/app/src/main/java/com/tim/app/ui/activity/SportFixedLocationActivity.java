@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.CoordinateConverter;
@@ -57,21 +55,15 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.SportAreaEntry;
-import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
-import com.tim.app.sport.SensorService;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -203,7 +195,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         initGPS();
 
-        mSportAreaEntry = (SportAreaEntry) getIntent().getSerializableExtra("sportAreaEntry");
+        mSportAreaEntry = (SportAreaEntry) getIntent().getParcelableExtra("sportAreaEntry");
+        Log.d(TAG, "mSportAreaEntry:" + mSportAreaEntry);
+
         interval = 1000;
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -404,7 +398,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 //        }
 
         tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvTargetSpeed.setText(getString(R.string.percent, sportEntry.getTargetSpeed()));
+//        tvTargetSpeed.setText(getString(R.string.percent, sportEntry.getTargetSpeed()));
 
         tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
@@ -791,7 +785,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_sport_detail;
+        return R.layout.activity_area_sport;
     }
 
     @Override
@@ -806,7 +800,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
+        tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);

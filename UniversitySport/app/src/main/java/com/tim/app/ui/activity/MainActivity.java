@@ -225,7 +225,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         } else if (position == 3) {
             //现在服务端接口只有一个数据
-            SportPrepareActivity.start(this, sportAreaEntryList, true);
+//            SportPrepareActivity.start(this, sportAreaEntryList, true);
+            Log.d(TAG, "sportAreaEntryList.size():" + sportAreaEntryList.size());
+            SportsAreaListActivity.start(this,sportAreaEntryList);
         }
         Log.d(TAG, "position:" + position);
         Log.d(TAG, "view.getId():" + view.getId());
@@ -355,6 +357,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 获取区域运动项目
      */
     public void queryAreaSportsData() {
+        sportAreaEntryList = new ArrayList<>();
         ServerInterface.instance().queryAreaSportsData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

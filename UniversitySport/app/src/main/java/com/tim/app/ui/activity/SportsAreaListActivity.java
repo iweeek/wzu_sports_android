@@ -22,8 +22,8 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.SportAreaEntry;
 import com.tim.app.server.entry.SportAreaList;
-import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.adapter.SportAreaListAdapter;
 
 import org.json.JSONArray;
@@ -48,7 +48,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     private SportAreaListAdapter adapter;
     private List<SportAreaList> dataList;
-    private SportEntry sportEntry;
+    private List<SportAreaEntry> mSportAreaEntryList;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -57,9 +57,9 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     }
 
 
-    public static void start(Context context, SportEntry  sportEntry){
+    public static void start(Context context, ArrayList<SportAreaEntry> sportAreaEntryArrayList){
         Intent  intent = new Intent(context,SportsAreaListActivity.class);
-        intent.putExtra("sportEntry",sportEntry);
+        intent.putExtra("sportAreaEntryArrayList",sportAreaEntryArrayList);
         context.startActivity(intent);
     }
     @Override
@@ -70,7 +70,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
+        mSportAreaEntryList = (List<SportAreaEntry>) getIntent().getSerializableExtra("sportAreaEntryArrayList");
     }
 
     @Override
@@ -207,7 +207,9 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     @Override
     public void onItemClick(View view, int position, long id) {
 //        SportPrepareActivity.start(this,dataList.get(position),sportEntry,true);
-        //打开SportFixedLocationActivity
-        SportFixedLocationActivity.start();
+        /**
+         * 这里的 mSportAreaEntryList 从现在服务端只提供了一个
+         */
+        SportFixedLocationActivity.start(this,mSportAreaEntryList.get(0));
     }
 }
