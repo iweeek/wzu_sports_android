@@ -27,7 +27,7 @@ public class ServerInterface {
 
     public static final String RUNNING_ACTIVITY_DATA = "runningActivityData";
 
-    public static final String AREA_SPORTS = "areasports";
+    public static final String AREA_ACTIVITIES = "areaActivities";
 
     public static final String QUERY_INTERFACE = "graphql/query";
 
@@ -50,6 +50,7 @@ public class ServerInterface {
 
     /**
      * {@link com.tim.app.ui.activity.SportDetailActivity} 调用
+     *
      * @param tag
      * @param runningSportId
      * @param studentId
@@ -69,9 +70,10 @@ public class ServerInterface {
     /**
      * 结束跑步运动
      * {@link com.tim.app.ui.activity.SportDetailActivity} 调用
+     *
      * @param tag
-     * @param distance   距离
-     * @param costTime   花费时间
+     * @param distance           距离
+     * @param costTime           花费时间
      * @param targetFinishedTime 目标时间
      * @param callback
      */
@@ -90,6 +92,7 @@ public class ServerInterface {
     /**
      * 向服务器提交数据
      * {@link com.tim.app.ui.activity.SportDetailActivity}  调用
+     *
      * @param tag
      * @param activityId
      * @param acquisitionTime
@@ -106,7 +109,7 @@ public class ServerInterface {
         String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", activityId);
-//        params.put("acquisitionTime", acquisitionTime);
+        //        params.put("acquisitionTime", acquisitionTime);
         params.put("stepCount", stepCount);
         params.put("distance", distance);
         params.put("longitude", longitude);
@@ -116,18 +119,32 @@ public class ServerInterface {
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
-
-    public void areaActivitiesStart(String tag,int areaSportId, int studentId,ResponseCallback callback) {
-        String url = API_SCHEME + AREA_SPORTS;
+    /**
+     * 创建本次区域运动项目
+     * @param tag
+     * @param areaSportId
+     * @param studentId
+     * @param callback
+     */
+    public void areaActivities(String tag, int areaSportId, int studentId, ResponseCallback callback) {
+        String url = API_SCHEME + AREA_ACTIVITIES;
         HashMap params = new HashMap();
         params.put("areaSportId", areaSportId);
         params.put("studentId", studentId);
-        Log.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
-
-
+    /**
+     * 结束本次区域运动
+     * @param tag
+     * @param areaSportRecordId
+     * @param callback
+     */
+    public void areaActivitiesEnd(String tag, int areaSportRecordId, ResponseCallback callback) {
+        String url = API_SCHEME + AREA_ACTIVITIES + "/" + areaSportRecordId;
+        HashMap params = new HashMap();
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
 
 
     public void query(String queryStr, ResponseCallback callback) {
@@ -150,6 +167,7 @@ public class ServerInterface {
 
     /**
      * MainActivity 调用
+     *
      * @param universityId
      * @param callback
      */
@@ -169,6 +187,7 @@ public class ServerInterface {
 
     /**
      * SportResultActivity 调用
+     *
      * @param activityId
      * @param callback
      */
@@ -200,7 +219,8 @@ public class ServerInterface {
     }
 
     /**
-     *  MainActivity 调用
+     * MainActivity 调用
+     *
      * @param universityId
      * @param studentId
      * @param callback
@@ -373,8 +393,8 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryAreaFixedLocationListData(int universityId, ResponseCallback callback){
-        String queryStr ="{\n" +
+    public void queryAreaFixedLocationListData(int universityId, ResponseCallback callback) {
+        String queryStr = "{\n" +
                 "  fixLocationOutdoorSportPoints(universityId: 1)  {\n" +
                 "    id\n" +
                 "    name\n" +
@@ -385,12 +405,13 @@ public class ServerInterface {
                 "    universityId\n" +
                 "  }\n" +
                 "}\n";
-        query(queryStr,callback);
+        query(queryStr, callback);
     }
 
     /**
      * 首页查询
      * {@link com.tim.app.ui.activity.MainActivity}调用
+     *
      * @param universityId
      * @param callback
      */

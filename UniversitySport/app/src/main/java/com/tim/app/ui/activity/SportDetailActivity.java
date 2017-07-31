@@ -41,7 +41,6 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -86,7 +85,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
-    private CoordinateConverter converter;
 
     private SportEntry sportEntry;
 //    private ImageButton ibBack;
@@ -143,7 +141,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
 
-    JsonResponseCallback callback;
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
     private LinearLayout llLacationHint;
@@ -861,7 +858,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     }
                 });
-
+        /*如果本地有未上传的数据*/
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
