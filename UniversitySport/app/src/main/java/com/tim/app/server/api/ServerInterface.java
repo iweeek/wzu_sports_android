@@ -29,6 +29,8 @@ public class ServerInterface {
 
     public static final String AREA_ACTIVITIES = "areaActivities";
 
+    public static final String AREA_ACTIVITY_DATA = "areaActivityData";
+
     public static final String QUERY_INTERFACE = "graphql/query";
 
     private String queryStr;
@@ -121,6 +123,7 @@ public class ServerInterface {
 
     /**
      * 创建本次区域运动项目
+     *
      * @param tag
      * @param areaSportId
      * @param studentId
@@ -136,6 +139,7 @@ public class ServerInterface {
 
     /**
      * 结束本次区域运动
+     *
      * @param tag
      * @param areaSportRecordId
      * @param callback
@@ -143,6 +147,24 @@ public class ServerInterface {
     public void areaActivitiesEnd(String tag, int areaSportRecordId, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITIES + "/" + areaSportRecordId;
         HashMap params = new HashMap();
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
+
+    /**
+     * 提交区域运动数据
+     *
+     * @param tag
+     * @param areaSportRecordId
+     * @param callback
+     */
+    public void areaActivityData(String tag, int areaSportRecordId, double longitude,
+                                 double latitude, int locationType, ResponseCallback callback) {
+        String url = API_SCHEME + AREA_ACTIVITY_DATA;
+        HashMap params = new HashMap();
+        params.put("activityId",areaSportRecordId );
+        params.put("longitude",longitude );
+        params.put("latitude",latitude );
+        params.put("locationType",locationType );
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
