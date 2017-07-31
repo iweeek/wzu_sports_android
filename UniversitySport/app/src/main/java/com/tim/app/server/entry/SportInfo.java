@@ -11,7 +11,7 @@ public class SportInfo implements Serializable {
     private static final long serialVersionUID = 6187447685293862071L;
     private String feild;//运动场馆
     private String desc;//描述
-    private int targetTime;//达标时间
+    private int qualifiedCostTime;//达标时间
     private int sportCount;//运动人数
 
     public String getFeild() {
@@ -30,12 +30,12 @@ public class SportInfo implements Serializable {
         this.desc = desc;
     }
 
-    public int getTargetTime() {
-        return targetTime;
+    public int getQualifiedCostTime() {
+        return qualifiedCostTime;
     }
 
-    public void setTargetTime(int targetTime) {
-        this.targetTime = targetTime;
+    public void setQualifiedCostTime(int qualifiedCostTime) {
+        this.qualifiedCostTime = qualifiedCostTime;
     }
 
 

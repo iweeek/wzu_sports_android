@@ -28,6 +28,7 @@ import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
+import com.tim.app.server.entry.SportAreaEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
@@ -67,6 +68,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private BadNetworkAdapter badNetworkAdapter;
     private List<SportEntry> sportEntryDataList;
     private List<BadNetWork> networkDataList;
+    private ArrayList<SportAreaEntry> sportAreaEntryList;
 
     private EmptyLayout emptyLayout;
 
@@ -217,8 +219,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         }
         if (position == 0) {
             SportDetailActivity.start(this, sportEntry);
+        } else if (position == 1) {
+
+        } else if (position == 2) {
+
         } else if (position == 3) {
-            SportsAreaListActivity.start(this,sportEntry);
+            //现在服务端接口只有一个数据
+            SportPrepareActivity.start(this, sportAreaEntryList, true);
         }
         Log.d(TAG, "position:" + position);
         Log.d(TAG, "view.getId():" + view.getId());
@@ -296,11 +303,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     return true;
                 } else {
                     emptyLayout.showEmptyOrError(errCode);
-                    //                    ToastUtil.showToast(errMsg);
-                    //                    //网络不好
-                    //                    wrvSportType.invalidate();
-                    //                    wrvSportType.setAdapter(badNetworkAdapter);
-                    //                    badNetworkAdapter.setOnItemClickListener(context);
                     return false;
                 }
             }
@@ -331,18 +333,16 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         t = t / 60;
                         BigDecimal bd = new BigDecimal(t);
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
-                        //                        String surplusTimes = String.valueOf(Integer.parseInt(curTermAccuCounts) - Integer.parseInt(curQuaTimes));
                         homepageHeadView.setData(curTermAccuCounts, totalConsumeEnergy, String.valueOf(bd), curQuaTimes, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
                         return true;
                     } catch (org.json.JSONException e) {
-                        Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                        Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
                         return false;
                     }
                 } else {
                     Log.d(TAG, "onJsonResponse: errcode != 0");
-                    //                    homepageHeadView.displayBadNetworkLayout();
                     return false;
                 }
             }
@@ -351,10 +351,41 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
 
+    /**
+     * 获取区域运动项目
+     */
+    public void queryAreaSportsData() {
+        ServerInterface.instance().queryAreaSportsData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                SportAreaEntry sportAreaEntry = new SportAreaEntry();
+                if (errCode == 0) {
+                    //获取接口参数
+                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("query");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.optJSONObject(i);
+                        sportAreaEntry.setId(jsonObject.optInt("id"));
+                        sportAreaEntry.setName(jsonObject.optString("name"));
+                        sportAreaEntry.setEnable(jsonObject.optBoolean("is_enable"));
+                        sportAreaEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
+                        sportAreaEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
+                        sportAreaEntry.setUniversityId(jsonObject.optInt("universityId"));
+                        sportAreaEntryList.add(sportAreaEntry);
+                    }
+                    return true;
+                } else {
+                    Log.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
+                    return false;
+                }
+            }
+        });
+    }
+
     @Override
     public void initData() {
         queryRunningProjects();
         queryCurTermData();
+        queryAreaSportsData();
     }
 
     @Override

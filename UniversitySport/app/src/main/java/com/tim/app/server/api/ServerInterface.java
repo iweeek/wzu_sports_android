@@ -373,7 +373,7 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryAreaSportData(int universityId, ResponseCallback callback){
+    public void queryAreaFixedLocationListData(int universityId, ResponseCallback callback){
         String queryStr ="{\n" +
                 "  fixLocationOutdoorSportPoints(universityId: 1)  {\n" +
                 "    id\n" +
@@ -386,6 +386,26 @@ public class ServerInterface {
                 "  }\n" +
                 "}\n";
         query(queryStr,callback);
+    }
+
+    /**
+     * 首页查询
+     * {@link com.tim.app.ui.activity.MainActivity}调用
+     * @param universityId
+     * @param callback
+     */
+    public void queryAreaSportsData(int universityId, ResponseCallback callback) {
+        String queryStr = "{\n" +
+                "  query: areaSports(universityId: 1) {\n" +
+                "    id\n" +
+                "    name\n" +
+                "    is_enable\n" +
+                "    qualifiedCostTime\n" +
+                "    acquisitionInterval\n" +
+                "    universityId\n" +
+                "  }\n" +
+                "}\n";
+        query(queryStr, callback);
     }
 
 }

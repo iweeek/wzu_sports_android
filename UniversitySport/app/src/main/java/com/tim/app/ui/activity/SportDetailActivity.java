@@ -728,7 +728,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                    state = STATE_END;
 //                }
 //
-//                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
+//                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
 //                    tvResult.setText("达标");
 //                } else {
 //                    tvResult.setText("不达标");
@@ -747,7 +747,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                }
 //
 //                int studentId = 1;//学生的id
-//                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+//                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getQualifiedCostTime());
 //
 //                tvResult.setVisibility(View.VISIBLE);
 //                tvSportJoinNumber.setVisibility(View.GONE);

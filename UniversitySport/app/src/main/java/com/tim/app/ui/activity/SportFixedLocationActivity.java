@@ -56,6 +56,7 @@ import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
+import com.tim.app.server.entry.SportAreaEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
@@ -82,7 +83,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private Context context = this;
     private CoordinateConverter converter;
 
-    private SportEntry sportEntry;
+    private SportAreaEntry mSportAreaEntry;
 
     private MapView mapView;
     private AMap aMap;
@@ -166,9 +167,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     };
 
 
-    public static void start(Context context, SportEntry sportEntry) {
+    public static void start(Context context, SportAreaEntry sportAreaEntry) {
         Intent intent = new Intent(context, SportFixedLocationActivity.class);
-        intent.putExtra("sportEntry", sportEntry);
+        intent.putExtra("sportAreaEntry", sportAreaEntry);
         context.startActivity(intent);
     }
 
@@ -202,8 +203,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         initGPS();
 
-        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
-        //        interval = sportEntry.getInterval() * 1000;
+        mSportAreaEntry = (SportAreaEntry) getIntent().getSerializableExtra("sportAreaEntry");
         interval = 1000;
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -387,21 +387,21 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(sportEntry.getSportName())) {
-            tvSportName.setText(sportEntry.getSportName());
-        }
-
-        if (sportEntry.getParticipantNum() > 0) {
-            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-        }
-
-        if (sportEntry.getTargetDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getTargetDistance())));
-        }
-
-        if (sportEntry.getTargetTime() > 0) {
-            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
-        }
+//        if (!TextUtils.isEmpty(sportEntry.getSportName())) {
+//            tvSportName.setText(sportEntry.getSportName());
+//        }
+//
+//        if (sportEntry.getParticipantNum() > 0) {
+//            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+//        }
+//
+//        if (sportEntry.getTargetDistance() > 0) {
+//            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getTargetDistance())));
+//        }
+//
+//        if (sportEntry.getTargetTime() > 0) {
+//            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
+//        }
 
         tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
         tvTargetSpeed.setText(getString(R.string.percent, sportEntry.getTargetSpeed()));
@@ -449,7 +449,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             tvAverSpeed.setText("0.0");
                         }
 
-                        runningActivitiesEnd(sportEntry.getId(), studentId, targetFinishedTime);
+//                        runningActivitiesEnd(sportEntry.getId(), studentId, targetFinishedTime);
 
                         tvSportJoinNumber.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
@@ -601,7 +601,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             //                    state = STATE_END;
             //                }
             //
-            //                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
+            //                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
             //                    tvResult.setText("达标");
             //                } else {
             //                    tvResult.setText("不达标");
@@ -620,7 +620,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             //                }
             //
             //                int studentId = 1;//学生的id
-            //                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+            //                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getQualifiedCostTime());
             //
             //                tvResult.setVisibility(View.VISIBLE);
             //                tvSportJoinNumber.setVisibility(View.GONE);

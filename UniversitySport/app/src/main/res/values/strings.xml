@@ -162,7 +162,7 @@
     <string name="percent">%s</string>
     <string name="slash">/</string>
 
-    <string name="targetTime">达标时间 ： %s分钟   </string>
+    <string name="qualifiedCostTime">达标时间 ： %s分钟   </string>
 
 
     <!-- -->

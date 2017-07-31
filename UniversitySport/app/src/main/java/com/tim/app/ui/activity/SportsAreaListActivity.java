@@ -22,7 +22,7 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.SportArea;
+import com.tim.app.server.entry.SportAreaList;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.adapter.SportAreaListAdapter;
 
@@ -47,7 +47,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     private EmptyLayout emptyLayout;
 
     private SportAreaListAdapter adapter;
-    private List<SportArea> dataList;
+    private List<SportAreaList> dataList;
     private SportEntry sportEntry;
 
     @Override
@@ -124,7 +124,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
      * 查询区域运动记录
      */
     public void queryAreaSportData() {
-        ServerInterface.instance().queryAreaSportData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryAreaFixedLocationListData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache)
             {
@@ -136,16 +136,16 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                         for (int i = 0; i < sportArray.length(); i++)
                         {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
-                            SportArea sportArea = new SportArea();
-                            sportArea.setId(jsonObject.optInt("id"));
-                            sportArea.setAreaName(jsonObject.optString("name"));
-                            sportArea.setLatitude(jsonObject.optDouble("latitude"));
-                            sportArea.setLongitude(jsonObject.optDouble("longitude"));
-                            sportArea.setRadius(jsonObject.optDouble("radius"));
-                            sportArea.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
-                            //                            int universityId = jsonObject.optInt("universityId");
+                            SportAreaList sportAreaList = new SportAreaList();
+                            sportAreaList.setId(jsonObject.optInt("id"));
+                            sportAreaList.setAreaName(jsonObject.optString("name"));
+                            sportAreaList.setLatitude(jsonObject.optDouble("latitude"));
+                            sportAreaList.setLongitude(jsonObject.optDouble("longitude"));
+                            sportAreaList.setRadius(jsonObject.optDouble("radius"));
+                            sportAreaList.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
+                            sportAreaList.setUniversityId(jsonObject.optInt("universityId"));
                             //还差 isSelected desc
-                            dataList.add(sportArea);
+                            dataList.add(sportAreaList);
                             wrvArea.setAdapter(adapter);
                             adapter.setOnItemClickListener(context);
                             adapter.notifyDataSetChanged();
@@ -206,6 +206,8 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     @Override
     public void onItemClick(View view, int position, long id) {
-        SportPrepareActivity.start(this,dataList.get(position),sportEntry,true);
+//        SportPrepareActivity.start(this,dataList.get(position),sportEntry,true);
+        //打开SportFixedLocationActivity
+        SportFixedLocationActivity.start();
     }
 }
