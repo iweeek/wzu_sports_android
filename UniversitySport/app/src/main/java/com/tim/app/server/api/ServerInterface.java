@@ -23,9 +23,11 @@ public class ServerInterface {
 
     private static final String API_SCHEME = "api/";//扩展字段
 
-    public static final String RUNNING_ACTIVITIES = "runningActivities";//
+    public static final String RUNNING_ACTIVITIES = "runningActivities";
 
     public static final String RUNNING_ACTIVITY_DATA = "runningActivityData";
+
+    public static final String AREA_SPORTS = "areasports";
 
     public static final String QUERY_INTERFACE = "graphql/query";
 
@@ -46,6 +48,14 @@ public class ServerInterface {
         return instance;
     }
 
+    /**
+     * {@link com.tim.app.ui.activity.SportDetailActivity} 调用
+     * @param tag
+     * @param runningSportId
+     * @param studentId
+     * @param startTime
+     * @param callback
+     */
     public void runningActivitiesStart(String tag, int runningSportId, int studentId, long startTime, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITIES + "/start";
         HashMap params = new HashMap();
@@ -57,8 +67,8 @@ public class ServerInterface {
     }
 
     /**
-     * 提交运动数据
-     *
+     * 结束跑步运动
+     * {@link com.tim.app.ui.activity.SportDetailActivity} 调用
      * @param tag
      * @param distance   距离
      * @param costTime   花费时间
@@ -77,12 +87,26 @@ public class ServerInterface {
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
+    /**
+     * 向服务器提交数据
+     * {@link com.tim.app.ui.activity.SportDetailActivity}  调用
+     * @param tag
+     * @param activityId
+     * @param acquisitionTime
+     * @param stepCount
+     * @param distance
+     * @param longitude
+     * @param latitude
+     * @param locationType
+     * @param isNormal
+     * @param callback
+     */
     public void runningActivityData(String tag, int activityId, long acquisitionTime, int stepCount, int distance, double longitude,
                                     double latitude, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", activityId);
-        params.put("acquisitionTime", acquisitionTime);
+//        params.put("acquisitionTime", acquisitionTime);
         params.put("stepCount", stepCount);
         params.put("distance", distance);
         params.put("longitude", longitude);
@@ -91,6 +115,20 @@ public class ServerInterface {
         params.put("isNormal", isNormal);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
+
+
+    public void areaActivitiesStart(String tag,int areaSportId, int studentId,ResponseCallback callback) {
+        String url = API_SCHEME + AREA_SPORTS;
+        HashMap params = new HashMap();
+        params.put("areaSportId", areaSportId);
+        params.put("studentId", studentId);
+        Log.d(TAG, "params: " + params);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
+
+
+
+
 
     public void query(String queryStr, ResponseCallback callback) {
         String url = API_SCHEME + QUERY_INTERFACE;
@@ -110,6 +148,11 @@ public class ServerInterface {
     }
 
 
+    /**
+     * MainActivity 调用
+     * @param universityId
+     * @param callback
+     */
     public void queryRunningSports(int universityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  runningSports(universityId: 1) {\n" +
@@ -124,6 +167,11 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+    /**
+     * SportResultActivity 调用
+     * @param activityId
+     * @param callback
+     */
     public void queryRunningActivity(int activityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "\trunningActivity(id:" + activityId + ") {\n" +
@@ -151,6 +199,12 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+    /**
+     *  MainActivity 调用
+     * @param universityId
+     * @param studentId
+     * @param callback
+     */
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
         String queryStr = "{\n" +
                 "\tuniversity(id:" + universityId + ") {\n" +

@@ -258,7 +258,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
                 Intent intent = null;
                 if (isOutDoor) {
                     intent = new Intent(SportPrepareActivity.this, SportsAreaListActivity.class);
-                } else {
+                } else {//室内
                     intent = new Intent(SportPrepareActivity.this, SportsClockListActivity.class);
                 }
                 startActivity(intent);
@@ -272,7 +272,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         //TODO 跳转运动详情
         switch (position) {
             default:
-                SportDetailActivity.start(this,sportEntry);
+                SportFixedLocationActivity.start(this,sportEntry);
                 break;
         }
     }
