@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:paddingBottom="10dp"
-    android:paddingLeft="15dp"
-    android:orientation="vertical"
-    android:paddingRight="15dp"
-    android:paddingTop="10dp">
+              xmlns:tool="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical"
+              android:paddingBottom="10dp"
+              android:paddingLeft="15dp"
+              android:paddingRight="15dp"
+              android:paddingTop="10dp">
 
 
     <RelativeLayout
@@ -18,21 +19,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-        <TextView
-            android:id="@+id/tvSportDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="随机慢跑"
-            android:textColor="#66a7fe"
-            android:textSize="18dp" />
-        <TextView
-            android:id="@+id/tvSportQualified"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dimen_5"
-            android:text="达标"
-            android:textColor="#66a7fe"
-            android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/tvSportDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="随机慢跑"
+                android:textColor="#66a7fe"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:id="@+id/tvSportQualified"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_5"
+                android:text="达标"
+                android:textColor="#66a7fe"
+                android:textSize="14dp"/>
         </LinearLayout>
 
         <TextView
@@ -41,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textColor="#979ea3"
-            android:textSize="14dp" />
+            android:textSize="14dp"/>
     </RelativeLayout>
 
     <View
@@ -49,7 +52,7 @@
         android:layout_height="1dp"
         android:layout_marginBottom="17dp"
         android:layout_marginTop="17dp"
-        android:background="#edf0f2" />
+        android:background="#edf0f2"/>
 
 
     <LinearLayout
@@ -73,23 +76,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="距离"
-                android:textSize="14dp" />
+                android:textSize="14dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tvLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="6000"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="米"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -107,22 +112,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="耗时"
-                android:textSize="14dp" />
+                android:textSize="14dp"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tvMiddle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="120"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="12dp" />
+                    android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -140,33 +148,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="平均速度"
-                android:textSize="14dp" />
+                android:textSize="14dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/tvRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textSize="16dp" />
+                    android:textSize="16dp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="米/秒"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="17dp"
         android:layout_marginTop="17dp"
-        android:background="#edf0f2" />
+        android:background="#edf0f2"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -176,17 +187,17 @@
             android:id="@+id/tvSportCost"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#979ea3"
             android:text="@string/curConsumeEnergy"
-            android:textSize="14dp" />
+            android:textColor="#979ea3"
+            android:textSize="14dp"/>
 
         <TextView
             android:id="@+id/tvSportCostTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textColor="#979ea3"
             android:text="@string/sportCostTime"
-            android:textSize="14dp" />
+            android:textColor="#979ea3"
+            android:textSize="14dp"/>
     </RelativeLayout>
 </LinearLayout>

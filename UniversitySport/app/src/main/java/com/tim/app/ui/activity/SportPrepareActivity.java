@@ -31,7 +31,7 @@ import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.SportAreaEntry;
+import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.SportInfo;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.adapter.SportInfoListAdapter;
@@ -60,7 +60,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
     private SportInfoListAdapter adapter;
     private List<SportInfo> dataList;
 
-    private ArrayList<SportAreaEntry>  mSportAreaEntryArrayList;
+    private ArrayList<AreaSportEntry> mAreaSportEntryArrayList;
 
     @Override
     protected int getLayoutId() {
@@ -69,9 +69,9 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
     boolean isOutDoor;
 
-    public static void start(Context context,ArrayList<SportAreaEntry> sportAreaEntryList, boolean isOutDoor) {
+    public static void start(Context context, ArrayList<AreaSportEntry> areaSportEntryList, boolean isOutDoor) {
         Intent intent = new Intent(context, SportPrepareActivity.class);
-        intent.putParcelableArrayListExtra("sportAreaEntryList",sportAreaEntryList);
+        intent.putParcelableArrayListExtra("areaSportEntryList", areaSportEntryList);
         intent.putExtra("isOutDoor", isOutDoor);
         context.startActivity(intent);
     }
@@ -108,7 +108,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
         initGPS();
 
-        mSportAreaEntryArrayList = getIntent().getParcelableArrayListExtra("sportAreaEntryList");
+        mAreaSportEntryArrayList = getIntent().getParcelableArrayListExtra("sportAreaEntryList");
         isOutDoor = getIntent().getBooleanExtra("isOutDoor", false);
 
         mapView = (MapView) findViewById(R.id.map);
@@ -218,12 +218,12 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         }
 
 
-        for (int i = 0; i < mSportAreaEntryArrayList.size(); i++) {
-            SportAreaEntry sportAreaEntry = mSportAreaEntryArrayList.get(i);
+        for (int i = 0; i < mAreaSportEntryArrayList.size(); i++) {
+            AreaSportEntry areaSportEntry = mAreaSportEntryArrayList.get(i);
             SportInfo info = new SportInfo();
 
-            info.setFeild(sportAreaEntry.getName());
-            info.setQualifiedCostTime(sportAreaEntry.getQualifiedCostTime());
+            info.setFeild(areaSportEntry.getName());
+            info.setQualifiedCostTime(areaSportEntry.getQualifiedCostTime());
             info.setDesc("南校区有八块运动场地，供同学们进行运动。");
             info.setSportCount(new Random().nextInt(50));
 
@@ -270,7 +270,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         //TODO 跳转运动详情
         switch (position) {
             default:
-                SportFixedLocationActivity.start(this, mSportAreaEntryArrayList.get(position));
+                SportFixedLocationActivity.start(this, mAreaSportEntryArrayList.get(position));
                 break;
         }
     }

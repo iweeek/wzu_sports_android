@@ -11,18 +11,18 @@ import android.widget.TextView;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
-import com.tim.app.server.entry.SportAreaList;
+import com.tim.app.server.entry.AreaSportList;
 
 import java.util.List;
 
 
-public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportAreaList>
+public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, AreaSportList>
         implements BaseRecyclerAdapter.OnItemClickListener {
 
     private Context mContext;
     private static final String TAG = "SportAreaListAdapter";
 
-    public SportAreaListAdapter(Context mContext, List<SportAreaList> mDataList) {
+    public SportAreaListAdapter(Context mContext, List<AreaSportList> mDataList) {
         super(mDataList);
         this.mContext = mContext;
 
@@ -37,7 +37,7 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, SportAreaList data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, AreaSportList data) {
         if (data == null) {
             return;
         }

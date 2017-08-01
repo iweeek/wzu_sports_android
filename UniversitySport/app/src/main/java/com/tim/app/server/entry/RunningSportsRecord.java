@@ -2,6 +2,7 @@ package com.tim.app.server.entry;
 
 /**
  * Created by nimon on 2017/6/17.
+ * 数据库记录
  */
 
 public class RunningSportsRecord extends SportsRecord {

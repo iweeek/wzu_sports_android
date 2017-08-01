@@ -38,7 +38,7 @@ import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
@@ -66,7 +66,7 @@ public class SportResultActivity extends BaseActivity {
     private Context context = this;
     private CoordinateConverter converter;
 
-    private HistorySportEntry historyEntry;
+    private HistoryRunningSportEntry historyEntry;
     private ImageButton ibBack;
 
     private MapView mapView;
@@ -168,7 +168,7 @@ public class SportResultActivity extends BaseActivity {
     private final static String parseErrMsg = "数据解析失败，请联系客服";
     private final static String noSportTrackMsg = "本次运动没有运动轨迹";
 
-    public static void start(Context context, HistorySportEntry entry) {
+    public static void start(Context context, HistoryRunningSportEntry entry) {
         Intent intent = new Intent(context, SportResultActivity.class);
         intent.putExtra("historyEntry", entry);
         context.startActivity(intent);
@@ -178,7 +178,7 @@ public class SportResultActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        historyEntry = (HistorySportEntry) getIntent().getSerializableExtra("historyEntry");
+        historyEntry = (HistoryRunningSportEntry) getIntent().getSerializableExtra("historyEntry");
         //TODO
 //        interval = historyEntry.getInterval() * 1000;
 
@@ -258,7 +258,7 @@ public class SportResultActivity extends BaseActivity {
             Log.d(TAG, "record: " + record);
         }
 
-        ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningActivity(historyEntry.getRunningSportId(), new JsonResponseCallback() {
 
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

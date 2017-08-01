@@ -10,7 +10,7 @@ import android.os.Parcelable;
  */
 
 
-public class SportAreaEntry implements Parcelable {
+public class AreaSportEntry implements Parcelable {
     private static final long serialVersionUID = 6187447685293862071L;
     private int id;//运动项目Id
     private String name;//名称
@@ -78,7 +78,7 @@ public class SportAreaEntry implements Parcelable {
 
     @Override
     public String toString() {
-        return "SportAreaEntry{" +
+        return "AreaSportEntry{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", isEnable=" + isEnable +
@@ -89,7 +89,7 @@ public class SportAreaEntry implements Parcelable {
                 '}';
     }
 
-    public SportAreaEntry() {
+    public AreaSportEntry() {
     }
 
     @Override
@@ -107,7 +107,7 @@ public class SportAreaEntry implements Parcelable {
         dest.writeInt(this.universityId);
     }
 
-    protected SportAreaEntry(Parcel in) {
+    protected AreaSportEntry(Parcel in) {
         this.id = in.readInt();
         this.name = in.readString();
         this.isEnable = in.readByte() != 0;
@@ -116,15 +116,15 @@ public class SportAreaEntry implements Parcelable {
         this.universityId = in.readInt();
     }
 
-    public static final Parcelable.Creator<SportAreaEntry> CREATOR = new Parcelable.Creator<SportAreaEntry>() {
+    public static final Parcelable.Creator<AreaSportEntry> CREATOR = new Parcelable.Creator<AreaSportEntry>() {
         @Override
-        public SportAreaEntry createFromParcel(Parcel source) {
-            return new SportAreaEntry(source);
+        public AreaSportEntry createFromParcel(Parcel source) {
+            return new AreaSportEntry(source);
         }
 
         @Override
-        public SportAreaEntry[] newArray(int size) {
-            return new SportAreaEntry[size];
+        public AreaSportEntry[] newArray(int size) {
+            return new AreaSportEntry[size];
         }
     };
 }

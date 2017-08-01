@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 运动区域
  */
-public class SportAreaList implements Serializable {
+public class AreaSportList implements Serializable {
 
     private static final long serialVersionUID = 6187447685293862071L;
     private  Integer id;
@@ -84,7 +84,7 @@ public class SportAreaList implements Serializable {
 
     @Override
     public String toString() {
-        return "SportAreaList{" +
+        return "AreaSportList{" +
                 "id=" + id +
                 ", areaName='" + areaName + '\'' +
                 ", address='" + address + '\'' +
