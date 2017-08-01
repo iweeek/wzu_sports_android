@@ -225,9 +225,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         } else if (position == 3) {
             //现在服务端接口只有一个数据
-//            SportPrepareActivity.start(this, sportAreaEntryList, true);
+            //            SportPrepareActivity.start(this, sportAreaEntryList, true);
             Log.d(TAG, "sportAreaEntryList.size():" + sportAreaEntryList.size());
-            SportsAreaListActivity.start(this,sportAreaEntryList);
+            SportsAreaListActivity.start(this, sportAreaEntryList);
         }
         Log.d(TAG, "position:" + position);
         Log.d(TAG, "view.getId():" + view.getId());
@@ -321,25 +321,40 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
+                    JSONObject jsonObject = json.optJSONObject("data").optJSONObject("student");
                     try {
-                        String curTermAccuCounts = json.optJSONObject("data").optJSONObject("student").
-                                optString("currentTermActivityCount");
-                        String curQuaTimes = json.optJSONObject("data").optJSONObject("student").
-                                getString("qualifiedActivityCount");
-                        String curTermTargetTimes = json.optJSONObject("data").optJSONObject("university").optJSONObject("currentTerm").optJSONObject("termSportsTask").
-                                getString("targetSportsTimes");
-                        String totalConsumeEnergy = json.optJSONObject("data").optJSONObject("student").
-                                getString("caloriesConsumption");
-                        double t = json.optJSONObject("data").optJSONObject("student").
-                                getLong("timeCosted");
-                        t = t / 60;
-                        BigDecimal bd = new BigDecimal(t);
+                        String curTermTargetTimes = String.valueOf(json.optJSONObject("data").optJSONObject("university")
+                                .optJSONObject("currentTerm").optJSONObject("termSportsTask")
+                                .optInt("targetSportsTimes"));
+
+
+                        String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
+                        String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
+
+                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
+                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
+
+                        String curTermAreaCostedTime = jsonObject.optString("areaActivityTimeCosted");
+                        String curTermRunningCostedTime = jsonObject.optString("runningActivityTimeCosted");
+
+                        String curTermAreaKcalConsumption = jsonObject.optString("areaActivityKcalConsumption");
+                        String curTermRunningKcalConsumption = jsonObject.optString("runningActivityKcalConsumption");
+
+
+                        String totalCount = String.valueOf(Integer.valueOf(curTermAreaCounts) + Integer.valueOf(curTermRunningCounts));
+                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
+                        String totalKcalComsuption = String.valueOf(Integer.valueOf(curTermAreaKcalConsumption) + Integer.valueOf(curTermRunningKcalConsumption));
+                        double totalCostedTime = Double.valueOf(curTermAreaCostedTime) + Double.valueOf(curTermRunningCostedTime);
+
+
+                        totalCostedTime = totalCostedTime / 60;
+                        BigDecimal bd = new BigDecimal(totalCostedTime);
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
-                        homepageHeadView.setData(curTermAccuCounts, totalConsumeEnergy, String.valueOf(bd), curQuaTimes, curTermTargetTimes);
+                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalQualifiedCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
                         return true;
-                    } catch (org.json.JSONException e) {
+                    } catch (Exception e) {
                         Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
                         return false;
                     }
@@ -373,6 +388,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         sportAreaEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
                         sportAreaEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
                         sportAreaEntry.setUniversityId(jsonObject.optInt("universityId"));
+                        Log.d(TAG, "sportAreaEntry:" + sportAreaEntry);
                         sportAreaEntryList.add(sportAreaEntry);
                     }
                     return true;

@@ -16,8 +16,6 @@ import com.tim.app.ui.activity.HistorySportActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.activity.SchoolRankingActivity;
 
-import java.math.BigDecimal;
-
 /**
  * 首页的headerview
  */
@@ -98,20 +96,17 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     /**
      * 刷新界面
      *
-     * @param count
-     * @param cost
      */
-
-    public void setData(String count, String cost, String costTime,
-                        String curTermQualifiedTimes,String curTermTargetTimes) {
-        tvCurTermAccuTimes.setText(getContext().getString(R.string.percent, count));
-        tvAccumulCostEnergy.setText(getContext().getString(R.string.percent, cost));
-        tvAccumulCostTime.setText((getContext().getString(R.string.percent, costTime)));
+    public void setData(String curTermSportCount, String KcalComsuption, String costedTime,
+                        String curTermQualifiedTimes,String curTermTargetCount) {
+        tvCurTermAccuTimes.setText(getContext().getString(R.string.percent, curTermSportCount));
+        tvAccumulCostEnergy.setText(getContext().getString(R.string.percent, KcalComsuption));
+        tvAccumulCostTime.setText((getContext().getString(R.string.percent, costedTime)));
         tvCurQualifiedTimes.setText((getContext().getString(R.string.percent, curTermQualifiedTimes)) + "/");
-        tvCurTermTargetTimes.setText((getContext().getString(R.string.percent, curTermTargetTimes)));
+        tvCurTermTargetTimes.setText((getContext().getString(R.string.percent, curTermTargetCount)));
 
         float q = Float.valueOf(curTermQualifiedTimes);
-        float t = Float.valueOf(curTermTargetTimes);
+        float t = Float.valueOf(curTermTargetCount);
         float r = q / t;
 
         pbReachTargetTimes.setProgress((int)(r * 100));
