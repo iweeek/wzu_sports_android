@@ -41,7 +41,6 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -80,13 +79,12 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * 运动详情
+ * 跑步运动详情页
  */
 public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
-    private CoordinateConverter converter;
 
     private SportEntry sportEntry;
 //    private ImageButton ibBack;
@@ -143,8 +141,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
 
-    JsonResponseCallback callback;
-    private int screenOffTimeout;
+    private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
     private LinearLayout llLacationHint;
 
@@ -377,6 +374,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
 
         if (location != null) {
+            Log.d(TAG, "locationType:" + locationType);
             //定位成功
             if (errorCode != 0 & locationType != -1 && locationType != 1 && state != STATE_STARTED) {
                 String errText = "正在定位中，GPS信号弱";
@@ -522,11 +520,28 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         currentDistance = 0;
         elapseTime = 0;
 
+        //外部存储设备权限请求
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
+
+
+        elapseTimeRunnable = new Runnable() {
+            public void run() {
+                // If you need update UI, simply do this:
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        // update your UI component here.
+                        elapseTime += timerInterval / 1000;
+                        Log.d(TAG, "elapseTime: " + elapseTime);
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(time);
+                    }
+                });
+            }
+        };
 
         // 设置滑动解锁-解锁的监听
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
@@ -542,13 +557,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
-//                        ibBack.setVisibility(View.GONE);
                         stopTimer();
-                        if (state == STATE_PAUSE) {
-                            state = STATE_END;
-                        }
+                        //已经没有暂停了
+//                        if (state == STATE_PAUSE) {
+//                            state = STATE_END;
+//                        }
 
-                        tvAverSpeedLabel.setText("平均速度");
+//                        tvAverSpeedLabel.setText("平均速度");
                         //做保护
                         if (elapseTime != 0) {
                             double d = currentDistance;
@@ -574,21 +589,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
             }
         });
-
-        elapseTimeRunnable = new Runnable() {
-            public void run() {
-                // If you need update UI, simply do this:
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        // update your UI component here.
-                        elapseTime += timerInterval / 1000;
-                        Log.d(TAG, "elapseTime: " + elapseTime);
-                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-                        tvElapseTime.setText(time);
-                    }
-                });
-            }
-        };
     }
 
     /**
@@ -643,6 +643,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
     }
 
+    /**
+     * 调整屏幕亮度
+     */
     private void turnUpScreen() {
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.screenBrightness = (float) 1;
@@ -676,7 +679,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
-                    ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
+                    ServerInterface.instance(). runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             Log.d(TAG, "errCode:" + errCode);
@@ -722,7 +725,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                    state = STATE_END;
 //                }
 //
-//                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getTargetTime()) {
+//                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
 //                    tvResult.setText("达标");
 //                } else {
 //                    tvResult.setText("不达标");
@@ -741,7 +744,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 //                }
 //
 //                int studentId = 1;//学生的id
-//                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getTargetTime());
+//                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getQualifiedCostTime());
 //
 //                tvResult.setVisibility(View.VISIBLE);
 //                tvSportJoinNumber.setVisibility(View.GONE);
@@ -855,7 +858,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         }
                     }
                 });
-
+        /*如果本地有未上传的数据*/
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -925,7 +928,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
+        tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);

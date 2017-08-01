@@ -15,14 +15,11 @@ import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.SportArea;
 import com.tim.app.server.entry.WifiInfo;
-import com.tim.app.ui.adapter.SportAreaListAdapter;
 import com.tim.app.ui.adapter.WifiListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * 打卡网络

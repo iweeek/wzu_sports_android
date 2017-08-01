@@ -161,8 +161,9 @@
     <string name="outsideScore">课外成绩(分)</string>
     <string name="percent">%s</string>
     <string name="slash">/</string>
+    <string name="targetMinute">%s分钟</string>
 
-    <string name="targetTime">达标时间 ： %s分钟   </string>
+    <string name="qualifiedCostTime">达标时间 ： %s分钟   </string>
 
 
     <!-- -->

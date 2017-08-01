@@ -11,18 +11,18 @@ import android.widget.TextView;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
-import com.tim.app.server.entry.SportArea;
+import com.tim.app.server.entry.SportAreaList;
 
 import java.util.List;
 
 
-public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportArea>
+public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportAreaList>
         implements BaseRecyclerAdapter.OnItemClickListener {
 
     private Context mContext;
     private static final String TAG = "SportAreaListAdapter";
 
-    public SportAreaListAdapter(Context mContext, List<SportArea> mDataList) {
+    public SportAreaListAdapter(Context mContext, List<SportAreaList> mDataList) {
         super(mDataList);
         this.mContext = mContext;
 
@@ -37,7 +37,7 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, SportArea data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, SportAreaList data) {
         if (data == null) {
             return;
         }
@@ -51,12 +51,12 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
             holder.tvAddress.setText(data.getAddress());
         }
 
-        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getTargetTime())));
-        if (data.isSelected()) {
-            holder.ivSelectIcon.setVisibility(View.VISIBLE);
-        } else {
-            holder.ivSelectIcon.setVisibility(View.INVISIBLE);
-        }
+//        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getQualifiedCostTime())));
+//        if (data.isSelected()) {
+//            holder.ivSelectIcon.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.ivSelectIcon.setVisibility(View.INVISIBLE);
+//        }
     }
 
     @Override

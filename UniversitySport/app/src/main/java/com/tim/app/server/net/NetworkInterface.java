@@ -1,6 +1,7 @@
 package com.tim.app.server.net;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.cache.CacheEntity;
@@ -95,6 +96,8 @@ public class NetworkInterface {
             if (cache == CacheMode.IF_NONE_CACHE_REQUEST) {
                 cacheTime = 30000L;
             }
+            Log.d("NetworkInterface", params.toString());
+
 
             post(requestUrl).params(params).cacheMode(cache).cacheTime(cacheTime).tag(apiTag).execute(new StringCallback() {
                 //CacheMode#DEFAULT

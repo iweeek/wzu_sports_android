@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 运动区域
  */
-public class SportArea implements Serializable {
+public class SportAreaList implements Serializable {
 
     private static final long serialVersionUID = 6187447685293862071L;
     private  Integer id;
@@ -14,9 +14,9 @@ public class SportArea implements Serializable {
     private String address;//地址
     private double latitude; //纬度
     private double longitude;//经度
-    private int targetTime;//达标时间
+    private int qualifiedCostTime;//达标时间
     private double radius;//半径
-    private boolean isSelected;//是否选中
+    private int universityId;
 
     public String getAddress() {
         return address;
@@ -34,20 +34,12 @@ public class SportArea implements Serializable {
         this.areaName = areaName;
     }
 
-    public int getTargetTime() {
-        return targetTime;
+    public int getQualifiedCostTime() {
+        return qualifiedCostTime;
     }
 
-    public void setTargetTime(int targetTime) {
-        this.targetTime = targetTime;
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
+    public void setQualifiedCostTime(int qualifiedCostTime) {
+        this.qualifiedCostTime = qualifiedCostTime;
     }
 
     public double getLatitude() {
@@ -80,5 +72,27 @@ public class SportArea implements Serializable {
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public int getUniversityId() {
+        return universityId;
+    }
+
+    public void setUniversityId(int universityId) {
+        this.universityId = universityId;
+    }
+
+    @Override
+    public String toString() {
+        return "SportAreaList{" +
+                "id=" + id +
+                ", areaName='" + areaName + '\'' +
+                ", address='" + address + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", qualifiedCostTime=" + qualifiedCostTime +
+                ", radius=" + radius +
+                ", universityId=" + universityId +
+                '}';
     }
 }

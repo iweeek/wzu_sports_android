@@ -13,7 +13,6 @@ import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.SportArea;
 import com.tim.app.server.entry.SportInfo;
 
 import java.util.List;
@@ -54,7 +53,7 @@ public class SportInfoListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
             holder.tvDesc.setText(data.getDesc());
         }
 
-        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getTargetTime())));
+//        holder.tvTargetTime.setText(mContext.getString(R.string.targetTime, String.valueOf(data.getQualifiedCostTime())));
         holder.tvSportCount.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getSportCount())));
     }
 

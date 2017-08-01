@@ -537,7 +537,7 @@ public class SportResultActivity extends BaseActivity {
 
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
+        tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);

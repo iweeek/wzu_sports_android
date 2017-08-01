@@ -31,8 +31,7 @@ import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.SportArea;
-import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.SportAreaEntry;
 import com.tim.app.server.entry.SportInfo;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.adapter.SportInfoListAdapter;
@@ -52,19 +51,16 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
     private static final String TAG = "SportPrepareActivity";
     private Context context = this;
 
-    private SportArea sportArea;
-    private SportEntry sportEntry;
-
     private MapView mapView;
     private AMap aMap;
-
     private int interval = 0;
-
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
 
     WrapRecyclerView wrvInfo;
     private SportInfoListAdapter adapter;
     private List<SportInfo> dataList;
+
+    private ArrayList<SportAreaEntry>  mSportAreaEntryArrayList;
 
     @Override
     protected int getLayoutId() {
@@ -73,10 +69,9 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
     boolean isOutDoor;
 
-    public static void start(Context context, SportArea sportArea, SportEntry sportEntry, boolean isOutDoor) {
+    public static void start(Context context,ArrayList<SportAreaEntry> sportAreaEntryList, boolean isOutDoor) {
         Intent intent = new Intent(context, SportPrepareActivity.class);
-        intent.putExtra("sportArea", sportArea);
-        intent.putExtra("sportEntry",sportEntry);
+        intent.putParcelableArrayListExtra("sportAreaEntryList",sportAreaEntryList);
         intent.putExtra("isOutDoor", isOutDoor);
         context.startActivity(intent);
     }
@@ -113,10 +108,8 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
 
         initGPS();
 
-        sportArea = (SportArea) getIntent().getSerializableExtra("sportArea");
-        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
+        mSportAreaEntryArrayList = getIntent().getParcelableArrayListExtra("sportAreaEntryList");
         isOutDoor = getIntent().getBooleanExtra("isOutDoor", false);
-        //        interval = sportArea.getInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -223,12 +216,17 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
-        for (int i = 0; i < 10; i++) {
+
+
+        for (int i = 0; i < mSportAreaEntryArrayList.size(); i++) {
+            SportAreaEntry sportAreaEntry = mSportAreaEntryArrayList.get(i);
             SportInfo info = new SportInfo();
-            info.setFeild("温州大学体育馆");
+
+            info.setFeild(sportAreaEntry.getName());
+            info.setQualifiedCostTime(sportAreaEntry.getQualifiedCostTime());
             info.setDesc("南校区有八块运动场地，供同学们进行运动。");
-            info.setTargetTime(new Random().nextInt(100));
             info.setSportCount(new Random().nextInt(50));
+
             dataList.add(info);
         }
         adapter.notifyDataSetChanged();
@@ -258,7 +256,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
                 Intent intent = null;
                 if (isOutDoor) {
                     intent = new Intent(SportPrepareActivity.this, SportsAreaListActivity.class);
-                } else {
+                } else {//室内
                     intent = new Intent(SportPrepareActivity.this, SportsClockListActivity.class);
                 }
                 startActivity(intent);
@@ -272,7 +270,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         //TODO 跳转运动详情
         switch (position) {
             default:
-                SportDetailActivity.start(this,sportEntry);
+                SportFixedLocationActivity.start(this, mSportAreaEntryArrayList.get(position));
                 break;
         }
     }
@@ -320,5 +318,8 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         OkHttpUtils.getInstance().cancelTag(TAG);
 
     }
+
+
+
 
 }

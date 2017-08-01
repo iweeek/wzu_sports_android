@@ -12,6 +12,7 @@ import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.BaseActivity;
+import com.tim.app.ui.activity.SportFixedLocationActivity;
 
 import java.util.Random;
 
@@ -81,12 +82,13 @@ public class SettingActivity extends BaseActivity {
 
         } else if (v.getId() == R.id.rlTest) {
             boolean value = new Random().nextBoolean();
+            Intent intent = null;
             if (value) {
-                Intent intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
-                startActivity(intent);
+                intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
             } else {
-//                SportPrepareActivity.start(SettingActivity.this,new SportArea(),new Random().nextBoolean());
+                intent = new Intent(SettingActivity.this, SportFixedLocationActivity.class);
             }
+            startActivity(intent);
         }
     }
 
