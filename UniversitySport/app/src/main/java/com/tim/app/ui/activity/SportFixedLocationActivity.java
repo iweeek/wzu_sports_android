@@ -268,11 +268,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             tvElapsedTime.setText(time);
         }
 
-        String toastText = "";
         int errorCode = -1;
         String errorInfo = "";
         int locationType = -1;
-        LatLng newLatLng;
+        LatLng newLatLng = null;
 
         //// TODO: 这部分待看
         Bundle bundle = location.getExtras();
@@ -281,7 +280,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
             // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
             locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
-            Log.d(TAG, "locationType:" + locationType);
+            Log.d(TAG, "errorCode:" + errorCode + "     errorInfo:" + errorInfo + "     locationType:" + locationType);
         }
 
         //屏幕到了锁屏的时间，调暗亮度
@@ -316,13 +315,14 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                Log.d(TAG + "haha", msg);
-                //                DLOG.writeToInternalFile(msg);
+                // DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
-                //// TODO: 2017/7/31 向服务器提交数据
+                if (batteryLevel <= 20) {
+                    Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
+                }
+                //// 向服务器提交数据
                 if (elapseTime % acquisitionInterval == 0) {
-//                if (0 == 0) {
                     ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
                             location.getLatitude(), locationType, new ResponseCallback() {
                                 @Override
@@ -341,8 +341,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             });
                 }
             }
-
-            DLOG.d(TAG, toastText);
+            oldLatLng = newLatLng;
         } else {
             String errText = "定位失败：" + errorInfo;
             Log.e(TAG, errText);
@@ -358,14 +357,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     public float getBatteryLevel() {
         Intent batteryIntent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
+        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);   //当前电池百分比
+        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);   //当前电池的最大基数，一般都设置为100
         // Error checking that probably isn't needed but I added just in case.
         if (level == -1 || scale == -1) {
             return 50.0f;
         }
-
         return ((float) level / (float) scale) * 100.0f;
     }
 
@@ -727,7 +724,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
 
-        //@SmartNi
         rlTopFloatingWindow = (RelativeLayout) findViewById(R.id.rlTopFloatingWindow);
         tvElapsedTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvResult = (TextView) findViewById(R.id.tvResult);
@@ -741,7 +737,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlBottomFloatingWindow = (RelativeLayout) findViewById(R.id.rlBottomFloatingWindow);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
-
 
         rlAnimView = findViewById(R.id.rlAnimView);
 
@@ -804,7 +799,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                 }
 
-                //TODO
                 float batteryLevel = getBatteryLevel();
                 Toast.makeText(SportFixedLocationActivity.this, "当前电量： " + batteryLevel + "%", Toast.LENGTH_LONG).show();
             }

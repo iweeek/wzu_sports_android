@@ -161,10 +161,10 @@ public class ServerInterface {
                                  double latitude, int locationType, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITY_DATA;
         HashMap params = new HashMap();
-        params.put("activityId",areaSportRecordId );
-        params.put("longitude",longitude );
-        params.put("latitude",latitude );
-        params.put("locationType",locationType );
+        params.put("activityId", areaSportRecordId);
+        params.put("longitude", longitude);
+        params.put("latitude", latitude);
+        params.put("locationType", locationType);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
@@ -249,21 +249,24 @@ public class ServerInterface {
      */
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "\tuniversity(id:" + universityId + ") {\n" +
-                "       currentTerm {\n" +
-                "        termSportsTask {\n" +
-                "          targetSportsTimes\n" +
-                "        }\n" +
+                "  student(id: "+studentId+") {\n" +
+                "    areaActivityKcalConsumption\n" +
+                "    runningActivityKcalConsumption\n" +
+                "    areaActivityTimeCosted\n" +
+                "    runningActivityTimeCosted\n" +
+                "    currentTermQualifiedAreaActivityCount\n" +
+                "    currentTermQualifiedRunningActivityCount\n" +
+                "    currentTermAreaActivityCount\n" +
+                "    currentTermRunningActivityCount\n" +
+                "  }\n" +
+                "  university(id: "+universityId+") {\n" +
+                "    currentTerm {\n" +
+                "      termSportsTask {\n" +
+                "        targetSportsTimes\n" +
                 "      }\n" +
+                "    }\n" +
                 "  }\n" +
-                "  \n" +
-                "  student(id:" + studentId + ") {\n" +
-                "    caloriesConsumption(timeRange:CURRENT_TERM)\n" +
-                "    timeCosted(timeRange:CURRENT_TERM)\n" +
-                "    qualifiedActivityCount(timeRange:CURRENT_TERM)\n" +
-                "    currentTermActivityCount\n" +
-                "  }\n" +
-                "}";
+                "}\n";
         query(queryStr, callback);
     }
 
@@ -439,15 +442,16 @@ public class ServerInterface {
      */
     public void queryAreaSportsData(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  query: areaSports(universityId: 1) {\n" +
+                "  query: areaSports(universityId:1){\n" +
                 "    id\n" +
                 "    name\n" +
-                "    is_enable\n" +
+                "    isEnable\n" +
                 "    qualifiedCostTime\n" +
                 "    acquisitionInterval\n" +
                 "    universityId\n" +
                 "  }\n" +
-                "}\n";
+                "}\n" +
+                "\n";
         query(queryStr, callback);
     }
 
