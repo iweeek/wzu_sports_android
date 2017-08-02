@@ -38,7 +38,6 @@ import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
@@ -67,7 +66,7 @@ public class SportResultActivity extends BaseActivity {
     private Context context = this;
     private CoordinateConverter converter;
 
-    private HistoryRunningSportEntry historyEntry;
+    private HistorySportEntry historyEntry;
     private ImageButton ibBack;
 
     private MapView mapView;
@@ -171,7 +170,7 @@ public class SportResultActivity extends BaseActivity {
 
     public static void start(Context context, HistorySportEntry entry) {
         Intent intent = new Intent(context, SportResultActivity.class);
-        intent.putExtra("historyEntry", entry);
+        intent.putExtra("historySportEntry", entry);
         context.startActivity(intent);
     }
 
@@ -179,7 +178,7 @@ public class SportResultActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        historyEntry = (HistoryRunningSportEntry) getIntent().getSerializableExtra("historyEntry");
+        historyEntry = (HistorySportEntry) getIntent().getSerializableExtra("historySportEntry");
         //TODO
 //        interval = historyEntry.getInterval() * 1000;
 

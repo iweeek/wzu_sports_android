@@ -107,6 +107,12 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     }
 
     @Override
+    public int getItemViewType(int position) {
+return 0;
+
+    }
+
+    @Override
     public void onItemClick(View view, int position, long id) {
         DLOG.d(TAG, "onItemClick");
         SportResultActivity.start(mContext, getDataList().get(position));
