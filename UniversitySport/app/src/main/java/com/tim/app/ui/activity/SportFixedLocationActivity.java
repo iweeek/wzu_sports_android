@@ -51,9 +51,8 @@ import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
-import com.tim.app.server.entry.SportAreaEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
@@ -104,7 +103,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private View rlAnimView;
 
     /*重要实体*/
-    private SportAreaEntry mSportAreaEntry;
+    private AreaSportEntry mAreaSportEntry;
     private LatLng oldLatLng = null;
 
     /*初始化变量*/
@@ -144,9 +143,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     };
 
 
-    public static void start(Context context, SportAreaEntry sportAreaEntry) {
+    public static void start(Context context, AreaSportEntry areaSportEntry) {
         Intent intent = new Intent(context, SportFixedLocationActivity.class);
-        intent.putExtra("sportAreaEntry", sportAreaEntry);
+        intent.putExtra("areaSportEntry", areaSportEntry);
         context.startActivity(intent);
     }
 
@@ -180,8 +179,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         initGPS();
 
-        mSportAreaEntry = (SportAreaEntry) getIntent().getParcelableExtra("sportAreaEntry");
-        Log.d(TAG, "mSportAreaEntry:" + mSportAreaEntry);
+        mAreaSportEntry = (AreaSportEntry) getIntent().getParcelableExtra("areaSportEntry");
+        Log.d(TAG, "mAreaSportEntry:" + mAreaSportEntry);
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -373,11 +372,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(mSportAreaEntry.getName())) {
-            tvAreaName.setText(mSportAreaEntry.getName());
+        if (!TextUtils.isEmpty(mAreaSportEntry.getName())) {
+            tvAreaName.setText(mAreaSportEntry.getName());
         }
-        if (mSportAreaEntry.getQualifiedCostTime() > 0) {
-            tvTargetTime.setText(String.valueOf(mSportAreaEntry.getQualifiedCostTime()));
+        if (mAreaSportEntry.getQualifiedCostTime() > 0) {
+            tvTargetTime.setText(String.valueOf(mAreaSportEntry.getQualifiedCostTime()));
         }
 
         //// TODO:    tvAreaDesc  由于接口还未提供。
@@ -511,7 +510,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
-                    ServerInterface.instance().areaActivities(TAG, mSportAreaEntry.getId(), studentId, new JsonResponseCallback() {
+                    ServerInterface.instance().areaActivities(TAG, mAreaSportEntry.getId(), studentId, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             if (errCode == 0) {
@@ -533,9 +532,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
-                    HistorySportEntry entry = new HistorySportEntry();
-                    //                    entry.setActivityId(activityId);
-                    SportResultActivity.start(this, entry);
+                    //// TODO: 2017/8/1 这里要做一个区域运动的实体类。
+//                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
+//                    entry.setRunningSportId(activityId);
+//                    SportResultActivity.start(this, entry);
                 }
                 break;
             //            case R.id.btContinue:

@@ -28,7 +28,7 @@ import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
-import com.tim.app.server.entry.SportAreaEntry;
+import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private BadNetworkAdapter badNetworkAdapter;
     private List<SportEntry> sportEntryDataList;
     private List<BadNetWork> networkDataList;
-    private ArrayList<SportAreaEntry> sportAreaEntryList;
+    private ArrayList<AreaSportEntry> mAreaSportEntryList;
 
     private EmptyLayout emptyLayout;
 
@@ -225,9 +225,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         } else if (position == 3) {
             //现在服务端接口只有一个数据
-            //            SportPrepareActivity.start(this, sportAreaEntryList, true);
-            Log.d(TAG, "sportAreaEntryList.size():" + sportAreaEntryList.size());
-            SportsAreaListActivity.start(this, sportAreaEntryList);
+            //            SportPrepareActivity.start(this, mAreaSportEntryList, true);
+            Log.d(TAG, "mAreaSportEntryList.size():" + mAreaSportEntryList.size());
+            SportsAreaListActivity.start(this, mAreaSportEntryList);
         }
         Log.d(TAG, "position:" + position);
         Log.d(TAG, "view.getId():" + view.getId());
@@ -372,24 +372,24 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 获取区域运动项目
      */
     public void queryAreaSportsData() {
-        sportAreaEntryList = new ArrayList<>();
+        mAreaSportEntryList = new ArrayList<>();
         ServerInterface.instance().queryAreaSportsData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                SportAreaEntry sportAreaEntry = new SportAreaEntry();
+                AreaSportEntry areaSportEntry = new AreaSportEntry();
                 if (errCode == 0) {
                     //获取接口参数
                     JSONArray jsonArray = json.optJSONObject("data").optJSONArray("query");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.optJSONObject(i);
-                        sportAreaEntry.setId(jsonObject.optInt("id"));
-                        sportAreaEntry.setName(jsonObject.optString("name"));
-                        sportAreaEntry.setEnable(jsonObject.optBoolean("is_enable"));
-                        sportAreaEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
-                        sportAreaEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
-                        sportAreaEntry.setUniversityId(jsonObject.optInt("universityId"));
-                        Log.d(TAG, "sportAreaEntry:" + sportAreaEntry);
-                        sportAreaEntryList.add(sportAreaEntry);
+                        areaSportEntry.setId(jsonObject.optInt("id"));
+                        areaSportEntry.setName(jsonObject.optString("name"));
+                        areaSportEntry.setEnable(jsonObject.optBoolean("is_enable"));
+                        areaSportEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
+                        areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
+                        areaSportEntry.setUniversityId(jsonObject.optInt("universityId"));
+                        Log.d(TAG, "areaSportEntry:" + areaSportEntry);
+                        mAreaSportEntryList.add(areaSportEntry);
                     }
                     return true;
                 } else {

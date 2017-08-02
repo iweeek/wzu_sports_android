@@ -305,25 +305,43 @@ public class ServerInterface {
 
     public void queryHistorySportsRecord(int studentId, int pageNo, int pageSize, int type, ResponseCallback callback) {
         if (type == AppConstant.THIS_WEEK) {
-            queryStr = "{    \n" +
-                    "\tstudent(id:" + studentId + ") {\n" +
-                    "qualifiedActivityCount(timeRange:CURRENT_WEEK)\n" +
-                    "timeCosted(timeRange:CURRENT_WEEK)\n" +
-                    "caloriesConsumption(timeRange:CURRENT_WEEK)\n" +
-                    "    currentWeekActivities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
-                    "      pagesCount\n" +
-                    "      dataCount\n" +
+            queryStr = "{\n" +
+                    "  student(id: 2) {\n" +
+                    "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
+                    "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
+                    "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
+                    "    qualifiedAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
+                    "    runningActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
+                    "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
+                    "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+                    "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+                    "    runningActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
                     "      data {\n" +
-                    "        id\n" +
                     "        runningSportId\n" +
                     "        costTime\n" +
-                    "        kcalConsumed\n" +
-                    "        startTime\n" +
                     "        distance\n" +
+                    "        kcalConsumed\n" +
                     "        qualified\n" +
-                    "        runningSport{\n" +
+                    "        startTime\n" +
+                    "        sportDate\n" +
+                    "        endedAt\n" +
+                    "        runningSport {\n" +
                     "          name\n" +
-                    "         }\n" +
+                    "        }\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "    areaActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
+                    "      data {\n" +
+                    "        areaSportId\n" +
+                    "        costTime\n" +
+                    "        kcalConsumed\n" +
+                    "        qualified\n" +
+                    "        startTime\n" +
+                    "        sportDate\n" +
+                    "        endedAt\n" +
+                    "        areaSport {\n" +
+                    "          name\n" +
+                    "        }\n" +
                     "      }\n" +
                     "    }\n" +
                     "  }\n" +

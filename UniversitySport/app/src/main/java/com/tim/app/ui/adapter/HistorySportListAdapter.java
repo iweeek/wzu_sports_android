@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
+import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.SportResultActivity;
 
@@ -45,6 +46,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         if (data == null) {
             return;
         }
+
+        if(data instanceof  HistoryRunningSportEntry){
+
+        }
         final ViewHolder holder = (ViewHolder) mHolder;
 
         if (!TextUtils.isEmpty(data.getSportName())) {
@@ -64,37 +69,37 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         }
 
         //异常数据处理，距离
-        if (data.getSportDistance() < 0) {
-            data.setSportDistance(0);
+        if (data.getDistance() < 0) {
+            data.setDistance(0);
         }
-        holder.tvLeft.setText(String.valueOf(data.getSportDistance()));
+        holder.tvLeft.setText(String.valueOf(data.getDistance()));
 
         //耗时
-        if (data.getSportTime() < 0) {
-            data.setSportTime(0);
+        if (data.getCostTime() < 0) {
+            data.setCostTime(0);
         }
 
-        String time = com.tim.app.util.TimeUtil.formatMillisTime(data.getSportTime() * 1000);
+        String time = com.tim.app.util.TimeUtil.formatMillisTime(data.getCostTime() * 1000);
         holder.tvMiddle.setText(time);
 
         //速度
-        if (data.getSportDistance() == 0) {
+        if (data.getDistance() == 0) {
             holder.tvRight.setText("0.0");
         } else {
-            double d = data.getSportDistance();
-            double t = data.getSportTime();
+            double d = data.getDistance();
+            double t = data.getCostTime();
             double v =  d / t;
             BigDecimal bd = new BigDecimal(v);
             bd = bd.setScale(1, RoundingMode.HALF_UP);
             holder.tvRight.setText(String.valueOf(bd));
         }
 
-        if (data.getCostEnergy() >= 0) {
-            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getCostEnergy())));
+        if (data.getKcalConsumed() >= 0) {
+            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getKcalConsumed())));
         }
 
-        if (data.getSportTime() >= 0) {
-            double t = data.getSportTime();
+        if (data.getCostTime() >= 0) {
+            double t = data.getCostTime();
             BigDecimal bd = new BigDecimal(t / 60);
             bd = bd.setScale(1, RoundingMode.HALF_UP);
             holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));

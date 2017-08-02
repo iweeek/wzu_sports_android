@@ -58,7 +58,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
@@ -160,7 +160,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     UiSettings uiSettings;
     private long targetFinishedTime;
-    private int activityId;
+    private int sportRecordId;
     private int studentId = 2;//TODO 需要从认证信息中获取
 
     private int pauseStateSteps = 0;
@@ -438,7 +438,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvAverSpeed.setText(String.valueOf(bd));
                 }
 
-                ServerInterface.instance().runningActivityData(TAG, activityId, System.currentTimeMillis(), currentSteps, currentDistance,
+                ServerInterface.instance().runningActivityData(TAG, sportRecordId, System.currentTimeMillis(), currentSteps, currentDistance,
                         location.getLongitude(), location.getLatitude(), locationType, isNormal, new ResponseCallback() {
                             @Override
                             public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
@@ -685,7 +685,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             Log.d(TAG, "errCode:" + errCode);
                             if (errCode == 0) {
                                 try {
-                                    activityId = json.getInt("id");
+                                    sportRecordId = json.getInt("id");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
@@ -701,8 +701,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
-                    HistorySportEntry entry = new HistorySportEntry();
-                    entry.setActivityId(activityId);
+                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
+                    entry.setSportId(sportRecordId);
                     SportResultActivity.start(this, entry);
                 }
                 break;
@@ -826,7 +826,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         SQLite.init(context, RunningSportsCallback.getInstance());
         //提交本次运动数据，更新UI
         ServerInterface.instance().runningActivitiesEnd(
-                TAG, activityId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
+                TAG, sportRecordId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
@@ -849,11 +849,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             return true;
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                            int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                                    runningSportId, activityId, studentId, currentDistance,
-                                    elapseTime, startTime, currentSteps, System.currentTimeMillis());
-
-                            Log.d(TAG, "result:" + result);
+//                            int result = SQLite.getInstance(context).saveRunningSportsRecord(
+//                                    runningSportId, sportRecordId, studentId, currentDistance,
+//                                    elapseTime, startTime, currentSteps, System.currentTimeMillis());
+//
+//                            Log.d(TAG, "result:" + result);
                             return false;
                         }
                     }

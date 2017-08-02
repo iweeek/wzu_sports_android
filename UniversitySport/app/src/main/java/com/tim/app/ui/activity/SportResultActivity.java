@@ -38,6 +38,7 @@ import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
@@ -66,7 +67,7 @@ public class SportResultActivity extends BaseActivity {
     private Context context = this;
     private CoordinateConverter converter;
 
-    private HistorySportEntry historyEntry;
+    private HistoryRunningSportEntry historyEntry;
     private ImageButton ibBack;
 
     private MapView mapView;
@@ -178,7 +179,7 @@ public class SportResultActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        historyEntry = (HistorySportEntry) getIntent().getSerializableExtra("historyEntry");
+        historyEntry = (HistoryRunningSportEntry) getIntent().getSerializableExtra("historyEntry");
         //TODO
 //        interval = historyEntry.getInterval() * 1000;
 
@@ -258,7 +259,7 @@ public class SportResultActivity extends BaseActivity {
             Log.d(TAG, "record: " + record);
         }
 
-        ServerInterface.instance().queryRunningActivity(historyEntry.getActivityId(), new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningActivity(historyEntry.getSportId(), new JsonResponseCallback() {
 
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

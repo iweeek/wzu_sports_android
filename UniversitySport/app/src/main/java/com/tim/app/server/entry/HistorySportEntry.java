@@ -1,38 +1,42 @@
 package com.tim.app.server.entry;
 
-
 import java.io.Serializable;
 
 /**
- * 运动数据
+ * @创建者 倪军
+ * @创建时间 2017/8/2
+ * @描述
  */
-public class HistorySportEntry implements Serializable {
+
+public class HistorySportEntry  implements Serializable{
+
     private static final long serialVersionUID = 6187447685293862071L;
-    private String sportName;//运动描述
-    private long startTime;
-    private String speed;//速度
-    private int completeCount;//完成段数
-    private int minDistance;//最短距离
-    private int sportTime;
-    private int costEnergy;
-    private int sportDistance;
+    private int sportId;
+    private int costTime;
+    private int kcalConsumed;
     private boolean qualified;
-    private  int activityId;
+    private long startTime;
+    private long endAt;
+    private String sportDate;
+    private String sportName;
+    private int distance;
+    private String speed;//速度
 
-    public int getActivityId() {
-        return activityId;
+    public int getDistance() {
+        return distance;
     }
 
-    public void setActivityId(int activityId) {
-        this.activityId = activityId;
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
-    public boolean isQualified() {
-        return qualified;
+
+    public String getSpeed() {
+        return speed;
     }
 
-    public void setQualified(boolean qualified) {
-        this.qualified = qualified;
+    public void setSpeed(String speed) {
+        this.speed = speed;
     }
 
     public String getSportName() {
@@ -43,6 +47,38 @@ public class HistorySportEntry implements Serializable {
         this.sportName = sportName;
     }
 
+    public int getSportId() {
+        return sportId;
+    }
+
+    public void setSportId(int sportId) {
+        this.sportId = sportId;
+    }
+
+    public int getCostTime() {
+        return costTime;
+    }
+
+    public void setCostTime(int costTime) {
+        this.costTime = costTime;
+    }
+
+    public int getKcalConsumed() {
+        return kcalConsumed;
+    }
+
+    public void setKcalConsumed(int kcalConsumed) {
+        this.kcalConsumed = kcalConsumed;
+    }
+
+    public boolean isQualified() {
+        return qualified;
+    }
+
+    public void setQualified(boolean qualified) {
+        this.qualified = qualified;
+    }
+
     public long getStartTime() {
         return startTime;
     }
@@ -51,51 +87,35 @@ public class HistorySportEntry implements Serializable {
         this.startTime = startTime;
     }
 
-    public String getSpeed() {
-        return speed;
+    public long getEndAt() {
+        return endAt;
     }
 
-    public void setSpeed(String speed) {
-        this.speed = speed;
+    public void setEndAt(long endAt) {
+        this.endAt = endAt;
     }
 
-    public int getCompleteCount() {
-        return completeCount;
+    public String getSportDate() {
+        return sportDate;
     }
 
-    public void setCompleteCount(int completeCount) {
-        this.completeCount = completeCount;
+    public void setSportDate(String sportDate) {
+        this.sportDate = sportDate;
     }
 
-    public int getMinDistance() {
-        return minDistance;
-    }
-
-    public void setMinDistance(int minDistance) {
-        this.minDistance = minDistance;
-    }
-
-    public int getSportTime() {
-        return sportTime;
-    }
-
-    public void setSportTime(int sportTime) {
-        this.sportTime = sportTime;
-    }
-
-    public int getCostEnergy() {
-        return costEnergy;
-    }
-
-    public void setCostEnergy(int costEnergy) {
-        this.costEnergy = costEnergy;
-    }
-
-    public int getSportDistance() {
-        return sportDistance;
-    }
-
-    public void setSportDistance(int distance) {
-        sportDistance = distance;
+    @Override
+    public String toString() {
+        return "HistorySportEntry{" +
+                "sportId=" + sportId +
+                ", costTime=" + costTime +
+                ", kcalConsumed=" + kcalConsumed +
+                ", qualified=" + qualified +
+                ", startTime=" + startTime +
+                ", endAt=" + endAt +
+                ", sportDate='" + sportDate + '\'' +
+                ", sportName='" + sportName + '\'' +
+                ", distance=" + distance +
+                ", speed='" + speed + '\'' +
+                '}';
     }
 }
