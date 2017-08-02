@@ -3,6 +3,7 @@ package com.tim.app.ui.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.ui.activity.HistoryItem;
 import com.tim.app.ui.activity.SportResultActivity;
 
 import java.math.BigDecimal;
@@ -20,15 +22,16 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
-public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistorySportEntry>
+public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
         implements  BaseRecyclerAdapter.OnItemClickListener{
     private Context mContext;
     private static final String TAG = "HistorySportListAdapter";
 
-    public HistorySportListAdapter(Context mContext, List<HistorySportEntry> mDataList) {
-        super(mDataList);
+    public HistorySportListAdapter(Context mContext, List<HistoryItem> dataList) {
+        super(dataList);
         this.mContext = mContext;
 
         this.setOnItemClickListener(this);
@@ -42,68 +45,69 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistorySportEntry data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistoryItem data) {
         if (data == null) {
             return;
         }
 
-        if(data instanceof  HistoryRunningSportEntry){
-
-        }
-        final ViewHolder holder = (ViewHolder) mHolder;
-
-        if (!TextUtils.isEmpty(data.getSportName())) {
-            holder.tvSportDesc.setText(data.getSportName());
-        }
-
-        Date date = new Date(data.getStartTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
-        holder.tvSportTime.setText(sdf.format(date));
-
-        if (data.isQualified()) {
-            holder.tvSportQualified.setText("达标");
-            holder.tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
-        } else {
-            holder.tvSportQualified.setText("不达标");
-            holder.tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
-        }
-
-        //异常数据处理，距离
-        if (data.getDistance() < 0) {
-            data.setDistance(0);
-        }
-        holder.tvLeft.setText(String.valueOf(data.getDistance()));
-
-        //耗时
-        if (data.getCostTime() < 0) {
-            data.setCostTime(0);
-        }
-
-        String time = com.tim.app.util.TimeUtil.formatMillisTime(data.getCostTime() * 1000);
-        holder.tvMiddle.setText(time);
-
-        //速度
-        if (data.getDistance() == 0) {
-            holder.tvRight.setText("0.0");
-        } else {
-            double d = data.getDistance();
-            double t = data.getCostTime();
-            double v =  d / t;
-            BigDecimal bd = new BigDecimal(v);
-            bd = bd.setScale(1, RoundingMode.HALF_UP);
-            holder.tvRight.setText(String.valueOf(bd));
-        }
-
-        if (data.getKcalConsumed() >= 0) {
-            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getKcalConsumed())));
-        }
-
-        if (data.getCostTime() >= 0) {
-            double t = data.getCostTime();
-            BigDecimal bd = new BigDecimal(t / 60);
-            bd = bd.setScale(1, RoundingMode.HALF_UP);
-            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));
-        }
+        Log.d(TAG, "data: " + data);
+//        if(data instanceof  HistoryRunningSportEntry){
+//
+//        }
+//        final ViewHolder holder = (ViewHolder) mHolder;
+//
+//        if (!TextUtils.isEmpty(data.getSportName())) {
+//            holder.tvSportDesc.setText(data.getSportName());
+//        }
+//
+//        Date date = new Date(data.getStartTime());
+//        SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
+//        holder.tvSportTime.setText(sdf.format(date));
+//
+//        if (data.isQualified()) {
+//            holder.tvSportQualified.setText("达标");
+//            holder.tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+//        } else {
+//            holder.tvSportQualified.setText("不达标");
+//            holder.tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+//        }
+//
+//        //异常数据处理，距离
+//        if (data.getDistance() < 0) {
+//            data.setDistance(0);
+//        }
+//        holder.tvLeft.setText(String.valueOf(data.getDistance()));
+//
+//        //耗时
+//        if (data.getCostTime() < 0) {
+//            data.setCostTime(0);
+//        }
+//
+//        String time = com.tim.app.util.TimeUtil.formatMillisTime(data.getCostTime() * 1000);
+//        holder.tvMiddle.setText(time);
+//
+//        //速度
+//        if (data.getDistance() == 0) {
+//            holder.tvRight.setText("0.0");
+//        } else {
+//            double d = data.getDistance();
+//            double t = data.getCostTime();
+//            double v =  d / t;
+//            BigDecimal bd = new BigDecimal(v);
+//            bd = bd.setScale(1, RoundingMode.HALF_UP);
+//            holder.tvRight.setText(String.valueOf(bd));
+//        }
+//
+//        if (data.getKcalConsumed() >= 0) {
+//            holder.tvSportCost.setText(mContext.getString(R.string.curConsumeEnergy, String.valueOf(data.getKcalConsumed())));
+//        }
+//
+//        if (data.getCostTime() >= 0) {
+//            double t = data.getCostTime();
+//            BigDecimal bd = new BigDecimal(t / 60);
+//            bd = bd.setScale(1, RoundingMode.HALF_UP);
+//            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));
+//        }
     }
 
     @Override
@@ -115,7 +119,7 @@ return 0;
     @Override
     public void onItemClick(View view, int position, long id) {
         DLOG.d(TAG, "onItemClick");
-        SportResultActivity.start(mContext, getDataList().get(position));
+//        SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
 
     }
 

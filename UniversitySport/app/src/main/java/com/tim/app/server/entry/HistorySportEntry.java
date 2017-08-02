@@ -10,6 +10,9 @@ import java.io.Serializable;
 
 public class HistorySportEntry  implements Serializable{
 
+    public static final int RUNNING_TYPE = 1;
+    public static final int AREA_TYPE = 2;
+
     private static final long serialVersionUID = 6187447685293862071L;
     private int sportId;
     private int costTime;
@@ -21,6 +24,16 @@ public class HistorySportEntry  implements Serializable{
     private String sportName;
     private int distance;
     private String speed;//速度
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    private int type;//类型：1，跑步运动；2，区域运动。
 
     public int getDistance() {
         return distance;

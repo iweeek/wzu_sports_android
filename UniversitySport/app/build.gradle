@@ -65,6 +65,7 @@ dependencies {
 //    compile 'com.amap.api:map3d-native:latest.integration'
     compile 'com.amap.api:3dmap:latest.integration'
     compile 'com.amap.api:location:latest.integration'
+    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
 }
 
 def releaseTime() {

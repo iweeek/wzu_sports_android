@@ -8,6 +8,7 @@ import com.lzy.okhttputils.model.HttpHeaders;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
+import com.tim.app.util.MyDateUtil;
 
 import java.util.HashMap;
 
@@ -304,9 +305,14 @@ public class ServerInterface {
     }
 
     public void queryHistorySportsRecord(int studentId, int pageNo, int pageSize, int type, ResponseCallback callback) {
+        String startDate = "";
+        String endDate = "";
+
         if (type == AppConstant.THIS_WEEK) {
+            startDate = "2017-07-30";
+            endDate = "2017-08-02";
             queryStr = "{\n" +
-                    "  student(id: 2) {\n" +
+                    "  student(id: " + studentId + ") {\n" +
                     "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
                     "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
                     "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
@@ -315,7 +321,7 @@ public class ServerInterface {
                     "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
                     "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
                     "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
-                    "    runningActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
+                    "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                     "      data {\n" +
                     "        runningSportId\n" +
                     "        costTime\n" +
@@ -330,7 +336,7 @@ public class ServerInterface {
                     "        }\n" +
                     "      }\n" +
                     "    }\n" +
-                    "    areaActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
+                    "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                     "      data {\n" +
                     "        areaSportId\n" +
                     "        costTime\n" +
@@ -346,7 +352,7 @@ public class ServerInterface {
                     "    }\n" +
                     "  }\n" +
                     "}";
-        } else if (type == AppConstant.THIS_MONTH) {
+        } /*else if (type == AppConstant.THIS_MONTH) {
             queryStr = "{\n" +
                     "  student(id: 2) {\n" +
                     "    accuRunningActivityCount(timeRange: CURRENT_MONTH)\n" +
@@ -495,7 +501,7 @@ public class ServerInterface {
 //                    "    }\n" +
 //                    "  }\n" +
 //                    "}";
-        }
+        }*/
         query(queryStr, callback);
     }
 
