@@ -201,10 +201,10 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");
                             JSONArray areaSportArray = student.optJSONObject("areaActivities").optJSONArray("data");
 
-                            for (LocalDate date = new LocalDate(endDate); date.isAfter(new LocalDate(startDate)); date = date.minusDays(1)) {
+                            for (LocalDate date = new LocalDate(endDate); date.isAfter(new LocalDate(startDate).minusDays(1)); date = date.minusDays(1)) {
 
                                 for (int i = 0; i < runningSportArray.length(); i++) {
-                                    Log.d(TAG, "sport date: " + runningSportArray.optJSONObject(i).optString("sportDate"));
+                                    Log.d(TAG, "running sport date: " + runningSportArray.optJSONObject(i).optString("sportDate"));
                                     Log.d(TAG, "date: " + date.toString());
                                     if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                         HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
@@ -226,7 +226,9 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 }
 
                                 for (int i = 0; i < areaSportArray.length(); i++) {
-                                    if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
+                                    Log.d(TAG, "area sport date: " + areaSportArray.optJSONObject(i).optString("sportDate"));
+                                    Log.d(TAG, "date: " + date.toString());
+                                    if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                         HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
                                         entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
                                         entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));
