@@ -702,7 +702,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
                     HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
-                    entry.setRunningSportId(sportRecordId);
+                    entry.setSportId(sportRecordId);
                     SportResultActivity.start(this, entry);
                 }
                 break;

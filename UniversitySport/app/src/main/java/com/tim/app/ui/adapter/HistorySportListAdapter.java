@@ -12,6 +12,7 @@ import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
+import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.SportResultActivity;
 
 import java.math.BigDecimal;
@@ -21,12 +22,12 @@ import java.util.Date;
 import java.util.List;
 
 
-public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryRunningSportEntry>
+public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistorySportEntry>
         implements  BaseRecyclerAdapter.OnItemClickListener{
     private Context mContext;
     private static final String TAG = "HistorySportListAdapter";
 
-    public HistorySportListAdapter(Context mContext, List<HistoryRunningSportEntry> mDataList) {
+    public HistorySportListAdapter(Context mContext, List<HistorySportEntry> mDataList) {
         super(mDataList);
         this.mContext = mContext;
 
@@ -41,9 +42,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistoryRunningSportEntry data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, HistorySportEntry data) {
         if (data == null) {
             return;
+        }
+
+        if(data instanceof  HistoryRunningSportEntry){
+
         }
         final ViewHolder holder = (ViewHolder) mHolder;
 
