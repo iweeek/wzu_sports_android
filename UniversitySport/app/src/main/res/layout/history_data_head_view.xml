@@ -118,15 +118,15 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#edf0f2"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="15dp"
-        android:text="锻炼明细"
-        android:textColor="@color/black"
-        android:textSize="15dp" />
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:background="#edf0f2"-->
+        <!--android:gravity="left|center_vertical"-->
+        <!--android:paddingLeft="15dp"-->
+        <!--android:text="锻炼明细"-->
+        <!--android:textColor="@color/black"-->
+        <!--android:textSize="15dp" />-->
 
 
 </com.tim.app.ui.view.HistoryDataHeadView>

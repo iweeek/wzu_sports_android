@@ -10,6 +10,9 @@ import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
 import com.tim.app.util.MyDateUtil;
 
+import org.joda.time.LocalDate;
+
+import java.util.Date;
 import java.util.HashMap;
 
 import static com.lzy.okhttputils.utils.OkLogger.tag;
@@ -309,8 +312,8 @@ public class ServerInterface {
         String endDate = "";
 
         if (type == AppConstant.THIS_WEEK) {
-            startDate = "2017-07-30";
-            endDate = "2017-08-02";
+            startDate = new LocalDate(MyDateUtil.getCurrentWeekStartDate()).toString();
+            endDate = new LocalDate(new Date()).toString();
             queryStr = "{\n" +
                     "  student(id: " + studentId + ") {\n" +
                     "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +

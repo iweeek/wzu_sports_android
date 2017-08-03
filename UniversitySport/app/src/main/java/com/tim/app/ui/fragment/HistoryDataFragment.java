@@ -171,9 +171,6 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
-                        HistoryItem item = new HistoryItem();
-                        item.historySportEntryList = null;
-
                         Date startDate = MyDateUtil.getCurrentWeekStartDate();
                         Date endDate= new Date();
 
@@ -202,7 +199,10 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             JSONArray areaSportArray = student.optJSONObject("areaActivities").optJSONArray("data");
 
                             for (LocalDate date = new LocalDate(endDate); date.isAfter(new LocalDate(startDate).minusDays(1)); date = date.minusDays(1)) {
-
+                                Log.d(TAG, "startDate: " + startDate);
+                                Log.d(TAG, "date: " + date);
+                                HistoryItem item = new HistoryItem();
+                                item.historySportEntryList = null;
                                 for (int i = 0; i < runningSportArray.length(); i++) {
                                     Log.d(TAG, "running sport date: " + runningSportArray.optJSONObject(i).optString("sportDate"));
                                     Log.d(TAG, "date: " + date.toString());
@@ -215,13 +215,20 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                         entry.setQualified(runningSportArray.optJSONObject(i).optBoolean("qualified"));
                                         entry.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
                                         entry.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
-                                        entry.setEndAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
+                                        //过滤不完整数据
+                                        if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
+                                            entry.setEndAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
+                                        } else {
+                                            continue;
+                                        }
                                         entry.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
                                         entry.setType(HistorySportEntry.RUNNING_TYPE);
 
-                                        item.historySportEntryList = new ArrayList<HistorySportEntry>();
+                                        if (item.historySportEntryList == null) {
+                                            item.historySportEntryList = new ArrayList<HistorySportEntry>();
+                                        }
                                         item.historySportEntryList.add(entry);
-                                        Log.d(TAG, "ag.runningSportEntry sport date: " + entry.getSportDate());
+                                        Log.d(TAG, "ag.runningSportEntry sport date: " + date);
                                     }
                                 }
 
@@ -236,17 +243,20 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                         entry.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
                                         entry.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                         entry.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
-                                        entry.setEndAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
+                                        //过滤不完整数据
+                                        if (Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")) > 0) {
+                                            entry.setEndAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
+                                        } else {
+                                            continue;
+                                        }
                                         entry.setSportName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
                                         entry.setType(HistorySportEntry.AREA_TYPE);
 
-                                        if (item.historySportEntryList != null) {
-                                            item.historySportEntryList.add(entry);
-                                        } else {
+                                        if (item.historySportEntryList == null) {
                                             item.historySportEntryList = new ArrayList<HistorySportEntry>();
-                                            item.historySportEntryList.add(entry);
                                         }
-                                        Log.d(TAG, "ag.areaSportEntry sport date: " + entry.getSportDate());
+                                        item.historySportEntryList.add(entry);
+                                        Log.d(TAG, "ag.areaSportEntry sport date: " + date);
                                     }
                                 }
 
