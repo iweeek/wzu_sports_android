@@ -70,7 +70,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(data.historySportEntryList.get(i).getSportName());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-//                tvSportQualified.setText(data.historySportEntryList.get(i));
+                if (data.historySportEntryList.get(i).isQualified()) {
+                    tvSportQualified.setText("达标");
+                    tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                } else {
+                    tvSportQualified.setText("不达标");
+                    tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
                 SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
@@ -107,7 +113,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(data.historySportEntryList.get(i).getSportName());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-//                tvSportQualified.setText(data.historySportEntryList.get(i));
+                if (data.historySportEntryList.get(i).isQualified()) {
+                    tvSportQualified.setText("达标");
+                    tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                } else {
+                    tvSportQualified.setText("不达标");
+                    tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
                 SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
