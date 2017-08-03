@@ -26,11 +26,20 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/ivSporIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:paddingRight="8dp"
+                android:scaleType="fitXY"/>
+
             <TextView
                 android:id="@+id/tvSportDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="随机慢跑"
+                android:paddingLeft="2dp"
                 android:textColor="#66a7fe"
                 android:textSize="18dp" />
 

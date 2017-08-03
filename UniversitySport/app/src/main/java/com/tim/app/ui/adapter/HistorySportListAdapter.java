@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,6 +63,9 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 //            Log.d(TAG, "data.historySportEntryList item: " + data.historySportEntryList.get(i).getSportDate());
             LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.history_daily_record_item, null);
             if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
+                ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
+                iv.setBackgroundResource(R.drawable.ic_run_sport);
+
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(data.historySportEntryList.get(i).getSportName());
 
@@ -95,6 +99,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 } else {
 
                 }
+
+                ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
+                iv.setBackgroundResource(R.drawable.ic_fix_location_sport);
+
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(data.historySportEntryList.get(i).getSportName());
 
