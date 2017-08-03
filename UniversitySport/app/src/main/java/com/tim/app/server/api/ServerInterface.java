@@ -15,6 +15,7 @@ import org.joda.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 
+import static android.R.attr.type;
 import static com.lzy.okhttputils.utils.OkLogger.tag;
 
 /**
@@ -307,29 +308,27 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryHistorySportsRecord(int studentId, int type, ResponseCallback callback) {
-        String startDate = "";
-        String endDate = new LocalDate(new Date()).toString();
+    public void queryTermInfo(int id, ResponseCallback callback) {
+        queryStr = "{\n" +
+                "term(id:" + id + "){\n" +
+                "id\n" +
+                "startDate\n" +
+                "}\n" +
+                "}";
+        query(queryStr, callback);
+    }
 
-        if (type == AppConstant.THIS_WEEK) {
-            startDate = new LocalDate(MyDateUtil.getCurrentWeekStartDate()).toString();
-        } else if (type == AppConstant.THIS_MONTH) {
-            startDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
-        } else if (type == AppConstant.THIS_TERM) {
-//            startDate = new LocalDate(MyDateUtil.getCurrentTStartDate()).toString();
-        } else {
-
-        }
+    public void queryHistorySportsRecord(int studentId, String startDate, String endDate, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  student(id: " + studentId + ") {\n" +
-                "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
-                "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
-                "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
-                "    qualifiedAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
-                "    runningActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
-                "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
-                "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
-                "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+//                "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
+//                "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
+//                "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
+//                "    qualifiedAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
+//                "    runningActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
+//                "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
+//                "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+//                "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
                 "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                 "      data {\n" +
                 "        runningSportId\n" +
