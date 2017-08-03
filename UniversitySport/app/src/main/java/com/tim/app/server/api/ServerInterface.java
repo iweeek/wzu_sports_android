@@ -218,7 +218,7 @@ public class ServerInterface {
      * @param activityId
      * @param callback
      */
-    public void queryRunningActivity(int activityId, ResponseCallback callback) {
+    public void queryRunningActivity(long activityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "\trunningActivity(id:" + activityId + ") {\n" +
                 "   distance\n" +
@@ -339,6 +339,7 @@ public class ServerInterface {
                 "    areaActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
                 "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                 "      data {\n" +
+                "        id\n" +
                 "        runningSportId\n" +
                 "        costTime\n" +
                 "        distance\n" +
@@ -354,6 +355,7 @@ public class ServerInterface {
                 "    }\n" +
                 "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                 "      data {\n" +
+                "        id\n" +
                 "        areaSportId\n" +
                 "        costTime\n" +
                 "        kcalConsumed\n" +

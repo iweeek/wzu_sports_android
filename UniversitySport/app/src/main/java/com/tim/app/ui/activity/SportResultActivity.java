@@ -166,6 +166,7 @@ public class SportResultActivity extends BaseActivity {
     private long targetTime;
     private final static String netErrMsg = "数据获取失败，请检查网络连接";
     private final static String parseErrMsg = "数据解析失败，请联系客服";
+    private final static String noSportDataMsg = "没有找到任务运动轨迹";
     private final static String noSportTrackMsg = "本次运动没有运动轨迹";
 
     public static void start(Context context, HistorySportEntry entry) {
@@ -247,18 +248,18 @@ public class SportResultActivity extends BaseActivity {
         DLOG.closeInternalFile();
         DLOG.d(TAG, "log_file: " + msg);
 
-        String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
-
         //TODO test
-        SQLite.init(context, RunningSportsCallback.getInstance());
-        List<RunningSportsRecord> list = SQLite.query(
-                RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
+//        String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
+//
+//        SQLite.init(context, RunningSportsCallback.getInstance());
+//        List<RunningSportsRecord> list = SQLite.query(
+//                RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
+//
+//        for (final RunningSportsRecord record : list) {
+//            Log.d(TAG, "record: " + record);
+//        }
 
-        for (final RunningSportsRecord record : list) {
-            Log.d(TAG, "record: " + record);
-        }
-
-        ServerInterface.instance().queryRunningActivity(historyEntry.getSportId(), new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningActivity(historyEntry.getId(), new JsonResponseCallback() {
 
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -266,6 +267,11 @@ public class SportResultActivity extends BaseActivity {
                     try {
                         drawPoints.clear();
                         actArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
+                        if (actArray.length() == 0) {
+                            Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+
                         for (int i = 0; i < actArray.length(); i++) {
                             LatLng ll = new LatLng(actArray.getJSONObject(i).getDouble("latitude"),
                                     actArray.getJSONObject(i).getDouble("longitude"));

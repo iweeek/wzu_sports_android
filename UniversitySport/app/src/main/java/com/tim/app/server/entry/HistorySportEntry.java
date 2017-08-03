@@ -13,6 +13,15 @@ public class HistorySportEntry  implements Serializable{
     public static final int RUNNING_TYPE = 1;
     public static final int AREA_TYPE = 2;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    private long id;
     private static final long serialVersionUID = 6187447685293862071L;
     private int sportId;
     private int costTime;
@@ -24,6 +33,7 @@ public class HistorySportEntry  implements Serializable{
     private String sportName;
     private int distance;
     private String speed;//速度
+
 
     public int getType() {
         return type;

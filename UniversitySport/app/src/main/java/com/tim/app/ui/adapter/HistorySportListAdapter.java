@@ -17,6 +17,7 @@ import com.tim.app.R;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.HistoryItem;
+import com.tim.app.ui.activity.SportResultActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,7 +30,7 @@ import static com.tim.app.R.id.tvSportQualified;
 
 
 public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
-        implements  BaseRecyclerAdapter.OnItemClickListener{
+        implements  BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener{
     private Context context;
     private static final String TAG = "HistorySportListAdapter";
 
@@ -62,7 +63,12 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         for (int i = 0; i < data.historySportEntryList.size(); i ++) {
 //            Log.d(TAG, "data.historySportEntryList item: " + data.historySportEntryList.get(i).getSportDate());
             LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.history_daily_record_item, null);
+
             if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
+                ll.setClickable(true);
+                ll.setOnClickListener(this);
+                ll.setTag(data.historySportEntryList.get(i));
+
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
                 iv.setBackgroundResource(R.drawable.ic_run_sport);
 
@@ -195,6 +201,11 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 //            bd = bd.setScale(1, RoundingMode.HALF_UP);
 //            holder.tvSportCostTime.setText(mContext.getString(R.string.sportCostTime, String.valueOf(bd)));
 //        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        SportResultActivity.start(context, (HistorySportEntry)view.getTag());
     }
 
     @Override

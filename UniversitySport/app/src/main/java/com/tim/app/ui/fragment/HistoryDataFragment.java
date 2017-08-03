@@ -213,6 +213,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 //                                    Log.d(TAG, "date: " + date.toString());
                                 if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                     HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
+                                    entry.setId(runningSportArray.optJSONObject(i).optInt("id"));
                                     entry.setSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
                                     entry.setCostTime(Integer.valueOf(runningSportArray.optJSONObject(i).optString("costTime")));
                                     entry.setDistance(Integer.valueOf(runningSportArray.optJSONObject(i).optString("distance")));
@@ -242,6 +243,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 //                                Log.d(TAG, "date: " + date.toString());
                                 if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
+                                    entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
                                     entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
                                     entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));
                                     entry.setKcalConsumed(Integer.valueOf(areaSportArray.optJSONObject(i).optString("kcalConsumed")));
