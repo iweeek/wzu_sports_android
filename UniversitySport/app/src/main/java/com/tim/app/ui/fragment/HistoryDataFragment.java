@@ -166,13 +166,17 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
     private void initData() {
 
-        if (type == AppConstant.THIS_WEEK) {
-            ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoWeek++, pageSizeWeek, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryHistorySportsRecord(studentId, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    Date startDate = null;
+                    Date endDate = new Date();
                     if (errCode == 0) {
-                        Date startDate = MyDateUtil.getCurrentWeekStartDate();
-                        Date endDate= new Date();
+                        if (type == AppConstant.THIS_WEEK) {
+                            startDate = MyDateUtil.getCurrentWeekStartDate();
+                        } else if (type == AppConstant.THIS_MONTH) {
+                            startDate = MyDateUtil.getCurrentMonthStartDate();
+                        }
 
                         JSONObject student = json.optJSONObject("data").optJSONObject("student");
                         try {
@@ -193,7 +197,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
                             String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
 
-                            headView.setData("本周累计次数（次）", totalActivityCount, totalqualifiedActivityCount, totalActivityTimeCosted, toalActivityKcalConsumption);
+//                            headView.setData("本周累计次数（次）", totalActivityCount, totalqualifiedActivityCount, totalActivityTimeCosted, toalActivityKcalConsumption);
 
                             JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");
                             JSONArray areaSportArray = student.optJSONObject("areaActivities").optJSONArray("data");
@@ -204,8 +208,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 HistoryItem item = new HistoryItem();
                                 item.historySportEntryList = null;
                                 for (int i = 0; i < runningSportArray.length(); i++) {
-                                    Log.d(TAG, "running sport date: " + runningSportArray.optJSONObject(i).optString("sportDate"));
-                                    Log.d(TAG, "date: " + date.toString());
+//                                    Log.d(TAG, "running sport date: " + runningSportArray.optJSONObject(i).optString("sportDate"));
+//                                    Log.d(TAG, "date: " + date.toString());
                                     if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                         HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
                                         entry.setSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
@@ -286,7 +290,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                 }
 
             });
-        } /*else if (type == AppConstant.THIS_MONTH) {
+        /*else if (type == AppConstant.THIS_MONTH) {
             ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoMonth++, pageSizeMonth, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -592,47 +596,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-        //        if (type == AppConstant.THIS_WEEK) {
-        //            ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoWeek, pageSizeWeek, type, new JsonResponseCallback() {
-        //                @Override
-        //                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-        //                    if (errCode == 0) {
-        //                        try {
-        //                            pageCountWeek = Integer.valueOf(json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
-        //                                    getString("pagesCount"));
-        //                            JSONArray historySportArray = json.optJSONObject("data").optJSONObject("student").optJSONObject("currentWeekActivities").
-        //                                    getJSONArray("data");
-        //                            for (int i = 0; i < historySportArray.length(); i++) {
-        //                                HistoryRunningSportEntry data = new HistoryRunningSportEntry();
-        //                                data.setRunningSportId(historySportArray.getJSONObject(i).getInt("id"));
-        //                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
-        //                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
-        //                                data.setKcalConsumed(Integer.valueOf(historySportArray.getJSONObject(i).getString("kcalConsumed")));
-        //                                data.setCostTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
-        //                                data.setSportDistance(Integer.valueOf(historySportArray.getJSONObject(i).getString("distance")));
-        //                                data.setQualified(historySportArray.getJSONObject(i).getBoolean("qualified"));
-        //                                dataList.add(data);
-        //                            }
-        //                            adapter.notifyDataSetChanged();
-        //                            return true;
-        //                        } catch (org.json.JSONException e) {
-        //                            e.printStackTrace();
-        //                            Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
-        //                            return false;
-        //                        }
-        //                    } else {
-        //                        return false;
-        //                    }
-        //                }
-        //
-        //            });
-        //
-        //            if (pageNoWeek != pageCountWeek) {
-        //                pageNoWeek++;
-        //                lrvLoadMore.loadMoreFinish(false, true);
-        //            } else {
-        //                lrvLoadMore.loadMoreFinish(false, false);
-        //            }
+                if (type == AppConstant.THIS_WEEK) {
+                    lrvLoadMore.loadMoreFinish(false, false);
+                } else if (type == AppConstant.THIS_MONTH) {
+                    lrvLoadMore.loadMoreFinish(false, false);
+                }
         //        } else if (type == AppConstant.THIS_MONTH) {
         //            ServerInterface.instance().queryHistorySportsRecord(studentId, pageNoMonth, pageSizeMonth, type, new JsonResponseCallback() {
         //                @Override

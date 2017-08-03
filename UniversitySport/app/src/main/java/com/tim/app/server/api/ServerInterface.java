@@ -253,7 +253,7 @@ public class ServerInterface {
      */
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  student(id: "+studentId+") {\n" +
+                "  student(id: " + studentId + ") {\n" +
                 "    areaActivityKcalConsumption\n" +
                 "    runningActivityKcalConsumption\n" +
                 "    areaActivityTimeCosted\n" +
@@ -263,7 +263,7 @@ public class ServerInterface {
                 "    currentTermAreaActivityCount\n" +
                 "    currentTermRunningActivityCount\n" +
                 "  }\n" +
-                "  university(id: "+universityId+") {\n" +
+                "  university(id: " + universityId + ") {\n" +
                 "    currentTerm {\n" +
                 "      termSportsTask {\n" +
                 "        targetSportsTimes\n" +
@@ -307,55 +307,61 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryHistorySportsRecord(int studentId, int pageNo, int pageSize, int type, ResponseCallback callback) {
+    public void queryHistorySportsRecord(int studentId, int type, ResponseCallback callback) {
         String startDate = "";
-        String endDate = "";
+        String endDate = new LocalDate(new Date()).toString();
 
         if (type == AppConstant.THIS_WEEK) {
             startDate = new LocalDate(MyDateUtil.getCurrentWeekStartDate()).toString();
-            endDate = new LocalDate(new Date()).toString();
-            queryStr = "{\n" +
-                    "  student(id: " + studentId + ") {\n" +
-                    "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
-                    "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
-                    "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
-                    "    qualifiedAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
-                    "    runningActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
-                    "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
-                    "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
-                    "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
-                    "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
-                    "      data {\n" +
-                    "        runningSportId\n" +
-                    "        costTime\n" +
-                    "        distance\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        runningSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
-                    "      data {\n" +
-                    "        areaSportId\n" +
-                    "        costTime\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        areaSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}";
-        } /*else if (type == AppConstant.THIS_MONTH) {
+        } else if (type == AppConstant.THIS_MONTH) {
+            startDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
+        } else if (type == AppConstant.THIS_TERM) {
+//            startDate = new LocalDate(MyDateUtil.getCurrentTStartDate()).toString();
+        } else {
+
+        }
+        queryStr = "{\n" +
+                "  student(id: " + studentId + ") {\n" +
+                "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
+                "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
+                "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
+                "    qualifiedAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
+                "    runningActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
+                "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
+                "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+                "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+                "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
+                "      data {\n" +
+                "        runningSportId\n" +
+                "        costTime\n" +
+                "        distance\n" +
+                "        kcalConsumed\n" +
+                "        qualified\n" +
+                "        startTime\n" +
+                "        sportDate\n" +
+                "        endedAt\n" +
+                "        runningSport {\n" +
+                "          name\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }\n" +
+                "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
+                "      data {\n" +
+                "        areaSportId\n" +
+                "        costTime\n" +
+                "        kcalConsumed\n" +
+                "        qualified\n" +
+                "        startTime\n" +
+                "        sportDate\n" +
+                "        endedAt\n" +
+                "        areaSport {\n" +
+                "          name\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        /*else if (type == AppConstant.THIS_MONTH) {
             queryStr = "{\n" +
                     "  student(id: 2) {\n" +
                     "    accuRunningActivityCount(timeRange: CURRENT_MONTH)\n" +
