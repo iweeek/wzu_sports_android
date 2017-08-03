@@ -79,7 +79,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
-                tvMiddle.setText(data.historySportEntryList.get(i).getCostTime() + "");
+                String time = com.tim.app.util.TimeUtil.formatMillisTime(data.historySportEntryList.get(i).getCostTime() * 1000);
+                tvMiddle.setText(time);
 
                 //消耗热量
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
@@ -111,7 +112,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
-                tvMiddle.setText(data.historySportEntryList.get(i).getDistance() + "");
+                String time = com.tim.app.util.TimeUtil.formatMillisTime(data.historySportEntryList.get(i).getCostTime() * 1000);
+                tvMiddle.setText(time);
 
                 //耗时
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
