@@ -167,7 +167,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void getHistoryRecord() {
-        ServerInterface.instance().queryHistorySportsRecord(studentId, tabStartDate, tabEndDate, new JsonResponseCallback() {
+        ServerInterface.instance().queryHistorySportsRecord(studentId, tabStartDate, tabEndDate, type, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 Date startDate = null;
@@ -193,7 +193,13 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
                         String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
 
-//                            headView.setData("本周累计次数（次）", totalActivityCount, totalqualifiedActivityCount, totalActivityTimeCosted, toalActivityKcalConsumption);
+                        if (type == AppConstant.THIS_WEEK) {
+                            headView.setData("本周累计次数（次）", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                        } else if (type == AppConstant.THIS_MONTH) {
+                            headView.setData("本月累计次数（次）", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                        } else {
+                            headView.setData("本学期累计次数（次）", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                        }
 
                         JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");
                         JSONArray areaSportArray = student.optJSONObject("areaActivities").optJSONArray("data");
@@ -227,7 +233,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                         item.historySportEntryList = new ArrayList<HistorySportEntry>();
                                     }
                                     item.historySportEntryList.add(entry);
-                                    Log.d(TAG, "ag.runningSportEntry sport date: " + date);
+//                                    Log.d(TAG, "ag.runningSportEntry sport date: " + date);
                                 }
                             }
 

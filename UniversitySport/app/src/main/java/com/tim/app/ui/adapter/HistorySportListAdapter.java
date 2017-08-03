@@ -53,13 +53,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
             return;
         }
 
-        Log.d(TAG, "data.historySportEntryList.size(): " + data.historySportEntryList.size());
+//        Log.d(TAG, "data.historySportEntryList.size(): " + data.historySportEntryList.size());
 
         final ViewHolder viewHolder = (ViewHolder) holder;
         viewHolder.tvSportDate.setText(data.date);
 
         for (int i = 0; i < data.historySportEntryList.size(); i ++) {
-            Log.d(TAG, "data.historySportEntryList item: " + data.historySportEntryList.get(i).getSportDate());
+//            Log.d(TAG, "data.historySportEntryList item: " + data.historySportEntryList.get(i).getSportDate());
             LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.history_daily_record_item, null);
             if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);

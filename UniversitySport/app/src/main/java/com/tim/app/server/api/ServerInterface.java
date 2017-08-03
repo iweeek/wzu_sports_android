@@ -318,17 +318,25 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryHistorySportsRecord(int studentId, String startDate, String endDate, ResponseCallback callback) {
+    public void queryHistorySportsRecord(int studentId, String startDate, String endDate, int type, ResponseCallback callback) {
+        String timeRange = "";
+        if (type == AppConstant.THIS_WEEK) {
+            timeRange = "CURRENT_WEEK";
+        } else if (type == AppConstant.THIS_MONTH) {
+            timeRange = "CURRENT_MONTH";
+        } else {
+            timeRange = "CURRENT_TERM";
+        }
         queryStr = "{\n" +
                 "  student(id: " + studentId + ") {\n" +
-//                "    accuRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
-//                "    accuAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
-//                "    qualifiedRunningActivityCount(timeRange: CURRENT_WEEK)\n" +
-//                "    qualifiedAreaActivityCount(timeRange: CURRENT_WEEK)\n" +
-//                "    runningActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
-//                "    areaActivityTimeCosted(timeRange: CURRENT_WEEK)\n" +
-//                "    runningActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
-//                "    areaActivityKcalConsumption(timeRange: CURRENT_WEEK)\n" +
+                "    accuRunningActivityCount(timeRange: " + timeRange + ")\n" +
+                "    accuAreaActivityCount(timeRange: " + timeRange + ")\n" +
+                "    qualifiedRunningActivityCount(timeRange: " + timeRange + ")\n" +
+                "    qualifiedAreaActivityCount(timeRange: " + timeRange + ")\n" +
+                "    runningActivityTimeCosted(timeRange: " + timeRange + ")\n" +
+                "    areaActivityTimeCosted(timeRange: " + timeRange + ")\n" +
+                "    runningActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
+                "    areaActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
                 "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                 "      data {\n" +
                 "        runningSportId\n" +
