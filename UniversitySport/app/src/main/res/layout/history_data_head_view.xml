@@ -78,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="消耗（卡）"
+                    android:text="消耗（千卡）"
                     android:textColor="#7f858e"
                     android:textSize="14dp" />
 

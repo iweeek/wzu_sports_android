@@ -48,7 +48,7 @@ public class HistorySportActivity extends BaseActivity {
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH), "本月");
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_TERM), "本学期");
 //        pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_HISTORY), "历史");
-        vpHistoryData.setOffscreenPageLimit(0);//除去当前显示页面外，还需要预先加载的页面个数
+        vpHistoryData.setOffscreenPageLimit(2);//除去当前显示页面外，还需要预先加载的页面个数
         vpHistoryData.setAdapter(pagerAdapter);
         vpHistoryData.setCurrentItem(0);
         stbNavBar.setViewPager(vpHistoryData);

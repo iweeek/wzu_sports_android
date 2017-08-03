@@ -69,7 +69,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private List<HistoryItem> dataList = new ArrayList<HistoryItem>();
     private HistoryDataHeadView headView;
     private int universityId;
-    private int studentId = 2;
+    private int studentId = 3;
 
     private int pageCountWeek;
     private int pageSizeWeek = 6;

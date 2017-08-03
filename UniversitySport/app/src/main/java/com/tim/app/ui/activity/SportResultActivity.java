@@ -607,7 +607,9 @@ public class SportResultActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
         Log.d(TAG, "onDestroy");
 
         //页面销毁移除未完成的网络请求
