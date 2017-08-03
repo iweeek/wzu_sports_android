@@ -51,7 +51,7 @@
                     android:id="@+id/tvCurTermAccuTimes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10"
+                    android:text=""
                     android:textSize="@dimen/text_size_36" />
 
             </LinearLayout>
