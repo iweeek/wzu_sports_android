@@ -552,6 +552,18 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+    public void queryAppVersion(ResponseCallback callback) {
+        String queryStr = "\t{latestAndroidVerisonInfo{\n" +
+                "    versionName\n" +
+                "    versionCode\n" +
+                "    changeLog\n" +
+                "    apkUrl\n" +
+                "    isForced\n" +
+                "  }\n"+
+                "}";
+        query(queryStr, callback);
+    }
+
     /**
      * 首页查询
      * {@link com.tim.app.ui.activity.MainActivity}调用

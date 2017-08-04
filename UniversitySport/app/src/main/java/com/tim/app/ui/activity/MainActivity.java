@@ -36,6 +36,7 @@ import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.ToastUtil;
+import com.tim.app.util.UpdateAppUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -405,6 +406,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         queryRunningProjects();
         queryCurTermData();
         queryAreaSportsData();
+        UpdateAppUtil.updateApp(this);
     }
 
     @Override
