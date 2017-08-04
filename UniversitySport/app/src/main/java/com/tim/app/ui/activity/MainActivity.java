@@ -287,20 +287,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             } else if (runningSportId == MODE_AREA) {
                                 sportEntry.setType(SportEntry.AREA_SPORT);
                                 sportEntry.setSportName(jsonObject.optString("", "区域锻炼"));
-                                //                                sportEntry.setParticiNum(participantNum);
-                                //                                sportEntry.setTargetDistance(distance);
-                                //                                sportEntry.setTargetTime((int) (time / 60));
-                                //                                sportEntry.setTargetSpeed(bd + "");
-                                //                                sportEntry.setInterval(interval);
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_area);
-
-                                // 存档                               sportEntry.setSportName(jsonObject.optString("name", "区域锻炼"));
-                                //                                sportEntry.setParticiNum(participantNum);
-                                //                                sportEntry.setTargetDistance(distance);
-                                //                                sportEntry.setTargetTime((int) (time / 60));
-                                //                                sportEntry.setTargetSpeed(bd + "");
-                                //                                sportEntry.setInterval(interval);
-                                //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
                             }
                             sportEntryDataList.add(sportEntry);
                         }

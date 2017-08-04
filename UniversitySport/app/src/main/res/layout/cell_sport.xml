@@ -53,7 +53,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:text="达标距离"
+                    android:text="@string/targetDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"
@@ -77,7 +77,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:text="达标时间"
+                    android:text="@string/targetTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"
@@ -102,6 +102,7 @@
                 <TextView
                     android:id="@+id/tvTargetTitle"
                     android:layout_width="wrap_content"
+                    android:text="@string/targetTitleSpeed"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"
                     android:textSize="14dp"/>
