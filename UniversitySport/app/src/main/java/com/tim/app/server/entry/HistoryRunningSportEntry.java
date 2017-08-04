@@ -27,4 +27,7 @@ public class HistoryRunningSportEntry  extends HistorySportEntry implements Seri
     public void setSpeed(String speed) {
         this.speed = speed;
     }
+
+
+
 }

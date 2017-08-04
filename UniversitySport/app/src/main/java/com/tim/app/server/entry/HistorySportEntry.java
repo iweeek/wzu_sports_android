@@ -31,8 +31,6 @@ public class HistorySportEntry  implements Serializable{
     private long endAt;
     private String sportDate;
     private String sportName;
-    private int distance;
-    private String speed;//速度
 
 
     public int getType() {
@@ -44,23 +42,6 @@ public class HistorySportEntry  implements Serializable{
     }
 
     private int type;//类型：1，跑步运动；2，区域运动。
-
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-
-    public String getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(String speed) {
-        this.speed = speed;
-    }
 
     public String getSportName() {
         return sportName;
@@ -137,8 +118,6 @@ public class HistorySportEntry  implements Serializable{
                 ", endAt=" + endAt +
                 ", sportDate='" + sportDate + '\'' +
                 ", sportName='" + sportName + '\'' +
-                ", distance=" + distance +
-                ", speed='" + speed + '\'' +
                 '}';
     }
 }
