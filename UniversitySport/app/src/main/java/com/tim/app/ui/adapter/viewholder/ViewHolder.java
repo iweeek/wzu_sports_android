@@ -28,12 +28,6 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
     private View mContentView;
     private Context mContext;
 
-    //    public RatioImageView rivSportBg;
-    //    public  TextView tvSportName;
-    //    public TextView tvSportJoinNumber;
-    //    public TextView tvTargetDistance;
-    //    public TextView tvTargetTime;
-    //    public TextView tvTargetValue;
     public RelativeLayout rlContainer;
     public LinearLayout llBottom;
 
@@ -44,12 +38,6 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
         mContext = context;
 
         long startTime = System.nanoTime();
-        //        rivSportBg = (RatioImageView) itemView.findViewById(R.id.rivSportBg);
-        //        tvSportName = (TextView) itemView.findViewById(R.id.tvSportName);
-        //        tvSportJoinNumber = (TextView) itemView.findViewById(R.id.tvSportJoinNumber);
-        //        tvTargetDistance = (TextView) itemView.findViewById(R.id.tvTargetDistance);
-        //        tvTargetTime = (TextView) itemView.findViewById(R.id.tvTargetTime);
-        //        tvTargetValue = (TextView) itemView.findViewById(R.id.tvTargetValue);
         rlContainer = (RelativeLayout) itemView.findViewById(R.id.rlContainer);
         rlContainer.setLayoutParams(new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
         llBottom = (LinearLayout) itemView.findViewById(R.id.llBottom);
@@ -77,7 +65,7 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
         return (T) view;
     }
 
-
+    /*****************************************/
     public ViewHolder setText(int viewId, String text) {
         TextView tv = findView(viewId);
         tv.setText(text);
@@ -93,6 +81,12 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
     public ViewHolder setVisible(int viewId, boolean visible) {
         View view = findView(viewId);
         view.setVisibility(visible ? View.VISIBLE : view.GONE);
+        return this;
+    }
+
+    public ViewHolder addView(int parentId,View childView){
+        ViewGroup parent = findView(parentId);
+        parent.addView(childView);
         return this;
     }
 }

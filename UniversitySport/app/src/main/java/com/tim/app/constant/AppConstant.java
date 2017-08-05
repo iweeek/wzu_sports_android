@@ -41,6 +41,15 @@ public class AppConstant {
     public static final int THIS_WEEK = 1;
     public static final int THIS_MONTH = 2;
     public static final int THIS_TERM = 3;
+
+
+
+    /*
+    * 微信
+    * */
+    public static  final  String APP_ID = "wxc602178d95890ea2";
+
+
 }
 
 

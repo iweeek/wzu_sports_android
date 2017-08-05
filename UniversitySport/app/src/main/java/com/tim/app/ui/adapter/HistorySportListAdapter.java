@@ -17,26 +17,27 @@ import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.HistoryItem;
 import com.tim.app.ui.activity.SportResultActivity;
+import com.tim.app.ui.adapter.viewholder.ViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
-        implements  BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener{
-    private Context context;
+        implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
+    private Context mContext;
     private static final String TAG = "HistorySportListAdapter";
 
     public HistorySportListAdapter(Context context, List<HistoryItem> dataList) {
         super(dataList);
-        this.context = context;
+        this.mContext = context;
         this.setOnItemClickListener(this);
     }
 
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder
-                holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.history_daily_record, null));
+                holder = new ViewHolder(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.history_daily_record, null));
         return holder;
     }
 
@@ -48,10 +49,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         }
 
         final ViewHolder viewHolder = (ViewHolder) holder;
-        viewHolder.tvSportDate.setText(data.date);
+        viewHolder.setText(R.id.tvSportDate, data.date);
 
-        for (int i = 0; i < data.historySportEntryList.size(); i ++) {
-            LinearLayout ll = (LinearLayout)LayoutInflater.from(context).inflate(R.layout.history_daily_record_item, null);
+        for (int i = 0; i < data.historySportEntryList.size(); i++) {
+            LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
 
             if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
                 //向下转型
@@ -93,7 +94,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(runningData.getKcalConsumed() + "");
 
-                ((ViewHolder) holder).llSportItem.addView(ll);
+                viewHolder.addView(R.id.llSportItem, ll);
             } else {
                 View view = (View) ll.findViewById(R.id.vTopDelimiter);
                 if (!isDelimit) {
@@ -138,42 +139,39 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(areaData.getKcalConsumed() + "");
 
-                ((ViewHolder) holder).llSportItem.addView(ll);
+                viewHolder.addView(R.id.llSportItem, ll);
+
             }
         }
     }
 
     @Override
     public void onClick(View view) {
-        SportResultActivity.start(context, (HistorySportEntry)view.getTag());
+        SportResultActivity.start(mContext, (HistorySportEntry) view.getTag());
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
 
     @Override
     public void onItemClick(View view, int position, long id) {
         DLOG.d(TAG, "onItemClick");
-// todo       SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
+        // todo       SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
 
     }
 
-    public class ViewHolder extends BaseRecyclerViewHolder {
-        TextView tvSportDate;
-        TextView tvEnergyCost;
-        LinearLayout llSportItem;
-//        LinearLayout llAreaItem;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvSportDate = (TextView) itemView.findViewById(R.id.tvSportDate);
-            tvEnergyCost = (TextView) itemView.findViewById(R.id.tvEnergyCost);
-            llSportItem = (LinearLayout)itemView.findViewById(R.id.llSportItem);
-//            llAreaItem = (LinearLayout)itemView.findViewById(R.id.llAreaItem);
-        }
-
-    }
+    //    public class ViewHolder extends BaseRecyclerViewHolder {
+    //        TextView tvSportDate;
+    //        TextView tvEnergyCost;
+    //        LinearLayout llSportItem;
+    ////        LinearLayout llAreaItem;
+    //
+    //        public ViewHolder(View itemView) {
+    //            super(itemView);
+    //            tvSportDate = (TextView) itemView.findViewById(R.id.tvSportDate);
+    //            tvEnergyCost = (TextView) itemView.findViewById(R.id.tvEnergyCost);
+    //            llSportItem = (LinearLayout)itemView.findViewById(R.id.llSportItem);
+    ////            llAreaItem = (LinearLayout)itemView.findViewById(R.id.llAreaItem);
+    //        }
+    //
+    //    }
 
 }

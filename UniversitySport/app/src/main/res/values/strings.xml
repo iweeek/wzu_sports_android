@@ -140,8 +140,8 @@
     <!-- 首页 -->
     <string name="joinPrompt">%s人正在参加</string>
     <string name="meter">米</string>
-    <string name="minute">分钟</string>
     <string name="speed">米/秒</string>
+    <string name="minute">%s分钟</string>
     <string name="step">步</string>
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTime">达标时间</string>
@@ -163,7 +163,6 @@
     <string name="outsideScore">课外成绩(分)</string>
     <string name="percent">%s</string>
     <string name="slash">/</string>
-    <string name="targetMinute">%s分钟</string>
 
     <string name="qualifiedCostTime">达标时间 ： %s分钟   </string>
 

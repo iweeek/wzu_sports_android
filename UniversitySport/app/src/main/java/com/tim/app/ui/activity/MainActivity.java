@@ -23,6 +23,11 @@ import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
@@ -77,12 +82,38 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private EmptyLayout emptyLayout;
 
-
-    NavigationView navigationView;
+    private NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
     private BadNetworkView badNetworkView;
 
+    /*
+    * 微信
+    * */
+    private IWXAPI api;
+
+    private  void regToWx(){
+        api = WXAPIFactory.createWXAPI(this,AppConstant.APP_ID);
+        api.registerApp(AppConstant.APP_ID);
+    }
+
+    /**
+     * 发送数据到微信
+     * @param text
+     */
+    private void sendToWx(String text){
+        WXTextObject textObj = new WXTextObject();
+        textObj.text=text;
+
+        WXMediaMessage msg =new WXMediaMessage();
+        msg.mediaObject =textObj;
+        msg.description =text;
+
+        SendMessageToWX.Req req= new SendMessageToWX.Req();
+        req.transaction = String.valueOf(System.currentTimeMillis());
+
+        api.sendReq(req);
+    }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
