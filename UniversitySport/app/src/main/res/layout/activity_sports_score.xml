@@ -14,7 +14,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/rlTitle"
+            android:id="@+id/tb"
             style="@style/TitleBarStyle"
             android:layout_height="@dimen/title_height"
             android:background="@color/blue"

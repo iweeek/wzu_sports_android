@@ -15,7 +15,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.CoordinateConverter;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -39,10 +37,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistorySportEntry;
-import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.sport.RunningSportsCallback;
-import com.tim.app.sport.SQLite;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONArray;
@@ -51,7 +46,6 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -64,10 +58,8 @@ public class SportResultActivity extends BaseActivity {
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
-    private CoordinateConverter converter;
 
     private HistorySportEntry historyEntry;
-    private ImageButton ibBack;
 
     private MapView mapView;
     private AMap aMap;

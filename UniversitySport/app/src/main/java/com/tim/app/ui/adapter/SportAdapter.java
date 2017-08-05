@@ -5,9 +5,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
+import com.tim.app.RT;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.adapter.viewholder.ViewHolder;
 import com.tim.app.util.BitmapLoader;
@@ -45,7 +47,11 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             return;
         }
 
+
         final ViewHolder holder = (ViewHolder) mHolder;
+
+        holder.setLayoutParams(R.id.rlContainer,new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
+
         if (!TextUtils.isEmpty(data.getBgUrl())) {
             BitmapLoader.ins().loadImage(data.getBgUrl(), R.drawable.ic_def_empty, (ImageView) holder.findView(R.id.rivSportBg));
         } else {
