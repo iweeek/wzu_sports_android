@@ -221,9 +221,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             tvAreaName.setText(mAreaSportEntry.getName());
         }
         if (mAreaSportEntry.getQualifiedCostTime() > 0) {
-            tvTargetTime.setText( String.format(getResources().getString(R.string.minute),mAreaSportEntry.getQualifiedCostTime()));
-        }else{
-            tvTargetTime.setText( "-");
+            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(mAreaSportEntry.getQualifiedCostTime() / 60)));
+        } else {
+            tvTargetTime.setText("-");
         }
         //// TODO:    tvAreaDesc  由于接口还未提供。
         //        if (sportEntry.getParticipantNum() > 0) {
@@ -258,6 +258,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             state = STATE_END;
                         }
 
+
+                        if (elapseTime < mAreaSportEntry.getQualifiedCostTime()) {
+
+                        }
+
                         //做保护
                         if (elapseTime != 0) {
 
@@ -266,7 +271,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         }
                         areaActivitiesEnd(areaSportRecordId);
 
-                        tvSportJoinNumber.setVisibility(View.GONE);
+                        //                        tvSportJoinNumber.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
                         btStart.setVisibility(View.VISIBLE);
@@ -507,6 +512,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     rlBottom.setVisibility(View.GONE);
                     slideUnlockView.setVisibility(View.VISIBLE);
                     tvPause.setVisibility(View.VISIBLE);
+                    rlElapsedTime.setVisibility(View.VISIBLE);
+                    rlAreaDesc.setVisibility(View.GONE);
+                    tvSelectLocation.setVisibility(View.INVISIBLE);
 
                     initData();
                     Intent bindIntent = new Intent(this, LocationService.class);
@@ -532,9 +540,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         }
                     });
 
-                } else if (state == STATE_END) {//运动结束时，查看锻炼结果
+                } else if (state == STATE_END) {
                     finish();
-                    //// TODO: 2017/8/1 这里要做一个区域运动的实体类。
+                    //// TODO: 2017/8/1 这里要做一个区域运动的实体类。//运动结束时，查看锻炼结果
                     //                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
                     //                    entry.setRunningSportId(activityId);
                     //                    SportResultActivity.start(this, entry);
@@ -595,7 +603,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 aMap.moveCamera(cu);
                 break;
             case R.id.tvSelectLocation:
-                //                Intent intent = new Intent(this,);
                 finish();
         }
     }
@@ -662,21 +669,14 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                              07-31 22:18:26.019 9640-9640/com.tim.moli D/http: ║     }
                              07-31 22:18:26.019 9640-9640/com.tim.moli D/http: ║ }
                              */
-                            //                                    try {
-                            //                                        String curConsumeEnergy = json.getString("kcalConsumed");
-                            //                                        boolean qualified = json.getBoolean("qualified");
-                            //                                        if (qualified) {
-                            //                                            tvResult.setText("达标");
-                            //                                        } else {
-                            //                                            tvResult.setText("未达标");
-                            //                                        }
-                            //                                        tvResult.setVisibility(View.VISIBLE);
-                            //                                        rlCurConsumeEnergy.setVisibility(View.VISIBLE);
-                            //                                        tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
-                            //                                    } catch (JSONException e) {
-                            //                                        e.printStackTrace();
-                            //                                        Log.e(TAG, "runningActivitiesEnd onJsonResponse e: " + e);
-                            //                                    }
+
+                            boolean qualified = json.optJSONObject("obj").optBoolean("qualified");
+                            if (qualified) {
+                                tvResult.setText("达标");
+                            } else {
+                                tvResult.setText("未达标");
+                            }
+                            tvResult.setVisibility(View.VISIBLE);
                             return true;
                         } else {
                             //                                    //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
