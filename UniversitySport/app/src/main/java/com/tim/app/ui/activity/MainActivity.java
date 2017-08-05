@@ -411,7 +411,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 AreaSportEntry areaSportEntry = new AreaSportEntry();
                 if (errCode == 0) {
                     //获取接口参数
-                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("query");
+                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("areaSports");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.optJSONObject(i);
                         areaSportEntry.setId(jsonObject.optInt("id"));

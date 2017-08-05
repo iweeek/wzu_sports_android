@@ -47,6 +47,8 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.AreaSportEntry;
+import com.tim.app.server.entry.HistoryAreaSportEntry;
+import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
@@ -603,6 +605,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 aMap.moveCamera(cu);
                 break;
             case R.id.tvSelectLocation:
+                HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
+                entry.setId(mAreaSportEntry.getId());
+                entry.setType(HistorySportEntry.AREA_TYPE);
+                SportResultActivity.start(this,entry);
                 finish();
         }
     }
