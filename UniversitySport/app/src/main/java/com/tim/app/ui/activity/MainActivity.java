@@ -1,10 +1,14 @@
 package com.tim.app.ui.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,6 +39,7 @@ import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
+import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.ToastUtil;
 import com.tim.app.util.UpdateAppUtil;
 
@@ -403,10 +408,90 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     public void initData() {
+        ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+//                String versionName = "";
+//                int versionCode;
+//                String changeLog = "";
+//                String apkUrl = "";
+//                boolean isForced = false;
+
+                if (errCode == 0) {
+                    try {
+                        final String versionName = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("versionName");
+                        final int versionCode = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getInt("versionCode");
+                        final String changeLog = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("changeLog");
+                        final String apkUrl = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("apkUrl");
+                        final boolean isForced = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getBoolean("isForced");
+
+                        PackageManager manager = context.getPackageManager();
+                        PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+
+                        final AlertDialog.Builder builder =
+                                new AlertDialog.Builder(context);
+                        AlertDialog dialog;
+//                                normalDialog.setIcon(R.drawable.icon_dialog);
+                        builder.setTitle("版本升级");
+                        builder.setPositiveButton("确认",
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        DownloadAppUtils.downloadForAutoInstall(context, apkUrl, "下载新版本");
+                                        if (isForced) {
+                                            //无操作
+                                        } else {
+                                            queryHomePagedata();
+                                        }
+                                    }
+                                });
+                        builder.setMessage("发现新版本");
+                        if (versionCode > info.versionCode) {
+                            if (isForced) {
+                                //对话框不变化
+                            } else {
+                                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //TODO
+                                        dialog.dismiss();
+                                        queryHomePagedata();
+                                    }
+                                });
+
+                            }
+
+                            dialog = builder.create();
+                            dialog.show();
+
+                        } else {
+                            queryHomePagedata();
+                        }
+
+                        return true;
+                        //发生以下情况的可能性正常时，是不存在的，所以这里不处理
+                    } catch (org.json.JSONException e) {
+                        e.printStackTrace();
+                        return false;
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+
+                } else {
+                    // TODO 网络出现问题？该接口出现问题？
+                    queryHomePagedata();
+                    return false;
+                }
+            }
+        });
+    }
+
+    private void queryHomePagedata() {
         queryRunningProjects();
         queryCurTermData();
         queryAreaSportsData();
-        UpdateAppUtil.updateApp(this);
     }
 
     @Override

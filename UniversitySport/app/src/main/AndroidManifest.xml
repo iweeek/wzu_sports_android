@@ -153,6 +153,14 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="com.tim.app.receiver.UpdateAppReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
