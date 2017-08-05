@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,8 +67,8 @@ public class SportResultActivity extends BaseActivity {
     private int interval = 0;
     private int speedLimitation = 10;//米
 
+    private LinearLayout llFloatingWindow;//运动详情浮动窗口
     private TextView tvSportName;
-    private TextView tvSportJoinNumber;
     private TextView tvCurrentDistance;
     private TextView tvAverSpeedLabel;
     private TextView tvElapseTime;
@@ -80,14 +79,12 @@ public class SportResultActivity extends BaseActivity {
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
-    private TextView tvStepTitle;
-    private TextView tvCurrentStep;
     private LinearLayout llTargetContainer;
 
     private MyLocationStyle myLocationStyle;
 
     private RelativeLayout rlBottom;
-    private Button btStart;
+    private Button btShare;
     private LinearLayout llBottom;
     private Button btContinue;
     private Button btStop;
@@ -119,7 +116,6 @@ public class SportResultActivity extends BaseActivity {
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
-    private LinearLayout llFloatingWindow;
 
 
     class DrawPoint {
@@ -145,15 +141,11 @@ public class SportResultActivity extends BaseActivity {
             return locationType;
         }
     }
-    private ArrayList<DrawPoint> drawPoints = new ArrayList<DrawPoint>();
 
-    private View rlAnimView;
-    private View ivShowSportInfo;
-    private View ivHideSportInfo;
+    private ArrayList<DrawPoint> drawPoints = new ArrayList<DrawPoint>();
 
     private Animation showAnimation;
     private Animation hideAnimation;
-    private JSONArray actArray;
     private int targetDistance;
     private long targetTime;
     private final static String netErrMsg = "数据获取失败，请检查网络连接";
@@ -172,23 +164,16 @@ public class SportResultActivity extends BaseActivity {
         super.init(savedInstanceState);
 
         historyEntry = (HistorySportEntry) getIntent().getSerializableExtra("historySportEntry");
-        //TODO
-//        interval = historyEntry.getInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
 
-        //        DisplayMetrics displayMetrics = new DisplayMetrics();
-        //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        //        int height = displayMetrics.heightPixels;
-        //        int width = displayMetrics.widthPixels;
-
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-//                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
-//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                //                String text = "缩放比例发生变化，当前地图的缩放级别为: " + cameraPosition.zoom;
+                //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -199,8 +184,6 @@ public class SportResultActivity extends BaseActivity {
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-//                initData();
-
             }
         });
     }
@@ -223,7 +206,6 @@ public class SportResultActivity extends BaseActivity {
     }
 
 
-
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
@@ -235,40 +217,83 @@ public class SportResultActivity extends BaseActivity {
     public void initData() {
         DLOG.d(TAG, "initData");
 
-        DLOG.openInternalFile(this);
-        String msg = DLOG.readFromInternalFile();
-        DLOG.closeInternalFile();
-        DLOG.d(TAG, "log_file: " + msg);
+        if (historyEntry.getType() == HistorySportEntry.RUNNING_TYPE) {
+            queryRunningActivity(historyEntry.getId());
+        }else if(historyEntry.getType() == HistorySportEntry.AREA_TYPE){
+//            queryAreaActivity(historyEntry.getId());
+        }
 
-        //TODO test
-//        String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
-//
-//        SQLite.init(context, RunningSportsCallback.getInstance());
-//        List<RunningSportsRecord> list = SQLite.query(
-//                RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
-//
-//        for (final RunningSportsRecord record : list) {
-//            Log.d(TAG, "record: " + record);
-//        }
 
-        ServerInterface.instance().queryRunningActivity(historyEntry.getId(), new JsonResponseCallback() {
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+        //        String text = "调整屏幕缩放比例：" + zoomLevel;
+        //        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
+
+        //        LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
+        //        drawLine(oldLatLng, secLL, true);
+        //        int moveDistance = (int)AMapUtils.calculateLineDistance(oldLatLng, secLL);
+        //        marker = aMap.addMarker(new MarkerOptions().position(secLL).title("运动距离（米）： " + moveDistance));
+        //
+        //        LatLng thirdLL = new LatLng(40.004556, 116.406505);//测试坐标
+        //        drawLine(secLL, thirdLL, false);
+        ////                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).snippet(thirdLL.toString()));
+        //        moveDistance = (int)AMapUtils.calculateLineDistance(secLL, thirdLL);
+        //        marker = aMap.addMarker(new MarkerOptions().position(thirdLL).title("运动距离（米）： " + moveDistance));
+        //
+        //        LatLng fourthLL = new LatLng(40.004756, 116.406305);//测试坐标
+        //        drawLine(thirdLL, fourthLL, true);
+        ////                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).snippet(fourthLL.toString()));
+        //        moveDistance = (int)AMapUtils.calculateLineDistance(thirdLL, fourthLL);
+        //        marker = aMap.addMarker(new MarkerOptions().position(fourthLL).title("运动距离（米）： " + moveDistance));
+    }
+
+    private void queryAreaActivity(long id) {
+        ServerInterface.instance().queryAreaActivity(id, new JsonResponseCallback() {
+            /*{
+                "errors": [],
+                "data": {
+                "runningActivity": {
+                    "distance": 37,
+                            "costTime": 59,
+                            "qualified": false,
+                            "qualifiedDistance": 2000,
+                            "qualifiedCostTime": 2400,
+                            "kcalConsumed": 2,
+                            "runningSport": {
+                        "name": "快走"
+                    },
+                    "data": [
+                    {
+                        "longitude": 120.672178,
+                            "latitude": 27.659497,
+                            "isNormal": true,
+                            "locationType": 1,
+                            "stepCount": 38,
+                            "distance": 37,
+                            "acquisitionTime": 1500787894000
+                    }
+      ]
+                }
+            },
+                "extensions": null
+            }*/
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
                         drawPoints.clear();
-                        actArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
-                        if (actArray.length() == 0) {
+                        JSONArray jsonArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
+                        if (jsonArray.length() == 0) {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
-                            return true;
+                            //                            return true;
                         }
 
-                        for (int i = 0; i < actArray.length(); i++) {
-                            LatLng ll = new LatLng(actArray.getJSONObject(i).getDouble("latitude"),
-                                    actArray.getJSONObject(i).getDouble("longitude"));
-                            DrawPoint dp = new DrawPoint(ll, actArray.getJSONObject(i).getBoolean("isNormal"),
-                                    actArray.getJSONObject(i).getInt("locationType"));
+                        //画线
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            LatLng ll = new LatLng(jsonArray.getJSONObject(i).getDouble("latitude"),
+                                    jsonArray.getJSONObject(i).getDouble("longitude"));
+                            DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getBoolean("isNormal"),
+                                    jsonArray.getJSONObject(i).getInt("locationType"));
                             drawPoints.add(dp);
                         }
 
@@ -282,11 +307,12 @@ public class SportResultActivity extends BaseActivity {
                             Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
                         }
 
-                        llCurrentInfo.setVisibility(View.VISIBLE);
-                        currentDistance = json.getJSONObject("data").getJSONObject("runningActivity").getInt("distance");
+                        //                        llCurrentInfo.setVisibility(View.VISIBLE);
+                        JSONObject jsonObject = json.getJSONObject("data").getJSONObject("runningActivity");
+                        currentDistance = jsonObject.getInt("distance");
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
 
-                        boolean qualified = json.getJSONObject("data").getJSONObject("runningActivity").getBoolean("qualified");
+                        boolean qualified = jsonObject.getBoolean("qualified");
                         if (qualified) {
                             tvResult.setText("达标");
                         } else {
@@ -294,10 +320,10 @@ public class SportResultActivity extends BaseActivity {
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
-                        tvSportName.setText(json.getJSONObject("data").getJSONObject("runningActivity").getJSONObject("runningSport")
+                        tvSportName.setText(jsonObject.getJSONObject("runningSport")
                                 .getString("name"));
 
-                        elapseTime = json.getJSONObject("data").getJSONObject("runningActivity").getLong("costTime");
+                        elapseTime = jsonObject.getLong("costTime");
                         String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
                         tvElapseTime.setText(time);
 
@@ -309,10 +335,10 @@ public class SportResultActivity extends BaseActivity {
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
-                        targetDistance = json.getJSONObject("data").getJSONObject("runningActivity").getInt("qualifiedDistance");
+                        targetDistance = jsonObject.getInt("qualifiedDistance");
                         tvTargetDistance.setText(String.valueOf(targetDistance));
 
-                        targetTime = json.getJSONObject("data").getJSONObject("runningActivity").getInt("qualifiedCostTime");
+                        targetTime = jsonObject.getInt("qualifiedCostTime");
                         tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
@@ -328,13 +354,10 @@ public class SportResultActivity extends BaseActivity {
                         tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
-
                         return true;
                     } catch (Exception e) {
-                        //TODO
                         e.printStackTrace();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
-//                        rlAnimView.setVisibility(View.GONE);
                         return false;
                     }
                 } else {
@@ -343,30 +366,127 @@ public class SportResultActivity extends BaseActivity {
                 }
             }
         });
+    }
 
+    private void queryRunningActivity(long id) {
+        ServerInterface.instance().queryRunningActivity(id, new JsonResponseCallback() {
+            /*{
+                "errors": [],
+                "data": {
+                "runningActivity": {
+                    "distance": 37,
+                            "costTime": 59,
+                            "qualified": false,
+                            "qualifiedDistance": 2000,
+                            "qualifiedCostTime": 2400,
+                            "kcalConsumed": 2,
+                            "runningSport": {
+                        "name": "快走"
+                    },
+                    "data": [
+                    {
+                        "longitude": 120.672178,
+                            "latitude": 27.659497,
+                            "isNormal": true,
+                            "locationType": 1,
+                            "stepCount": 38,
+                            "distance": 37,
+                            "acquisitionTime": 1500787894000
+                    }
+      ]
+                }
+            },
+                "extensions": null
+            }*/
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    try {
+                        drawPoints.clear();
+                        JSONArray jsonArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
+                        if (jsonArray.length() == 0) {
+                            Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
+                            //                            return true;
+                        }
 
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-//        String text = "调整屏幕缩放比例：" + zoomLevel;
-//        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                        //画线
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            LatLng ll = new LatLng(jsonArray.getJSONObject(i).getDouble("latitude"),
+                                    jsonArray.getJSONObject(i).getDouble("longitude"));
+                            DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getBoolean("isNormal"),
+                                    jsonArray.getJSONObject(i).getInt("locationType"));
+                            drawPoints.add(dp);
+                        }
 
+                        if (drawPoints.size() > 0) {
+                            oldLatLng = drawPoints.get(0).getLL();//起始坐标
+                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
 
+                            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+                            aMap.moveCamera(cu);
+                        } else {
+                            Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
+                        }
 
-//        LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
-//        drawLine(oldLatLng, secLL, true);
-//        int moveDistance = (int)AMapUtils.calculateLineDistance(oldLatLng, secLL);
-//        marker = aMap.addMarker(new MarkerOptions().position(secLL).title("运动距离（米）： " + moveDistance));
-//
-//        LatLng thirdLL = new LatLng(40.004556, 116.406505);//测试坐标
-//        drawLine(secLL, thirdLL, false);
-////                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).snippet(thirdLL.toString()));
-//        moveDistance = (int)AMapUtils.calculateLineDistance(secLL, thirdLL);
-//        marker = aMap.addMarker(new MarkerOptions().position(thirdLL).title("运动距离（米）： " + moveDistance));
-//
-//        LatLng fourthLL = new LatLng(40.004756, 116.406305);//测试坐标
-//        drawLine(thirdLL, fourthLL, true);
-////                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).snippet(fourthLL.toString()));
-//        moveDistance = (int)AMapUtils.calculateLineDistance(thirdLL, fourthLL);
-//        marker = aMap.addMarker(new MarkerOptions().position(fourthLL).title("运动距离（米）： " + moveDistance));
+                        //                        llCurrentInfo.setVisibility(View.VISIBLE);
+                        JSONObject jsonObject = json.getJSONObject("data").getJSONObject("runningActivity");
+                        currentDistance = jsonObject.getInt("distance");
+                        tvCurrentDistance.setText(String.valueOf(currentDistance));
+
+                        boolean qualified = jsonObject.getBoolean("qualified");
+                        if (qualified) {
+                            tvResult.setText("达标");
+                        } else {
+                            tvResult.setText("未达标");
+                        }
+                        tvResult.setVisibility(View.VISIBLE);
+
+                        tvSportName.setText(jsonObject.getJSONObject("runningSport")
+                                .getString("name"));
+
+                        elapseTime = jsonObject.getLong("costTime");
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(time);
+
+                        if (elapseTime != 0) {
+                            double d = currentDistance;
+                            double t = elapseTime;
+                            BigDecimal bd = new BigDecimal(d / t);
+                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            tvAverSpeed.setText(String.valueOf(bd));
+                        }
+
+                        targetDistance = jsonObject.getInt("qualifiedDistance");
+                        tvTargetDistance.setText(String.valueOf(targetDistance));
+
+                        targetTime = jsonObject.getInt("qualifiedCostTime");
+                        tvTargetTime.setText(String.valueOf(targetTime / 60));
+
+                        if (targetTime != 0) {
+                            double t = targetTime;
+                            double d = targetDistance;
+                            double s = d / t;
+                            BigDecimal bd = new BigDecimal(s);
+                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            tvTargetSpeed.setText(String.valueOf(bd));
+                        }
+
+                        String curConsumeEnergy = json.getJSONObject("data").getJSONObject("runningActivity").getString("kcalConsumed");
+                        tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
+                        rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+                        llFloatingWindow.setVisibility(View.VISIBLE);
+                        return true;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                } else {
+                    Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        });
     }
 
     /**
@@ -400,7 +520,7 @@ public class SportResultActivity extends BaseActivity {
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
                     .geodesic(true).color(Color.GREEN));
-        } else  {
+        } else {
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
                     .geodesic(true).color(Color.RED));
@@ -426,10 +546,10 @@ public class SportResultActivity extends BaseActivity {
             case R.id.ibBack:
                 finish();
                 break;
-            case R.id.btStart:
-                btStart.setVisibility(View.GONE);
-//                aMap.addPolyline(new PolylineOptions().
-//                        addAll(drawPoints.get).width(10).color(Color.argb(255, 1, 1, 1)));
+            case R.id.btShare:
+                btShare.setVisibility(View.GONE);
+                //                aMap.addPolyline(new PolylineOptions().
+                //                        addAll(drawPoints.get).width(10).color(Color.argb(255, 1, 1, 1)));
 
                 LatLng ll = oldLatLng;
 
@@ -439,7 +559,7 @@ public class SportResultActivity extends BaseActivity {
                         drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
                         ll = drawPoints.get(i).getLL();
                         DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
-                        ", i: " + i);
+                                ", i: " + i);
                     }
                 }
 
@@ -452,54 +572,50 @@ public class SportResultActivity extends BaseActivity {
                 String toastText = "移动屏幕，当前位置居中";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
-            case R.id.ivShowSportInfo:
-                //TODO 指南针的位置要变化，UiSettings 中寻找方法
-                if (null == showAnimation) {
-                    showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
-                }
-                ivShowSportInfo.setSelected(false);
-                showAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        rlAnimView.setVisibility(View.VISIBLE);
-                        ivShowSportInfo.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                rlAnimView.startAnimation(showAnimation);
-                break;
-            case R.id.ivHideSportInfo:
-                if (null == hideAnimation) {
-                    hideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
-                }
-                hideAnimation.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        rlAnimView.setVisibility(View.GONE);
-                        ivShowSportInfo.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                rlAnimView.startAnimation(hideAnimation);
-                break;
+            //            case ivShowSportInfo:
+            //                if (null == showAnimation) {
+            //                    showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
+            //                }
+            //                showAnimation.setAnimationListener(new Animation.AnimationListener() {
+            //                    @Override
+            //                    public void onAnimationStart(Animation animation) {
+            //
+            //                    }
+            //
+            //                    @Override
+            //                    public void onAnimationEnd(Animation animation) {
+            //                        rlAnimView.setVisibility(View.VISIBLE);
+            //                    }
+            //
+            //                    @Override
+            //                    public void onAnimationRepeat(Animation animation) {
+            //
+            //                    }
+            //                });
+            //                rlAnimView.startAnimation(showAnimation);
+            //                break;
+            //            case ivHideSportInfo:
+            //                if (null == hideAnimation) {
+            //                    hideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
+            //                }
+            //                hideAnimation.setAnimationListener(new Animation.AnimationListener() {
+            //                    @Override
+            //                    public void onAnimationStart(Animation animation) {
+            //
+            //                    }
+            //
+            //                    @Override
+            //                    public void onAnimationEnd(Animation animation) {
+            //                        rlAnimView.setVisibility(View.GONE);
+            //                    }
+            //
+            //                    @Override
+            //                    public void onAnimationRepeat(Animation animation) {
+            //
+            //                    }
+            //                });
+            //                rlAnimView.startAnimation(hideAnimation);
+            //                break;
         }
 
     }
@@ -511,22 +627,20 @@ public class SportResultActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_sport_detail;
+        return R.layout.activity_sport_result;
     }
 
     @Override
     public void initView() {
-        llLacationHint = (LinearLayout)findViewById(R.id.llLacationHint);
+        llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
         llLacationHint.setVisibility(View.GONE);
 
-        llFloatingWindow = (LinearLayout)findViewById(R.id.llFloatingWindow);
+        llFloatingWindow = (LinearLayout) findViewById(R.id.llFloatingWindow);
         llFloatingWindow.setVisibility(View.GONE);
 
-//        ibBack = (ImageButton) findViewById(R.id.ibBack);
-//        ibBack.setOnClickListener(this);
+        //        ibBack = (ImageButton) findViewById(R.id.ibBack);
+        //        ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
-        tvSportJoinNumber.setVisibility(View.GONE);
 
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
@@ -541,36 +655,22 @@ public class SportResultActivity extends BaseActivity {
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
-        rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
-        btStart = (Button) findViewById(R.id.btStart);
-        llBottom = (LinearLayout) findViewById(R.id.llBottom);
-        btContinue = (Button) findViewById(R.id.btContinue);
-        btStop = (Button) findViewById(R.id.btStop);
+        btShare = (Button) findViewById(R.id.btShare);
         tvResult = (TextView) findViewById(R.id.tvResult);
-        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
-        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
-//        tvTitle = (TextView) findViewById(R.id.tvTitle);
-//        tvTitle.setText("锻炼成果");
+        //        tvTitle = (TextView) findViewById(R.id.tvTitle);
+        //        tvTitle.setText("锻炼成果");
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
         tvCurConsumeEnergy = (TextView) findViewById(R.id.tvCurConsumeEnergy);
 
-        rlAnimView = findViewById(R.id.rlAnimView);
-        ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
-        ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
+        btShare.setOnClickListener(this);
+        btShare.setText("绘制运动轨迹");
+        btShare.setVisibility(View.VISIBLE);
 
-        btStart.setOnClickListener(this);
-        btStart.setText("绘制运动轨迹");
-        btStart.setVisibility(View.VISIBLE);
-
-        btContinue.setOnClickListener(this);
-        btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
 
-        ivShowSportInfo.setOnClickListener(this);
-        ivHideSportInfo.setOnClickListener(this);
     }
 
 

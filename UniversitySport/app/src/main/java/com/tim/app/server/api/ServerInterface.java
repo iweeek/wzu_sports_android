@@ -240,6 +240,40 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+
+    /**
+     * SportResultActivity 调用
+     * // todo 接口未确定
+     * @param activityId
+     * @param callback
+     */
+    public void queryAreaActivity(long activityId, ResponseCallback callback) {
+        queryStr = "{\n" +
+                "\trunningActivity(id:" + activityId + ") {\n" +
+                "   distance\n" +
+                "   costTime\n" +
+                "   qualified\n" +
+                "   qualifiedDistance" +
+                "   qualifiedCostTime" +
+                "   kcalConsumed" +
+                "   runningSport {\n" +
+                "       name\n" +
+                "    }\n" +
+                "    data{\n" +
+                "      longitude\n" +
+                "      latitude\n" +
+                "      isNormal\n" +
+                "      locationType\n" +
+                "      stepCount\n" +
+                "      distance\n" +
+                "      acquisitionTime\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        query(queryStr, callback);
+    }
+
     /**
      * MainActivity 调用
      *
@@ -406,7 +440,7 @@ public class ServerInterface {
      */
     public void queryAreaSportsData(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  query: areaSports(universityId:1){\n" +
+                " areaSports(universityId:1){\n" +
                 "    id\n" +
                 "    name\n" +
                 "    isEnable\n" +

@@ -59,6 +59,7 @@ import com.tim.app.R;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
+import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
@@ -682,17 +683,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     ServerInterface.instance(). runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                            Log.d(TAG, "errCode:" + errCode);
                             if (errCode == 0) {
                                 try {
                                     sportRecordId = json.getInt("id");
+                                    Log.d(TAG, "sportRecordId:" + sportRecordId);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
                                 }
                                 return true;
                             } else {
-                                //TODO 网络请求失败
                                 Log.d(TAG, "errMsg:" + errMsg);
                                 return false;
                             }
@@ -702,7 +702,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
                     HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
-                    entry.setSportId(sportRecordId);
+                    entry.setId(sportRecordId);
+                    entry.setType(HistorySportEntry.RUNNING_TYPE);
                     SportResultActivity.start(this, entry);
                 }
                 break;
