@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.BatteryManager;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
@@ -39,6 +41,7 @@ import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.net.ResponseCallback;
@@ -47,9 +50,9 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.AreaSportEntry;
+import com.tim.app.server.entry.AreaSportList;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
-import com.tim.app.server.entry.RunningSportsRecord;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
@@ -57,8 +60,6 @@ import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.TimeUtil;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 /**
  * @创建者 倪军
@@ -98,7 +99,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private View rlAnimView;
 
     /*重要实体*/
-    private AreaSportEntry mAreaSportEntry;
+    private AreaSportEntry mAreaSportEntry;//创建areaActivity的时候要用到
+    private AreaSportList mAreaSportList;
     private LatLng oldLatLng = null;
 
     /*初始化变量*/
@@ -140,9 +142,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     };
 
 
-    public static void start(Context context, AreaSportEntry areaSportEntry) {
+    public static void start(Context context, AreaSportList areaSportList, AreaSportEntry areaSportEntry) {
         Intent intent = new Intent(context, SportFixedLocationActivity.class);
         intent.putExtra("areaSportEntry", areaSportEntry);
+        intent.putExtra("areaSportList", areaSportList);
+        Log.d(TAG, "areaSportEntry:" + areaSportEntry);
+        Log.d(TAG, "areaSportList:" + areaSportList);
         context.startActivity(intent);
     }
 
@@ -177,7 +182,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         initGPS();
 
         mAreaSportEntry = (AreaSportEntry) getIntent().getParcelableExtra("areaSportEntry");
-        Log.d(TAG, "mAreaSportEntry:" + mAreaSportEntry);
+        mAreaSportList = (AreaSportList) getIntent().getParcelableExtra("areaSportList");
+        Log.d(TAG, "mAreaSportList:" + mAreaSportList);
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -219,11 +225,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(mAreaSportEntry.getName())) {
-            tvAreaName.setText(mAreaSportEntry.getName());
+        if (!TextUtils.isEmpty(mAreaSportList.getAreaName())) {
+            tvAreaName.setText(mAreaSportList.getAreaName());
         }
-        if (mAreaSportEntry.getQualifiedCostTime() > 0) {
-            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(mAreaSportEntry.getQualifiedCostTime() / 60)));
+        if (mAreaSportList.getQualifiedCostTime() > 0) {
+            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(mAreaSportList.getQualifiedCostTime() / 60)));
         } else {
             tvTargetTime.setText("-");
         }
@@ -260,17 +266,13 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             state = STATE_END;
                         }
 
-
-                        if (elapseTime < mAreaSportEntry.getQualifiedCostTime()) {
-
-                        }
-
                         //做保护
                         if (elapseTime != 0) {
 
                         } else {
 
                         }
+                        //结束本次运动
                         areaActivitiesEnd(areaSportRecordId);
 
                         //                        tvSportJoinNumber.setVisibility(View.GONE);
@@ -346,10 +348,36 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         aMap.setMyLocationStyle(myLocationStyle);
     }
 
+
+    /**
+     * 绘制两个坐标点之间的线段,从以前位置到现在位置
+     */
+    private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
+        // 绘制曲线
+        if (isNormal) {
+            aMap.addPolyline((new PolylineOptions())
+                    .add(oldData, newData)
+                    .geodesic(true).color(Color.GREEN));
+        } else {
+            aMap.addPolyline((new PolylineOptions())
+                    .add(oldData, newData)
+                    .geodesic(true).color(Color.RED));
+        }
+
+    }
+
     @Override
     public void onMyLocationChange(Location location) {
         Log.d(TAG, "onMyLocationChange location: " + location);
         DLOG.openInternalFile(this);
+
+        String toastText = "";
+        int errorCode = -1;
+        String errorInfo = "";
+        int locationType = -1;
+        LatLng newLatLng;
+        Boolean isNormal = true;
+
 
         //运动耗时
         if (state == STATE_STARTED) {
@@ -359,11 +387,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             Log.d(TAG, time);
             tvElapsedTime.setText(time);
         }
-
-        int errorCode = -1;
-        String errorInfo = "";
-        int locationType = -1;
-        LatLng newLatLng = null;
 
         //// TODO: 这部分待看
         Bundle bundle = location.getExtras();
@@ -413,6 +436,20 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 if (batteryLevel <= 20) {
                     Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
                 }
+
+                Log.d(TAG, "oldLatLng: " + oldLatLng);
+                float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+
+                toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
+                        + "， 本次移动距离： " + moveDistance +
+                        "， 当前电量: " + batteryLevel + "%";
+                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+
+                isNormal = true;
+                drawLine(oldLatLng, newLatLng, isNormal);
+
+
                 //// 向服务器提交数据
                 if (elapseTime % acquisitionInterval == 0) {
                     ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
@@ -420,7 +457,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                 @Override
                                 public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                     if (status == 0) {
-                                        DLOG.d(TAG, "areaActivityData succeed");
+                                        DLOG.d(TAG, "上传 areaActivityData 成功!");
                                         return true;
                                     } else {
                                         String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
@@ -544,9 +581,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                 } else if (state == STATE_END) {
                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
-                    entry.setId(mAreaSportEntry.getId());
+                    entry.setId(areaSportRecordId);
                     entry.setType(HistorySportEntry.AREA_TYPE);
-                    SportResultActivity.start(this,entry);
+                    SportResultActivity.start(this, entry);
                     finish();
                     //// TODO: 2017/8/1 这里要做一个区域运动的实体类。//运动结束时，查看锻炼结果
                     //                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
@@ -651,9 +688,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 TAG, areaSportRecordId, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                        Log.d(TAG, "errCode:" + errCode);
                         Log.d(TAG, "成功发出 areaActivitiesEnd 请求");
-                        Log.d(TAG, json.toString());
                         if (errCode == 0) {
                             //todo 处理返回的数据
                             /**
@@ -695,44 +730,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         }
                     }
                 });
-        /*如果本地有未上传的数据*/
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                //查询数据库中的记录。
-                String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
-
-                List<RunningSportsRecord> list = SQLite.query(
-                        RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
-
-                //                for (final RunningSportsRecord record : list) {
-                //                    Log.d(TAG, "record:" + record);
-                //                    ServerInterface.instance().areaActivitiesEnd(
-                //                            TAG,list.get(0),
-                //                            new JsonResponseCallback() {
-                //                                //提交未数据库中为提交的记录
-                //                                @Override
-                //                                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                //                                    Log.d(TAG, "errCode: " + errCode);
-                //                                    if (errCode == 0) {
-                //                                        //提交成功，把数据库中记录删除。
-                //                                        int result = SQLite.getInstance(context).deleteSportsRecord(
-                //                                                RunningSportsCallback.TABLE_RUNNING_SPORTS,
-                //                                                "startTime = ?", new String[]{record.getStartTime().toString()});
-                //                                        Log.d(TAG, "delete result: " + result);
-                //                                        Log.d(TAG, "record.getStartTime(): " + record.getStartTime());
-                //
-                //                                        return true;
-                //                                    } else {
-                //                                        Log.d(TAG, "onJsonResponse errMsg: " + errMsg);
-                //                                        return false;
-                //                                    }
-                //                                }
-                //                            });
-                //                }
-            }
-        };
-        new Thread(runnable).start();
     }
 
     public float getBatteryLevel() {

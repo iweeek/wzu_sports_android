@@ -411,6 +411,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
                 float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+
                 toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
                         + "， 本次移动距离： " + moveDistance + "， 当前步数： " + currentSteps +
                 "， 当前电量: " + batteryLevel + "%";
@@ -439,7 +440,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvAverSpeed.setText(String.valueOf(bd));
                 }
 
-                ServerInterface.instance().runningActivityData(TAG, sportRecordId, System.currentTimeMillis(), currentSteps, currentDistance,
+                ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
                         location.getLongitude(), location.getLatitude(), locationType, isNormal, new ResponseCallback() {
                             @Override
                             public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {

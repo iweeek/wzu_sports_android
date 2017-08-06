@@ -270,7 +270,7 @@ public class SportPrepareActivity extends BaseActivity implements AMap.OnMyLocat
         //TODO 跳转运动详情
         switch (position) {
             default:
-                SportFixedLocationActivity.start(this, mAreaSportEntryArrayList.get(position));
+//                SportFixedLocationActivity.start(this, mAreaSportEntryArrayList.get(position));
                 break;
         }
     }

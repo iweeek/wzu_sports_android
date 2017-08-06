@@ -1,12 +1,13 @@
 package com.tim.app.server.entry;
 
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * 运动区域列表项
  */
-public class AreaSportList implements Serializable {
+public class AreaSportList implements  Parcelable {
 
     private static final long serialVersionUID = 6187447685293862071L;
     private  Integer id;
@@ -95,4 +96,47 @@ public class AreaSportList implements Serializable {
                 ", universityId=" + universityId +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.areaName);
+        dest.writeString(this.address);
+        dest.writeDouble(this.latitude);
+        dest.writeDouble(this.longitude);
+        dest.writeInt(this.qualifiedCostTime);
+        dest.writeDouble(this.radius);
+        dest.writeInt(this.universityId);
+    }
+
+    public AreaSportList() {
+    }
+
+    protected AreaSportList(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.areaName = in.readString();
+        this.address = in.readString();
+        this.latitude = in.readDouble();
+        this.longitude = in.readDouble();
+        this.qualifiedCostTime = in.readInt();
+        this.radius = in.readDouble();
+        this.universityId = in.readInt();
+    }
+
+    public static final Parcelable.Creator<AreaSportList> CREATOR = new Parcelable.Creator<AreaSportList>() {
+        @Override
+        public AreaSportList createFromParcel(Parcel source) {
+            return new AreaSportList(source);
+        }
+
+        @Override
+        public AreaSportList[] newArray(int size) {
+            return new AreaSportList[size];
+        }
+    };
 }
