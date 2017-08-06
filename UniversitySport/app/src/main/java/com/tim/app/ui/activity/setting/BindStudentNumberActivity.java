@@ -46,8 +46,8 @@ public class BindStudentNumberActivity extends BaseActivity {
         etSchool = (EditText) findViewById(R.id.etSchool);
         tvSchoolErrorPrmpt = (TextView) findViewById(R.id.tvSchoolErrorPrmpt);
 
-        etNo = (EditText) findViewById(R.id.etNo);
-        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
+        etNo = (EditText) findViewById(R.id.etStudentNo);
+        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
 
         etName = (EditText) findViewById(R.id.etName);
         tvNameErrorPrmpt = (TextView) findViewById(R.id.tvNameErrorPrmpt);

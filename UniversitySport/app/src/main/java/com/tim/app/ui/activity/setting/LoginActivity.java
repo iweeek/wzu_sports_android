@@ -1,9 +1,11 @@
 package com.tim.app.ui.activity.setting;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -37,7 +39,7 @@ public class LoginActivity extends BaseActivity {
     public static final String USER_IS_FIRST_LOGIN = "user_is_first_login";
     public static final String USER_HAS_EDIT_FIRST_PASSWORD = "user_has_edit_first_password";
     private static final String USER = "user";
-    private EditText etNo, etPassword;
+    private EditText etStudentNo, etPassword;
     private Button btLogin;
     private String sNo, password;
     private TextView tvNoErrorPrmpt;
@@ -48,6 +50,7 @@ public class LoginActivity extends BaseActivity {
     private ImageView ivPasswordDelete;
     private boolean mIsFirstLogin;
     private boolean mHasEditFirstPassword;
+    private TextView tvUniversity;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -62,9 +65,28 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void initView() {
         btLogin = (Button) findViewById(R.id.btLogin);
-        etNo = (EditText) findViewById(R.id.etNo);
+        etStudentNo = (EditText) findViewById(R.id.etStudentNo);
+        tvUniversity = (TextView) findViewById(R.id.tvUniversity);
+        tvUniversity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final CharSequence univsersities[] = new CharSequence[] {"温州大学", "温州医科大学", "温州商学院", "温州职业技术学院"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder.setTitle("请选择您的学校");
+                builder.setItems(univsersities, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // the user clicked on colors[which]
+                        tvUniversity.setText(univsersities[which]);
+                    }
+                });
+                builder.show();
+            }
+        });
+
         etPassword = (EditText) findViewById(R.id.etPassword);
-        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
+        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
         tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
         ivPasswordVisiable = (ImageView) findViewById(R.id.ivPasswordVisiable);
         tvForgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
@@ -78,7 +100,7 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.ivPasswordVisiable).setOnClickListener(this);
         btLogin.setOnClickListener(this);
 
-        etNo.addTextChangedListener(new TextWatcher() {
+        etStudentNo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -131,13 +153,13 @@ public class LoginActivity extends BaseActivity {
         if (v.getId() == R.id.ibClose) {
             finish();
         } else if (v.getId() == R.id.ivDeleteNo) {
-            etNo.setText("");
+            etStudentNo.setText("");
         } else if (v.getId() == R.id.ivPasswordDelete) {
             etPassword.setText("");
         } else if (v.getId() == R.id.tvForgotPassword) {
             findPassword();
         } else if (v.getId() == R.id.btLogin) {
-            sNo = etNo.getText().toString().trim();
+            sNo = etStudentNo.getText().toString().trim();
             password = etPassword.getText().toString().trim();
 
             //暂时跳过登录
@@ -301,8 +323,8 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (etNo != null) {
-            SoftKeyboardUtil.hideSoftKeyboard(etNo);
+        if (etStudentNo != null) {
+            SoftKeyboardUtil.hideSoftKeyboard(etStudentNo);
         }
         if (etPassword != null) {
             SoftKeyboardUtil.hideSoftKeyboard(etPassword);

@@ -62,9 +62,11 @@
 
     <!--手机登录-->
     <string name="login">登录</string>
-    <string name="no.">学号</string>
-    <string name="login_input_num">请输入您的学号</string>
+    <string name="University">学校</string>
+    <string name="studentNo">学号</string>
     <string name="password">密码</string>
+    <string name="login_input_num">请输入您的学号</string>
+    <string name="select_your_university">请选择您当前所读学校</string>
     <string name="login_input_password">请输入6-16位密码</string>
     <string name="login_forget_password">忘记密码</string>
     <string name="modtify_init_password">修改初始密码</string>

@@ -53,9 +53,9 @@ public class RegistPhoneActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        etPhone = (EditText) findViewById(R.id.etNo);
+        etPhone = (EditText) findViewById(R.id.etStudentNo);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
+        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
         ivDeleteNo = (ImageView) findViewById(R.id.ivDeleteNo);
         btGetVerificationCode = (Button) findViewById(R.id.btGetVerificationCode);
         ivDeleteNo.setOnClickListener(this);

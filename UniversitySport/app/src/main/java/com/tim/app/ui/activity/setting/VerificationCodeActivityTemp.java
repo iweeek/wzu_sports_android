@@ -53,9 +53,9 @@ public class VerificationCodeActivityTemp extends BaseActivity {
     @Override
     public void initView() {
 //        btLogin = (Button) findViewById(R.id.btLogin);
-        etNo = (EditText) findViewById(R.id.etNo);
+        etNo = (EditText) findViewById(R.id.etStudentNo);
 //        etPassword = (EditText) findViewById(R.id.etPassword);
-        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
+        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
 //        tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
 //        ivPasswordVisiable = (ImageView)findViewById(R.id.ivPasswordVisiable);
 //        tvForgotPassword = (TextView)findViewById(R.id.tvForgotPassword);

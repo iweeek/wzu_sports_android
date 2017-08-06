@@ -43,7 +43,65 @@
             <TextView
                 style="@style/inputContentTitle"
                 android:gravity="center"
-                android:text="@string/no." />
+                android:text="@string/University" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp">
+
+                <TextView
+                    android:id="@+id/tvUniversity"
+                    style="@style/inputContentText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/select_your_university"
+                    android:inputType="number"
+                    android:textColorHint="@color/white_80" />
+
+                <ImageView
+                    android:id="@+id/ivUniVisiable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/password_input_selector"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:id="@+id/ivDeleteUni"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@id/ivUniVisiable"
+                    android:background="@drawable/btn_delete"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <View style="@style/vLine" />
+
+            <TextView
+                android:id="@+id/tvUniErrorPrmpt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:textColor="@color/errorTextColor"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/inputContentTitle"
+                android:gravity="center"
+                android:text="@string/studentNo" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -52,7 +110,7 @@
                 android:layout_marginTop="16dp">
 
                 <EditText
-                    android:id="@+id/etNo"
+                    android:id="@+id/etStudentNo"
                     style="@style/inputContentText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -84,7 +142,7 @@
             <View style="@style/vLine" />
 
             <TextView
-                android:id="@+id/tvNoErrorPrmpt"
+                android:id="@+id/tvStuNoErrorPrmpt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -96,7 +154,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:orientation="vertical">
 
             <TextView

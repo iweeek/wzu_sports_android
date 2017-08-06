@@ -72,7 +72,7 @@ public class VerificationCodeActivity extends BaseActivity {
         etSmsCode = (EditText) findViewById(R.id.etSmsCode);
         ibClose = (ImageButton) findViewById(R.id.ibClose);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvNoErrorPrmpt);
+        tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
         ivDeleteNo = (ImageView) findViewById(R.id.ivDeleteNo);
         etSmsCode.addTextChangedListener(new VerificationCodeActivity.MyEditChangeListener());
         btBindNo.setOnClickListener(this);
