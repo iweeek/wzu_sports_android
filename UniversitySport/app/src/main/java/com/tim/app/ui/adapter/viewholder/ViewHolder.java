@@ -3,24 +3,19 @@ package com.tim.app.ui.adapter.viewholder;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IdRes;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
-import com.tim.app.R;
-import com.tim.app.RT;
 
 /**
  * @创建者 倪军
  * @创建时间 2017/8/4
- * @描述
+ * @描述  万能的ViewHolder
  */
 
 public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
@@ -28,21 +23,12 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
     private View mContentView;
     private Context mContext;
 
-    public RelativeLayout rlContainer;
-    public LinearLayout llBottom;
 
     public ViewHolder(Context context, View itemView) {
         super(itemView);
         mViews = new SparseArray<View>();
         mContentView = itemView;
         mContext = context;
-
-        long startTime = System.nanoTime();
-        rlContainer = (RelativeLayout) itemView.findViewById(R.id.rlContainer);
-        rlContainer.setLayoutParams(new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
-        llBottom = (LinearLayout) itemView.findViewById(R.id.llBottom);
-        long endTime = System.nanoTime();
-        Log.d("ViewHolder", "程序运行时间： " + (endTime - startTime) + "ns");
     }
 
     public static ViewHolder createViewHolder(Context context, View itemView) {
@@ -65,7 +51,7 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
         return (T) view;
     }
 
-    /*****************************************/
+    /******************    可以继续扩展  ***********************/
     public ViewHolder setText(int viewId, String text) {
         TextView tv = findView(viewId);
         tv.setText(text);
@@ -89,4 +75,11 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
         parent.addView(childView);
         return this;
     }
+
+    public ViewHolder setLayoutParams(int parentId, ViewGroup.LayoutParams params){
+        ViewGroup view = findView(parentId);
+        view.setLayoutParams(params);
+        return this;
+    }
+
 }

@@ -13,6 +13,10 @@ public class HistorySportEntry  implements Serializable{
     public static final int RUNNING_TYPE = 1;
     public static final int AREA_TYPE = 2;
 
+    /**
+     * 记录的Id
+     * @return
+     */
     public long getId() {
         return id;
     }
@@ -51,6 +55,10 @@ public class HistorySportEntry  implements Serializable{
         this.sportName = sportName;
     }
 
+    /**
+     * 这个运动项目的Id,首页的运动项目
+     * @return
+     */
     public int getSportId() {
         return sportId;
     }

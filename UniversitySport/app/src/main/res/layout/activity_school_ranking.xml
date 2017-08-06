@@ -9,7 +9,7 @@
     tools:context=".ui.activity.SchoolRankingActivity">
 
     <RelativeLayout
-        android:id="@+id/rlTitle"
+        android:id="@+id/tb"
         style="@style/TitleBarStyle"
         android:background="@color/blue"
         android:layout_height="@dimen/title_height"

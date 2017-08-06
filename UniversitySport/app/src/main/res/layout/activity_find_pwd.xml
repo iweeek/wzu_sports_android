@@ -6,7 +6,7 @@
     android:background="@color/white">
 
     <RelativeLayout
-        android:id="@+id/rlTitle"
+        android:id="@+id/tb"
         style="@style/TitleBarStyle"  android:layout_height="@dimen/title_height"
         android:paddingLeft="20dp">
 
@@ -31,7 +31,7 @@
         android:id="@+id/center_ll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rlTitle"
+        android:layout_below="@id/tb"
         android:layout_margin="@dimen/dimen_15"
         android:orientation="vertical">
 

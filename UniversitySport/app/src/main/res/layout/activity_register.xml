@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/rlTitle"
+        android:id="@+id/tb"
         style="@style/TitleBarStyle">
 
         <TextView
