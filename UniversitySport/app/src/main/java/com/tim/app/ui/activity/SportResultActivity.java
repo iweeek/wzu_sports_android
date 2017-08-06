@@ -548,7 +548,7 @@ public class SportResultActivity extends BaseActivity {
                 if (historyEntry instanceof HistoryAreaSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
                         if (drawPoints.get(i).getLocationType() == 1 ) {
-                            drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
+                            drawLine(ll, drawPoints.get(i).getLL());
                             ll = drawPoints.get(i).getLL();
                             DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
                                     ", i: " + i);
