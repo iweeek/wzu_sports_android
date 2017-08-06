@@ -24,6 +24,7 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.AreaSportList;
+import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.adapter.SportAreaListAdapter;
 
 import org.json.JSONArray;
@@ -57,7 +58,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     }
 
 
-    public static void start(Context context, AreaSportEntry areaSportEntry){
+    public static void start(Context context, SportEntry areaSportEntry){
         Intent  intent = new Intent(context,SportsAreaListActivity.class);
         intent.putExtra("areaSportEntry", areaSportEntry);
         context.startActivity(intent);

@@ -47,7 +47,6 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             return;
         }
 
-
         final ViewHolder holder = (ViewHolder) mHolder;
 
         holder.setLayoutParams(R.id.rlContainer,new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));

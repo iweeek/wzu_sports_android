@@ -438,7 +438,7 @@ public class ServerInterface {
      * @param universityId
      * @param callback
      */
-    public void queryAreaSportsData(int universityId, ResponseCallback callback) {
+    public void queryAreaSport(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
                 " areaSports(universityId:1){\n" +
                 "    id\n" +
