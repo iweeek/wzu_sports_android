@@ -543,6 +543,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     });
 
                 } else if (state == STATE_END) {
+                    HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
+                    entry.setId(mAreaSportEntry.getId());
+                    entry.setType(HistorySportEntry.AREA_TYPE);
+                    SportResultActivity.start(this,entry);
                     finish();
                     //// TODO: 2017/8/1 这里要做一个区域运动的实体类。//运动结束时，查看锻炼结果
                     //                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
@@ -605,10 +609,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 aMap.moveCamera(cu);
                 break;
             case R.id.tvSelectLocation:
-                HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
-                entry.setId(mAreaSportEntry.getId());
-                entry.setType(HistorySportEntry.AREA_TYPE);
-                SportResultActivity.start(this,entry);
                 finish();
         }
     }

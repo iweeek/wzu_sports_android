@@ -36,8 +36,8 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.AreaSportEntry;
+import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
@@ -46,7 +46,6 @@ import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.ToastUtil;
-import com.tim.app.util.UpdateAppUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
