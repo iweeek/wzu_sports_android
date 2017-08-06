@@ -539,7 +539,7 @@ public class SportResultActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btDrawLine:
-                //                btDrawArea.setVisibility(View.GONE);
+                btDrawLine.setVisibility(View.GONE);
                 //                aMap.addPolyline(new PolylineOptions().
                 //                        addAll(drawPoints.get).width(10).color(Color.argb(255, 1, 1, 1)));
 
@@ -547,14 +547,14 @@ public class SportResultActivity extends BaseActivity {
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 if (historyEntry instanceof HistoryAreaSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
-                        if (drawPoints.get(i).getLocationType() == 1 ) {
-                            drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
+                        if (drawPoints.get(i).getLocationType() == 1) {
+                            drawLine(ll, drawPoints.get(i).getLL(), true);
                             ll = drawPoints.get(i).getLL();
                             DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
                                     ", i: " + i);
                         }
                     }
-                }else if(historyEntry instanceof HistoryRunningSportEntry){
+                } else if(historyEntry instanceof HistoryRunningSportEntry){
                     for (int i = 1; i < drawPoints.size(); i++) {
                         if (drawPoints.get(i).getLocationType() == 1 && drawPoints.get(i).isNormal()) {
                             drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
