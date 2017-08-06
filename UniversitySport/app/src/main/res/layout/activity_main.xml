@@ -13,39 +13,39 @@
         android:orientation="vertical"
         >
 
-        <RelativeLayout
-            android:id="@+id/rlTitle"
-            style="@style/TitleBarStyle"
-            android:background="@color/blue"
-            android:padding="20dp">
+        <include layout="@layout/cell_toolbar"/>
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/rlTitle"-->
+            <!--style="@style/TitleBarStyle"-->
+            <!--android:background="@color/blue"-->
+            <!--android:padding="20dp">-->
 
-            <ImageView
-                android:id="@+id/ibMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_menu" />
+            <!--<ImageView-->
+                <!--android:id="@+id/ibMenu"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentLeft="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:src="@drawable/ic_menu" />-->
 
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/TitleTextStyle"
-                android:layout_marginLeft="50dp"
-                android:layout_toRightOf="@id/ibClose"
-                android:text="课外体育锻炼" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvTitle"-->
+                <!--style="@style/TitleTextStyle"-->
+                <!--android:layout_marginStart="50dp"-->
+                <!--android:text="课外体育锻炼" />-->
 
-            <ImageView
-                android:id="@+id/ibNotify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_notify"
-                android:visibility="gone" />
+            <!--<ImageView-->
+                <!--android:id="@+id/ibNotify"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:src="@drawable/ic_notify"-->
+                <!--android:visibility="gone" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
 
         <LinearLayout
             android:id="@+id/llContainer"

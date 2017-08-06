@@ -1,6 +1,5 @@
 package com.tim.app.ui.fragment;
 
-import android.app.ActivityGroup;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,27 +30,15 @@ import com.tim.app.ui.adapter.HistorySportListAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
 import com.tim.app.util.MyDateUtil;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static android.R.attr.data;
-import static android.R.id.list;
-import static com.tim.app.R.id.map;
 
 /**
  * 历史数据
@@ -69,7 +56,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private List<HistoryItem> dataList = new ArrayList<HistoryItem>();
     private HistoryDataHeadView headView;
     private int universityId;
-    private int studentId = 3;
+    private int studentId = 2;
 
     private int pageCountWeek;
     private int pageSizeWeek = 6;
@@ -209,8 +196,6 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             HistoryItem item = new HistoryItem();
                             item.historySportEntryList = null;
                             for (int i = 0; i < runningSportArray.length(); i++) {
-//                                    Log.d(TAG, "running sport date: " + runningSportArray.optJSONObject(i).optString("sportDate"));
-//                                    Log.d(TAG, "date: " + date.toString());
                                 if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                     HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
                                     entry.setId(runningSportArray.optJSONObject(i).optInt("id"));
@@ -234,13 +219,10 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                         item.historySportEntryList = new ArrayList<HistorySportEntry>();
                                     }
                                     item.historySportEntryList.add(entry);
-//                                    Log.d(TAG, "ag.runningSportEntry sport date: " + date);
                                 }
                             }
 
                             for (int i = 0; i < areaSportArray.length(); i++) {
-//                                Log.d(TAG, "area sport date: " + areaSportArray.optJSONObject(i).optString("sportDate"));
-//                                Log.d(TAG, "date: " + date.toString());
                                 if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
                                     entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
@@ -256,14 +238,13 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                     } else {
                                         continue;
                                     }
-                                    entry.setSportName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
+                                    entry.setAreaName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
                                     entry.setType(HistorySportEntry.AREA_TYPE);
 
                                     if (item.historySportEntryList == null) {
                                         item.historySportEntryList = new ArrayList<HistorySportEntry>();
                                     }
                                     item.historySportEntryList.add(entry);
-//                                    Log.d(TAG, "ag.areaSportEntry sport date: " + date);
                                 }
                             }
 

@@ -27,12 +27,17 @@ import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXTextObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.AreaSportEntry;
+import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
@@ -41,7 +46,6 @@ import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.ToastUtil;
-import com.tim.app.util.UpdateAppUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +62,11 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    public static final int MODE_FAST_WALK = 1;
+    public static final int MODE_RANDOM_RUN = 2;
+    public static final int MODE_FAST_RUN = 3;
+    public static final int MODE_AREA = 4;
+
     private MainActivity context;
 
     private long last_back_time = 0;
@@ -78,12 +87,38 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private EmptyLayout emptyLayout;
 
-
-    NavigationView navigationView;
+    private NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
     private BadNetworkView badNetworkView;
 
+    /*
+    * 微信
+    * */
+    private IWXAPI api;
+
+    private  void regToWx(){
+        api = WXAPIFactory.createWXAPI(this,AppConstant.APP_ID);
+        api.registerApp(AppConstant.APP_ID);
+    }
+
+    /**
+     * 发送数据到微信
+     * @param text
+     */
+    private void sendToWx(String text){
+        WXTextObject textObj = new WXTextObject();
+        textObj.text=text;
+
+        WXMediaMessage msg =new WXMediaMessage();
+        msg.mediaObject =textObj;
+        msg.description =text;
+
+        SendMessageToWX.Req req= new SendMessageToWX.Req();
+        req.transaction = String.valueOf(System.currentTimeMillis());
+
+        api.sendReq(req);
+    }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -212,8 +247,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 首页底部运动方式Item点击事件
      *
      * @param view
-     * @param position
-     * @param id
+     * @param position within the adapter's data set.  在适配器中数据集中的位置。
+     * @param id       todo  暂时不知道有什么用。返回的一直是 -1 {@link android.support.v7.widget.RecyclerView#NO_ID}
      */
     @Override
     public void onItemClick(View view, int position, long id) {
@@ -223,20 +258,17 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             Log.d(TAG, "onItemClick: bad network!");
             queryRunningProjects();
         }
-        if (position == 0) {
+
+        if (position == MODE_FAST_WALK - 1) {
             SportDetailActivity.start(this, sportEntry);
-        } else if (position == 1) {
+        } else if (position == MODE_RANDOM_RUN - 1) {
 
-        } else if (position == 2) {
+        } else if (position == MODE_FAST_RUN - 1) {
 
-        } else if (position == 3) {
-            //现在服务端接口只有一个数据
-            //            SportPrepareActivity.start(this, mAreaSportEntryList, true);
-            Log.d(TAG, "mAreaSportEntryList.size():" + mAreaSportEntryList.size());
+        } else if (position == MODE_AREA - 1) {
             SportsAreaListActivity.start(this, mAreaSportEntryList);
         }
         Log.d(TAG, "position:" + position);
-        Log.d(TAG, "view.getId():" + view.getId());
     }
 
     /**
@@ -249,7 +281,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 if (errCode == 0) {
                     JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
                     try {
-                        for (int i = 0; i < 4; i++) {
+                        for (int i = 0; i < 4; i++) {//这里定死了4个
                             JSONObject jsonObject = sportArray.getJSONObject(i);
                             int runningSportId = jsonObject.getInt("id");
                             int distance = jsonObject.optInt("qualifiedDistance", 1000);
@@ -261,38 +293,37 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             bd = bd.setScale(1, RoundingMode.HALF_UP);
                             int interval = jsonObject.optInt("acquisitionInterval", 1);
                             SportEntry sportEntry = new SportEntry();
-                            if (runningSportId == 1) {
-                                sportEntry.setSportName(jsonObject.optString("name", "随机慢跑"));
-                                sportEntry.setParticiNum(participantNum);
-                                sportEntry.setTargetDistance(distance);
-                                sportEntry.setTargetTime((int) (time / 60));
-                                sportEntry.setTargetSpeed(bd + "");
-                                sportEntry.setInterval(interval);
-                                sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
-                            } else if (runningSportId == 2) {
-                                sportEntry.setSportName(jsonObject.optString("name", "快跑"));
-                                sportEntry.setParticiNum(participantNum);
-                                sportEntry.setTargetDistance(distance);
-                                sportEntry.setTargetTime((int) (time / 60));
-                                sportEntry.setTargetSpeed(bd + "");
-                                sportEntry.setInterval(interval);
-                                sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                            } else if (runningSportId == 3) {
+                            if (runningSportId == MODE_FAST_WALK) {
+                                sportEntry.setType(SportEntry.RUNNING_SPORT);
                                 sportEntry.setSportName(jsonObject.optString("name", "快走"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);
                                 sportEntry.setTargetTime((int) (time / 60));
                                 sportEntry.setTargetSpeed(bd + "");
                                 sportEntry.setInterval(interval);
-                                sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                            } else if (runningSportId == 4) {
-                                sportEntry.setSportName(jsonObject.optString("name", "区域锻炼"));
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
+                            } else if (runningSportId == MODE_RANDOM_RUN) {
+                                sportEntry.setType(SportEntry.RUNNING_SPORT);
+                                sportEntry.setSportName(jsonObject.optString("name", "随机慢跑"));
                                 sportEntry.setParticiNum(participantNum);
                                 sportEntry.setTargetDistance(distance);
                                 sportEntry.setTargetTime((int) (time / 60));
                                 sportEntry.setTargetSpeed(bd + "");
                                 sportEntry.setInterval(interval);
-                                sportEntry.setBgDrawableId(R.drawable.ic_bg_cumulative_step);
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
+                            } else if (runningSportId == MODE_FAST_RUN) {
+                                sportEntry.setType(SportEntry.RUNNING_SPORT);
+                                sportEntry.setSportName(jsonObject.optString("name", "快跑"));
+                                sportEntry.setParticiNum(participantNum);
+                                sportEntry.setTargetDistance(distance);
+                                sportEntry.setTargetTime((int) (time / 60));
+                                sportEntry.setTargetSpeed(bd + "");
+                                sportEntry.setInterval(interval);
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
+                            } else if (runningSportId == MODE_AREA) {
+                                sportEntry.setType(SportEntry.AREA_SPORT);
+                                sportEntry.setSportName(jsonObject.optString("", "区域锻炼"));
+                                sportEntry.setBgDrawableId(R.drawable.ic_bg_area);
                             }
                             sportEntryDataList.add(sportEntry);
                         }
@@ -385,12 +416,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 AreaSportEntry areaSportEntry = new AreaSportEntry();
                 if (errCode == 0) {
                     //获取接口参数
-                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("query");
+                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("areaSports");
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.optJSONObject(i);
                         areaSportEntry.setId(jsonObject.optInt("id"));
                         areaSportEntry.setName(jsonObject.optString("name"));
-                        areaSportEntry.setEnable(jsonObject.optBoolean("is_enable"));
+                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                         areaSportEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
                         areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
                         areaSportEntry.setUniversityId(jsonObject.optInt("universityId"));

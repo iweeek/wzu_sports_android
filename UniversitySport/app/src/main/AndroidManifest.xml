@@ -145,6 +145,10 @@
             android:name="com.tim.app.ui.activity.setting.RegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
+        <!--微信respose模块-->
+        <activity android:name=".ui.activity.wxapi.WXEntryActivity"
+                  android:label="@string/app_name"
+                  android:exported="true"/>
 
         <receiver android:name="com.tim.app.receiver.LSReceiver">
             <intent-filter android:priority="2147483647">

@@ -13,6 +13,10 @@ public class HistorySportEntry  implements Serializable{
     public static final int RUNNING_TYPE = 1;
     public static final int AREA_TYPE = 2;
 
+    /**
+     * 记录的Id
+     * @return
+     */
     public long getId() {
         return id;
     }
@@ -31,8 +35,6 @@ public class HistorySportEntry  implements Serializable{
     private long endAt;
     private String sportDate;
     private String sportName;
-    private int distance;
-    private String speed;//速度
 
 
     public int getType() {
@@ -45,23 +47,6 @@ public class HistorySportEntry  implements Serializable{
 
     private int type;//类型：1，跑步运动；2，区域运动。
 
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-
-    public String getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(String speed) {
-        this.speed = speed;
-    }
-
     public String getSportName() {
         return sportName;
     }
@@ -70,6 +55,10 @@ public class HistorySportEntry  implements Serializable{
         this.sportName = sportName;
     }
 
+    /**
+     * 这个运动项目的Id,首页的运动项目
+     * @return
+     */
     public int getSportId() {
         return sportId;
     }
@@ -137,8 +126,6 @@ public class HistorySportEntry  implements Serializable{
                 ", endAt=" + endAt +
                 ", sportDate='" + sportDate + '\'' +
                 ", sportName='" + sportName + '\'' +
-                ", distance=" + distance +
-                ", speed='" + speed + '\'' +
                 '}';
     }
 }

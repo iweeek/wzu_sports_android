@@ -8,14 +8,9 @@ import com.lzy.okhttputils.model.HttpHeaders;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
-import com.tim.app.util.MyDateUtil;
 
-import org.joda.time.LocalDate;
-
-import java.util.Date;
 import java.util.HashMap;
 
-import static android.R.attr.type;
 import static com.lzy.okhttputils.utils.OkLogger.tag;
 
 /**
@@ -245,6 +240,40 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
+
+    /**
+     * SportResultActivity 调用
+     * // todo 接口未确定
+     * @param activityId
+     * @param callback
+     */
+    public void queryAreaActivity(long activityId, ResponseCallback callback) {
+        queryStr = "{\n" +
+                "\trunningActivity(id:" + activityId + ") {\n" +
+                "   distance\n" +
+                "   costTime\n" +
+                "   qualified\n" +
+                "   qualifiedDistance" +
+                "   qualifiedCostTime" +
+                "   kcalConsumed" +
+                "   runningSport {\n" +
+                "       name\n" +
+                "    }\n" +
+                "    data{\n" +
+                "      longitude\n" +
+                "      latitude\n" +
+                "      isNormal\n" +
+                "      locationType\n" +
+                "      stepCount\n" +
+                "      distance\n" +
+                "      acquisitionTime\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        query(queryStr, callback);
+    }
+
     /**
      * MainActivity 调用
      *
@@ -370,156 +399,6 @@ public class ServerInterface {
                 "    }\n" +
                 "  }\n" +
                 "}";
-        /*else if (type == AppConstant.THIS_MONTH) {
-            queryStr = "{\n" +
-                    "  student(id: 2) {\n" +
-                    "    accuRunningActivityCount(timeRange: CURRENT_MONTH)\n" +
-                    "    accuAreaActivityCount(timeRange: CURRENT_MONTH)\n" +
-                    "    qualifiedRunningActivityCount(timeRange: CURRENT_MONTH)\n" +
-                    "    qualifiedAreaActivityCount(timeRange: CURRENT_MONTH)\n" +
-                    "    runningActivityTimeCosted(timeRange: CURRENT_MONTH)\n" +
-                    "    areaActivityTimeCosted(timeRange: CURRENT_MONTH)\n" +
-                    "    runningActivityKcalConsumption(timeRange: CURRENT_MONTH)\n" +
-                    "    areaActivityKcalConsumption(timeRange: CURRENT_MONTH)\n" +
-                    "    runningActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
-                    "      data {\n" +
-                    "        runningSportId\n" +
-                    "        costTime\n" +
-                    "        distance\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        runningSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "    areaActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
-                    "      data {\n" +
-                    "        areaSportId\n" +
-                    "        costTime\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        areaSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}\n";
-        } else if (type == AppConstant.THIS_TERM) {
-            queryStr = "{\n" +
-                    "  student(id: 2) {\n" +
-                    "    accuRunningActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    accuAreaActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    qualifiedRunningActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    qualifiedAreaActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    runningActivityTimeCosted(timeRange: CURRENT_TERM)\n" +
-                    "    areaActivityTimeCosted(timeRange: CURRENT_TERM)\n" +
-                    "    runningActivityKcalConsumption(timeRange: CURRENT_TERM)\n" +
-                    "    areaActivityKcalConsumption(timeRange: CURRENT_TERM)\n" +
-                    "    runningActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
-                    "      data {\n" +
-                    "        runningSportId\n" +
-                    "        costTime\n" +
-                    "        distance\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        runningSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "    areaActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
-                    "      data {\n" +
-                    "        areaSportId\n" +
-                    "        costTime\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        areaSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}\n";
-        } else {
-            queryStr = "{\n" +
-                    "  student(id: 2) {\n" +
-                    "    accuRunningActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    accuAreaActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    qualifiedRunningActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    qualifiedAreaActivityCount(timeRange: CURRENT_TERM)\n" +
-                    "    runningActivityTimeCosted(timeRange: CURRENT_TERM)\n" +
-                    "    areaActivityTimeCosted(timeRange: CURRENT_TERM)\n" +
-                    "    runningActivityKcalConsumption(timeRange: CURRENT_TERM)\n" +
-                    "    areaActivityKcalConsumption(timeRange: CURRENT_TERM)\n" +
-                    "    runningActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
-                    "      data {\n" +
-                    "        runningSportId\n" +
-                    "        costTime\n" +
-                    "        distance\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        runningSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "    areaActivities(startDate: \"2017-07-01\", endDate: \"2017-08-01\") {\n" +
-                    "      data {\n" +
-                    "        areaSportId\n" +
-                    "        costTime\n" +
-                    "        kcalConsumed\n" +
-                    "        qualified\n" +
-                    "        startTime\n" +
-                    "        sportDate\n" +
-                    "        endedAt\n" +
-                    "        areaSport {\n" +
-                    "          name\n" +
-                    "        }\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}\n";
-//            queryStr = "{    \n" +
-//                    "\tstudent(id:" + studentId + ") {\n" +
-//                    "qualifiedActivityCount\n" +
-//                    "timeCosted\n" +
-//                    "caloriesConsumption\n" +
-//                    "    activities(pageNumber:" + pageNo + ", pageSize:" + pageSize + "){\n" +
-//                    "      pagesCount\n" +
-//                    "      dataCount\n" +
-//                    "      data {\n" +
-//                    "        id\n" +
-//                    "        runningSportId\n" +
-//                    "        costTime\n" +
-//                    "        kcalConsumed\n" +
-//                    "        startTime\n" +
-//                    "        distance\n" +
-//                    "        qualified\n" +
-//                    "        runningSport{\n" +
-//                    "          name\n" +
-//                    "         }\n" +
-//                    "      }\n" +
-//                    "    }\n" +
-//                    "  }\n" +
-//                    "}";
-        }*/
         query(queryStr, callback);
     }
 
@@ -573,7 +452,7 @@ public class ServerInterface {
      */
     public void queryAreaSportsData(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  query: areaSports(universityId:1){\n" +
+                " areaSports(universityId:1){\n" +
                 "    id\n" +
                 "    name\n" +
                 "    isEnable\n" +
