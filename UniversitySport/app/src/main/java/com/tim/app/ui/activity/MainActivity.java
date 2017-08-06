@@ -67,6 +67,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public static final int MODE_FAST_RUN = 3;
     public static final int MODE_AREA = 4;
 
+    public static int studentId = 1;
+
     private MainActivity context;
 
     private long last_back_time = 0;
@@ -354,7 +356,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 查询首页顶部本学期运动记录
      */
     public void queryCurTermData() {
-        int studentId = 2;
+
         ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

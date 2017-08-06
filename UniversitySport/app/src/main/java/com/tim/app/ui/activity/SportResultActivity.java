@@ -109,7 +109,7 @@ public class SportResultActivity extends BaseActivity {
 
     private int initSteps = 0;//初始化的步数
 
-    private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
+    private float zoomLevel = 15;//地图缩放级别，范围3-19,越大越精细
     JsonResponseCallback callback;
     private int screenOffTimeout;
     private int screenKeepLightTime;
@@ -547,8 +547,9 @@ public class SportResultActivity extends BaseActivity {
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 if (historyEntry instanceof HistoryAreaSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
+
                         if (drawPoints.get(i).getLocationType() == 1) {
-                            drawLine(ll, drawPoints.get(i).getLL(), true);
+                            drawLine(ll, drawPoints.get(i).getLL());
                             ll = drawPoints.get(i).getLL();
                             DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
                                     ", i: " + i);

@@ -78,6 +78,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.tim.app.ui.activity.MainActivity.studentId;
+
 
 /**
  * 跑步运动详情页
@@ -162,7 +164,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     UiSettings uiSettings;
     private long targetFinishedTime;
     private int sportRecordId;
-    private int studentId = 2;//TODO 需要从认证信息中获取
+//    private int studentId = 1;//TODO 需要从认证信息中获取
 
     private int pauseStateSteps = 0;
 

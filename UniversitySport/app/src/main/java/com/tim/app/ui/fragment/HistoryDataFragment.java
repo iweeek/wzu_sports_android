@@ -40,6 +40,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import static com.tim.app.ui.activity.MainActivity.studentId;
+
 /**
  * 历史数据
  */
@@ -56,7 +58,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private List<HistoryItem> dataList = new ArrayList<HistoryItem>();
     private HistoryDataHeadView headView;
     private int universityId;
-    private int studentId = 2;
+//    private int studentId = 2;
 
     private int pageCountWeek;
     private int pageSizeWeek = 6;
