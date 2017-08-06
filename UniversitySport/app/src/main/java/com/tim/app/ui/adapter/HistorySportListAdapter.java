@@ -2,6 +2,7 @@ package com.tim.app.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.HistoryItem;
+import com.tim.app.ui.activity.SportResultActivity;
 import com.tim.app.ui.adapter.viewholder.ViewHolder;
 
 import java.text.SimpleDateFormat;
@@ -41,7 +43,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder holder, int position, HistoryItem data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder holder, final int position, HistoryItem data) {
         boolean isDelimit = false;
         if (data == null) {
             return;
@@ -51,11 +53,11 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         viewHolder.setText(R.id.tvSportDate, data.date);
 
         for (int i = 0; i < data.historySportEntryList.size(); i++) {
-            LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
+            final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
 
             if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
                 //向下转型
-                HistoryRunningSportEntry runningData = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
+                final HistoryRunningSportEntry runningData = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
 //                ll.setClickable(true);
                 ll.setTag(runningData);
 
@@ -92,6 +94,15 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(runningData.getKcalConsumed() + "");
 
+
+                ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SportResultActivity.start(mContext, runningData);
+                    }
+                });
+
+
                 viewHolder.addView(R.id.llSportItem, ll);
             } else {
                 View view = (View) ll.findViewById(R.id.vTopDelimiter);
@@ -102,7 +113,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 }
 
-                HistoryAreaSportEntry areaData = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
+                final HistoryAreaSportEntry areaData = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
 
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
                 iv.setBackgroundResource(R.drawable.ic_fix_location_sport);
@@ -137,8 +148,15 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(areaData.getKcalConsumed() + "");
 
-                viewHolder.addView(R.id.llSportItem, ll);
 
+                ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SportResultActivity.start(mContext, areaData);
+                    }
+                });
+
+                viewHolder.addView(R.id.llSportItem, ll);
             }
         }
     }
@@ -146,7 +164,9 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     @Override
     public void onItemClick(View view, int position, long id) {
         DLOG.d(TAG, "onItemClick");
-        // todo       SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
-
+        Log.d(TAG, "position:" + position);
+        Log.d(TAG, "id:" + id);
+        Log.d(TAG, "getDataList().get(position).historySportEntryList.get(0):" + getDataList().get(position).historySportEntryList.get(0));
+//        SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
     }
 }
