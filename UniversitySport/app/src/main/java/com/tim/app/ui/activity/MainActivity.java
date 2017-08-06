@@ -83,7 +83,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private BadNetworkAdapter badNetworkAdapter;
     private List<SportEntry> sportEntryDataList;
     private List<BadNetWork> networkDataList;
-    private ArrayList<AreaSportEntry> mAreaSportEntryList;
+    private ArrayList<AreaSportEntry> mAreaSportEntryList;//区域运动项目
 
     private EmptyLayout emptyLayout;
 
@@ -97,24 +97,25 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     * */
     private IWXAPI api;
 
-    private  void regToWx(){
-        api = WXAPIFactory.createWXAPI(this,AppConstant.APP_ID);
+    private void regToWx() {
+        api = WXAPIFactory.createWXAPI(this, AppConstant.APP_ID);
         api.registerApp(AppConstant.APP_ID);
     }
 
     /**
      * 发送数据到微信
+     *
      * @param text
      */
-    private void sendToWx(String text){
+    private void sendToWx(String text) {
         WXTextObject textObj = new WXTextObject();
-        textObj.text=text;
+        textObj.text = text;
 
-        WXMediaMessage msg =new WXMediaMessage();
-        msg.mediaObject =textObj;
-        msg.description =text;
+        WXMediaMessage msg = new WXMediaMessage();
+        msg.mediaObject = textObj;
+        msg.description = text;
 
-        SendMessageToWX.Req req= new SendMessageToWX.Req();
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = String.valueOf(System.currentTimeMillis());
 
         api.sendReq(req);
@@ -266,7 +267,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         } else if (position == MODE_FAST_RUN - 1) {
 
         } else if (position == MODE_AREA - 1) {
-            SportsAreaListActivity.start(this, mAreaSportEntryList);
+            SportsAreaListActivity.start(this, mAreaSportEntryList.get(0));
         }
         Log.d(TAG, "position:" + position);
     }
@@ -440,48 +441,55 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initData() {
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
+
+            private JSONObject latestAndroidVersionInfo;
+
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-//                String versionName = "";
-//                int versionCode;
-//                String changeLog = "";
-//                String apkUrl = "";
-//                boolean isForced = false;
+                //                String versionName = "";
+                //                int versionCode;
+                //                String changeLog = "";
+                //                String apkUrl = "";
+                //                boolean isForced = false;
 
                 if (errCode == 0) {
                     try {
-                        final String versionName = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("versionName");
-                        final int versionCode = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getInt("versionCode");
-                        final String changeLog = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("changeLog");
-                        final String apkUrl = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("apkUrl");
-                        final boolean isForced = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getBoolean("isForced");
+                        latestAndroidVersionInfo = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo");
+                        final String versionName = latestAndroidVersionInfo.getString("versionName");
+                        final int versionCode = latestAndroidVersionInfo.getInt("versionCode");
+                        final String changeLog = latestAndroidVersionInfo.getString("changeLog");
+                        final String apkUrl = latestAndroidVersionInfo.getString("apkUrl");
+                        final boolean isForced = latestAndroidVersionInfo.getBoolean("isForced");
 
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
 
-                        final AlertDialog.Builder builder =
-                                new AlertDialog.Builder(context);
-                        AlertDialog dialog;
-//                                normalDialog.setIcon(R.drawable.icon_dialog);
-                        builder.setTitle("版本升级");
-                        builder.setPositiveButton("确认",
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        DownloadAppUtils.downloadForAutoInstall(context, apkUrl, "下载新版本");
-                                        if (isForced) {
-                                            //无操作
-                                        } else {
-                                            queryHomePagedata();
-                                        }
-                                    }
-                                });
-                        builder.setMessage("发现新版本");
                         if (versionCode > info.versionCode) {
-                            if (isForced) {
-                                //对话框不变化
-                            } else {
+
+                            final AlertDialog.Builder builder =
+                                    new AlertDialog.Builder(context);
+                            AlertDialog dialog;
+                            builder.setTitle("版本升级");
+                            builder.setPositiveButton("确认",
+                                    new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DownloadAppUtils.downloadForAutoInstall(context, apkUrl, "下载新版本");
+                                            if (isForced) {
+                                                //无操作
+                                            } else {
+                                                queryHomePagedata();
+                                            }
+                                        }
+                                    });
+                            builder.setMessage("发现新版本");
+                            Log.d(TAG, "服务器版本" + versionCode);
+                            Log.d(TAG, "客户端版本" + info.versionCode);
+
+//                            if (isForced) {//强制升级
+//                                //对话框不变化
+//                            } else {
                                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -490,8 +498,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                         queryHomePagedata();
                                     }
                                 });
-
-                            }
+//                            }
 
                             dialog = builder.create();
                             dialog.show();

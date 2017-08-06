@@ -13,8 +13,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.tim.app.R;
-
 import java.io.File;
 
 /**
@@ -66,7 +64,7 @@ public class DownloadAppUtils {
             String filePath = null;
 
             //存储位置
-            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {//外部存储卡
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {//外部存储卡  /storage/emulated/0
                 filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             } else {
                 //TODO

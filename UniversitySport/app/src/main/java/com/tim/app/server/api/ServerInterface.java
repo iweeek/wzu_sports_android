@@ -106,12 +106,11 @@ public class ServerInterface {
      * @param isNormal
      * @param callback
      */
-    public void runningActivityData(String tag, int activityId, long acquisitionTime, int stepCount, int distance, double longitude,
+    public void runningActivityData(String tag, int activityId, int stepCount, int distance, double longitude,
                                     double latitude, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", activityId);
-        //        params.put("acquisitionTime", acquisitionTime);
         params.put("stepCount", stepCount);
         params.put("distance", distance);
         params.put("longitude", longitude);
@@ -240,37 +239,25 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-
-    /**
-     * SportResultActivity 调用
-     * // todo 接口未确定
-     * @param activityId
-     * @param callback
-     */
     public void queryAreaActivity(long activityId, ResponseCallback callback) {
-        queryStr = "{\n" +
-                "\trunningActivity(id:" + activityId + ") {\n" +
-                "   distance\n" +
-                "   costTime\n" +
-                "   qualified\n" +
-                "   qualifiedDistance" +
-                "   qualifiedCostTime" +
-                "   kcalConsumed" +
-                "   runningSport {\n" +
-                "       name\n" +
+        queryStr="{\n" +
+                "  areaActivity(id: "+activityId+") {\n" +
+                "    costTime\n" +
+                "    qualified\n" +
+                "    qualifiedCostTime\n" +
+                "    kcalConsumed\n" +
+                "    areaSport {\n" +
+                "      name\n" +
                 "    }\n" +
-                "    data{\n" +
+                "    data {\n" +
                 "      longitude\n" +
                 "      latitude\n" +
                 "      isNormal\n" +
                 "      locationType\n" +
-                "      stepCount\n" +
-                "      distance\n" +
                 "      acquisitionTime\n" +
                 "    }\n" +
                 "  }\n" +
-                "}";
-
+                "}\n";
         query(queryStr, callback);
     }
 
@@ -418,9 +405,10 @@ public class ServerInterface {
 
     public void queryAreaFixedLocationListData(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  fixLocationOutdoorSportPoints(universityId: 1)  {\n" +
+                "  fixLocationOutdoorSportPoints(universityId: 1) {\n" +
                 "    id\n" +
                 "    name\n" +
+                "    addr\n" +
                 "    latitude\n" +
                 "    longitude\n" +
                 "    radius\n" +
@@ -438,7 +426,7 @@ public class ServerInterface {
                 "    changeLog\n" +
                 "    apkUrl\n" +
                 "    isForced\n" +
-                "  }\n"+
+                "  }\n" +
                 "}";
         query(queryStr, callback);
     }

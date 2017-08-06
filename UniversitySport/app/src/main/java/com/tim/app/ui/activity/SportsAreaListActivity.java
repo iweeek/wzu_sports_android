@@ -48,7 +48,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     private SportAreaListAdapter adapter;
     private List<AreaSportList> dataList;
-    private List<AreaSportEntry> mAreaSportEntryList;
+    private AreaSportEntry areaSportEntry;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -57,9 +57,9 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     }
 
 
-    public static void start(Context context, ArrayList<AreaSportEntry> areaSportEntryArrayList){
+    public static void start(Context context, AreaSportEntry areaSportEntry){
         Intent  intent = new Intent(context,SportsAreaListActivity.class);
-        intent.putExtra("areaSportEntryArrayList", areaSportEntryArrayList);
+        intent.putExtra("areaSportEntry", areaSportEntry);
         context.startActivity(intent);
     }
     @Override
@@ -70,7 +70,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        mAreaSportEntryList = (List<AreaSportEntry>) getIntent().getSerializableExtra("areaSportEntryArrayList");
+        areaSportEntry = (AreaSportEntry) getIntent().getParcelableExtra("areaSportEntry");
     }
 
     @Override
@@ -139,6 +139,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                             AreaSportList areaSportList = new AreaSportList();
                             areaSportList.setId(jsonObject.optInt("id"));
                             areaSportList.setAreaName(jsonObject.optString("name"));
+                            areaSportList.setAddress(jsonObject.optString("addr"));
                             areaSportList.setLatitude(jsonObject.optDouble("latitude"));
                             areaSportList.setLongitude(jsonObject.optDouble("longitude"));
                             areaSportList.setRadius(jsonObject.optDouble("radius"));
@@ -210,6 +211,6 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
         /**
          * 这里的 mAreaSportEntryList 从现在服务端只提供了一个
          */
-        SportFixedLocationActivity.start(this, mAreaSportEntryList.get(0));
+        SportFixedLocationActivity.start(this, dataList.get(position),areaSportEntry);
     }
 }

@@ -80,6 +80,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/llCurrentDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -150,6 +151,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llAverageSpeed"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -222,12 +224,13 @@
                 android:id="@+id/llTargetContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@color/white"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
 
                 <LinearLayout
+                    android:id="@+id/llTargetDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -307,6 +310,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llTargetSpeed"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
@@ -389,7 +393,7 @@
             android:layout_alignParentBottom="true">
 
             <Button
-                android:id="@+id/btShare"
+                android:id="@+id/btDrawLine"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#cc66A6FE"
