@@ -481,6 +481,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         if (versionCode > info.versionCode) {
                             if (isForced) {
                                 //对话框不变化
+                                builder.setCancelable(false);
                             } else {
                                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
