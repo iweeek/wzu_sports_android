@@ -42,26 +42,26 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
 
     @Override
     public void onBindViewHolder(final BaseRecyclerViewHolder holder, final int position) {
-        //提供点击事件
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListener != null) {
-                    mListener.onItemClick(v, position, getItemId(position));
+            //提供点击事件
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onItemClick(v, position, getItemId(position));
+                    }
                 }
-            }
-        });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mLongListener != null) {
-                    return mLongListener.onItemLongClick(v, position, getItemId(position));
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mLongListener != null) {
+                        return mLongListener.onItemLongClick(v, position, getItemId(position));  //todo  这里id没有提供正确。
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
-        //调用子类重写的
-        onBindViewHolder((T) holder, position, mDataList.get(position));
+            });
+            //调用子类重写的
+            onBindViewHolder((T) holder, position, mDataList.get(position));
     }
 
 

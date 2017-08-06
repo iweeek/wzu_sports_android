@@ -8,6 +8,9 @@ import java.io.Serializable;
  */
 public class SportEntry implements Serializable {
     private static final long serialVersionUID = 6187447685293862071L;
+    public   static final  int AREA_SPORT = 1;
+    public static  final  int RUNNING_SPORT = 2;
+
     private String sportName;//名称
     private int participantNum;//参加人数
     private int targetDistance;//目标距离

@@ -3,16 +3,13 @@ package com.tim.app.ui.adapter;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 
-import com.application.library.widget.RatioImageView;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
-import com.tim.app.RT;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.ui.adapter.viewholder.ViewHolder;
 import com.tim.app.util.BitmapLoader;
 
 import java.util.List;
@@ -38,7 +35,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder
-                holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null));
+                holder = new ViewHolder(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null));
         return holder;
     }
 
@@ -50,54 +47,37 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
 
         final ViewHolder holder = (ViewHolder) mHolder;
         if (!TextUtils.isEmpty(data.getBgUrl())) {
-            BitmapLoader.ins().loadImage(data.getBgUrl(), R.drawable.ic_def_empty, holder.rivSportBg);
+            BitmapLoader.ins().loadImage(data.getBgUrl(), R.drawable.ic_def_empty, (ImageView) holder.findView(R.id.rivSportBg));
         } else {
-            holder.rivSportBg.setBackground(mContext.getResources().getDrawable(data.getBgDrawableId()));
+            holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
         }
 
         if (!TextUtils.isEmpty(data.getSportName())) {
-            holder.tvSportName.setText(data.getSportName());
+            holder.setText(R.id.tvSportName, data.getSportName());
         }
 
-        if (data.getParticipantNum() > 0) {
-            holder.tvSportJoinNumber.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
-        }
+        if (SportEntry.RUNNING_SPORT == data.getType()) {
+
+            if (data.getParticipantNum() > 0) {
+                holder.setText(R.id.tvSportJoinNumber, mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
+            }
 
 
-        if (data.getTargetDistance() > 0) {
-            holder.tvTargetDistance.setText(mContext.getString(R.string.percent, String.valueOf(data.getTargetDistance()))+"米");
-        }
-        if (data.getTargetTime() > 0) {
-            holder.tvTargetTime.setText(mContext.getString(R.string.percent, String.valueOf(data.getTargetTime()))+"分");
-        }
+            if (data.getTargetDistance() > 0) {
+                /** TODO: 这里 {@link R.string.percent}    需要改掉，统一使用 %s米  */
+                holder.setText(R.id.tvTargetDistance, mContext.getString(R.string.percent, String.valueOf(data.getTargetDistance())) + "米");
+            }
+            if (data.getTargetTime() > 0) {
+                holder.setText(R.id.tvTargetTime, mContext.getString(R.string.percent, String.valueOf(data.getTargetTime())) + "分");
+            }
 
-        holder.tvTargetTitle.setText(mContext.getString(R.string.targetTitleSpeed));
-        holder.tvTargetValue.setText(mContext.getString(R.string.percent,data.getTargetSpeed())+"米/秒");
-
-
-    }
-
-    public class ViewHolder extends BaseRecyclerViewHolder {
-        RatioImageView rivSportBg;
-        TextView tvSportName;
-        TextView tvSportJoinNumber;
-        TextView tvTargetDistance;
-        TextView tvTargetTime;
-        TextView tvTargetTitle;
-        TextView tvTargetValue;
-        RelativeLayout rlContainer;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            rivSportBg = (RatioImageView) itemView.findViewById(R.id.rivSportBg);
-            tvSportName = (TextView) itemView.findViewById(R.id.tvSportName);
-            tvSportJoinNumber = (TextView) itemView.findViewById(R.id.tvSportJoinNumber);
-            tvTargetDistance = (TextView) itemView.findViewById(R.id.tvTargetDistance);
-            tvTargetTime = (TextView) itemView.findViewById(R.id.tvTargetTime);
-            tvTargetTitle = (TextView) itemView.findViewById(R.id.tvTargetTitle);
-            tvTargetValue = (TextView) itemView.findViewById(R.id.tvTargetValue);
-            rlContainer = (RelativeLayout) itemView.findViewById(R.id.rlContainer);
-            rlContainer.setLayoutParams(new RelativeLayout.LayoutParams(RT.getScreenWidth(),(int)(RT.getScreenWidth()*0.43)));
+            if (!data.getTargetSpeed().equals("") || data.getTargetSpeed() != null) {
+                holder.setText(R.id.tvTargetValue, mContext.getString(R.string.percent, data.getTargetSpeed()) + "米/秒");
+            }
+        } else if (SportEntry.AREA_SPORT == data.getType()) {
+            holder.setVisible(R.id.llBottom, false);
         }
     }
+
+
 }

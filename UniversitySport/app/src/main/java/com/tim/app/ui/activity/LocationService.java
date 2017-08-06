@@ -18,9 +18,7 @@ import com.application.library.log.DLOG;
 
 import java.util.ArrayList;
 
-/**
- *
- */
+
 public class LocationService extends Service {
 
     private static final String TAG = "LocationService";

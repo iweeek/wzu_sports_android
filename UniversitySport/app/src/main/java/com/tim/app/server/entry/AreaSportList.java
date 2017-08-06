@@ -4,7 +4,7 @@ package com.tim.app.server.entry;
 import java.io.Serializable;
 
 /**
- * 运动区域
+ * 运动区域列表项
  */
 public class AreaSportList implements Serializable {
 

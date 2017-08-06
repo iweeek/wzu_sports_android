@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * @创建者 倪军
  * @创建时间 2017/7/31
- * @描述 区域定点运动运动项目实体类
+ * @描述 区域定点运动运动项目实体类  ---对应 SPortFixedLocationActivity
  */
 
 
