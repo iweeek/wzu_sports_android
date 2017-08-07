@@ -49,7 +49,6 @@ import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
@@ -102,7 +101,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private View rlAnimView;
 
     /*重要实体*/
-    private SportEntry mAreaSportEntry;//创建areaActivity的时候要用到
+    private SportEntry sportEntry;//创建areaActivity的时候要用到
     private FixLocationOutdoorSportPoint mFixLocationOutdoorSportPoint;
     private LatLng oldLatLng = null;
 
@@ -183,7 +182,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         initGPS();
 
-        mAreaSportEntry = (SportEntry) getIntent().getParcelableExtra("areaSportEntry");
+        sportEntry = (SportEntry) getIntent().getSerializableExtra("areaSportEntry");
         mFixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getParcelableExtra("fixLocationOutdoorSportPoint");
         Log.d(TAG, "mFixLocationOutdoorSportPoint:" + mFixLocationOutdoorSportPoint);
 
@@ -561,7 +560,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
-                    ServerInterface.instance().areaActivities(TAG, mAreaSportEntry.getId(), studentId, new JsonResponseCallback() {
+                    ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), studentId, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             if (errCode == 0) {
