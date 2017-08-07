@@ -403,7 +403,7 @@ public class ServerInterface {
         query(queryStr, callback);
     }
 
-    public void queryAreaFixedLocationListData(int universityId, ResponseCallback callback) {
+    public void queryAreaFixedLocationList(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
                 "  fixLocationOutdoorSportPoints(universityId: 1) {\n" +
                 "    id\n" +

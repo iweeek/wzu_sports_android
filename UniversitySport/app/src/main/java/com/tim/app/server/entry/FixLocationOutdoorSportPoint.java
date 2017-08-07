@@ -7,7 +7,7 @@ import android.os.Parcelable;
 /**
  * 运动区域列表项
  */
-public class AreaSportList implements  Parcelable {
+public class FixLocationOutdoorSportPoint implements  Parcelable {
 
     private static final long serialVersionUID = 6187447685293862071L;
     private  Integer id;
@@ -85,7 +85,7 @@ public class AreaSportList implements  Parcelable {
 
     @Override
     public String toString() {
-        return "AreaSportList{" +
+        return "FixLocationOutdoorSportPoint{" +
                 "id=" + id +
                 ", areaName='" + areaName + '\'' +
                 ", address='" + address + '\'' +
@@ -114,10 +114,10 @@ public class AreaSportList implements  Parcelable {
         dest.writeInt(this.universityId);
     }
 
-    public AreaSportList() {
+    public FixLocationOutdoorSportPoint() {
     }
 
-    protected AreaSportList(Parcel in) {
+    protected FixLocationOutdoorSportPoint(Parcel in) {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.areaName = in.readString();
         this.address = in.readString();
@@ -128,15 +128,15 @@ public class AreaSportList implements  Parcelable {
         this.universityId = in.readInt();
     }
 
-    public static final Parcelable.Creator<AreaSportList> CREATOR = new Parcelable.Creator<AreaSportList>() {
+    public static final Parcelable.Creator<FixLocationOutdoorSportPoint> CREATOR = new Parcelable.Creator<FixLocationOutdoorSportPoint>() {
         @Override
-        public AreaSportList createFromParcel(Parcel source) {
-            return new AreaSportList(source);
+        public FixLocationOutdoorSportPoint createFromParcel(Parcel source) {
+            return new FixLocationOutdoorSportPoint(source);
         }
 
         @Override
-        public AreaSportList[] newArray(int size) {
-            return new AreaSportList[size];
+        public FixLocationOutdoorSportPoint[] newArray(int size) {
+            return new FixLocationOutdoorSportPoint[size];
         }
     };
 }

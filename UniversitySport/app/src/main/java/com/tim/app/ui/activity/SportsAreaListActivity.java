@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -22,8 +23,7 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.AreaSportEntry;
-import com.tim.app.server.entry.AreaSportList;
+import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.adapter.SportAreaListAdapter;
 
@@ -48,8 +48,8 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     private EmptyLayout emptyLayout;
 
     private SportAreaListAdapter adapter;
-    private List<AreaSportList> dataList;
-    private AreaSportEntry areaSportEntry;
+    private List<FixLocationOutdoorSportPoint> dataList;
+    private SportEntry areaSportEntry;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -59,7 +59,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
 
     public static void start(Context context, SportEntry areaSportEntry){
-        Intent  intent = new Intent(context,SportsAreaListActivity.class);
+        Intent intent = new Intent(context,SportsAreaListActivity.class);
         intent.putExtra("areaSportEntry", areaSportEntry);
         context.startActivity(intent);
     }
@@ -71,7 +71,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        areaSportEntry = (AreaSportEntry) getIntent().getParcelableExtra("areaSportEntry");
+        areaSportEntry = (SportEntry) getIntent().getSerializableExtra("areaSportEntry");
     }
 
     @Override
@@ -125,7 +125,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
      * 查询区域运动记录
      */
     public void queryAreaSportData() {
-        ServerInterface.instance().queryAreaFixedLocationListData(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryAreaFixedLocationList(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache)
             {
@@ -137,17 +137,17 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                         for (int i = 0; i < sportArray.length(); i++)
                         {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
-                            AreaSportList areaSportList = new AreaSportList();
-                            areaSportList.setId(jsonObject.optInt("id"));
-                            areaSportList.setAreaName(jsonObject.optString("name"));
-                            areaSportList.setAddress(jsonObject.optString("addr"));
-                            areaSportList.setLatitude(jsonObject.optDouble("latitude"));
-                            areaSportList.setLongitude(jsonObject.optDouble("longitude"));
-                            areaSportList.setRadius(jsonObject.optDouble("radius"));
-                            areaSportList.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
-                            areaSportList.setUniversityId(jsonObject.optInt("universityId"));
+                            FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint = new FixLocationOutdoorSportPoint();
+                            fixLocationOutdoorSportPoint.setId(jsonObject.optInt("id"));
+                            fixLocationOutdoorSportPoint.setAreaName(jsonObject.optString("name"));
+                            fixLocationOutdoorSportPoint.setAddress(jsonObject.optString("addr"));
+                            fixLocationOutdoorSportPoint.setLatitude(jsonObject.optDouble("latitude"));
+                            fixLocationOutdoorSportPoint.setLongitude(jsonObject.optDouble("longitude"));
+                            fixLocationOutdoorSportPoint.setRadius(jsonObject.optDouble("radius"));
+                            fixLocationOutdoorSportPoint.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
+                            fixLocationOutdoorSportPoint.setUniversityId(jsonObject.optInt("universityId"));
                             //还差 isSelected desc
-                            dataList.add(areaSportList);
+                            dataList.add(fixLocationOutdoorSportPoint);
                             wrvArea.setAdapter(adapter);
                             adapter.setOnItemClickListener(context);
                             adapter.notifyDataSetChanged();
@@ -212,6 +212,6 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
         /**
          * 这里的 mAreaSportEntryList 从现在服务端只提供了一个
          */
-        SportFixedLocationActivity.start(this, dataList.get(position),areaSportEntry);
+        SportFixedLocationActivity.start(this, dataList.get(position), areaSportEntry);
     }
 }

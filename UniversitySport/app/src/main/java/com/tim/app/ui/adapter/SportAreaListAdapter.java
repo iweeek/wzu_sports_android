@@ -8,19 +8,19 @@ import android.view.ViewGroup;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
-import com.tim.app.server.entry.AreaSportList;
+import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.ui.adapter.viewholder.ViewHolder;
 
 import java.util.List;
 
 
-public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, AreaSportList>
+public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, FixLocationOutdoorSportPoint>
         implements BaseRecyclerAdapter.OnItemClickListener {
 
     private Context mContext;
     private static final String TAG = "SportAreaListAdapter";
 
-    public SportAreaListAdapter(Context mContext, List<AreaSportList> mDataList) {
+    public SportAreaListAdapter(Context mContext, List<FixLocationOutdoorSportPoint> mDataList) {
         super(mDataList);
         this.mContext = mContext;
 
@@ -35,7 +35,7 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, AreaSp
 
 
     @Override
-    public void onBindViewHolder(com.tim.app.ui.adapter.viewholder.ViewHolder holder, int position, AreaSportList data) {
+    public void onBindViewHolder(com.tim.app.ui.adapter.viewholder.ViewHolder holder, int position, FixLocationOutdoorSportPoint data) {
         if (data == null) {
             return;
         }

@@ -50,9 +50,10 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.AreaSportEntry;
-import com.tim.app.server.entry.AreaSportList;
+import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
@@ -60,6 +61,8 @@ import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.TimeUtil;
 
 import org.json.JSONObject;
+
+import static com.tim.app.ui.activity.MainActivity.studentId;
 
 /**
  * @创建者 倪军
@@ -69,7 +72,7 @@ import org.json.JSONObject;
 public class SportFixedLocationActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
 
     /*全局变量*/
-    private static final String TAG = "SportFixedLocationActivity";
+    private static final String TAG = "FixLocationActivity";
     private Context context = this;
 
     /*三方控件*/
@@ -99,8 +102,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private View rlAnimView;
 
     /*重要实体*/
-    private AreaSportEntry mAreaSportEntry;//创建areaActivity的时候要用到
-    private AreaSportList mAreaSportList;
+    private SportEntry mAreaSportEntry;//创建areaActivity的时候要用到
+    private FixLocationOutdoorSportPoint mFixLocationOutdoorSportPoint;
     private LatLng oldLatLng = null;
 
     /*初始化变量*/
@@ -114,7 +117,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private long elapseTime = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
-    private int studentId = 2;//TODO 需要从认证信息中获取
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
     private int areaSportRecordId; //注意，这里的id指的是服务端数据库中这条记录的ID。
 
@@ -142,12 +144,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     };
 
 
-    public static void start(Context context, AreaSportList areaSportList, AreaSportEntry areaSportEntry) {
+    public static void start(Context context, FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint, SportEntry areaSportEntry) {
         Intent intent = new Intent(context, SportFixedLocationActivity.class);
         intent.putExtra("areaSportEntry", areaSportEntry);
-        intent.putExtra("areaSportList", areaSportList);
+        intent.putExtra("fixLocationOutdoorSportPoint", fixLocationOutdoorSportPoint);
         Log.d(TAG, "areaSportEntry:" + areaSportEntry);
-        Log.d(TAG, "areaSportList:" + areaSportList);
+        Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
         context.startActivity(intent);
     }
 
@@ -181,9 +183,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         initGPS();
 
-        mAreaSportEntry = (AreaSportEntry) getIntent().getParcelableExtra("areaSportEntry");
-        mAreaSportList = (AreaSportList) getIntent().getParcelableExtra("areaSportList");
-        Log.d(TAG, "mAreaSportList:" + mAreaSportList);
+        mAreaSportEntry = (SportEntry) getIntent().getParcelableExtra("areaSportEntry");
+        mFixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getParcelableExtra("fixLocationOutdoorSportPoint");
+        Log.d(TAG, "mFixLocationOutdoorSportPoint:" + mFixLocationOutdoorSportPoint);
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -225,11 +227,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(mAreaSportList.getAreaName())) {
-            tvAreaName.setText(mAreaSportList.getAreaName());
+        if (!TextUtils.isEmpty(mFixLocationOutdoorSportPoint.getAreaName())) {
+            tvAreaName.setText(mFixLocationOutdoorSportPoint.getAreaName());
         }
-        if (mAreaSportList.getQualifiedCostTime() > 0) {
-            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(mAreaSportList.getQualifiedCostTime() / 60)));
+        if (mFixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
+            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(mFixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
         } else {
             tvTargetTime.setText("-");
         }
