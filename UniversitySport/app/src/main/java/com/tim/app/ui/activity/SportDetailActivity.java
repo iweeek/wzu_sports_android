@@ -351,6 +351,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Log.d(TAG, "onMyLocationChange location: " + location);
         DLOG.openInternalFile(this);
 
+        Log.d(TAG, "state:" + state);
         String toastText = "";
         int errorCode = -1;
         String errorInfo = "";
@@ -375,7 +376,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             getWindow().setAttributes(params);
             Log.d(TAG, "onMyLocationChange turn down light");
         }
-
         if (location != null) {
             Log.d(TAG, "locationType:" + locationType);
             //定位成功
@@ -405,7 +405,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     btStart.setVisibility(View.VISIBLE);
                 }
             }
-
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 DLOG.writeToInternalFile(msg);
@@ -828,6 +827,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void runningActivitiesEnd(final int runningSportId, final int studentId, final long targetFinishedTime) {
         //必须先初始化。
         SQLite.init(context, RunningSportsCallback.getInstance());
+        Log.d(TAG, "runningActivitiesEnd");
         //提交本次运动数据，更新UI
         ServerInterface.instance().runningActivitiesEnd(
                 TAG, sportRecordId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {

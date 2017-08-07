@@ -314,6 +314,9 @@ public class SportResultActivity extends BaseActivity {
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
+                        tvSportName.setText(jsonObject.getJSONObject("areaSport")
+                                .getString("name"));
+
                         elapseTime = jsonObject.getLong("costTime");
                         String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
                         tvElapseTime.setText(time);
