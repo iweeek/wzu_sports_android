@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -25,11 +26,15 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.maps.utils.SpatialRelationUtil;
+import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -40,6 +45,7 @@ import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.MarkerOverlay;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,9 +53,7 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
+import java.util.List;
 
 
 /**
@@ -61,9 +65,6 @@ public class SportResultActivity extends BaseActivity {
     private Context context = this;
 
     private HistorySportEntry historyEntry;
-
-    private MapView mapView;
-    private AMap aMap;
 
     private LatLng oldLatLng = null;
     private int interval = 0;
@@ -87,11 +88,13 @@ public class SportResultActivity extends BaseActivity {
     private ImageView ivLocation;
     private ImageView ibMenu;
     private LinearLayout llTargetContainer;
+    private Button btTest;
 
 
     private RelativeLayout rlBottom;
     private Button btDrawLine;
     private LinearLayout llBottom;
+    private LinearLayout llLacationHint;
     private Button btContinue;
     private Button btStop;
     private SlideUnlockView slideUnlockView;
@@ -100,7 +103,6 @@ public class SportResultActivity extends BaseActivity {
     private RelativeLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
     private TextView tvTitle;
-
     private TextView tvPause;
 
     private int currentDistance = 0;
@@ -109,19 +111,17 @@ public class SportResultActivity extends BaseActivity {
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
 
-    private int initSteps = 0;//初始化的步数
+
+    //高德地图相关
+    private MarkerOverlay markerOverlay;
+    private AMap aMap;
+    private MapView mapView;
+    private LatLng center = new LatLng(39.993167, 116.473274);// 中心点
+    private Button btncenter;
+    private Button btnzoom;
+    private List<LatLng> pointList = new ArrayList<LatLng>();
 
     private float zoomLevel = 15;//地图缩放级别，范围3-19,越大越精细
-    JsonResponseCallback callback;
-    private int screenOffTimeout;
-    private int screenKeepLightTime;
-
-    private LinearLayout llLacationHint;
-    private final ScheduledExecutorService scheduler =
-            Executors.newScheduledThreadPool(1);
-    private Runnable elapseTimeRunnable;
-    private ScheduledFuture<?> timerHandler;
-    private long timerInterval = 1000;
 
 
     class DrawPoint {
@@ -154,6 +154,7 @@ public class SportResultActivity extends BaseActivity {
     }
 
     private ArrayList<DrawPoint> drawPoints = new ArrayList<DrawPoint>();
+    private List<LatLng> points = new ArrayList<LatLng>();
 
     private Animation showAnimation;
     private Animation hideAnimation;
@@ -212,7 +213,7 @@ public class SportResultActivity extends BaseActivity {
     private void setUpMap() {
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.getUiSettings().setCompassEnabled(true);
-        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.getUiSettings().setZoomControlsEnabled(true);
         aMap.setMyLocationEnabled(false);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
     }
 
@@ -283,12 +284,12 @@ public class SportResultActivity extends BaseActivity {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
                             return true;
                         }
-
                         //画线
                         for (int i = 0; i < jsonArray.length(); i++) {
                             LatLng ll = new LatLng(jsonArray.getJSONObject(i).getDouble("latitude"),
                                     jsonArray.getJSONObject(i).getDouble("longitude"));
                             DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getInt("locationType"));
+                            points.add(ll);
                             drawPoints.add(dp);
                         }
 
@@ -408,6 +409,7 @@ public class SportResultActivity extends BaseActivity {
                                     jsonArray.getJSONObject(i).getDouble("longitude"));
                             DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getBoolean("isNormal"),
                                     jsonArray.getJSONObject(i).getInt("locationType"));
+                            points.add(ll);
                             drawPoints.add(dp);
                         }
 
@@ -520,7 +522,6 @@ public class SportResultActivity extends BaseActivity {
                     .add(oldData, newData)
                     .geodesic(true).color(Color.RED));
         }
-
     }
 
     private void drawLine(LatLng oldData, LatLng newData) {
@@ -551,6 +552,7 @@ public class SportResultActivity extends BaseActivity {
                 btDrawLine.setVisibility(View.GONE);
 
                 LatLng ll = oldLatLng;
+
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 if (historyEntry instanceof HistoryAreaSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
@@ -561,7 +563,7 @@ public class SportResultActivity extends BaseActivity {
                                     ", i: " + i);
                         }
                     }
-                } else if(historyEntry instanceof HistoryRunningSportEntry){
+                } else if (historyEntry instanceof HistoryRunningSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
                         if (drawPoints.get(i).getLocationType() == 1 && drawPoints.get(i).isNormal()) {
                             drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
@@ -571,6 +573,34 @@ public class SportResultActivity extends BaseActivity {
                         }
                     }
                 }
+
+                //运动轨迹动态跟踪
+                if (points.size() > 1) {
+                    // 获取轨迹坐标点
+                    initPointList(points);
+                    //                    LatLngBounds bounds = getLatLngBounds(points.get(0), pointList);//以中心点缩放
+                    LatLngBounds bounds = getLatLngBounds(pointList);  //根据提供的点缩放至屏幕可见范围。
+
+                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                    //                    aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+
+                    SmoothMoveMarker smoothMarker = new SmoothMoveMarker(aMap);
+                    // 设置滑动的图标
+                    smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
+
+                    LatLng drivePoint = points.get(0);
+                    Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(points, drivePoint);
+                    points.set(pair.first, drivePoint);
+                    List<LatLng> subList = points.subList(pair.first, points.size());
+
+                    // 设置滑动的轨迹左边点
+                    smoothMarker.setPoints(subList);
+                    // 设置滑动的总时间
+                    smoothMarker.setTotalDuration(10);
+                    // 开始滑动
+                    smoothMarker.startSmoothMove();
+                }
+
 
                 if (drawPoints.size() > 0) {
                     Marker marker = aMap.addMarker(new MarkerOptions().position(drawPoints.get(drawPoints.size() - 1).getLL()).title("终点"));
@@ -583,6 +613,12 @@ public class SportResultActivity extends BaseActivity {
                 aMap.moveCamera(cu);
                 String toastText = "移动屏幕，当前位置居中";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                break;
+            case R.id.btTest:
+                markerOverlay = new MarkerOverlay(aMap, points, points.get(0));
+                markerOverlay.addToMap();
+                markerOverlay.zoomToSpanWithCenter();
+                zoomToSpanWithCenter();
                 break;
             //            case ivShowSportInfo:
             //                if (null == showAnimation) {
@@ -630,6 +666,41 @@ public class SportResultActivity extends BaseActivity {
             //                break;
         }
 
+    }
+
+    //初始化list
+    private void initPointList(List<LatLng> points) {
+        if (points != null && points.size() > 0) {
+            for (LatLng point : points) {
+                pointList.add(point);
+            }
+        }
+    }
+
+    //根据中心点和自定义内容获取缩放bounds
+    private LatLngBounds getLatLngBounds(LatLng centerpoint, List<LatLng> pointList) {
+        LatLngBounds.Builder b = LatLngBounds.builder();
+        if (centerpoint != null) {
+            for (int i = 0; i < pointList.size(); i++) {
+                LatLng p = pointList.get(i);
+                LatLng p1 = new LatLng((centerpoint.latitude * 2) - p.latitude, (centerpoint.longitude * 2) - p.longitude);
+                b.include(p);
+                b.include(p1);
+            }
+        }
+        return b.build();
+    }
+
+    /**
+     * 根据自定义内容获取缩放bounds
+     */
+    private LatLngBounds getLatLngBounds(List<LatLng> pointList) {
+        LatLngBounds.Builder b = LatLngBounds.builder();
+        for (int i = 0; i < pointList.size(); i++) {
+            LatLng p = pointList.get(i);
+            b.include(p);
+        }
+        return b.build();
     }
 
     @Override
@@ -691,6 +762,9 @@ public class SportResultActivity extends BaseActivity {
             ibMenu.setImageDrawable(getDrawable(R.drawable.ic_back_white));
         }
         ibMenu.setOnClickListener(this);
+
+        btTest = (Button) findViewById(R.id.btTest);
+        btTest.setOnClickListener(this);
     }
 
 
@@ -732,4 +806,27 @@ public class SportResultActivity extends BaseActivity {
     protected int getLayoutId() {
         return R.layout.activity_sport_result;
     }
+
+    private List<LatLng> getPointList() {
+        List<LatLng> pointList = new ArrayList<LatLng>();
+        pointList.add(new LatLng(39.993755, 116.467987));
+        pointList.add(new LatLng(39.985589, 116.469306));
+        pointList.add(new LatLng(39.990946, 116.48439));
+        pointList.add(new LatLng(40.000466, 116.463384));
+        pointList.add(new LatLng(39.975426, 116.490079));
+        pointList.add(new LatLng(40.016392, 116.464343));
+        pointList.add(new LatLng(39.959215, 116.464882));
+        pointList.add(new LatLng(39.962136, 116.495418));
+        pointList.add(new LatLng(39.994012, 116.426363));
+        pointList.add(new LatLng(39.960666, 116.444798));
+        pointList.add(new LatLng(39.972976, 116.424517));
+        pointList.add(new LatLng(39.951329, 116.455913));
+        return pointList;
+    }
+
+    private void zoomToSpanWithCenter() {
+        markerOverlay.zoomToSpanWithCenter();
+    }
+
+
 }

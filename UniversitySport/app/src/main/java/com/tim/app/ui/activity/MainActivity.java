@@ -486,9 +486,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initData() {
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
-
             private JSONObject latestAndroidVersionInfo;
-
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 //                String versionName = "";
@@ -496,7 +494,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 //                String changeLog = "";
                 //                String apkUrl = "";
                 //                boolean isForced = false;
-
                 if (errCode == 0) {
                     try {
                         latestAndroidVersionInfo = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo");
@@ -508,7 +505,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-
                         if (versionCode > info.versionCode) {
 
                             final AlertDialog.Builder builder =
@@ -575,7 +571,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private void queryHomePagedata() {
         queryRunningSport();
         queryCurTermData();
-
     }
 
     @Override
