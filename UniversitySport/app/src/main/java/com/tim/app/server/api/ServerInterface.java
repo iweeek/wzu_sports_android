@@ -443,7 +443,6 @@ public class ServerInterface {
                 " areaSports(universityId:1){\n" +
                 "    id\n" +
                 "    name\n" +
-                "    isEnable\n" +
                 "    qualifiedCostTime\n" +
                 "    acquisitionInterval\n" +
                 "    universityId\n" +

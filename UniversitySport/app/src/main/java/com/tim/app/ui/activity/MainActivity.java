@@ -290,7 +290,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 if (errCode == 0) {
                     JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
                     try {
-                        for (int i = 0; i < sportArray.length(); i++) {//这里定死了4个
+                        for (int i = 0; i < sportArray.length(); i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
                             int runningSportId = jsonObject.getInt("id");
                             int distance = jsonObject.optInt("qualifiedDistance", 1000);
@@ -359,9 +359,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         emptyLayout.showEmpty();
                         e.printStackTrace();
                     }
+                    queryAreaSport();
                     return true;
                 } else {
-                    emptyLayout.showEmptyOrError(errCode);
+//                    emptyLayout.showEmptyOrError(errCode);
                     return false;
                 }
             }
@@ -511,6 +512,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             Log.d(TAG, "客户端版本" + info.versionCode);
 
                             if (isForced) {//强制升级
+                                builder.setCancelable(false);
                                 //对话框不变化
                             } else {
                                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -552,7 +554,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private void queryHomePagedata() {
         queryRunningSport();
         queryCurTermData();
-        queryAreaSport();
+
     }
 
     @Override
