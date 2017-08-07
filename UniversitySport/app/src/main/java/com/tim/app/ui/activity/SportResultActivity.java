@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -84,6 +85,7 @@ public class SportResultActivity extends BaseActivity {
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
+    private ImageView ibMenu;
     private LinearLayout llTargetContainer;
 
 
@@ -305,8 +307,10 @@ public class SportResultActivity extends BaseActivity {
                         boolean qualified = jsonObject.getBoolean("qualified");
                         if (qualified) {
                             tvResult.setText("达标");
+                            tvResult.setTextColor(Color.GREEN);
                         } else {
                             tvResult.setText("未达标");
+                            tvResult.setTextColor(Color.RED);
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
@@ -422,8 +426,10 @@ public class SportResultActivity extends BaseActivity {
                         boolean qualified = jsonObject.getBoolean("qualified");
                         if (qualified) {
                             tvResult.setText("达标");
+                            tvResult.setTextColor(Color.GREEN);
                         } else {
                             tvResult.setText("未达标");
+                            tvResult.setTextColor(Color.RED);
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
@@ -535,19 +541,16 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibBack:
+            case R.id.ibMenu:
                 finish();
                 break;
             case R.id.btDrawLine:
                 btDrawLine.setVisibility(View.GONE);
-                //                aMap.addPolyline(new PolylineOptions().
-                //                        addAll(drawPoints.get).width(10).color(Color.argb(255, 1, 1, 1)));
 
                 LatLng ll = oldLatLng;
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
                 if (historyEntry instanceof HistoryAreaSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
-
                         if (drawPoints.get(i).getLocationType() == 1) {
                             drawLine(ll, drawPoints.get(i).getLL());
                             ll = drawPoints.get(i).getLL();
@@ -571,8 +574,6 @@ public class SportResultActivity extends BaseActivity {
                 } else {
 
                 }
-
-                Toast.makeText(this, "此功能正在完善。", Toast.LENGTH_SHORT);
                 break;
             case R.id.ivLocation:
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
@@ -636,6 +637,7 @@ public class SportResultActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
         llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
         llLacationHint.setVisibility(View.GONE);
 
@@ -658,6 +660,7 @@ public class SportResultActivity extends BaseActivity {
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        ibMenu = (ImageView) findViewById(R.id.ibMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
         tvResult = (TextView) findViewById(R.id.tvResult);
@@ -681,7 +684,10 @@ public class SportResultActivity extends BaseActivity {
         btDrawLine.setVisibility(View.VISIBLE);
 
         ivLocation.setOnClickListener(this);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ibMenu.setImageDrawable(getDrawable(R.drawable.ic_back_white));
+        }
+        ibMenu.setOnClickListener(this);
     }
 
 

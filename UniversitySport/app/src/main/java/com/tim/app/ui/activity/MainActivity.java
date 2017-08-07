@@ -345,6 +345,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 //                                sportEntry.setSportName(jsonObject.optString("", "区域锻炼"));
 //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_area);
 //                            }
+
                             sportEntryDataList.add(sportEntry);
                         }
                         wrvSportType.setAdapter(adapter);

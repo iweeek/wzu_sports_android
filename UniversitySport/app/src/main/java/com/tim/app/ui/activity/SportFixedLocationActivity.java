@@ -49,6 +49,7 @@ import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
@@ -61,7 +62,13 @@ import com.tim.app.util.TimeUtil;
 
 import org.json.JSONObject;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
 import static com.tim.app.ui.activity.MainActivity.studentId;
+
 
 /**
  * @创建者 倪军
@@ -122,6 +129,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private int screenOffTimeout;
     private int screenKeepLightTime;
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private Runnable elapseTimeRunnable;
+    private ScheduledFuture<?> timerHandler;
+    private long timerInterval = 1000;
+
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
 
 
@@ -129,7 +141,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private LocationService.MyBinder myBinder = null;
 
     private ServiceConnection connection = new ServiceConnection() {
-
         @Override
         public void onServiceDisconnected(ComponentName name) {
         }
@@ -138,7 +149,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         public void onServiceConnected(ComponentName name, IBinder service) {
             DLOG.d(TAG, "onServiceConnected name: " + name + ", service: " + service);
             myBinder = (LocationService.MyBinder) service;
-            myBinder.startLocationInService(interval);
+            myBinder.startLocationInService(acquisitionInterval);
         }
     };
 
@@ -240,14 +251,26 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         //        }
 
 
-        elapseTime = 0;
-        tvElapsedTime.setText(String.valueOf(elapseTime / 60));
-
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
+
+        elapseTimeRunnable = new Runnable() {
+            public void run() {
+                // If you need update UI, simply do this:
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        // update your UI component here.
+                        elapseTime += timerInterval / 1000;
+                        Log.d(TAG, "elapseTime: " + elapseTime);
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapsedTime.setText(time);
+                    }
+                });
+            }
+        };
 
         // 设置滑动解锁-解锁的监听
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
@@ -263,9 +286,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
-                        if (state == STATE_PAUSE) {
-                            state = STATE_END;
-                        }
 
                         //做保护
                         if (elapseTime != 0) {
@@ -343,12 +363,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private void setupLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-        myLocationStyle.interval(interval);
+        myLocationStyle.interval(acquisitionInterval);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.drawable.navi_map_gps_locked));
+        //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW) ;
         aMap.setMyLocationStyle(myLocationStyle);
     }
-
 
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
@@ -364,7 +384,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     .add(oldData, newData)
                     .geodesic(true).color(Color.RED));
         }
-
     }
 
     @Override

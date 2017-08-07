@@ -150,7 +150,6 @@ public class EventManager {
                         item.getListener()
                                 .handleMessage(item.getWhat(), item.getArg1(), item.getArg2(), item.getData());
                         item.setData(null);
-
                     }
                     synchronized (lock) {
                         lock.wait();

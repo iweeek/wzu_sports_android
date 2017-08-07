@@ -148,8 +148,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int screenKeepLightTime;
     private LinearLayout llLacationHint;
 
-    private final ScheduledExecutorService scheduler =
-            Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
@@ -222,6 +221,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private void stopTimer() {
         timerHandler.cancel(true);
+        scheduler.shutdown();
     }
 
     private void initGPS() {
