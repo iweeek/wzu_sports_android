@@ -506,7 +506,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                             }
                                         }
                                     });
-                            builder.setMessage("发现新版本");
+                            builder.setMessage(changeLog);
                             Log.d(TAG, "服务器版本" + versionCode);
                             Log.d(TAG, "客户端版本" + info.versionCode);
 
