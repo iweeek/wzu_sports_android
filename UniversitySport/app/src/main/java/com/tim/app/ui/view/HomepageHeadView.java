@@ -52,6 +52,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
         rlSecond = (RelativeLayout) findViewById(R.id.rlSecond);
         rlSecond.setOnClickListener(this);
+        rlHeadView = (RelativeLayout) findViewById(R.id.rlHeadView);
+        rlHeadView.setOnClickListener(this);
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
         rlRank.setOnClickListener(this);
         rlTop = (RelativeLayout) findViewById(R.id.rlTop);
@@ -69,10 +71,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
                 Intent intent = new Intent(getContext(), SchoolRankingActivity.class);
                 getContext().startActivity(intent);
                 break;
-            case R.id.rlTop:
-                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
-                break;
-            case R.id.rlSecond:
+            //            case R.id.rlTop:
+            //                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
+            //                break;
+            //            case R.id.rlSecond:
+            //                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
+            //                break;
+            case R.id.rlHeadView:
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
         }
@@ -100,10 +105,9 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
     /**
      * 刷新界面
-     *
      */
     public void setData(String curTermSportCount, String KcalComsuption, String costedTime,
-                        String curTermQualifiedTimes,String curTermTargetCount) {
+                        String curTermQualifiedTimes, String curTermTargetCount) {
         tvCurTermAccuTimes.setText(getContext().getString(R.string.percent, curTermSportCount));
         tvAccumulCostEnergy.setText(getContext().getString(R.string.percent, KcalComsuption));
         tvAccumulCostTime.setText((getContext().getString(R.string.percent, costedTime)));
@@ -114,7 +118,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         float t = Float.valueOf(curTermTargetCount);
         float r = q / t;
 
-        pbReachTargetTimes.setProgress((int)(r * 100));
+        pbReachTargetTimes.setProgress((int) (r * 100));
     }
 
 }

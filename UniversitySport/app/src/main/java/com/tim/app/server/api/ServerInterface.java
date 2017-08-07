@@ -97,7 +97,6 @@ public class ServerInterface {
      *
      * @param tag
      * @param activityId
-     * @param acquisitionTime
      * @param stepCount
      * @param distance
      * @param longitude
@@ -240,8 +239,8 @@ public class ServerInterface {
     }
 
     public void queryAreaActivity(long activityId, ResponseCallback callback) {
-        queryStr="{\n" +
-                "  areaActivity(id: "+activityId+") {\n" +
+        queryStr = "{\n" +
+                "  areaActivity(id: " + activityId + ") {\n" +
                 "    costTime\n" +
                 "    qualified\n" +
                 "    qualifiedCostTime\n" +
@@ -440,7 +439,7 @@ public class ServerInterface {
      */
     public void queryAreaSportsData(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                " areaSports(universityId:1){\n" +
+                " areaSports(universityId:" + universityId + "){\n" +
                 "    id\n" +
                 "    name\n" +
                 "    isEnable\n" +
