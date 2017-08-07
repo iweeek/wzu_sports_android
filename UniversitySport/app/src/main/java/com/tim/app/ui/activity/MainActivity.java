@@ -321,7 +321,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 sportEntry.setTargetSpeed(bd + "");
                                 sportEntry.setInterval(interval);
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                            } else if (runningSportId == MODE_AREA) {
+                            } else if (runningSportId == MODE_AREA + 1) {
                                 sportEntry.setType(SportEntry.AREA_SPORT);
                                 sportEntry.setSportName(jsonObject.optString("", "区域锻炼"));
                                 sportEntry.setBgDrawableId(R.drawable.ic_bg_area);
@@ -487,9 +487,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             Log.d(TAG, "服务器版本" + versionCode);
                             Log.d(TAG, "客户端版本" + info.versionCode);
 
-//                            if (isForced) {//强制升级
-//                                //对话框不变化
-//                            } else {
+                            if (isForced) {//强制升级
+                                //对话框不变化
+                            } else {
                                 builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -498,7 +498,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                         queryHomePagedata();
                                     }
                                 });
-//                            }
+                            }
 
                             dialog = builder.create();
                             dialog.show();

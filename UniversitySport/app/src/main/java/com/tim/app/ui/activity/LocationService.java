@@ -59,7 +59,6 @@ public class LocationService extends Service {
         public void startLocationInService(int interval) {
             DLOG.d(TAG, "startLocation");
             startLocation(interval);
-
         }
 
         public void stopLocationInService() {

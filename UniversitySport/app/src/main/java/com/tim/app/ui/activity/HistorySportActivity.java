@@ -31,11 +31,6 @@ public class HistorySportActivity extends BaseActivity {
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_history;
-    }
-
-    @Override
     public void initView() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         stbNavBar = (SmartTabLayout) findViewById(R.id.stbNavBar);
@@ -90,5 +85,10 @@ public class HistorySportActivity extends BaseActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_history;
+    }
 
 }
