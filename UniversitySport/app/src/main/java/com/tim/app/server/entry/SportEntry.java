@@ -110,6 +110,4 @@ public class SportEntry implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-
-
 }

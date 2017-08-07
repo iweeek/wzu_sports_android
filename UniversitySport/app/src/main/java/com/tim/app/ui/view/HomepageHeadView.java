@@ -71,12 +71,12 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
                 Intent intent = new Intent(getContext(), SchoolRankingActivity.class);
                 getContext().startActivity(intent);
                 break;
-            //            case R.id.rlTop:
-            //                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
-            //                break;
-            //            case R.id.rlSecond:
-            //                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
-            //                break;
+            case R.id.rlTop:
+                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
+                break;
+            case R.id.rlSecond:
+                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
+                break;
             case R.id.rlHeadView:
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;

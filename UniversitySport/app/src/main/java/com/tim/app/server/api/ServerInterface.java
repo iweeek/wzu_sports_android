@@ -193,11 +193,12 @@ public class ServerInterface {
      */
     public void queryRunningSports(int universityId, ResponseCallback callback) {
         queryStr = "{\n" +
-                "  runningSports(universityId: 1) {\n" +
-                "   acquisitionInterval\n" +
-                "   participantNum\n" +
+                "  runningSports(universityId: " + universityId + ") {\n" +
+                "    acquisitionInterval\n" +
+                "    participantNum\n" +
                 "    id\n" +
                 "    name\n" +
+                "    isEnabled\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
                 "  }\n" +
