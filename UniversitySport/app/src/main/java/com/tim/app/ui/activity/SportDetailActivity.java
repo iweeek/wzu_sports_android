@@ -407,7 +407,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                DLOG.writeToInternalFile(msg);
+//                DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
@@ -682,6 +682,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
+
+                    Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     ServerInterface.instance(). runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

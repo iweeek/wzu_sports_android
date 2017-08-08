@@ -260,6 +260,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             queryRunningSport();
         }
 
+        Log.d(TAG, "position:" + position);
+        Log.d(TAG, "sportEntry:" + sportEntry);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
             SportDetailActivity.start(this, sportEntry);
         } else {
@@ -306,6 +308,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             int interval = jsonObject.optInt("acquisitionInterval", 1);
 
                             SportEntry sportEntry = new SportEntry();
+                            sportEntry.setId(runningSportId);
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
                             sportEntry.setSportName(jsonObject.optString("name", "快走"));
                             String name = jsonObject.optString("name", "快走");

@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 
-public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
+public class    HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
         implements BaseRecyclerAdapter.OnItemClickListener{
     private Context mContext;
     private static final String TAG = "HistorySportListAdapter";
