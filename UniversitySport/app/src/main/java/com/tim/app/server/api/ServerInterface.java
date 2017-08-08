@@ -294,7 +294,7 @@ public class ServerInterface {
     public void queryCollegeSportsRankingData(int universityId, int pageSize, int pageNo, int type, ResponseCallback callback) {
         if (type == AppConstant.TYPE_COST_ENERGY) {
             queryStr = "{    \n" +
-                    "  university(id:1) {\n" +
+                    "  university(id:" + universityId + ") {\n" +
                     "\t\tkcalConsumptionRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
                     "      pagesCount\n" +
                     "      data{\n" +
@@ -405,13 +405,14 @@ public class ServerInterface {
 
     public void queryAreaFixedLocationList(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  fixLocationOutdoorSportPoints(universityId: 1) {\n" +
+                "  fixLocationOutdoorSportPoints(universityId: " + universityId + ") {\n" +
                 "    id\n" +
                 "    name\n" +
-                "    addr\n" +
+                "    isEnabled\n" +
                 "    latitude\n" +
                 "    longitude\n" +
                 "    radius\n" +
+                "    addr\n" +
                 "    qualifiedCostTime\n" +
                 "    universityId\n" +
                 "  }\n" +

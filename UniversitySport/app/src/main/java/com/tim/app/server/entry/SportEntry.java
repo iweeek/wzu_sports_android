@@ -21,14 +21,14 @@ public class SportEntry implements Serializable {
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
     private int id = 1;//运动id，默认值为1
-    private int interval;
+    private int acquisitionInterval;
 
-    public int getInterval() {
-        return interval;
+    public int getAcquisitionInterval() {
+        return acquisitionInterval;
     }
 
-    public void setInterval(int interval) {
-        this.interval = interval;
+    public void setAcquisitionInterval(int acquisitionInterval) {
+        this.acquisitionInterval = acquisitionInterval;
     }
 
     public String getSportName() {
@@ -43,10 +43,9 @@ public class SportEntry implements Serializable {
         return participantNum;
     }
 
-    public void setParticiNum(int num) {
-        this.participantNum = num;
+    public void setParticipantNum(int participantNum) {
+        this.participantNum = participantNum;
     }
-
     public int getTargetDistance() {
         return targetDistance;
     }
@@ -109,5 +108,22 @@ public class SportEntry implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "SportEntry{" +
+                "sportName='" + sportName + '\'' +
+                ", participantNum=" + participantNum +
+                ", targetDistance=" + targetDistance +
+                ", targetSpeed='" + targetSpeed + '\'' +
+                ", targetTime=" + targetTime +
+                ", steps=" + steps +
+                ", bgUrl='" + bgUrl + '\'' +
+                ", bgDrawableId=" + bgDrawableId +
+                ", type=" + type +
+                ", id=" + id +
+                ", acquisitionInterval=" + acquisitionInterval +
+                '}';
     }
 }

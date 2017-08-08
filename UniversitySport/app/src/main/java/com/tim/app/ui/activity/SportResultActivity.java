@@ -3,8 +3,6 @@ package com.tim.app.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -212,7 +209,7 @@ public class SportResultActivity extends BaseActivity {
      */
     private void setUpMap() {
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
-        aMap.getUiSettings().setCompassEnabled(true);
+        aMap.getUiSettings().setCompassEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(true);
         aMap.setMyLocationEnabled(false);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
     }
@@ -487,28 +484,6 @@ public class SportResultActivity extends BaseActivity {
     }
 
     /**
-     * 组装地图截图和其他View截图，需要注意的是目前提供的方法限定为MapView与其他View在同一个ViewGroup下
-     *
-     * @param bitmap        地图截图回调返回的结果
-     * @param viewContainer MapView和其他要截图的View所在的父容器ViewGroup
-     * @param mapView       MapView控件
-     * @param views         其他想要在截图中显示的控件
-     */
-    public static Bitmap getMapAndViewScreenShot(Bitmap bitmap, ViewGroup viewContainer, MapView mapView, View... views) {
-        int width = viewContainer.getWidth();
-        int height = viewContainer.getHeight();
-        final Bitmap screenBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(screenBitmap);
-        canvas.drawBitmap(bitmap, mapView.getLeft(), mapView.getTop(), null);
-        for (View view : views) {
-            view.setDrawingCacheEnabled(true);
-            canvas.drawBitmap(view.getDrawingCache(), view.getLeft(), view.getTop(), null);
-        }
-
-        return screenBitmap;
-    }
-
-    /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
      */
     private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
@@ -581,7 +556,7 @@ public class SportResultActivity extends BaseActivity {
                     //                    LatLngBounds bounds = getLatLngBounds(points.get(0), pointList);//以中心点缩放
                     LatLngBounds bounds = getLatLngBounds(pointList);  //根据提供的点缩放至屏幕可见范围。
 
-                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
+                    aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250)); //平滑移动
                     //                    aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
 
                     SmoothMoveMarker smoothMarker = new SmoothMoveMarker(aMap);

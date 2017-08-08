@@ -39,6 +39,8 @@ import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.Circle;
+import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
@@ -49,7 +51,6 @@ import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
@@ -61,11 +62,6 @@ import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.TimeUtil;
 
 import org.json.JSONObject;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import static com.tim.app.ui.activity.MainActivity.studentId;
 
@@ -85,6 +81,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private MapView mapView;
     private AMap aMap;
     private UiSettings uiSettings;
+
 
     /*基本控件*/
     private LinearLayout llLacationHint;
@@ -109,7 +106,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
-    private FixLocationOutdoorSportPoint mFixLocationOutdoorSportPoint;
+    private FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint;
     private LatLng oldLatLng = null;
 
     /*初始化变量*/
@@ -129,9 +126,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private int screenOffTimeout;
     private int screenKeepLightTime;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Runnable elapseTimeRunnable;
-    private ScheduledFuture<?> timerHandler;
     private long timerInterval = 1000;
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
@@ -154,11 +149,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     };
 
 
-    public static void start(Context context, FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint, SportEntry areaSportEntry) {
+    public static void start(Context context, FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportFixedLocationActivity.class);
-        intent.putExtra("areaSportEntry", areaSportEntry);
+        intent.putExtra("sportEntry", sportEntry);
         intent.putExtra("fixLocationOutdoorSportPoint", fixLocationOutdoorSportPoint);
-        Log.d(TAG, "areaSportEntry:" + areaSportEntry);
         Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
         context.startActivity(intent);
     }
@@ -193,13 +187,16 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         initGPS();
 
-        sportEntry = (SportEntry) getIntent().getSerializableExtra("areaSportEntry");
-        mFixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getParcelableExtra("fixLocationOutdoorSportPoint");
-        Log.d(TAG, "mFixLocationOutdoorSportPoint:" + mFixLocationOutdoorSportPoint);
+        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
+        fixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getParcelableExtra("fixLocationOutdoorSportPoint");
+        Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+        Log.d(TAG, "sportEntry:" + sportEntry);
 
+        acquisitionInterval = sportEntry.getAcquisitionInterval() * 1000;
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
+        //        mAMapGeoFence = new AMapGeoFence(this.getApplicationContext(), aMap, handler);
 
         startService(new Intent(this, LocationService.class));
 
@@ -230,6 +227,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         registerReceiver(lowBatteryReceiver, filter);
     }
 
+
+
     @Override
     public void initData() {
         float batteryLevel = getBatteryLevel();
@@ -237,11 +236,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(mFixLocationOutdoorSportPoint.getAreaName())) {
-            tvAreaName.setText(mFixLocationOutdoorSportPoint.getAreaName());
+        if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getAreaName())) {
+            tvAreaName.setText(fixLocationOutdoorSportPoint.getAreaName());
         }
-        if (mFixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
-            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(mFixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
+        if (fixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
+            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(fixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
         } else {
             tvTargetTime.setText("-");
         }
@@ -256,21 +255,15 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
-
-        elapseTimeRunnable = new Runnable() {
-            public void run() {
-                // If you need update UI, simply do this:
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        // update your UI component here.
-                        elapseTime += timerInterval / 1000;
-                        Log.d(TAG, "elapseTime: " + elapseTime);
-                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-                        tvElapsedTime.setText(time);
-                    }
-                });
-            }
-        };
+        //设置地图区域范围（画圈儿）
+        LatLng latLng = new LatLng(fixLocationOutdoorSportPoint.getLatitude(),fixLocationOutdoorSportPoint.getLongitude());
+        Circle circle = aMap.addCircle(new CircleOptions().
+                center(latLng).
+                radius(fixLocationOutdoorSportPoint.getRadius()).
+                fillColor(Color.parseColor("#22A7F64C")).
+                strokeColor(Color.parseColor("#224C5773")).
+                strokeWidth(1));
+        Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
 
         // 设置滑动解锁-解锁的监听
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
@@ -282,7 +275,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     // 重置一下滑动解锁的控件
                     slideUnlockView.reset();
                     // 让滑动解锁控件消失
-                    slideUnlockView.setVisibility(View.GONE);
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
@@ -296,7 +288,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         //结束本次运动
                         areaActivitiesEnd(areaSportRecordId);
 
-                        //                        tvSportJoinNumber.setVisibility(View.GONE);
+                        //tvSportJoinNumber.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
                         btStart.setVisibility(View.VISIBLE);
@@ -366,7 +358,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         myLocationStyle.interval(acquisitionInterval);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.drawable.navi_map_gps_locked));
-        //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW) ;
         aMap.setMyLocationStyle(myLocationStyle);
     }
 
@@ -401,11 +392,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         //运动耗时
         if (state == STATE_STARTED) {
-            acquisitionInterval += 1;
-            elapseTime += 1;
+            elapseTime += acquisitionInterval;
             String time = TimeUtil.formatMillisTime(elapseTime * 1000);
             Log.d(TAG, time);
-            tvElapsedTime.setText(time);
+            tvElapsedTime.setText(time.substring(0, time.length() - 3));
         }
 
         //// TODO: 这部分待看
@@ -471,24 +461,23 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
 
                 //// 向服务器提交数据
-                if (elapseTime % acquisitionInterval == 0) {
-                    ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
-                            location.getLatitude(), locationType, new ResponseCallback() {
-                                @Override
-                                public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                                    if (status == 0) {
-                                        DLOG.d(TAG, "上传 areaActivityData 成功!");
-                                        return true;
-                                    } else {
-                                        String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
-                                        msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
-                                        msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
-                                        DLOG.writeToInternalFile(msg);
-                                        return false;
-                                    }
+                ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
+                        location.getLatitude(), locationType, new ResponseCallback() {
+                            @Override
+                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                if (status == 0) {
+                                    DLOG.d(TAG, "上传 areaActivityData 成功!");
+                                    return true;
+                                } else {
+                                    String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
+                                    msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
+                                    msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
+                                    DLOG.writeToInternalFile(msg);
+                                    return false;
                                 }
-                            });
-                }
+                            }
+                        });
+
             }
             oldLatLng = newLatLng;
         } else {
@@ -530,7 +519,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         unregisterReceiver(lowBatteryReceiver);
 
         DLOG.closeInternalFile();
-
     }
 
 

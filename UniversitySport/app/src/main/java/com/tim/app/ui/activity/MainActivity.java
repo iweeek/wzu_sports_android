@@ -36,7 +36,6 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.AreaSportEntry;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
@@ -85,7 +84,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private BadNetworkAdapter badNetworkAdapter;
     private List<SportEntry> sportEntryDataList;
     private List<BadNetWork> networkDataList;
-    private ArrayList<AreaSportEntry> mAreaSportEntryList;//区域运动项目
 
     private EmptyLayout emptyLayout;
 
@@ -326,11 +324,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                                     break;
                             }
-                            sportEntry.setParticiNum(participantNum);
+                            sportEntry.setParticipantNum(participantNum);
                             sportEntry.setTargetDistance(distance);
                             sportEntry.setTargetTime((int) (time / 60));
                             sportEntry.setTargetSpeed(bd + "");
-                            sportEntry.setInterval(interval);
+                            sportEntry.setAcquisitionInterval(interval);
 
                             //                            SportEntry sportEntry = new SportEntry();
                             //                            if (runningSportId == MODE_FAST_WALK) {
@@ -340,7 +338,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                                sportEntry.setTargetDistance(distance);
                             //                                sportEntry.setTargetTime((int) (time / 60));
                             //                                sportEntry.setTargetSpeed(bd + "");
-                            //                                sportEntry.setInterval(interval);
+                            //                                sportEntry.setAcquisitionInterval(interval);
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
                             //                            } else if (runningSportId == MODE_RANDOM_RUN) {
                             //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
@@ -349,7 +347,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                                sportEntry.setTargetDistance(distance);
                             //                                sportEntry.setTargetTime((int) (time / 60));
                             //                                sportEntry.setTargetSpeed(bd + "");
-                            //                                sportEntry.setInterval(interval);
+                            //                                sportEntry.setAcquisitionInterval(interval);
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                             //                            } else if (runningSportId == MODE_FAST_RUN) {
                             //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
@@ -358,7 +356,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                                sportEntry.setTargetDistance(distance);
                             //                                sportEntry.setTargetTime((int) (time / 60));
                             //                                sportEntry.setTargetSpeed(bd + "");
-                            //                                sportEntry.setInterval(interval);
+                            //                                sportEntry.setAcquisitionInterval(interval);
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
                             //                            } else if (runningSportId == MODE_AREA) {
                             //                                sportEntry.setType(SportEntry.AREA_SPORT);
@@ -466,7 +464,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         areaSportEntry.setType(SportEntry.AREA_SPORT);
                         //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                         areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
-                        areaSportEntry.setInterval(jsonObject.optInt("acquisitionInterval"));
+                        areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
                         areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
                         //                        areaSportEntry.(jsonObject.optInt("universityId"));
                         Log.d(TAG, "areaSportEntry:" + areaSportEntry);

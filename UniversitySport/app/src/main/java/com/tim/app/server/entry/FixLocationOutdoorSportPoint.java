@@ -12,12 +12,14 @@ public class FixLocationOutdoorSportPoint implements  Parcelable {
     private static final long serialVersionUID = 6187447685293862071L;
     private  Integer id;
     private String areaName;//地点描述
+    private boolean isEnabled;
     private String address;//地址
     private double latitude; //纬度
     private double longitude;//经度
     private int qualifiedCostTime;//达标时间
     private double radius;//半径
     private int universityId;
+
 
     public String getAddress() {
         return address;
@@ -83,11 +85,21 @@ public class FixLocationOutdoorSportPoint implements  Parcelable {
         this.universityId = universityId;
     }
 
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        isEnabled = enabled;
+    }
+
+
     @Override
     public String toString() {
         return "FixLocationOutdoorSportPoint{" +
                 "id=" + id +
                 ", areaName='" + areaName + '\'' +
+                ", isEnabled=" + isEnabled +
                 ", address='" + address + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +

@@ -48,7 +48,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     private SportAreaListAdapter adapter;
     private List<FixLocationOutdoorSportPoint> dataList;
-    private SportEntry areaSportEntry;
+    private SportEntry sportEntry;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -56,12 +56,12 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
         context = this;
     }
 
-
-    public static void start(Context context, SportEntry areaSportEntry){
-        Intent intent = new Intent(context,SportsAreaListActivity.class);
-        intent.putExtra("areaSportEntry", areaSportEntry);
+    public static void start(Context context, SportEntry sportEntry) {
+        Intent intent = new Intent(context, SportsAreaListActivity.class);
+        intent.putExtra("sportEntry", sportEntry);
         context.startActivity(intent);
     }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_sports_area;
@@ -70,7 +70,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        areaSportEntry = (SportEntry) getIntent().getSerializableExtra("areaSportEntry");
+        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
     }
 
     @Override
@@ -126,34 +126,32 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     public void queryAreaSportData() {
         ServerInterface.instance().queryAreaFixedLocationList(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
             @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache)
-            {
-                if (errCode == 0)
-                {
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
                     JSONArray sportArray = json.optJSONObject("data").optJSONArray("fixLocationOutdoorSportPoints");
-                    try
-                    {
-                        for (int i = 0; i < sportArray.length(); i++)
-                        {
+                    try {
+                        for (int i = 0; i < sportArray.length(); i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
-                            FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint = new FixLocationOutdoorSportPoint();
-                            fixLocationOutdoorSportPoint.setId(jsonObject.optInt("id"));
-                            fixLocationOutdoorSportPoint.setAreaName(jsonObject.optString("name"));
-                            fixLocationOutdoorSportPoint.setAddress(jsonObject.optString("addr"));
-                            fixLocationOutdoorSportPoint.setLatitude(jsonObject.optDouble("latitude"));
-                            fixLocationOutdoorSportPoint.setLongitude(jsonObject.optDouble("longitude"));
-                            fixLocationOutdoorSportPoint.setRadius(jsonObject.optDouble("radius"));
-                            fixLocationOutdoorSportPoint.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
-                            fixLocationOutdoorSportPoint.setUniversityId(jsonObject.optInt("universityId"));
-                            //还差 isSelected desc
-                            dataList.add(fixLocationOutdoorSportPoint);
-                            wrvArea.setAdapter(adapter);
-                            adapter.setOnItemClickListener(context);
-                            adapter.notifyDataSetChanged();
-                            if (dataList.size() == 0) {
-                                emptyLayout.showEmpty();
-                            } else {
-                                emptyLayout.showContent();
+                            if (jsonObject.optBoolean("isEnabled")){
+                                FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint = new FixLocationOutdoorSportPoint();
+                                fixLocationOutdoorSportPoint.setEnabled(jsonObject.optBoolean("isEnabled"));
+                                fixLocationOutdoorSportPoint.setId(jsonObject.optInt("id"));
+                                fixLocationOutdoorSportPoint.setAreaName(jsonObject.optString("name"));
+                                fixLocationOutdoorSportPoint.setAddress(jsonObject.optString("addr"));
+                                fixLocationOutdoorSportPoint.setLatitude(jsonObject.optDouble("latitude"));
+                                fixLocationOutdoorSportPoint.setLongitude(jsonObject.optDouble("longitude"));
+                                fixLocationOutdoorSportPoint.setRadius(jsonObject.optDouble("radius"));
+                                fixLocationOutdoorSportPoint.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
+                                fixLocationOutdoorSportPoint.setUniversityId(jsonObject.optInt("universityId"));
+                                dataList.add(fixLocationOutdoorSportPoint);
+                                wrvArea.setAdapter(adapter);
+                                adapter.setOnItemClickListener(context);
+                                adapter.notifyDataSetChanged();
+                                if (dataList.size() == 0) {
+                                    emptyLayout.showEmpty();
+                                } else {
+                                    emptyLayout.showContent();
+                                }
                             }
                         }
                     } catch (JSONException e) {
@@ -207,10 +205,10 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     @Override
     public void onItemClick(View view, int position, long id) {
-//        SportPrepareActivity.start(this,dataList.get(position),sportEntry,true);
+        //        SportPrepareActivity.start(this,dataList.get(position),sportEntry,true);
         /**
          * 这里的 mAreaSportEntryList 从现在服务端只提供了一个
          */
-        SportFixedLocationActivity.start(this, dataList.get(position), areaSportEntry);
+        SportFixedLocationActivity.start(this, dataList.get(position), sportEntry);
     }
 }

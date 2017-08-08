@@ -262,7 +262,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
-        interval = sportEntry.getInterval() * 1000;
+        interval = sportEntry.getAcquisitionInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -418,10 +418,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 "， 当前电量: " + batteryLevel + "%";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                if (moveDistance / sportEntry.getInterval() > speedLimitation) {
+                if (moveDistance / sportEntry.getAcquisitionInterval() > speedLimitation) {
                     //位置漂移
 //                        return;
-                    toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getInterval();
+                    toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getAcquisitionInterval();
                     Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                     isNormal = false;
                     drawLine(oldLatLng, newLatLng, isNormal);

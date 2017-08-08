@@ -51,4 +51,8 @@
     <color name="home_tab_text_selector_color">#333333</color>
     <color name="home_area_item_background_color">#303030</color>
 
+    <!--map-->
+    <color name="fill">#3376d4f3</color>
+    <color name="stroke">#cc3f91fc</color>
+    <color name="chambray">#4C5773</color>
 </resources>
