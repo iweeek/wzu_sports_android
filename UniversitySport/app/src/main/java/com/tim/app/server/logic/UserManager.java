@@ -53,17 +53,18 @@ public class UserManager {
      * @return
      */
     public boolean isLogin() {
-        return loginUser != null && !TextUtils.isEmpty(loginUser.getUid());
+        //        return loginUser != null && !TextUtils.isEmpty(loginUser.getUid());
+        return loginUser != null && loginUser.getUid() != 0;
     }
 
     /**
      * 注销 清空数据 发送注销事件
      */
     public void logout(Context context) {
-//        IMManager.instance().switchAccount();
+        //        IMManager.instance().switchAccount();
         PreferenceHelper.ins().storeBooleanShareData(KEY_IS_THIRD, false);
         PreferenceHelper.ins().commit();
-//        saveUserInfo(null);
+        //        saveUserInfo(null);
         FileUtils.deleteFile(RT.defaultCache);
         EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGOUT, 0, 0, null);
         try {
@@ -74,12 +75,12 @@ public class UserManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        ActivityManager.instance().finishAllActivity();
-//        DaoFactory.clearDataAll(context);
+        //        ActivityManager.instance().finishAllActivity();
+        //        DaoFactory.clearDataAll(context);
         //暂时不做退出的activity处理 liuhao 2016/7/12
-//        Intent intent = new Intent(context, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        context.startActivity(intent);
+        //        Intent intent = new Intent(context, MainActivity.class);
+        //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //        context.startActivity(intent);
     }
 
     public User loginUser = new User();
@@ -310,21 +311,21 @@ public class UserManager {
      * @param password
      * @return
      */
-//    public boolean checkLogin(String phone, String password) {
-//        if (TextUtils.isEmpty(phone)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
-//            return false;
-//        }
-//        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
-//            return false;
-//        }
-//        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_password));
-//            return false;
-//        }
-//        return true;
-//    }
+    //    public boolean checkLogin(String phone, String password) {
+    //        if (TextUtils.isEmpty(phone)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
+    //            return false;
+    //        }
+    //        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
+    //            return false;
+    //        }
+    //        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_password));
+    //            return false;
+    //        }
+    //        return true;
+    //    }
 
     /**
      * 检测注册参数
@@ -334,56 +335,56 @@ public class UserManager {
      * @param smscode
      * @return
      */
-//    public boolean checkRegister(String phone, String password, String repeat_password, String smscode) {
-//        if (TextUtils.isEmpty(phone)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
-//            return false;
-//        }
-//        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
-//            return false;
-//        }
-//        if (TextUtils.isEmpty(smscode)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
-//            return false;
-//        }
-//        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_password));
-//            return false;
-//        }
-//        if (TextUtils.isEmpty(repeat_password)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_password_again));
-//            return false;
-//        }
-//        if (!password.equals(repeat_password)) {
-//            ToastUtil.showToast(RT.getString(R.string.error_password_nosame));
-//            return false;
-//        }
-//        return true;
-//    }
+    //    public boolean checkRegister(String phone, String password, String repeat_password, String smscode) {
+    //        if (TextUtils.isEmpty(phone)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_mobile_empty));
+    //            return false;
+    //        }
+    //        if (!phone.matches(StringUtil.ZHENGZE_PHONE)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_mobile_error));
+    //            return false;
+    //        }
+    //        if (TextUtils.isEmpty(smscode)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_mobile_vertify));
+    //            return false;
+    //        }
+    //        if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_password));
+    //            return false;
+    //        }
+    //        if (TextUtils.isEmpty(repeat_password)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_password_again));
+    //            return false;
+    //        }
+    //        if (!password.equals(repeat_password)) {
+    //            ToastUtil.showToast(RT.getString(R.string.error_password_nosame));
+    //            return false;
+    //        }
+    //        return true;
+    //    }
 
     /**
      * 显示登录提示弹窗
      *
      * @param context
      */
-//    public void showLoginDialog(final Context context) {
-//        TipDialog dialog = new TipDialog(context);
-//        dialog.setTextDes(context.getString(R.string.login_dialog_desc));
-//        dialog.setButton1(context.getString(R.string.login_title), new TipDialog.DialogButtonOnClickListener() {
-//            @Override
-//            public void onClick(View button, TipDialog dialog) {
-//                dialog.dismiss();
-//                ViewGT.gotoLoginActivity(context);
-//            }
-//        });
-//        dialog.setButton2(context.getString(R.string.action_cancel), new TipDialog.DialogButtonOnClickListener() {
-//            @Override
-//            public void onClick(View button, TipDialog dialog) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.show();
-//    }
+    //    public void showLoginDialog(final Context context) {
+    //        TipDialog dialog = new TipDialog(context);
+    //        dialog.setTextDes(context.getString(R.string.login_dialog_desc));
+    //        dialog.setButton1(context.getString(R.string.login_title), new TipDialog.DialogButtonOnClickListener() {
+    //            @Override
+    //            public void onClick(View button, TipDialog dialog) {
+    //                dialog.dismiss();
+    //                ViewGT.gotoLoginActivity(context);
+    //            }
+    //        });
+    //        dialog.setButton2(context.getString(R.string.action_cancel), new TipDialog.DialogButtonOnClickListener() {
+    //            @Override
+    //            public void onClick(View button, TipDialog dialog) {
+    //                dialog.dismiss();
+    //            }
+    //        });
+    //        dialog.show();
+    //    }
 
 }

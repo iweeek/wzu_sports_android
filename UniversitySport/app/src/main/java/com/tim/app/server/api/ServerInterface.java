@@ -33,6 +33,8 @@ public class ServerInterface {
 
     public static final String QUERY_INTERFACE = "graphql/query";
 
+    public static final String TOKENS = "tokens";
+
     private String queryStr;
 
     private ServerInterface() {
@@ -50,7 +52,44 @@ public class ServerInterface {
         return instance;
     }
 
+
+    public void queryUniversities(ResponseCallback callback) {
+        String queryStr = "{\n" +
+                "  universities {\n" +
+                "    id\n" +
+                "    name\n" +
+                "  }\n" +
+                "}\n";
+        query(queryStr, callback);
+    }
+
+    public void tokens(String tag, int universityId, String username, String password, int expiredHour, ResponseCallback callback) {
+        String url = API_SCHEME + TOKENS;
+        HashMap params = new HashMap();
+        params.put("universityId", universityId);
+        params.put("username", username);
+        params.put("password", password);
+        params.put("expiredHour", expiredHour);
+        Log.d(TAG, "params: " + params);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+    }
+
+    public void queryStudent(int userId, ResponseCallback callback) {
+        String queryStr = "{\n" +
+                "  student(userId: " + userId + ") {\n" +
+                "    id\n" +
+                "    universityId\n" +
+                "    userId\n" +
+                "    studentNo\n" +
+                "    name\n" +
+                "    classId\n" +
+                "  }\n" +
+                "}\n";
+        query(queryStr, callback);
+    }
+
     /**
+     * 开始跑步
      * {@link com.tim.app.ui.activity.SportDetailActivity} 调用
      *
      * @param tag

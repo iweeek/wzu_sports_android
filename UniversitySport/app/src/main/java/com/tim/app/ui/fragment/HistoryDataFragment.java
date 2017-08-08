@@ -40,7 +40,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.tim.app.ui.activity.MainActivity.studentId;
+import static com.tim.app.ui.activity.MainActivity.student;
 
 /**
  * 历史数据
@@ -156,7 +156,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void getHistoryRecord() {
-        ServerInterface.instance().queryHistorySportsRecord(studentId, tabStartDate, tabEndDate, type, new JsonResponseCallback() {
+        ServerInterface.instance().queryHistorySportsRecord(student.getId(), tabStartDate, tabEndDate, type, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 Date startDate = null;

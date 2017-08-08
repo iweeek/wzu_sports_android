@@ -6,13 +6,41 @@ import java.io.Serializable;
 public class User implements Serializable {
 
     private static final long serialVersionUID = 6187447685293862071L;
-    private String uid;
+    private int uid;
     private String phone;
     private String username;
     private String password;
     private String headpicthumb;
     private String headpic;
+    private String[] roles;
+    private Long expiredDate;
+    private String token;
     private int studentId;
+
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public Long getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(Long expiredDate) {
+        this.expiredDate = expiredDate;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public int getStudentId() {
         return studentId;
@@ -25,11 +53,11 @@ public class User implements Serializable {
     public User() {
     }
 
-    public String getUid() {
+    public int getUid() {
         return uid;
     }
 
-    public void setUid(String uid) {
+    public void setUid(int uid) {
         this.uid = uid;
     }
 

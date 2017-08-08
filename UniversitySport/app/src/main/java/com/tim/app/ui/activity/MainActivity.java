@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -38,6 +39,8 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.Student;
+import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
@@ -66,7 +69,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public static final int MODE_FAST_RUN = 3;
     public static final int MODE_AREA = 4;
 
-    public static int studentId = 1;
+    public static User  user;
+    public static Student  student;
 
     private MainActivity context;
 
@@ -126,6 +130,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         context.startActivity(intent);
     }
 
+    public static void start(Context context, User user, Student student) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("user",user);
+        intent.putExtra("student",student);
+        context.startActivity(intent);
+    }
+
 
     private boolean isOpen;
 
@@ -139,6 +150,15 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
+    }
+
+
+    @Override
+    protected void init(Bundle savedInstanceState) {
+        user = (User) getIntent().getSerializableExtra("user");
+        student = (Student) getIntent().getSerializableExtra("student");
+        Log.d(TAG, "user:" + user);
+        Log.d(TAG, "student:" + student);
     }
 
     @Override
@@ -397,7 +417,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      */
     public void queryCurTermData() {
 
-        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, studentId, new JsonResponseCallback() {
+        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, student.getId() , new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {

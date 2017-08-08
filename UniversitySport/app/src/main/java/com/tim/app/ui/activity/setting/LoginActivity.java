@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity.setting;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -24,11 +26,20 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
+import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.Student;
+import com.tim.app.server.entry.University;
 import com.tim.app.server.entry.User;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 登录
@@ -44,6 +55,7 @@ public class LoginActivity extends BaseActivity {
     private String sNo, password;
     private TextView tvNoErrorPrmpt;
     private TextView tvPasswordErrorPrmpt;
+    private TextView tvUniErrorPrmpt;
     private ImageView ivPasswordVisiable;
     private TextView tvForgotPassword;
     private ImageView ivDeleteNo;
@@ -51,6 +63,12 @@ public class LoginActivity extends BaseActivity {
     private boolean mIsFirstLogin;
     private boolean mHasEditFirstPassword;
     private TextView tvUniversity;
+
+    private List<University> universities = new ArrayList<>();
+    private List<String> universityNames = new ArrayList<>();
+    private User user;
+    private Student student;
+    private Context context = this;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -67,27 +85,19 @@ public class LoginActivity extends BaseActivity {
         btLogin = (Button) findViewById(R.id.btLogin);
         etStudentNo = (EditText) findViewById(R.id.etStudentNo);
         tvUniversity = (TextView) findViewById(R.id.tvUniversity);
-        tvUniversity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final CharSequence univsersities[] = new CharSequence[] {"温州大学", "温州医科大学", "温州商学院", "温州职业技术学院"};
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                builder.setTitle("请选择您的学校");
-                builder.setItems(univsersities, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
-                        tvUniversity.setText(univsersities[which]);
-                    }
-                });
-                builder.show();
-            }
-        });
-
         etPassword = (EditText) findViewById(R.id.etPassword);
+
+        etStudentNo.setText("14211133129");
+        etPassword.setText("123456");
+        //        etStudentNo.setText("15211134139");
+        //        etPassword.setText("123456");
+
+        queryUniversities();
+
+
         tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
         tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
+        tvUniErrorPrmpt = (TextView) findViewById(R.id.tvUniErrorPrmpt);
         ivPasswordVisiable = (ImageView) findViewById(R.id.ivPasswordVisiable);
         tvForgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         ivDeleteNo = (ImageView) findViewById(R.id.ivDeleteNo);
@@ -145,7 +155,57 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initData() {
+    }
 
+    private void queryUniversities() {
+        ServerInterface.instance().queryUniversities(new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("universities");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.optJSONObject(i);
+                        University university = new University();
+
+                        university.setId(jsonObject.optInt("id"));
+                        String name = jsonObject.optString("name");
+                        university.setName(name);
+
+                        universityNames.add(name);
+                        universities.add(university);
+                    }
+                    prepareAlertDialog();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }
+
+    private void prepareAlertDialog() {
+        final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
+        tvUniversity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //                 final CharSequence univsersities[] = new CharSequence[]{"温州大学", "温州医科大学", "温州商学院", "温州职业技术学院"};
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder.setTitle("请选择您的学校");
+                builder.setItems(names, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // the user clicked on colors[which]
+                        tvUniversity.setText(names[which]);
+                        Log.d(TAG, "which:" + which);
+                        Log.d(TAG, "names[which]:" + names[which]);
+                        tvUniversity.setTag(which);
+                    }
+                });
+
+                builder.show();
+            }
+        });
     }
 
     @Override
@@ -162,24 +222,29 @@ public class LoginActivity extends BaseActivity {
             sNo = etStudentNo.getText().toString().trim();
             password = etPassword.getText().toString().trim();
 
-            //暂时跳过登录
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+            if (!checkLogin(sNo, password)) {
 
-/*
-            SharedPreferences sharedPreferences = getSharedPreferences(USER, Activity.MODE_PRIVATE);
-            mIsFirstLogin = sharedPreferences.getBoolean(USER_IS_FIRST_LOGIN, true);
-            mHasEditFirstPassword = sharedPreferences.getBoolean(USER_HAS_EDIT_FIRST_PASSWORD, false);
+            } else {
+                //判断选择的是哪所学校
+                int index = (int) tvUniversity.getTag();
+                University university = universities.get(index);
+                Log.d(TAG, "universities.get(index):" + universities.get(index));
+                ServerInterface.instance().tokens(TAG, university.getId(), sNo, password, 2, new JsonResponseCallback() {
+                    @Override
+                    public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                        if (errCode == 0) {
+                            user = new User();
+                            user.setUid(json.optInt("userId"));
 
-            String password = sharedPreferences.getString(sNo, "");
-            if(!"".equals(password)) {
-                if (checkLogin(sNo, password)) {
-                    login(sNo, password);
-                }
-            }else{  //如果sharedPreference不存在学生学号，那就当作是第一次登录。
-                firstLogin(sNo, password);
+                            Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
+                            queryStudent(user.getUid());
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
             }
-            */
         } else if (v.getId() == R.id.ivPasswordVisiable) {
             ivPasswordVisiable.setSelected(!ivPasswordVisiable.isSelected());
             if (ivPasswordVisiable.isSelected()) {
@@ -188,6 +253,30 @@ public class LoginActivity extends BaseActivity {
                 etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
             }
         }
+    }
+
+    private void queryStudent(int uid) {
+        ServerInterface.instance().queryStudent(uid, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    JSONObject jsonObject = json.optJSONObject("data").optJSONObject("student");
+                    student = new Student();
+                    student.setId(jsonObject.optInt("id"));
+                    student.setUniversityId(jsonObject.optInt("universityId"));
+                    student.setName(jsonObject.optString("name"));
+                    student.setStudentNo(jsonObject.optString("studentNo"));
+                    student.setClassId(jsonObject.optInt("classId"));
+                    student.setUserId(jsonObject.optInt("userId"));
+
+                    Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
+                    MainActivity.start(context, user, student);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
     }
 
 
@@ -199,23 +288,38 @@ public class LoginActivity extends BaseActivity {
      * @return
      */
     public boolean checkLogin(String sNo, String password) {
+
+        if(TextUtils.isEmpty(tvUniversity.getText())){
+            tvUniErrorPrmpt.setVisibility(View.VISIBLE);
+            tvUniErrorPrmpt.setText(RT.getString(R.string.select_your_university));
+            return false;
+        }else{
+            tvUniErrorPrmpt.setVisibility(View.GONE);
+        }
+
         if (TextUtils.isEmpty(sNo)) {
             tvNoErrorPrmpt.setVisibility(View.VISIBLE);
             tvNoErrorPrmpt.setText(RT.getString(R.string.login_input_num));
             return false;
+        } else {
+            tvNoErrorPrmpt.setVisibility(View.GONE);
         }
+
         if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
             tvNoErrorPrmpt.setVisibility(View.VISIBLE);
             tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
             return false;
+        } else {
+            tvNoErrorPrmpt.setVisibility(View.GONE);
         }
+
         if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
             tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
             tvPasswordErrorPrmpt.setText(RT.getString(R.string.error_password));
             return false;
+        } else {
+            tvPasswordErrorPrmpt.setVisibility(View.GONE);
         }
-        tvNoErrorPrmpt.setVisibility(View.GONE);
-        tvPasswordErrorPrmpt.setVisibility(View.GONE);
         return true;
     }
 
@@ -230,7 +334,7 @@ public class LoginActivity extends BaseActivity {
             Bundle bundle = data.getExtras();
             mHasEditFirstPassword = bundle.getBoolean("hasEditFirstPassword");
 
-            Log.d(TAG, "onActivityResult: 从修改初始密码界面返回。 mHasEditFirstPassword "+ mHasEditFirstPassword);
+            Log.d(TAG, "onActivityResult: 从修改初始密码界面返回。 mHasEditFirstPassword " + mHasEditFirstPassword);
         } else if (requestCode == AppConstant.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
             //如果是从忘记密码界面返回。
             Log.d(TAG, "onActivityResult: 从忘记密码界面返回。");
@@ -253,7 +357,7 @@ public class LoginActivity extends BaseActivity {
 
         Bundle bundle = new Bundle();
         bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
-        bundle.putString("sno",sNo);
+        bundle.putString("sno", sNo);
         Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
@@ -299,10 +403,10 @@ public class LoginActivity extends BaseActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
         String password1 = sharedPreferences.getString(sNo, "");
 
-        if("".equals(password1)){
+        if ("".equals(password1)) {
             tvNoErrorPrmpt.setVisibility(View.VISIBLE);
             tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
-        }else if (!password.equals(password1)) {
+        } else if (!password.equals(password1)) {
             tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
             tvPasswordErrorPrmpt.setText(RT.getString(R.string.error_login));
         } else {

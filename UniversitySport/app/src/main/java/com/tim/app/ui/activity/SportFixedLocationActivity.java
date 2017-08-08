@@ -63,7 +63,7 @@ import com.tim.app.util.TimeUtil;
 
 import org.json.JSONObject;
 
-import static com.tim.app.ui.activity.MainActivity.studentId;
+import static com.tim.app.ui.activity.MainActivity.student;
 
 
 /**
@@ -567,7 +567,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
-                    ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), studentId, new JsonResponseCallback() {
+                    ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             if (errCode == 0) {

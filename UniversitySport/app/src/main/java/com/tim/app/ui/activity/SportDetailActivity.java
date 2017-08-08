@@ -78,7 +78,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.tim.app.ui.activity.MainActivity.studentId;
+import static com.tim.app.ui.activity.MainActivity.student;
 
 
 /**
@@ -578,7 +578,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvAverSpeed.setText("0.0");
                         }
 
-                        runningActivitiesEnd(sportEntry.getId(), studentId, targetFinishedTime);
+                        runningActivitiesEnd(sportEntry.getId(), student.getId(), targetFinishedTime);
 
                         tvSportJoinNumber.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
@@ -684,7 +684,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
 
                     Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
-                    ServerInterface.instance(). runningActivitiesStart(TAG, sportEntry.getId(), studentId, startTime, new JsonResponseCallback() {
+                    ServerInterface.instance(). runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             if (errCode == 0) {
