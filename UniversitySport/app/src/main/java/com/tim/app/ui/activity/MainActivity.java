@@ -346,7 +346,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 case "1000米跑":
                                     sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                                     break;
+                                default:
+                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
+                                    continue;
                             }
+
                             sportEntry.setParticipantNum(participantNum);
                             sportEntry.setTargetDistance(distance);
                             sportEntry.setTargetTime((int) (time / 60));

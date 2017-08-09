@@ -81,7 +81,13 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private MapView mapView;
     private AMap aMap;
     private UiSettings uiSettings;
+    private Location firstLocation;
+    private int firstLocationType;
+    private LatLng oldLatLng = null;
 
+    /*重要实体*/
+    private SportEntry sportEntry;//创建areaActivity的时候要用到
+    private FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint;
 
     /*基本控件*/
     private LinearLayout llLacationHint;
@@ -104,10 +110,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private TextView tvPause;
     private View rlAnimView;
 
-    /*重要实体*/
-    private SportEntry sportEntry;//创建areaActivity的时候要用到
-    private FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint;
-    private LatLng oldLatLng = null;
 
     /*初始化变量*/
     static final int STATE_NORMAL = 0;//初始状态
@@ -228,7 +230,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     }
 
 
-
     @Override
     public void initData() {
         float batteryLevel = getBatteryLevel();
@@ -256,7 +257,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             UserManager.instance().cleanCache();
         }
         //设置地图区域范围（画圈儿）
-        LatLng latLng = new LatLng(fixLocationOutdoorSportPoint.getLatitude(),fixLocationOutdoorSportPoint.getLongitude());
+        LatLng latLng = new LatLng(fixLocationOutdoorSportPoint.getLatitude(), fixLocationOutdoorSportPoint.getLongitude());
         Circle circle = aMap.addCircle(new CircleOptions().
                 center(latLng).
                 radius(fixLocationOutdoorSportPoint.getRadius()).
@@ -275,6 +276,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     // 重置一下滑动解锁的控件
                     slideUnlockView.reset();
                     // 让滑动解锁控件消失
+                    slideUnlockView.setVisibility(View.GONE);
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
@@ -389,7 +391,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         LatLng newLatLng;
         Boolean isNormal = true;
 
-
         //运动耗时
         if (state == STATE_STARTED) {
             elapseTime += acquisitionInterval;
@@ -430,6 +431,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 // 判断第一次，第一次会提示
                 if (oldLatLng == null) {
                     String errText = "定位成功";
+                    firstLocation = location;
+                    firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                     CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
@@ -567,18 +570,34 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
+                    //开始本次运动
                     ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             if (errCode == 0) {
                                 Log.d(TAG, "areaSportsStart 成功");
                                 JSONObject jsonObject = json.optJSONObject("obj");
-                                try {
-                                    areaSportRecordId = jsonObject.optInt("id");
-                                    acquisitionInterval = jsonObject.optInt("acquisitionInterval");
-                                } catch (Exception e) {
 
-                                }
+                                areaSportRecordId = jsonObject.optInt("id");
+                                acquisitionInterval = jsonObject.optInt("acquisitionInterval");
+
+                                //第一次向服务器提交数据
+                                ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, firstLocation.getLongitude(),
+                                        firstLocation.getLatitude(), firstLocationType, new ResponseCallback() {
+                                            @Override
+                                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                                if (status == 0) {
+                                                    DLOG.d(TAG, "第一次上传 areaActivityData 成功!");
+                                                    return true;
+                                                } else {
+                                                    String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
+                                                    msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
+                                                    msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
+                                                    DLOG.writeToInternalFile(msg);
+                                                    return false;
+                                                }
+                                            }
+                                        });
                                 return true;
                             } else {
                                 Log.d(TAG, "errMsg:" + errMsg);
@@ -586,6 +605,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             }
                         }
                     });
+
 
                 } else if (state == STATE_END) {
                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
