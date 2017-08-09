@@ -405,6 +405,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         emptyLayout.showEmpty();
                         e.printStackTrace();
                     }
+                    //在查询跑步项目之后调用。
                     queryAreaSport();
                     return true;
                 } else {
@@ -602,6 +603,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     protected void onResume() {
         super.onResume();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
+        Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
+        queryCurTermData();
     }
 
     @Override
@@ -654,4 +657,5 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
 }

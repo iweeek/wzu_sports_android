@@ -566,6 +566,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     rlAreaDesc.setVisibility(View.GONE);
                     tvSelectLocation.setVisibility(View.INVISIBLE);
 
+                    //设置时间m
+                    String time = TimeUtil.formatMillisTime(elapseTime * 1000);
+                    tvElapsedTime.setText(time.substring(0, time.length() - 3));//设置时间
+
                     initData();
                     Intent bindIntent = new Intent(this, LocationService.class);
                     bindService(bindIntent, connection, BIND_AUTO_CREATE);
@@ -605,7 +609,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             }
                         }
                     });
-
 
                 } else if (state == STATE_END) {
                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();

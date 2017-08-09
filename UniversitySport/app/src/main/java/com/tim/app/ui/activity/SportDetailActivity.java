@@ -709,7 +709,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                     }
                                                 }
                                             });
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
