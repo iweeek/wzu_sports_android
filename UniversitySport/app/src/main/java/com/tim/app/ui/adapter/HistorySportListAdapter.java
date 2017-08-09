@@ -24,8 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 
-public class    HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
-        implements BaseRecyclerAdapter.OnItemClickListener{
+public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, HistoryItem>
+        implements BaseRecyclerAdapter.OnItemClickListener {
     private Context mContext;
     private static final String TAG = "HistorySportListAdapter";
 
@@ -58,7 +58,7 @@ public class    HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecycler
             if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
                 //向下转型
                 final HistoryRunningSportEntry runningData = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
-//                ll.setClickable(true);
+                //                ll.setClickable(true);
                 ll.setTag(runningData);
 
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
@@ -68,12 +68,17 @@ public class    HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecycler
                 tvSportDesc.setText(runningData.getSportName());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-                if (runningData.isQualified()) {
-                    tvSportQualified.setText("达标");
-                    tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                if (runningData.getEndAt() == 0) {
+                    tvSportQualified.setText("非正常结束");
+                    tvSportQualified.setTextColor(Color.parseColor("#FFAA2B"));
                 } else {
-                    tvSportQualified.setText("不达标");
-                    tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                    if (runningData.isQualified()) {
+                        tvSportQualified.setText("达标");
+                        tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                    } else {
+                        tvSportQualified.setText("不达标");
+                        tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                    }
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
@@ -167,6 +172,6 @@ public class    HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecycler
         Log.d(TAG, "position:" + position);
         Log.d(TAG, "id:" + id);
         Log.d(TAG, "getDataList().get(position).historySportEntryList.get(0):" + getDataList().get(position).historySportEntryList.get(0));
-//        SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
+        //        SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
     }
 }

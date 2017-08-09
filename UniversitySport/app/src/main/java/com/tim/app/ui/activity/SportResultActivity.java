@@ -61,7 +61,7 @@ public class SportResultActivity extends BaseActivity {
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
 
-    private HistorySportEntry historyEntry;
+    private HistorySportEntry historySportEntry;
 
     private LatLng oldLatLng = null;
     private int interval = 0;
@@ -172,7 +172,7 @@ public class SportResultActivity extends BaseActivity {
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        historyEntry = (HistorySportEntry) getIntent().getSerializableExtra("historySportEntry");
+        historySportEntry = (HistorySportEntry) getIntent().getSerializableExtra("historySportEntry");
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -226,10 +226,10 @@ public class SportResultActivity extends BaseActivity {
     public void initData() {
         DLOG.d(TAG, "initData");
 
-        if (historyEntry.getType() == HistorySportEntry.RUNNING_TYPE) {
-            queryRunningActivity(historyEntry.getId());
-        } else if (historyEntry.getType() == HistorySportEntry.AREA_TYPE) {
-            queryAreaActivity(historyEntry.getId());
+        if (historySportEntry.getType() == HistorySportEntry.RUNNING_TYPE) {
+            queryRunningActivity(historySportEntry.getId());
+        } else if (historySportEntry.getType() == HistorySportEntry.AREA_TYPE) {
+            queryAreaActivity(historySportEntry.getId());
         }
 
 
@@ -303,12 +303,17 @@ public class SportResultActivity extends BaseActivity {
                         JSONObject jsonObject = json.getJSONObject("data").getJSONObject("areaActivity");
 
                         boolean qualified = jsonObject.getBoolean("qualified");
-                        if (qualified) {
-                            tvResult.setText("达标");
-                            tvResult.setTextColor(Color.GREEN);
+                        if (historySportEntry.getEndAt() == 0) {
+                            tvResult.setText("非正常结束");
+                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {
-                            tvResult.setText("未达标");
-                            tvResult.setTextColor(Color.RED);
+                            if (qualified) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(Color.GREEN);
+                            } else {
+                                tvResult.setText("未达标");
+                                tvResult.setTextColor(Color.RED);
+                            }
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
@@ -426,12 +431,17 @@ public class SportResultActivity extends BaseActivity {
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
 
                         boolean qualified = jsonObject.getBoolean("qualified");
-                        if (qualified) {
-                            tvResult.setText("达标");
-                            tvResult.setTextColor(Color.GREEN);
+                        if (historySportEntry.getEndAt() == 0) {
+                            tvResult.setText("非正常结束");
+                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {
-                            tvResult.setText("未达标");
-                            tvResult.setTextColor(Color.RED);
+                            if (qualified) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(Color.GREEN);
+                            } else {
+                                tvResult.setText("未达标");
+                                tvResult.setTextColor(Color.RED);
+                            }
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
@@ -529,7 +539,7 @@ public class SportResultActivity extends BaseActivity {
                 LatLng ll = oldLatLng;
 
                 DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
-                if (historyEntry instanceof HistoryAreaSportEntry) {
+                if (historySportEntry instanceof HistoryAreaSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
                         if (drawPoints.get(i).getLocationType() == 1) {
                             drawLine(ll, drawPoints.get(i).getLL());
@@ -538,7 +548,7 @@ public class SportResultActivity extends BaseActivity {
                                     ", i: " + i);
                         }
                     }
-                } else if (historyEntry instanceof HistoryRunningSportEntry) {
+                } else if (historySportEntry instanceof HistoryRunningSportEntry) {
                     for (int i = 1; i < drawPoints.size(); i++) {
                         if (drawPoints.get(i).getLocationType() == 1 && drawPoints.get(i).isNormal()) {
                             drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());

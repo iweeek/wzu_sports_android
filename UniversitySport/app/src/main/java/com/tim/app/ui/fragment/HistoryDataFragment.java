@@ -209,11 +209,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                     entry.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
                                     entry.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
                                     //过滤不完整数据
-                                    if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
+//                                    if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
                                         entry.setEndAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
-                                    } else {
-                                        continue;
-                                    }
+//                                    } else {
+//                                        continue;
+//                                    }
                                     entry.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
                                     entry.setType(HistorySportEntry.RUNNING_TYPE);
 
@@ -235,11 +235,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                     entry.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                     entry.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
                                     //过滤不完整数据
-                                    if (Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")) > 0) {
+//                                    if (Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")) > 0) {
                                         entry.setEndAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
-                                    } else {
-                                        continue;
-                                    }
+//                                    } else {
+//                                        continue;
+//                                    }
                                     entry.setAreaName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
                                     entry.setType(HistorySportEntry.AREA_TYPE);
 
