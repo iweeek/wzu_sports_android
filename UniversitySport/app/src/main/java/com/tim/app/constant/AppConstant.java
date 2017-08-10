@@ -50,6 +50,13 @@ public class AppConstant {
     public static  final  String APP_ID = "wxc602178d95890ea2";
 
 
+
+    /*
+    * 运动类型
+    */
+    public static final int RUNNING_TYPE = 1;
+    public static final int AREA_TYPE = 2;
+
 }
 
 

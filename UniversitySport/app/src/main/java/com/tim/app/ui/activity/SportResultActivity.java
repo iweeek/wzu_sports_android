@@ -36,6 +36,7 @@ import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
@@ -226,9 +227,9 @@ public class SportResultActivity extends BaseActivity {
     public void initData() {
         DLOG.d(TAG, "initData");
 
-        if (historySportEntry.getType() == HistorySportEntry.RUNNING_TYPE) {
+        if (historySportEntry.getType() == AppConstant.RUNNING_TYPE) {
             queryRunningActivity(historySportEntry.getId());
-        } else if (historySportEntry.getType() == HistorySportEntry.AREA_TYPE) {
+        } else if (historySportEntry.getType() == AppConstant.AREA_TYPE) {
             queryAreaActivity(historySportEntry.getId());
         }
 
@@ -304,7 +305,7 @@ public class SportResultActivity extends BaseActivity {
 
                         boolean qualified = jsonObject.getBoolean("qualified");
 
-                        if (historySportEntry.getEndAt() == 0) {
+                        if (historySportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {
@@ -432,7 +433,7 @@ public class SportResultActivity extends BaseActivity {
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
 
                         boolean qualified = jsonObject.getBoolean("qualified");
-                        if (historySportEntry.getEndAt() == 0) {
+                        if (historySportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {

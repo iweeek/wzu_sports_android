@@ -50,7 +50,9 @@ import com.application.library.net.ResponseCallback;
 import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.AreaSportRecord;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
@@ -88,6 +90,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
     private FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint;
+    private HistorySportEntry historySportEntry;
 
     /*基本控件*/
     private LinearLayout llLacationHint;
@@ -127,9 +130,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     private int screenOffTimeout;
     private int screenKeepLightTime;
-
-    private Runnable elapseTimeRunnable;
-    private long timerInterval = 1000;
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
 
@@ -277,6 +277,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     slideUnlockView.reset();
                     // 让滑动解锁控件消失
                     slideUnlockView.setVisibility(View.GONE);
+                    tvPause.setVisibility(View.VISIBLE);
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
@@ -611,10 +612,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     });
 
                 } else if (state == STATE_END) {
-                    HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
-                    entry.setId(areaSportRecordId);
-                    entry.setType(HistorySportEntry.AREA_TYPE);
-                    SportResultActivity.start(this, entry);
+                    SportResultActivity.start(this, historySportEntry);
                     finish();
                     //// TODO: 2017/8/1 这里要做一个区域运动的实体类。//运动结束时，查看锻炼结果
                     //                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
@@ -741,12 +739,28 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                              07-31 22:18:26.019 9640-9640/com.tim.moli D/http: ║     }
                              07-31 22:18:26.019 9640-9640/com.tim.moli D/http: ║ }
                              */
+                            JSONObject jsonObject = json.optJSONObject("obj");
+                            historySportEntry = new HistoryAreaSportEntry();
 
-                            boolean qualified = json.optJSONObject("obj").optBoolean("qualified");
-                            if (qualified) {
+                            historySportEntry.setId(jsonObject.optInt("id"));
+                            historySportEntry.setSportId(jsonObject.optInt("areaSportId"));
+                            historySportEntry.setStudentId(jsonObject.optInt("studentId"));
+                            historySportEntry.setCostTime(jsonObject.optInt("costTime"));
+                            historySportEntry.setStartTime(jsonObject.optLong("startTime"));
+                            historySportEntry.setKcalConsumed(jsonObject.optInt("kcalConsumed"));
+                            historySportEntry.setQualified(jsonObject.optBoolean("qualified"));
+                            historySportEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
+                            historySportEntry.setCreatedAt(jsonObject.optLong("createdAt"));
+                            historySportEntry.setUpdatedAt(jsonObject.optLong("updatedAt"));
+                            historySportEntry.setEndedAt(jsonObject.optLong("endedAt"));
+                            historySportEntry.setEndedBy(jsonObject.optBoolean("endedBy"));
+                            historySportEntry.setType(AppConstant.AREA_TYPE);
+                            if (historySportEntry.isQualified()) {
                                 tvResult.setText("达标");
+                                tvResult.setTextColor(Color.GREEN);
                             } else {
                                 tvResult.setText("未达标");
+                                tvResult.setTextColor(Color.RED);
                             }
                             tvResult.setVisibility(View.VISIBLE);
                             return true;

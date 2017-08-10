@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
-import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.HistoryItem;
 import com.tim.app.ui.activity.SportResultActivity;
 import com.tim.app.ui.adapter.viewholder.ViewHolder;
@@ -55,7 +55,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         for (int i = 0; i < data.historySportEntryList.size(); i++) {
             final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
 
-            if (data.historySportEntryList.get(i).getType() == HistorySportEntry.RUNNING_TYPE) {
+            if (data.historySportEntryList.get(i).getType() == AppConstant.RUNNING_TYPE) {
                 //向下转型
                 final HistoryRunningSportEntry runningData = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
                 //                ll.setClickable(true);
@@ -68,7 +68,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(runningData.getSportName());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-                if (runningData.getEndAt() == 0) {
+                if (runningData.getEndedAt() == 0) {
                     tvSportQualified.setText("非正常结束");
                     tvSportQualified.setTextColor(Color.parseColor("#FFAA2B"));
                 } else {

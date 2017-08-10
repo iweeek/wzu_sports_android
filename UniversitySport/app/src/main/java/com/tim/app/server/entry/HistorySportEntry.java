@@ -8,15 +8,29 @@ import java.io.Serializable;
  * @描述
  */
 
-public class HistorySportEntry  implements Serializable{
+public class HistorySportEntry implements Serializable {
 
-    public static final int RUNNING_TYPE = 1;
-    public static final int AREA_TYPE = 2;
+    private static final long serialVersionUID = 6187447685293862071L;
 
-    /**
-     * 记录的Id
-     * @return
-     */
+    private long id;
+    private int sportId;
+    private int studentId;
+    private int costTime;
+    private long startTime;
+    private int kcalConsumed;
+    private int distance;
+    private boolean qualified;
+    private int qualifiedCostTime;
+    private long createdAt;
+    private long updatedAt;
+    private long endedAt;
+    private String sportDate;
+    private String sportName;
+    private String areaName;
+    private boolean endedBy;
+    private int type;//类型：1，跑步运动；2，区域运动。
+
+
     public long getId() {
         return id;
     }
@@ -25,46 +39,20 @@ public class HistorySportEntry  implements Serializable{
         this.id = id;
     }
 
-    private long id;
-    private static final long serialVersionUID = 6187447685293862071L;
-    private int sportId;
-    private int costTime;
-    private int kcalConsumed;
-    private boolean qualified;
-    private long startTime;
-    private long endAt;
-    private String sportDate;
-    private String sportName;
-
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    private int type;//类型：1，跑步运动；2，区域运动。
-
-    public String getSportName() {
-        return sportName;
-    }
-
-    public void setSportName(String sportName) {
-        this.sportName = sportName;
-    }
-
-    /**
-     * 这个运动项目的Id,首页的运动项目
-     * @return
-     */
     public int getSportId() {
         return sportId;
     }
 
     public void setSportId(int sportId) {
         this.sportId = sportId;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
     public int getCostTime() {
@@ -75,12 +63,28 @@ public class HistorySportEntry  implements Serializable{
         this.costTime = costTime;
     }
 
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
     public int getKcalConsumed() {
         return kcalConsumed;
     }
 
     public void setKcalConsumed(int kcalConsumed) {
         this.kcalConsumed = kcalConsumed;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     public boolean isQualified() {
@@ -91,20 +95,36 @@ public class HistorySportEntry  implements Serializable{
         this.qualified = qualified;
     }
 
-    public long getStartTime() {
-        return startTime;
+    public int getQualifiedCostTime() {
+        return qualifiedCostTime;
     }
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
+    public void setQualifiedCostTime(int qualifiedCostTime) {
+        this.qualifiedCostTime = qualifiedCostTime;
     }
 
-    public long getEndAt() {
-        return endAt;
+    public long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setEndAt(long endAt) {
-        this.endAt = endAt;
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public long getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public long getEndedAt() {
+        return endedAt;
+    }
+
+    public void setEndedAt(long endedAt) {
+        this.endedAt = endedAt;
     }
 
     public String getSportDate() {
@@ -115,17 +135,58 @@ public class HistorySportEntry  implements Serializable{
         this.sportDate = sportDate;
     }
 
+    public String getSportName() {
+        return sportName;
+    }
+
+    public void setSportName(String sportName) {
+        this.sportName = sportName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    public boolean isEndedBy() {
+        return endedBy;
+    }
+
+    public void setEndedBy(boolean endedBy) {
+        this.endedBy = endedBy;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "HistorySportEntry{" +
-                "sportId=" + sportId +
+                "id=" + id +
+                ", sportId=" + sportId +
+                ", studentId=" + studentId +
                 ", costTime=" + costTime +
-                ", kcalConsumed=" + kcalConsumed +
-                ", qualified=" + qualified +
                 ", startTime=" + startTime +
-                ", endAt=" + endAt +
+                ", kcalConsumed=" + kcalConsumed +
+                ", distance=" + distance +
+                ", qualified=" + qualified +
+                ", qualifiedCostTime=" + qualifiedCostTime +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", endedAt=" + endedAt +
                 ", sportDate='" + sportDate + '\'' +
                 ", sportName='" + sportName + '\'' +
+                ", areaName='" + areaName + '\'' +
+                ", endedBy=" + endedBy +
+                ", type=" + type +
                 '}';
     }
 }

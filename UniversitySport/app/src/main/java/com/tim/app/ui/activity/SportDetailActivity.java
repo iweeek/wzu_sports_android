@@ -56,12 +56,13 @@ import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryRunningSportEntry;
+import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
-import com.tim.app.server.entry.db.RunningSportsRecordOld;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.db.RunningSportsRecordOld;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
@@ -91,6 +92,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     //重要实体
     private SportEntry sportEntry;
+    private HistorySportEntry historySportEntry;
 
     //第三方
     private MapView mapView;
@@ -723,10 +725,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
-                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
-                    entry.setId(sportRecordId);
-                    entry.setType(HistorySportEntry.RUNNING_TYPE);
-                    SportResultActivity.start(this, entry);
+                    SportResultActivity.start(this, historySportEntry);
                 }
                 break;
             //            case R.id.btContinue:
@@ -855,21 +854,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
                         if (errCode == 0) {
-                            try {
-                                String curConsumeEnergy = json.getString("kcalConsumed");
-                                boolean qualified = json.getBoolean("qualified");
-                                if (qualified) {
-                                    tvResult.setText("达标");
-                                } else {
-                                    tvResult.setText("未达标");
-                                }
-                                tvResult.setVisibility(View.VISIBLE);
-                                rlCurConsumeEnergy.setVisibility(View.VISIBLE);
-                                tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                                Log.e(TAG, "runningActivitiesEnd onJsonResponse e: " + e);
+
+                            historySportEntry = new HistoryAreaSportEntry();
+
+                            historySportEntry.setId(json.optInt("id"));
+                            historySportEntry.setSportId(json.optInt("areaSportId"));
+                            historySportEntry.setStudentId(json.optInt("studentId"));
+                            historySportEntry.setCostTime(json.optInt("costTime"));
+                            historySportEntry.setStartTime(json.optLong("startTime"));
+                            historySportEntry.setKcalConsumed(json.optInt("kcalConsumed"));
+                            historySportEntry.setQualified(json.optBoolean("qualified"));
+                            historySportEntry.setQualifiedCostTime(json.optInt("qualifiedCostTime"));
+                            historySportEntry.setCreatedAt(json.optLong("createdAt"));
+                            historySportEntry.setUpdatedAt(json.optLong("updatedAt"));
+                            historySportEntry.setEndedAt(json.optLong("endedAt"));
+                            historySportEntry.setEndedBy(json.optBoolean("endedBy"));
+                            historySportEntry.setType(AppConstant.RUNNING_TYPE);
+                            if (historySportEntry.isQualified()) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(Color.GREEN);
+                            } else {
+                                tvResult.setText("未达标");
+                                tvResult.setTextColor(Color.RED);
                             }
+                            tvResult.setVisibility(View.VISIBLE);
+                            rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+                            tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, String.valueOf(historySportEntry.getKcalConsumed())));
+
                             return true;
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
