@@ -246,9 +246,9 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             }
 
                             if (item.historySportEntryList != null) {
-                                for (int i = 0; i < item.historySportEntryList.size(); i++) {
-                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
-                                }
+//                                for (int i = 0; i < item.historySportEntryList.size(); i++) {
+//                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
+//                                }
                                 // 对item.historySportEntryList进行排序
                                 TimeComparator timeComparator = new TimeComparator();
                                 Collections.sort(item.historySportEntryList, timeComparator);

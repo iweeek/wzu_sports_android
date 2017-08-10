@@ -49,12 +49,12 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
             return;
         }
 
+        int totalEnergyCost = 0;
         final ViewHolder viewHolder = (ViewHolder) holder;
-        viewHolder.setText(R.id.tvSportDate, data.date);
+
 
         for (int i = 0; i < data.historySportEntryList.size(); i++) {
             final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
-
             if (data.historySportEntryList.get(i).getType() == AppConstant.RUNNING_TYPE) {
                 //向下转型
                 final HistoryRunningSportEntry runningData = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
@@ -99,6 +99,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(runningData.getKcalConsumed() + "");
 
+                //累加总共消耗热量
+                totalEnergyCost += runningData.getKcalConsumed();
 
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -153,9 +155,11 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(areaData.getKcalConsumed() + "");
                 //消耗能量要隐藏
-                LinearLayout llRight = (LinearLayout) ll.findViewById(R.id.llRight);
-                llRight.setVisibility(View.INVISIBLE);
+                //                LinearLayout llRight = (LinearLayout) ll.findViewById(R.id.llRight);
+                //                llRight.setVisibility(View.INVISIBLE);
 
+                //累加总共消耗热量
+                totalEnergyCost += areaData.getKcalConsumed();
 
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -167,6 +171,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 viewHolder.addView(R.id.llSportItem, ll);
             }
         }
+        //当天日期
+        viewHolder.setText(R.id.tvSportDate, data.date);
+        //一天的热量消耗
+        viewHolder.setText(R.id.tvEnergyCost, totalEnergyCost + "千卡");
     }
 
     @Override
