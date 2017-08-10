@@ -147,7 +147,7 @@
     <string name="step">步</string>
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTime">达标时间</string>
-    <string name="targetDistance">达标距离</string>
+    <string name="qualifiedDistance">达标距离</string>
     <string name="targetTitleStep">达标步数</string>
     <string name="curTermTargetCount">学期目标次数：%s次</string>
     <string name="curTermAccuCountLabel">本学期累计运动（次）</string>

@@ -303,6 +303,7 @@ public class SportResultActivity extends BaseActivity {
                         JSONObject jsonObject = json.getJSONObject("data").getJSONObject("areaActivity");
 
                         boolean qualified = jsonObject.getBoolean("qualified");
+
                         if (historySportEntry.getEndAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));

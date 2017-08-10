@@ -368,7 +368,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 //                                    } else {
 //                                        continue;
 //                                    }
-//                                    entry.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
+//                                    entry.setName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
 //                                    entry.setType(HistorySportEntry.RUNNING_TYPE);
 //
 //                                    if (item.historySportEntryList == null) {
@@ -396,7 +396,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 //                                    } else {
 //                                        continue;
 //                                    }
-//                                    entry.setSportName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
+//                                    entry.setName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
 //                                    entry.setType(HistorySportEntry.AREA_TYPE);
 //
 //                                    if (item.historySportEntryList == null) {
@@ -472,7 +472,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
                                 data.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
                                 data.setEndAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
-                                data.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
+                                data.setName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
                                 dataList.add(data);
                             }
                             for (int i = 0; i < areaSportArray.length(); i++) {
@@ -484,7 +484,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                 data.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
                                 data.setEndAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
-                                data.setSportName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
+                                data.setName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
                                 dataList.add(data);
                             }
 
@@ -558,7 +558,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
                                 data.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
                                 data.setEndAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
-                                data.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
+                                data.setName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
                                 dataList.add(data);
                             }
                             for (int i = 0; i < areaSportArray.length(); i++) {
@@ -570,7 +570,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                 data.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
                                 data.setEndAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
-                                data.setSportName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
+                                data.setName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
                                 dataList.add(data);
                             }
 
@@ -644,7 +644,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
                                 data.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
                                 data.setEndAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
-                                data.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
+                                data.setName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
                                 dataList.add(data);
                             }
                             for (int i = 0; i < areaSportArray.length(); i++) {
@@ -656,7 +656,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                 data.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
                                 data.setEndAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
-                                data.setSportName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
+                                data.setName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
                                 dataList.add(data);
                             }
 
@@ -766,7 +766,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         //                            for (int i = 0; i < historySportArray.length(); i++) {
         //                                HistoryRunningSportEntry data = new HistoryRunningSportEntry();
         //                                data.setRunningSportId(historySportArray.getJSONObject(i).getInt("id"));
-        //                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
+        //                                data.setName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
         //                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
         //                                data.setKcalConsumed(Integer.valueOf(historySportArray.getJSONObject(i).getString("kcalConsumed")));
         //                                data.setCostTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
@@ -808,7 +808,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         //                            for (int i = 0; i < historySportArray.length(); i++) {
         //                                HistoryRunningSportEntry data = new HistoryRunningSportEntry();
         //                                data.setRunningSportId(historySportArray.getJSONObject(i).getInt("id"));
-        //                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
+        //                                data.setName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
         //                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
         //                                data.setKcalConsumed(Integer.valueOf(historySportArray.getJSONObject(i).getString("kcalConsumed")));
         //                                data.setCostTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));
@@ -850,7 +850,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         //                            for (int i = 0; i < historySportArray.length(); i++) {
         //                                HistoryRunningSportEntry data = new HistoryRunningSportEntry();
         //                                data.setRunningSportId(historySportArray.getJSONObject(i).getInt("id"));
-        //                                data.setSportName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
+        //                                data.setName(historySportArray.getJSONObject(i).optJSONObject("runningSport").getString("name"));
         //                                data.setStartTime(Long.valueOf(historySportArray.getJSONObject(i).getString("startTime")));
         //                                data.setKcalConsumed(Integer.valueOf(historySportArray.getJSONObject(i).getString("kcalConsumed")));
         //                                data.setCostTime(Integer.valueOf(historySportArray.getJSONObject(i).getString("costTime")));

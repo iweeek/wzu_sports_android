@@ -25,9 +25,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
-import com.tim.app.server.entry.RunningSportsRecord;
-import com.tim.app.server.entry.SportsRecord;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -461,18 +458,18 @@ public class Database extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
-    public SportsRecord getEntityByCursor(String tableName, Cursor c) {
-        switch (tableName) {
-            case TABLE_RUNNING_SPORTS:
-                return new RunningSportsRecord(c.getInt(0),
-                        c.getInt(1), c.getInt(2),
-                        c.getInt(3), c.getInt(4),
-                        c.getInt(5),
-                        c.getLong(6), c.getInt(7),
-                        c.getLong(8));
-        }
-        return null;
-    }
+//    public SportsRecord getEntityByCursor(String tableName, Cursor c) {
+//        switch (tableName) {
+//            case TABLE_RUNNING_SPORTS:
+//                return new RunningSportsRecordOld(c.getInt(0),
+//                        c.getInt(1), c.getInt(2),
+//                        c.getInt(3), c.getInt(4),
+//                        c.getInt(5),
+//                        c.getLong(6), c.getInt(7),
+//                        c.getLong(8));
+//        }
+//        return null;
+//    }
 
     public interface TableInterface {
         //DB NAME

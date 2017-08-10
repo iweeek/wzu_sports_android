@@ -40,8 +40,8 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, FixLoc
             return;
         }
 
-        if (!TextUtils.isEmpty(data.getAreaName())) {
-            holder.setText(R.id.tvAreaName, data.getAreaName());
+        if (!TextUtils.isEmpty(data.getName())) {
+            holder.setText(R.id.tvAreaName, data.getName());
         }
 
         if (!TextUtils.isEmpty(data.getAddress())) {

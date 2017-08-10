@@ -190,7 +190,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
-        fixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getParcelableExtra("fixLocationOutdoorSportPoint");
+        fixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getSerializableExtra("fixLocationOutdoorSportPoint");
         Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
         Log.d(TAG, "sportEntry:" + sportEntry);
 
@@ -237,8 +237,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         screenOffTimeout = Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getAreaName())) {
-            tvAreaName.setText(fixLocationOutdoorSportPoint.getAreaName());
+        if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getName())) {
+            tvAreaName.setText(fixLocationOutdoorSportPoint.getName());
         }
         if (fixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
             tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(fixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
@@ -641,7 +641,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             //                    state = STATE_END;
             //                }
             //
-            //                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
+            //                if (currentDistance > sportEntry.getQualifiedDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
             //                    tvResult.setText("达标");
             //                } else {
             //                    tvResult.setText("不达标");

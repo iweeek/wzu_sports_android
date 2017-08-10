@@ -1,4 +1,4 @@
-package com.tim.app.server.entry;
+package com.tim.app.server.entry.db;
 
 /**
  * Created by nimon on 2017/6/17.

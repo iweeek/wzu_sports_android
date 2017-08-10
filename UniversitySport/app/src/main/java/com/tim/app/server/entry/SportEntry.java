@@ -11,17 +11,16 @@ public class SportEntry implements Serializable {
     public   static final  int AREA_SPORT = 1;
     public static  final  int RUNNING_SPORT = 2;
 
-    private String sportName;//名称
+    private int id = 1;//运动id，默认值为1
+    private String name;//名称
+    private int qualifiedCostTime;//目标时间
+    private int acquisitionInterval;
     private int participantNum;//参加人数
-    private int targetDistance;//目标距离
+    private int qualifiedDistance;//目标距离
     private String targetSpeed;//目标速度
-    private int targetTime;//目标时间
-    private int steps;//目标步数
     private String bgUrl;//背景图片地址
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
-    private int id = 1;//运动id，默认值为1
-    private int acquisitionInterval;
 
     public int getAcquisitionInterval() {
         return acquisitionInterval;
@@ -31,12 +30,12 @@ public class SportEntry implements Serializable {
         this.acquisitionInterval = acquisitionInterval;
     }
 
-    public String getSportName() {
-        return sportName;
+    public String getName() {
+        return name;
     }
 
-    public void setSportName(String sportName) {
-        this.sportName = sportName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getParticipantNum() {
@@ -46,12 +45,12 @@ public class SportEntry implements Serializable {
     public void setParticipantNum(int participantNum) {
         this.participantNum = participantNum;
     }
-    public int getTargetDistance() {
-        return targetDistance;
+    public int getQualifiedDistance() {
+        return qualifiedDistance;
     }
 
-    public void setTargetDistance(int targetDistance) {
-        this.targetDistance = targetDistance;
+    public void setQualifiedDistance(int qualifiedDistance) {
+        this.qualifiedDistance = qualifiedDistance;
     }
 
     public String getTargetSpeed() {
@@ -63,19 +62,11 @@ public class SportEntry implements Serializable {
     }
 
     public int getTargetTime() {
-        return targetTime;
+        return qualifiedCostTime;
     }
 
     public void setTargetTime(int targetTime) {
-        this.targetTime = targetTime;
-    }
-
-    public int getSteps() {
-        return steps;
-    }
-
-    public void setSteps(int steps) {
-        this.steps = steps;
+        this.qualifiedCostTime = targetTime;
     }
 
     public String getBgUrl() {
@@ -113,12 +104,11 @@ public class SportEntry implements Serializable {
     @Override
     public String toString() {
         return "SportEntry{" +
-                "sportName='" + sportName + '\'' +
+                "name='" + name + '\'' +
                 ", participantNum=" + participantNum +
-                ", targetDistance=" + targetDistance +
+                ", qualifiedDistance=" + qualifiedDistance +
                 ", targetSpeed='" + targetSpeed + '\'' +
-                ", targetTime=" + targetTime +
-                ", steps=" + steps +
+                ", qualifiedCostTime=" + qualifiedCostTime +
                 ", bgUrl='" + bgUrl + '\'' +
                 ", bgDrawableId=" + bgDrawableId +
                 ", type=" + type +

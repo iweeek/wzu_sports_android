@@ -330,7 +330,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             SportEntry sportEntry = new SportEntry();
                             sportEntry.setId(runningSportId);
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            sportEntry.setSportName(jsonObject.optString("name", "快走"));
+                            sportEntry.setName(jsonObject.optString("name", "快走"));
                             String name = jsonObject.optString("name", "快走");
 
                             switch (name) {
@@ -352,7 +352,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             }
 
                             sportEntry.setParticipantNum(participantNum);
-                            sportEntry.setTargetDistance(distance);
+                            sportEntry.setQualifiedDistance(distance);
                             sportEntry.setTargetTime((int) (time / 60));
                             sportEntry.setTargetSpeed(bd + "");
                             sportEntry.setAcquisitionInterval(interval);
@@ -360,34 +360,34 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                            SportEntry sportEntry = new SportEntry();
                             //                            if (runningSportId == MODE_FAST_WALK) {
                             //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            //                                sportEntry.setSportName(jsonObject.optString("name", "快走"));
+                            //                                sportEntry.setName(jsonObject.optString("name", "快走"));
                             //                                sportEntry.setParticiNum(participantNum);
-                            //                                sportEntry.setTargetDistance(distance);
+                            //                                sportEntry.setQualifiedDistance(distance);
                             //                                sportEntry.setTargetTime((int) (time / 60));
                             //                                sportEntry.setTargetSpeed(bd + "");
                             //                                sportEntry.setAcquisitionInterval(interval);
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
                             //                            } else if (runningSportId == MODE_RANDOM_RUN) {
                             //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            //                                sportEntry.setSportName(jsonObject.optString("name", "随机慢跑"));
+                            //                                sportEntry.setName(jsonObject.optString("name", "随机慢跑"));
                             //                                sportEntry.setParticiNum(participantNum);
-                            //                                sportEntry.setTargetDistance(distance);
+                            //                                sportEntry.setQualifiedDistance(distance);
                             //                                sportEntry.setTargetTime((int) (time / 60));
                             //                                sportEntry.setTargetSpeed(bd + "");
                             //                                sportEntry.setAcquisitionInterval(interval);
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                             //                            } else if (runningSportId == MODE_FAST_RUN) {
                             //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            //                                sportEntry.setSportName(jsonObject.optString("name", "快跑"));
+                            //                                sportEntry.setName(jsonObject.optString("name", "快跑"));
                             //                                sportEntry.setParticiNum(participantNum);
-                            //                                sportEntry.setTargetDistance(distance);
+                            //                                sportEntry.setQualifiedDistance(distance);
                             //                                sportEntry.setTargetTime((int) (time / 60));
                             //                                sportEntry.setTargetSpeed(bd + "");
                             //                                sportEntry.setAcquisitionInterval(interval);
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
                             //                            } else if (runningSportId == MODE_AREA) {
                             //                                sportEntry.setType(SportEntry.AREA_SPORT);
-                            //                                sportEntry.setSportName(jsonObject.optString("", "区域锻炼"));
+                            //                                sportEntry.setName(jsonObject.optString("", "区域锻炼"));
                             //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_area);
                             //                            }
 
@@ -488,7 +488,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.optJSONObject(i);
                         areaSportEntry.setId(jsonObject.optInt("id"));
-                        areaSportEntry.setSportName(jsonObject.optString("name"));
+                        areaSportEntry.setName(jsonObject.optString("name"));
                         areaSportEntry.setType(SportEntry.AREA_SPORT);
                         //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                         areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));

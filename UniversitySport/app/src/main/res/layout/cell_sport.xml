@@ -53,7 +53,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:text="@string/targetDistance"
+                    android:text="@string/qualifiedDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"

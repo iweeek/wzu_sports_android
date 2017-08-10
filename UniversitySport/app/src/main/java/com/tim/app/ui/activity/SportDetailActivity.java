@@ -60,7 +60,7 @@ import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
-import com.tim.app.server.entry.RunningSportsRecord;
+import com.tim.app.server.entry.db.RunningSportsRecordOld;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
@@ -430,7 +430,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     drawLine(oldLatLng, newLatLng, isNormal);
                     currentDistance += moveDistance;
 
-                    if (currentDistance > sportEntry.getTargetDistance() && targetFinishedTime == 0) {
+                    if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
                         targetFinishedTime = elapseTime;
                     }
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
@@ -494,16 +494,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(sportEntry.getSportName())) {
-            tvSportName.setText(sportEntry.getSportName());
+        if (!TextUtils.isEmpty(sportEntry.getName())) {
+            tvSportName.setText(sportEntry.getName());
         }
 
         if (sportEntry.getParticipantNum() > 0) {
             tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
         }
 
-        if (sportEntry.getTargetDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getTargetDistance())));
+        if (sportEntry.getQualifiedDistance() > 0) {
+            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getQualifiedDistance())));
         }
 
         if (sportEntry.getTargetTime() > 0) {
@@ -748,7 +748,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                    state = STATE_END;
             //                }
             //
-            //                if (currentDistance > sportEntry.getTargetDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
+            //                if (currentDistance > sportEntry.getQualifiedDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
             //                    tvResult.setText("达标");
             //                } else {
             //                    tvResult.setText("不达标");
@@ -889,10 +889,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //查询数据库中的记录。
                 String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
 
-                List<RunningSportsRecord> list = SQLite.query(
+                List<RunningSportsRecordOld> list = SQLite.query(
                         RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
 
-                for (final RunningSportsRecord record : list) {
+                for (final RunningSportsRecordOld record : list) {
                     Log.d(TAG, "record:" + record);
                     ServerInterface.instance().runningActivitiesEnd(
                             TAG, record.getAcitivityId(),

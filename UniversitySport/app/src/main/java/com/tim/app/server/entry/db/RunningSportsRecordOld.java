@@ -1,11 +1,11 @@
-package com.tim.app.server.entry;
+package com.tim.app.server.entry.db;
 
 /**
  * Created by nimon on 2017/6/17.
  * 数据库记录
  */
 
-public class RunningSportsRecord extends SportsRecord {
+public class RunningSportsRecordOld extends SportsRecord {
 
     private int id;
     private Integer currentDistance;
@@ -16,12 +16,12 @@ public class RunningSportsRecord extends SportsRecord {
     private Integer acitivityId;
 
 
-    public RunningSportsRecord() {
+    public RunningSportsRecordOld() {
     }
 
-    public RunningSportsRecord(int id, Integer runningSportId, Integer activityId, Integer studentId,
-                               Integer currentDistance, Integer elapseTime,
-                               Long startTime, Integer steps, Long date) {
+    public RunningSportsRecordOld(int id, Integer runningSportId, Integer activityId, Integer studentId,
+                                  Integer currentDistance, Integer elapseTime,
+                                  Long startTime, Integer steps, Long date) {
         this.id = id;
         this.runningSportId = runningSportId;
         this.acitivityId = activityId;
@@ -83,7 +83,7 @@ public class RunningSportsRecord extends SportsRecord {
 
     @Override
     public String toString() {
-        return "RunningSportsRecord{" +
+        return "RunningSportsRecordOld{" +
                 "runningSportId=" + runningSportId +
                 ", id=" + id +
                 ", studentId=" + studentId +

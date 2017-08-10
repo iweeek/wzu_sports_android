@@ -6,7 +6,7 @@ import java.io.Serializable;
 /**
  * 运动场馆信息
  */
-public class SportInfo implements Serializable {
+public class Stadium implements Serializable {
 
     private static final long serialVersionUID = 6187447685293862071L;
     private String feild;//运动场馆

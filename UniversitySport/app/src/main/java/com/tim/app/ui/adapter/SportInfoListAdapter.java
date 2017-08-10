@@ -13,18 +13,18 @@ import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.server.entry.SportInfo;
+import com.tim.app.server.entry.Stadium;
 
 import java.util.List;
 
 
-public class SportInfoListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportInfo>
+public class SportInfoListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, Stadium>
         implements BaseRecyclerAdapter.OnItemClickListener {
 
     private Context mContext;
     private static final String TAG = "SportAreaListAdapter";
 
-    public SportInfoListAdapter(Context mContext, List<SportInfo> mDataList) {
+    public SportInfoListAdapter(Context mContext, List<Stadium> mDataList) {
         super(mDataList);
         this.mContext = mContext;
 
@@ -39,7 +39,7 @@ public class SportInfoListAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, SportInfo data) {
+    public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, Stadium data) {
         if (data == null) {
             return;
         }

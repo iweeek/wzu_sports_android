@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.tim.app.server.entry.RunningSportsRecord;
+import com.tim.app.server.entry.db.RunningSportsRecordOld;
 
 import java.util.Arrays;
 import java.util.List;
@@ -105,8 +105,8 @@ public class RunningSportsCallback implements SQLite.TableInterface {
     public <T> void assignValuesByEntity(String tableName, T t, ContentValues values) {
         switch (tableName){
             case TABLE_RUNNING_SPORTS:
-                if(t instanceof  RunningSportsRecord){
-                    RunningSportsRecord record = (RunningSportsRecord) t;
+                if(t instanceof RunningSportsRecordOld){
+                    RunningSportsRecordOld record = (RunningSportsRecordOld) t;
                     values.put(KEY_RUNNING_ID, record.getId());
                     values.put(KEY_RUNNING_PROJECTID, record.getAcitivityId());
                     values.put(KEY_RUNNING_ACTIVITY_ID, record.getProjectId());
@@ -126,7 +126,7 @@ public class RunningSportsCallback implements SQLite.TableInterface {
     public Object getEntityByCursor(String tableName, Cursor c) {
         switch (tableName) {
             case TABLE_RUNNING_SPORTS:
-                return new RunningSportsRecord(
+                return new RunningSportsRecordOld(
                         c.getInt(0),
                         c.getInt(1),
                         c.getInt(2),

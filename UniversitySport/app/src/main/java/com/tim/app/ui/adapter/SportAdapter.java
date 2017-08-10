@@ -57,8 +57,8 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
         }
 
-        if (!TextUtils.isEmpty(data.getSportName())) {
-            holder.setText(R.id.tvSportName, data.getSportName());
+        if (!TextUtils.isEmpty(data.getName())) {
+            holder.setText(R.id.tvSportName, data.getName());
         }
 
         if (SportEntry.RUNNING_SPORT == data.getType()) {
@@ -68,9 +68,9 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             }
 
 
-            if (data.getTargetDistance() > 0) {
+            if (data.getQualifiedDistance() > 0) {
                 /** TODO: 这里 {@link R.string.percent}    需要改掉，统一使用 %s米  */
-                holder.setText(R.id.tvTargetDistance, mContext.getString(R.string.percent, String.valueOf(data.getTargetDistance())) + "米");
+                holder.setText(R.id.tvTargetDistance, mContext.getString(R.string.percent, String.valueOf(data.getQualifiedDistance())) + "米");
             }
             if (data.getTargetTime() > 0) {
                 holder.setText(R.id.tvTargetTime, mContext.getString(R.string.percent, String.valueOf(data.getTargetTime())) + "分");
