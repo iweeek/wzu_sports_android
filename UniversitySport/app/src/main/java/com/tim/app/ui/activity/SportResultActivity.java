@@ -51,6 +51,7 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -323,8 +324,8 @@ public class SportResultActivity extends BaseActivity {
                                 .getString("name"));
 
                         elapseTime = jsonObject.getLong("costTime");
-                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-                        tvElapseTime.setText(time);
+//                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(elapseTime/60 +" 分钟");
 
                         if (elapseTime != 0) {
                             double d = currentDistance;
@@ -451,6 +452,8 @@ public class SportResultActivity extends BaseActivity {
                                 .getString("name"));
 
                         elapseTime = jsonObject.getLong("costTime");
+                        Date date = new Date(elapseTime);
+
                         String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
                         tvElapseTime.setText(time);
 

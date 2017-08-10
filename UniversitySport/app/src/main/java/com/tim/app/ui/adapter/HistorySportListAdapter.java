@@ -124,7 +124,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 iv.setBackgroundResource(R.drawable.ic_fix_location_sport);
 
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
-                tvSportDesc.setText(areaData.getSportName());
+                tvSportDesc.setText(areaData.getAreaName());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
                 if (data.historySportEntryList.get(i).isQualified()) {
@@ -146,12 +146,15 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
-                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaData.getCostTime() * 1000);
-                tvMiddle.setText(time);
+                //                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaData.getCostTime() * 1000);
+                tvMiddle.setText(String.valueOf(areaData.getCostTime() / 60) + " 分钟");
 
-                //耗时
+                //耗能
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(areaData.getKcalConsumed() + "");
+                //消耗能量要隐藏
+                LinearLayout llRight = (LinearLayout) ll.findViewById(R.id.llRight);
+                llRight.setVisibility(View.INVISIBLE);
 
 
                 ll.setOnClickListener(new View.OnClickListener() {

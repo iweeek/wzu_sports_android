@@ -392,7 +392,7 @@ public class ServerInterface {
                 "    areaActivityTimeCosted(timeRange: " + timeRange + ")\n" +
                 "    runningActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
                 "    areaActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
-                "    runningActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
+                "    runningActivities(startDate: \"" + "2017-08-10" + "\", endDate: \"" + "2017-08-10" + "\") {\n" +
                 "      data {\n" +
                 "        id\n" +
                 "        runningSportId\n" +
@@ -408,7 +408,7 @@ public class ServerInterface {
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
+                "    areaActivities(startDate: \"" + "2017-08-10" + "\", endDate: \"" + "2017-08-10" + "\") {\n" +
                 "      data {\n" +
                 "        id\n" +
                 "        areaSportId\n" +

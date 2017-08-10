@@ -880,7 +880,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvResult.setVisibility(View.VISIBLE);
                             rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                             tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, String.valueOf(historySportEntry.getKcalConsumed())));
-
                             return true;
                         } else {
                             //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。

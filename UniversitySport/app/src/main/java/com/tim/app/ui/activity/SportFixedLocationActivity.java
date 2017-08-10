@@ -52,7 +52,6 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.AreaSportRecord;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
