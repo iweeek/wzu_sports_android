@@ -394,9 +394,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         //运动耗时
         if (state == STATE_STARTED) {
             elapseTime += acquisitionInterval;
-            String time = TimeUtil.formatMillisTime(elapseTime * 1000);
-            Log.d(TAG, time);
-            tvElapsedTime.setText(time.substring(0, time.length() - 3));
+//            String time = TimeUtil.formatMillisTime(elapseTime * 1000);
+//            tvElapsedTime.setText(time.substring(0, time.length() - 3));
+            tvElapsedTime.setText(elapseTime / 60 +" 分钟");
         }
 
         //// TODO: 这部分待看

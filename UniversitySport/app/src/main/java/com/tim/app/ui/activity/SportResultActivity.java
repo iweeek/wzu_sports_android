@@ -324,8 +324,8 @@ public class SportResultActivity extends BaseActivity {
                                 .getString("name"));
 
                         elapseTime = jsonObject.getLong("costTime");
-//                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-                        tvElapseTime.setText(elapseTime/60 +" 分钟");
+                        //                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(elapseTime / 60 + " 分钟");
 
                         if (elapseTime != 0) {
                             double d = currentDistance;
