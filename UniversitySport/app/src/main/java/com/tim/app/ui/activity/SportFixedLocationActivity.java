@@ -60,7 +60,6 @@ import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
 import com.tim.app.ui.view.SlideUnlockView;
-import com.tim.app.util.TimeUtil;
 
 import org.json.JSONObject;
 
@@ -85,6 +84,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private Location firstLocation;
     private int firstLocationType;
     private LatLng oldLatLng = null;
+    private Circle circle;//当前运动区域
 
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
@@ -155,6 +155,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         intent.putExtra("sportEntry", sportEntry);
         intent.putExtra("fixLocationOutdoorSportPoint", fixLocationOutdoorSportPoint);
         Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+        Log.d(TAG, "sportEntry:" + sportEntry);
         context.startActivity(intent);
     }
 
@@ -257,7 +258,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         }
         //设置地图区域范围（画圈儿）
         LatLng latLng = new LatLng(fixLocationOutdoorSportPoint.getLatitude(), fixLocationOutdoorSportPoint.getLongitude());
-        Circle circle = aMap.addCircle(new CircleOptions().
+        circle = aMap.addCircle(new CircleOptions().
                 center(latLng).
                 radius(fixLocationOutdoorSportPoint.getRadius()).
                 fillColor(Color.parseColor("#22A7F64C")).
@@ -393,10 +394,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         //运动耗时
         if (state == STATE_STARTED) {
-            elapseTime += acquisitionInterval;
-//            String time = TimeUtil.formatMillisTime(elapseTime * 1000);
-//            tvElapsedTime.setText(time.substring(0, time.length() - 3));
-            tvElapsedTime.setText(elapseTime / 60 +" 分钟");
+            elapseTime += acquisitionInterval / 1000;
+            //            String time = TimeUtil.formatMillisTime(elapseTime * 1000);
+            //            tvElapsedTime.setText(time);
+            tvElapsedTime.setText(elapseTime / 60 + " 分钟");
         }
 
         //// TODO: 这部分待看
@@ -458,10 +459,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         "， 当前电量: " + batteryLevel + "%";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-
                 isNormal = true;
                 drawLine(oldLatLng, newLatLng, isNormal);
-
 
                 //// 向服务器提交数据
                 ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
@@ -553,70 +552,34 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     @Override
     public void onClick(View v) {
         turnUpScreen();
+
         switch (v.getId()) {
             case R.id.btStart:
-                if (state == STATE_NORMAL) {
-                    state = STATE_STARTED;
-                    startTime = System.currentTimeMillis();
-                    btStart.setVisibility(View.GONE);
-                    rlBottom.setVisibility(View.GONE);
-                    slideUnlockView.setVisibility(View.VISIBLE);
-                    tvPause.setVisibility(View.VISIBLE);
-                    rlElapsedTime.setVisibility(View.VISIBLE);
-                    rlAreaDesc.setVisibility(View.GONE);
-                    tvSelectLocation.setVisibility(View.INVISIBLE);
-
-                    //设置时间m
-                    String time = TimeUtil.formatMillisTime(elapseTime * 1000);
-                    tvElapsedTime.setText(time.substring(0, time.length() - 3));//设置时间
-
-                    initData();
-                    Intent bindIntent = new Intent(this, LocationService.class);
-                    bindService(bindIntent, connection, BIND_AUTO_CREATE);
-
-                    //开始本次运动
-                    ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), new JsonResponseCallback() {
+                //判断是否在运动范围内
+                boolean isContains = circle.contains(oldLatLng);
+                if (!isContains && state == STATE_NORMAL) {
+                    Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("注意");
+                    builder.setMessage("您当前不再指定的运动区域，确定要开始运动吗？");
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
-                        public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                            if (errCode == 0) {
-                                Log.d(TAG, "areaSportsStart 成功");
-                                JSONObject jsonObject = json.optJSONObject("obj");
-
-                                areaSportRecordId = jsonObject.optInt("id");
-                                acquisitionInterval = jsonObject.optInt("acquisitionInterval");
-
-                                //第一次向服务器提交数据
-                                ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, firstLocation.getLongitude(),
-                                        firstLocation.getLatitude(), firstLocationType, new ResponseCallback() {
-                                            @Override
-                                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                                                if (status == 0) {
-                                                    DLOG.d(TAG, "第一次上传 areaActivityData 成功!");
-                                                    return true;
-                                                } else {
-                                                    String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
-                                                    msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
-                                                    msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
-                                                    DLOG.writeToInternalFile(msg);
-                                                    return false;
-                                                }
-                                            }
-                                        });
-                                return true;
-                            } else {
-                                Log.d(TAG, "errMsg:" + errMsg);
-                                return false;
-                            }
+                        public void onClick(DialogInterface dialog, int which) {
+                            allowStart();
                         }
                     });
+                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
+                        }
+                    });
+                    builder.show();
+                } else if (isContains && state == STATE_NORMAL) {
+                    allowStart();
                 } else if (state == STATE_END) {
                     SportResultActivity.start(this, historySportEntry);
                     finish();
-                    //// TODO: 2017/8/1 这里要做一个区域运动的实体类。//运动结束时，查看锻炼结果
-                    //                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
-                    //                    entry.setRunningSportId(activityId);
-                    //                    SportResultActivity.start(this, entry);
                 }
                 break;
             //            case R.id.btContinue:
@@ -675,6 +638,74 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 break;
             case R.id.tvSelectLocation:
                 finish();
+        }
+    }
+
+    /**
+     * 点击事件，运动开始
+     */
+    public void allowStart() {
+        if (state == STATE_NORMAL) {
+            state = STATE_STARTED;
+            startTime = System.currentTimeMillis();
+            btStart.setVisibility(View.GONE);
+            rlBottom.setVisibility(View.GONE);
+            slideUnlockView.setVisibility(View.VISIBLE);
+            tvPause.setVisibility(View.VISIBLE);
+            rlElapsedTime.setVisibility(View.VISIBLE);
+            rlAreaDesc.setVisibility(View.GONE);
+            tvSelectLocation.setVisibility(View.INVISIBLE);
+
+            //设置时间
+            tvElapsedTime.setText("0 分钟");
+
+            initData();
+            Intent bindIntent = new Intent(this, LocationService.class);
+            bindService(bindIntent, connection, BIND_AUTO_CREATE);
+
+            //开始本次运动
+            ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    if (errCode == 0) {
+                        Log.d(TAG, "areaSportsStart 成功");
+                        JSONObject jsonObject = json.optJSONObject("obj");
+
+                        areaSportRecordId = jsonObject.optInt("id");
+                        //                        acquisitionInterval = jsonObject.optInt("acquisitionInterval");
+
+                        //第一次向服务器提交数据
+                        ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, firstLocation.getLongitude(),
+                                firstLocation.getLatitude(), firstLocationType, new ResponseCallback() {
+                                    @Override
+                                    public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                        if (status == 0) {
+                                            DLOG.d(TAG, "第一次上传 areaActivityData 成功!");
+                                            return true;
+                                        } else {
+                                            String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
+                                            msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
+                                            msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
+                                            DLOG.writeToInternalFile(msg);
+                                            return false;
+                                        }
+                                    }
+                                });
+                        return true;
+                    } else {
+                        Log.d(TAG, "errMsg:" + errMsg);
+                        return false;
+                    }
+                }
+            });
+
+        } else if (state == STATE_END) {
+            SportResultActivity.start(this, historySportEntry);
+            finish();
+            //// TODO: 2017/8/1 这里要做一个区域运动的实体类。//运动结束时，查看锻炼结果
+            //                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
+            //                    entry.setRunningSportId(activityId);
+            //                    SportResultActivity.start(this, entry);
         }
     }
 
