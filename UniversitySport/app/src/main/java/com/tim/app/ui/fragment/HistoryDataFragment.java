@@ -36,7 +36,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -250,8 +249,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 //                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
 //                                }
                                 // 对item.historySportEntryList进行排序
-                                TimeComparator timeComparator = new TimeComparator();
-                                Collections.sort(item.historySportEntryList, timeComparator);
+//                                TimeComparator timeComparator = new TimeComparator();
+//                                Collections.sort(item.historySportEntryList, timeComparator);
 
                                 item.date = date.toString();
                                 dataList.add(item);

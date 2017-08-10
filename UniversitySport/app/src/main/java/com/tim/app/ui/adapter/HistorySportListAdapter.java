@@ -64,6 +64,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
                 iv.setBackgroundResource(R.drawable.ic_run_sport);
 
+                //运动名字
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(runningData.getSportName());
 
@@ -125,6 +126,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
                 iv.setBackgroundResource(R.drawable.ic_fix_location_sport);
 
+                //区域名字
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(areaData.getAreaName());
 
@@ -154,9 +156,6 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 //耗能
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(areaData.getKcalConsumed() + "");
-                //消耗能量要隐藏
-                //                LinearLayout llRight = (LinearLayout) ll.findViewById(R.id.llRight);
-                //                llRight.setVisibility(View.INVISIBLE);
 
                 //累加总共消耗热量
                 totalEnergyCost += areaData.getKcalConsumed();
