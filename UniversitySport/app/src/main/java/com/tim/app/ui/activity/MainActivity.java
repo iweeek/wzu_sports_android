@@ -531,6 +531,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+
+                        Log.d(TAG, "服务器版本" + versionCode);
+                        Log.d(TAG, "客户端版本" + info.versionCode);
                         if (versionCode > info.versionCode) {
 
                             final AlertDialog.Builder builder =
@@ -551,8 +554,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                         }
                                     });
                             builder.setMessage(changeLog);
-                            Log.d(TAG, "服务器版本" + versionCode);
-                            Log.d(TAG, "客户端版本" + info.versionCode);
 
                             if (isForced) {//强制升级
                                 builder.setCancelable(false);
