@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:hint="@string/login_input_num"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:textColorHint="@color/white_80" />
 
                 <ImageView

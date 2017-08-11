@@ -559,22 +559,22 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 boolean isContains = circle.contains(oldLatLng);
                 if (!isContains && state == STATE_NORMAL) {
                     Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("注意");
-                    builder.setMessage("您当前不再指定的运动区域，确定要开始运动吗？");
-                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            allowStart();
-                        }
-                    });
-                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    builder.show();
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                    builder.setTitle("注意");
+//                    builder.setMessage("您当前不再指定的运动区域，确定要开始运动吗？");
+//                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            allowStart();
+//                        }
+//                    });
+//                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//
+//                        }
+//                    });
+//                    builder.show();
                 } else if (isContains && state == STATE_NORMAL) {
                     allowStart();
                 } else if (state == STATE_END) {
@@ -582,55 +582,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     finish();
                 }
                 break;
-            //            case R.id.btContinue:
-            //                if (state == STATE_PAUSE) {
-            //                    state = STATE_STARTED;
-            //                }
-            //                slideUnlockView.setVisibility(View.VISIBLE);
-            //                tvPause.setVisibility(View.VISIBLE);
-            //                rlBottom.setVisibility(View.GONE);
-            //                llBottom.setVisibility(View.GONE);
-            //                break;
-            //            case R.id.btStop:
-            ////                if (elapseTime == 0) {
-            ////                    ToastUtil.showToast("运动时间太短，无法结束");
-            ////                    return;
-            ////                }
-            ////                ibBack.setVisibility(View.VISIBLE);
-            //                if (state == STATE_PAUSE) {
-            //                    state = STATE_END;
-            //                }
-            //
-            //                if (currentDistance > sportEntry.getQualifiedDistance() && elapseTime / 60 > sportEntry.getQualifiedCostTime()) {
-            //                    tvResult.setText("达标");
-            //                } else {
-            //                    tvResult.setText("不达标");
-            //                }
-            //
-            //                tvAverSpeedLabel.setText("平均速度");
-            //                //做保护
-            //                if (elapseTime != 0) {
-            //                    double d = currentDistance;
-            //                    double t = elapseTime;
-            //                    BigDecimal bd = new BigDecimal(d / t);
-            //                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-            //                    tvAverSpeed.setText(String.valueOf(bd));
-            //                } else {
-            //                    tvAverSpeed.setText("0.0");
-            //                }
-            //
-            //                int studentId = 1;//学生的id
-            //                runningActivitiesEnd(sportEntry.getId(), studentId, sportEntry.getQualifiedCostTime());
-            //
-            //                tvResult.setVisibility(View.VISIBLE);
-            //                tvSportJoinNumber.setVisibility(View.GONE);
-            //                rlBottom.setVisibility(View.VISIBLE);
-            //                llBottom.setVisibility(View.GONE);
-            //                btStart.setVisibility(View.VISIBLE);
-            //
-            //                stopTimer();
-            //
-            //                break;
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));

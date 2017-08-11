@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActivity {
         tvUniversity = (TextView) findViewById(R.id.tvUniversity);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
-        etStudentNo.setText("14211133129");
+        etStudentNo.setText("nijun");
         etPassword.setText("123456");
         //        etStudentNo.setText("15211134139");
         //        etPassword.setText("123456");
@@ -210,7 +210,7 @@ public class LoginActivity extends BaseActivity {
                 password = etPassword.getText().toString().trim();
 
                 if (!checkLogin(sNo, password)) {
-
+                    Log.d(TAG, "验证错误");
                 } else {
                     //判断选择的是哪所学校
                     int index = (int) tvUniversity.getTag();
@@ -318,13 +318,13 @@ public class LoginActivity extends BaseActivity {
             tvNoErrorPrmpt.setVisibility(View.GONE);
         }
 
-        if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
-            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
-            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
-            return false;
-        } else {
-            tvNoErrorPrmpt.setVisibility(View.GONE);
-        }
+//        if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
+//            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+//            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
+//            return false;
+//        } else {
+//            tvNoErrorPrmpt.setVisibility(View.GONE);
+//        }
 
         if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
             tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
