@@ -61,8 +61,17 @@ public class SplashActivity extends BaseActivity {
         } else {
             UserManager.instance().cleanCache();
         }
-
-
+        Log.d(TAG, "initData");
+        User user = getUserFromCache();
+        if(user!=null){
+            showLoadingDialog();
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            MainActivity.start(this,user,user.getStudent());
+        }
     }
 
 
@@ -129,16 +138,7 @@ public class SplashActivity extends BaseActivity {
         super.onResume();
         handleIntent();
         Log.d(TAG, "onResume");
-        User user = getUserFromCache();
-        if(user!=null){
-            showLoadingDialog();
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            MainActivity.start(this,user,user.getStudent());
-        }
+        hideLoadingDialog();
     }
 
 
