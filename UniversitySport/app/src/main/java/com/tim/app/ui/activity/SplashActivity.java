@@ -2,19 +2,28 @@ package com.tim.app.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.server.entry.User;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.util.ViewGT;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.concurrent.TimeUnit;
 
 public class SplashActivity extends BaseActivity {
 
@@ -53,6 +62,24 @@ public class SplashActivity extends BaseActivity {
             UserManager.instance().cleanCache();
         }
 
+
+    }
+
+
+    private User getUserFromCache() {
+        User user = null;
+        SharedPreferences sp =  getSharedPreferences(User.USER_SHARED_PREFERENCE,MODE_PRIVATE);
+        String temp = sp.getString(User.USER, null);
+        ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
+        try {
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            user = (User) ois.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
@@ -90,8 +117,6 @@ public class SplashActivity extends BaseActivity {
                     }
                     break;
             }
-
-
         }
     };
 
@@ -103,6 +128,17 @@ public class SplashActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         handleIntent();
+        Log.d(TAG, "onResume");
+        User user = getUserFromCache();
+        if(user!=null){
+            showLoadingDialog();
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            MainActivity.start(this,user,user.getStudent());
+        }
     }
 
 
@@ -113,6 +149,7 @@ public class SplashActivity extends BaseActivity {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        hideLoadingDialog();
     }
 
     @Override

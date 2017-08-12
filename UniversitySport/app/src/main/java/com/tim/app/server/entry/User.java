@@ -2,10 +2,15 @@ package com.tim.app.server.entry;
 
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class User implements Serializable {
 
     private static final long serialVersionUID = 6187447685293862071L;
+    public static final String USER = "user";
+    public static final String USER_SHARED_PREFERENCE = "user_shared_preference";
+
+
     private int uid;
     private String phone;
     private String username;
@@ -15,42 +20,23 @@ public class User implements Serializable {
     private String[] roles;
     private Long expiredDate;
     private String token;
-    private int studentId;
+    private Student student;
 
 
-    public String[] getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String[] roles) {
-        this.roles = roles;
-    }
-
-    public Long getExpiredDate() {
-        return expiredDate;
-    }
-
-    public void setExpiredDate(Long expiredDate) {
-        this.expiredDate = expiredDate;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    public User() {
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid=" + uid +
+                ", phone='" + phone + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", headpicthumb='" + headpicthumb + '\'' +
+                ", headpic='" + headpic + '\'' +
+                ", roles=" + Arrays.toString(roles) +
+                ", expiredDate=" + expiredDate +
+                ", token='" + token + '\'' +
+                ", student=" + student +
+                '}';
     }
 
     public int getUid() {
@@ -99,5 +85,37 @@ public class User implements Serializable {
 
     public void setHeadpic(String headpic) {
         this.headpic = headpic;
+    }
+
+    public String[] getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public Long getExpiredDate() {
+        return expiredDate;
+    }
+
+    public void setExpiredDate(Long expiredDate) {
+        this.expiredDate = expiredDate;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +32,6 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Student;
 import com.tim.app.server.entry.University;
 import com.tim.app.server.entry.User;
-import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.SoftKeyboardUtil;
@@ -40,6 +40,9 @@ import com.tim.app.util.ToastUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,10 +54,8 @@ public class LoginActivity extends BaseActivity {
     private static final String TAG = "LoginActivity";
     public static final String USER_IS_FIRST_LOGIN = "user_is_first_login";
     public static final String USER_HAS_EDIT_FIRST_PASSWORD = "user_has_edit_first_password";
-    private static final String USER = "user";
     private EditText etStudentNo, etPassword;
     private Button btLogin;
-    private String sNo, password;
     private TextView tvNoErrorPrmpt;
     private TextView tvPasswordErrorPrmpt;
     private TextView tvUniErrorPrmpt;
@@ -62,7 +63,7 @@ public class LoginActivity extends BaseActivity {
     private TextView tvForgotPassword;
     private ImageView ivDeleteNo;
     private ImageView ivPasswordDelete;
-    private boolean mIsFirstLogin;
+    private boolean sFirstLogin;
     private boolean mHasEditFirstPassword;
     private TextView tvUniversity;
 
@@ -91,8 +92,6 @@ public class LoginActivity extends BaseActivity {
 
         etStudentNo.setText("nijun");
         etPassword.setText("123456");
-        //        etStudentNo.setText("15211134139");
-        //        etPassword.setText("123456");
 
         queryUniversities();
 
@@ -189,7 +188,6 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -206,31 +204,13 @@ public class LoginActivity extends BaseActivity {
                 findPassword();
                 break;
             case R.id.btLogin:
-                sNo = etStudentNo.getText().toString().trim();
-                password = etPassword.getText().toString().trim();
+                String username = etStudentNo.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
 
-                if (!checkLogin(sNo, password)) {
-                    Log.d(TAG, "验证错误");
+                if (!checkLogin(username, password)) {
+
                 } else {
-                    //判断选择的是哪所学校
-                    int index = (int) tvUniversity.getTag();
-                    University university = universities.get(index);
-                    Log.d(TAG, "universities.get(index):" + universities.get(index));
-                    ServerInterface.instance().tokens(TAG, university.getId(), sNo, password, 2, new JsonResponseCallback() {
-                        @Override
-                        public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                            if (errCode == 0) {
-                                user = new User();
-                                user.setUid(json.optInt("userId"));
-
-                                Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
-                                queryStudent(user.getUid());
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    });
+                    login(username, password);
                 }
                 break;
             case R.id.ivPasswordVisiable:
@@ -242,7 +222,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.tvUniversity:
-                if(universityNames.size()==0) {
+                if (universityNames.size() == 0) {
                     queryUniversities();
                 }
                 final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
@@ -266,30 +246,6 @@ public class LoginActivity extends BaseActivity {
                 builder.show();
                 break;
         }
-    }
-
-    private void queryStudent(int uid) {
-        ServerInterface.instance().queryStudent(uid, new JsonResponseCallback() {
-            @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                if (errCode == 0) {
-                    JSONObject jsonObject = json.optJSONObject("data").optJSONObject("student");
-                    student = new Student();
-                    student.setId(jsonObject.optInt("id"));
-                    student.setUniversityId(jsonObject.optInt("universityId"));
-                    student.setName(jsonObject.optString("name"));
-                    student.setStudentNo(jsonObject.optString("studentNo"));
-                    student.setClassId(jsonObject.optInt("classId"));
-                    student.setUserId(jsonObject.optInt("userId"));
-
-                    Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
-                    MainActivity.start(context, user, student);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
     }
 
 
@@ -318,13 +274,13 @@ public class LoginActivity extends BaseActivity {
             tvNoErrorPrmpt.setVisibility(View.GONE);
         }
 
-//        if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
-//            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
-//            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
-//            return false;
-//        } else {
-//            tvNoErrorPrmpt.setVisibility(View.GONE);
-//        }
+        //        if (!sNo.matches(StringUtil.ZHENGZE_SNO)) {
+        //            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
+        //            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
+        //            return false;
+        //        } else {
+        //            tvNoErrorPrmpt.setVisibility(View.GONE);
+        //        }
 
         if (TextUtils.isEmpty(password) || !password.matches(StringUtil.ZHENGZE_PASSWORD)) {
             tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
@@ -334,6 +290,129 @@ public class LoginActivity extends BaseActivity {
             tvPasswordErrorPrmpt.setVisibility(View.GONE);
         }
         return true;
+    }
+
+
+    //    private void firstLogin(String sNo, String password) {
+    //        showLoadingDialog();
+    //
+    //        Log.d(TAG, "firstLogin: " + sNo);
+    //        Log.d(TAG, "firstLogin: " + password);
+    //
+    //        SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
+    //        SharedPreferences.Editor edit = sharedPreferences.edit();
+    //        edit.putBoolean(USER_IS_FIRST_LOGIN, false);
+    //        edit.putString(sNo, password);
+    //        edit.apply();
+    //
+    //        Bundle bundle = new Bundle();
+    //        bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
+    //        bundle.putString("sno", sNo);
+    //        Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
+    //        intent.putExtras(bundle);
+    //        startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
+    //    }
+
+
+    private void queryStudent(int uid) {
+        ServerInterface.instance().queryStudent(uid, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    JSONObject jsonObject = json.optJSONObject("data").optJSONObject("student");
+                    student = new Student();
+                    student.setId(jsonObject.optInt("id"));
+                    student.setUniversityId(jsonObject.optInt("universityId"));
+                    student.setName(jsonObject.optString("name"));
+                    student.setStudentNo(jsonObject.optString("studentNo"));
+                    student.setClassId(jsonObject.optInt("classId"));
+                    student.setUserId(jsonObject.optInt("userId"));
+
+                    Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
+                    if (student != null) {
+                        user.setStudent(student);
+                        saveUser(User.USER_SHARED_PREFERENCE,User.USER,user);
+                        MainActivity.start(context, user, student);
+                    }else{
+
+                    }
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }
+
+    private void login(final String username, final String password) {
+        showLoadingDialog();
+
+        //判断选择的是哪所学校
+        int index = (int) tvUniversity.getTag();
+        University university = universities.get(index);
+        Log.d(TAG, "universities.get(index):" + universities.get(index));
+        ServerInterface.instance().tokens(TAG, university.getId(), username, password, 2, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                if (errCode == 0) {
+                    user = new User();
+                    user.setUid(json.optInt("userId"));
+
+                    List<String> roles = new ArrayList<>();
+                    JSONArray roleArray = json.optJSONArray("roles");
+                    for (int i = 0; i < roles.size(); i++) {
+                        roles.add(roleArray.optString(i));
+                    }
+                    user.setRoles(roles.toArray(new String[roles.size()]));
+
+                    user.setExpiredDate(json.optLong("expiredDate"));
+                    user.setToken(json.optString("token"));
+
+                    user.setUsername(username);
+                    user.setPassword(password);
+                    Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
+
+                    if (user != null) {
+                        //说明用户登录成功
+                        queryStudent(user.getUid());
+                    } else {
+                        //TODO 查找用户信息失败
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }
+
+    /**
+     * 保存到SharedPreferences
+     *
+     * @param user
+     */
+    private void saveUser(String preferenceName,String key,User user) {
+        SharedPreferences.Editor editor = getSharedPreferences(preferenceName, MODE_PRIVATE).edit();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(user);
+            String temp = new String(Base64.encode(baos.toByteArray(),Base64.DEFAULT));
+            editor.putString(key,temp);
+            editor.apply();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void findPassword() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("flag", AppConstant.VERTIFY_RESETPASSWORD);
+        Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, AppConstant.CODE_LOGIN_FINDPWD);
     }
 
     @Override
@@ -354,87 +433,6 @@ public class LoginActivity extends BaseActivity {
         }
         //每次结束记得隐藏加载条。
         hideLoadingDialog();
-    }
-
-    private void firstLogin(String sNo, String password) {
-        showLoadingDialog();
-
-        Log.d(TAG, "firstLogin: " + sNo);
-        Log.d(TAG, "firstLogin: " + password);
-
-        SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putBoolean(USER_IS_FIRST_LOGIN, false);
-        edit.putString(sNo, password);
-        edit.apply();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
-        bundle.putString("sno", sNo);
-        Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
-    }
-
-    private void login(String sNo, String password) {
-        //showLoadingDialog();
-        //        API_User.instance().login(TAG, input_phone_num.getText().toString(), SignRequestParams.MDString(input_password.getText().toString()), "", new JsonResponseCallback() {
-        //            @Override
-        //            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-        //                hideLoadingDialog();
-        //                if (errCode == 200 && json != null) {
-        //                    String token = json.optString("token");
-        //                    UserManager.instance().saveToken(token);
-        //                    JSONObject userJson = json.optJSONObject("user");
-        //                    if (userJson != null) {
-        //                        User user = new Gson().fromJson(userJson.toString(), User.class);
-        //                        UserManager.instance().savePassword(password);
-        //                        UserManager.instance().saveLoginType(AppConstant.LOGIN_TYPE_MOBILE);
-        //                        UserManager.instance().saveUserInfo(user);
-        //                        EventManager.instance().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
-        //                        API_Init.instance().initPush(TAG, new StringResponseCallback() {
-        //                            @Override
-        //                            public boolean onStringResponse(String result, int errCode, String errMsg, int id, boolean formCache) {
-        //                                return false;
-        //                            }
-        //                        });
-        //                        LoginActivity.this.finish();
-        //                    }
-        //                } else {
-        //                    ToastUtil.showToast(errMsg);
-        //                }
-        //                return false;
-        //            }
-        //        });
-
-        //        MainActivity.start(this);
-        //TODO test
-        User user = new User();
-        user.setStudentId(2);
-        UserManager.instance().saveUserInfo(user);
-
-        SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
-        String password1 = sharedPreferences.getString(sNo, "");
-
-        if ("".equals(password1)) {
-            tvNoErrorPrmpt.setVisibility(View.VISIBLE);
-            tvNoErrorPrmpt.setText(RT.getString(R.string.error_sno_error));
-        } else if (!password.equals(password1)) {
-            tvPasswordErrorPrmpt.setVisibility(View.VISIBLE);
-            tvPasswordErrorPrmpt.setText(RT.getString(R.string.error_login));
-        } else {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-            showLoadingDialog();
-        }
-    }
-
-    private void findPassword() {
-        Bundle bundle = new Bundle();
-        bundle.putInt("flag", AppConstant.VERTIFY_RESETPASSWORD);
-        Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, AppConstant.CODE_LOGIN_FINDPWD);
     }
 
     @Override
