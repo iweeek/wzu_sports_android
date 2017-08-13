@@ -28,11 +28,6 @@ import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
-import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
-import com.tencent.mm.opensdk.modelmsg.WXTextObject;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
@@ -64,10 +59,6 @@ import java.util.List;
 public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
-    public static final int MODE_FAST_WALK = 1;
-    public static final int MODE_RANDOM_RUN = 2;
-    public static final int MODE_FAST_RUN = 3;
-    public static final int MODE_AREA = 4;
 
     public static User  user;
     public static Student  student;
@@ -99,31 +90,30 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     /*
     * 微信
     * */
-    private IWXAPI api;
-
-    private void regToWx() {
-        api = WXAPIFactory.createWXAPI(this, AppConstant.APP_ID);
-        api.registerApp(AppConstant.APP_ID);
-    }
+//    private IWXAPI api;
+//
+//    private void regToWx() {
+//        api = WXAPIFactory.createWXAPI(this, AppConstant.APP_ID);
+//        api.registerApp(AppConstant.APP_ID);
+//    }
 
     /**
      * 发送数据到微信
      *
-     * @param text
-     */
-    private void sendToWx(String text) {
-        WXTextObject textObj = new WXTextObject();
-        textObj.text = text;
-
-        WXMediaMessage msg = new WXMediaMessage();
-        msg.mediaObject = textObj;
-        msg.description = text;
-
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = String.valueOf(System.currentTimeMillis());
-
-        api.sendReq(req);
-    }
+//     */
+//    private void sendToWx(String text) {
+//        WXTextObject textObj = new WXTextObject();
+//        textObj.text = text;
+//
+//        WXMediaMessage msg = new WXMediaMessage();
+//        msg.mediaObject = textObj;
+//        msg.description = text;
+//
+//        SendMessageToWX.Req req = new SendMessageToWX.Req();
+//        req.transaction = String.valueOf(System.currentTimeMillis());
+//
+//        api.sendReq(req);
+//    }
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -287,17 +277,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         } else {
             SportsAreaListActivity.start(this, sportEntry);
         }
-
-        //        if (position == MODE_FAST_WALK - 1) {
-        //            SportDetailActivity.start(this, sportEntry);
-        //        } else if (position == MODE_RANDOM_RUN - 1) {
-        //
-        //        } else if (position == MODE_FAST_RUN - 1) {
-        //
-        //        } else if (position == MODE_AREA - 1) {
-        //            SportsAreaListActivity.start(this, mAreaSportEntryList.get(0));
-        //        }
-        //        Log.d(TAG, "position:" + position);
     }
 
     /**
@@ -333,6 +312,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setName(jsonObject.optString("name", "快走"));
                             String name = jsonObject.optString("name", "快走");
 
+                            //// TODO: 2017/8/13 有待改进
                             switch (name) {
                                 case "快走":
                                     sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
@@ -357,40 +337,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setTargetSpeed(bd + "");
                             sportEntry.setAcquisitionInterval(interval);
 
-                            //                            SportEntry sportEntry = new SportEntry();
-                            //                            if (runningSportId == MODE_FAST_WALK) {
-                            //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            //                                sportEntry.setName(jsonObject.optString("name", "快走"));
-                            //                                sportEntry.setParticiNum(participantNum);
-                            //                                sportEntry.setQualifiedDistance(distance);
-                            //                                sportEntry.setTargetTime((int) (time / 60));
-                            //                                sportEntry.setTargetSpeed(bd + "");
-                            //                                sportEntry.setAcquisitionInterval(interval);
-                            //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
-                            //                            } else if (runningSportId == MODE_RANDOM_RUN) {
-                            //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            //                                sportEntry.setName(jsonObject.optString("name", "随机慢跑"));
-                            //                                sportEntry.setParticiNum(participantNum);
-                            //                                sportEntry.setQualifiedDistance(distance);
-                            //                                sportEntry.setTargetTime((int) (time / 60));
-                            //                                sportEntry.setTargetSpeed(bd + "");
-                            //                                sportEntry.setAcquisitionInterval(interval);
-                            //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                            //                            } else if (runningSportId == MODE_FAST_RUN) {
-                            //                                sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            //                                sportEntry.setName(jsonObject.optString("name", "快跑"));
-                            //                                sportEntry.setParticiNum(participantNum);
-                            //                                sportEntry.setQualifiedDistance(distance);
-                            //                                sportEntry.setTargetTime((int) (time / 60));
-                            //                                sportEntry.setTargetSpeed(bd + "");
-                            //                                sportEntry.setAcquisitionInterval(interval);
-                            //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                            //                            } else if (runningSportId == MODE_AREA) {
-                            //                                sportEntry.setType(SportEntry.AREA_SPORT);
-                            //                                sportEntry.setName(jsonObject.optString("", "区域锻炼"));
-                            //                                sportEntry.setBgDrawableId(R.drawable.ic_bg_area);
-                            //                            }
-
                             sportEntryDataList.add(sportEntry);
                         }
                         wrvSportType.setAdapter(adapter);
@@ -409,7 +355,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     queryAreaSport();
                     return true;
                 } else {
-                    //                    emptyLayout.showEmptyOrError(errCode);
+                    //emptyLayout.showEmptyOrError(errCode);
                     return false;
                 }
             }

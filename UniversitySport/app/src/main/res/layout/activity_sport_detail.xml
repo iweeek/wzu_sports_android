@@ -70,7 +70,7 @@
                     android:textSize="14dp" />
 
                 <TextView
-                    android:id="@+id/tvSportJoinNumber"
+                    android:id="@+id/tvParticipantNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/llRightTitle"

@@ -317,7 +317,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlTopFloatingWindow = (RelativeLayout) findViewById(R.id.rlTopFloatingWindow);
         tvElapsedTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvResult = (TextView) findViewById(R.id.tvResult);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
+        tvSportJoinNumber = (TextView) findViewById(R.id.tvParticipantNum);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         tvAreaName = (TextView) findViewById(R.id.tvAreaName);
         tvSelectLocation = (TextView) findViewById(R.id.tvSelectLocation);
@@ -326,7 +326,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlElapsedTime = (RelativeLayout) findViewById(R.id.rlElapsedTime);
         rlBottomFloatingWindow = (RelativeLayout) findViewById(R.id.rlBottomFloatingWindow);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
+        tvSportJoinNumber = (TextView) findViewById(R.id.tvParticipantNum);
 
         rlAnimView = findViewById(R.id.rlAnimView);
 
@@ -581,6 +581,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     SportResultActivity.start(this, historySportEntry);
                     finish();
                 }
+                allowStart();
                 break;
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置

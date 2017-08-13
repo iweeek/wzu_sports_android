@@ -114,7 +114,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int initSteps = 0;//初始化的步数
 
     private TextView tvSportName;
-    private TextView tvSportJoinNumber;
+    private TextView tvParticipantNum;
     private TextView tvCurrentDistance;
     private TextView tvAverSpeedLabel;
     private TextView tvElapseTime;
@@ -501,7 +501,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
 
         if (sportEntry.getParticipantNum() > 0) {
-            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+            tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+        }else{
+            tvParticipantNum.setText("当前没有人正在进行运动");
         }
 
         if (sportEntry.getQualifiedDistance() > 0) {
@@ -559,6 +561,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     slideUnlockView.reset();
                     // 让滑动解锁控件消失
                     slideUnlockView.setVisibility(View.GONE);
+                    tvPause.setVisibility(View.GONE);
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
@@ -582,7 +585,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         runningActivitiesEnd(sportEntry.getId(), student.getId(), targetFinishedTime);
 
-                        tvSportJoinNumber.setVisibility(View.GONE);
+                        tvParticipantNum.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
                         btStart.setVisibility(View.VISIBLE);
@@ -956,7 +959,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        ibBack = (ImageButton) findViewById(R.id.ibBack);
         //        ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvSportJoinNumber);
+        tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
