@@ -34,6 +34,7 @@ import com.tim.app.server.entry.University;
 import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
+import com.tim.app.util.EncryptUtil;
 import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
 
@@ -348,11 +349,12 @@ public class LoginActivity extends BaseActivity {
     private void login(final String username, final String password) {
         showLoadingDialog();
 
+        final String md5Password= EncryptUtil.md5(password);
         //判断选择的是哪所学校
         int index = (int) tvUniversity.getTag();
         University university = universities.get(index);
         Log.d(TAG, "universities.get(index):" + universities.get(index));
-        ServerInterface.instance().tokens(TAG, university.getId(), username, password, 2, new JsonResponseCallback() {
+        ServerInterface.instance().tokens(TAG, university.getId(), username, md5Password, 2, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -370,7 +372,7 @@ public class LoginActivity extends BaseActivity {
                     user.setToken(json.optString("token"));
 
                     user.setUsername(username);
-                    user.setPassword(password);
+                    user.setPassword(md5Password);
                     Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
 
                     if (user != null) {

@@ -468,12 +468,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 //                boolean isForced = false;
                 if (errCode == 0) {
                     try {
-                        latestAndroidVersionInfo = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo");
-                        final String versionName = latestAndroidVersionInfo.getString("versionName");
-                        final int versionCode = latestAndroidVersionInfo.getInt("versionCode");
-                        final String changeLog = latestAndroidVersionInfo.getString("changeLog");
-                        final String apkUrl = latestAndroidVersionInfo.getString("apkUrl");
-                        final boolean isForced = latestAndroidVersionInfo.getBoolean("isForced");
+                        latestAndroidVersionInfo = json.getJSONObject("data").optJSONObject("latestVerison");
+                        final String versionName = latestAndroidVersionInfo.optString("versionName");
+                        final int versionCode = latestAndroidVersionInfo.optInt("versionCode");
+                        final String changeLog = latestAndroidVersionInfo.optString("changeLog");
+                        final String downloadUrl = latestAndroidVersionInfo.optString("downloadUrl");
+                        final boolean isForced = latestAndroidVersionInfo.optBoolean("isForced");
+                        final int platformId = latestAndroidVersionInfo.optInt("platformId");
 
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
@@ -491,7 +492,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            DownloadAppUtils.downloadForAutoInstall(context, apkUrl, "下载新版本");
+                                            DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
                                             if (isForced) {
                                                 //无操作
                                             } else {

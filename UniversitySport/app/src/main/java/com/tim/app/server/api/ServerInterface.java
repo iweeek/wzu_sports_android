@@ -460,14 +460,17 @@ public class ServerInterface {
     }
 
     public void queryAppVersion(ResponseCallback callback) {
-        String queryStr = "\t{latestAndroidVerisonInfo{\n" +
+        String queryStr="{\n" +
+                "  latestVerison(platformId:0) {\n" +
+                "    id\n" +
                 "    versionName\n" +
                 "    versionCode\n" +
                 "    changeLog\n" +
-                "    apkUrl\n" +
+                "    downloadUrl\n" +
                 "    isForced\n" +
+                "    platformId\n" +
                 "  }\n" +
-                "}";
+                "}\n";
         query(queryStr, callback);
     }
 

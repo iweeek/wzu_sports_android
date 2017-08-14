@@ -581,7 +581,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     SportResultActivity.start(this, historySportEntry);
                     finish();
                 }
-                allowStart();
+//                allowStart();
                 break;
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置
