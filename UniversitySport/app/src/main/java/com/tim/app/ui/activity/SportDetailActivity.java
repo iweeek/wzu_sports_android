@@ -500,11 +500,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportName.setText(sportEntry.getName());
         }
 
-        if (sportEntry.getParticipantNum() > 0) {
+//        if (sportEntry.getParticipantNum() > 0) {
             tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-        }else{
-            tvParticipantNum.setText("当前没有人正在进行运动");
-        }
+//        }else{
+//            tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+//        }
 
         if (sportEntry.getQualifiedDistance() > 0) {
             tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getQualifiedDistance())));

@@ -173,7 +173,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         //当天日期
         viewHolder.setText(R.id.tvSportDate, data.date);
         //一天的热量消耗
-        viewHolder.setText(R.id.tvEnergyCost, totalEnergyCost + "千卡");
+        viewHolder.setText(R.id.tvEnergyCost,mContext.getString(R.string.caloriePlaceholder,String.valueOf(totalEnergyCost)));
     }
 
     @Override

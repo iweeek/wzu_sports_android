@@ -241,7 +241,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             tvAreaName.setText(fixLocationOutdoorSportPoint.getName());
         }
         if (fixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
-            tvTargetTime.setText(String.format(getResources().getString(R.string.minute), String.valueOf(fixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
+            tvTargetTime.setText(String.format(getResources().getString(R.string.minutePlaceHolder), String.valueOf(fixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
         } else {
             tvTargetTime.setText("-");
         }
@@ -277,7 +277,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     slideUnlockView.reset();
                     // 让滑动解锁控件消失
                     slideUnlockView.setVisibility(View.GONE);
-                    tvPause.setVisibility(View.VISIBLE);
+                    tvPause.setVisibility(View.INVISIBLE);
 
                     if (state == STATE_STARTED) {
                         state = STATE_END;
@@ -581,7 +581,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     SportResultActivity.start(this, historySportEntry);
                     finish();
                 }
-//                allowStart();
+                allowStart();
                 break;
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置

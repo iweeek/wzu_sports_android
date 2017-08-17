@@ -50,7 +50,7 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, FixLoc
         }
 
         if (data.getQualifiedCostTime() > 0) {
-            String time = mContext.getString(R.string.minute, String.valueOf(data.getQualifiedCostTime() / 60));
+            String time = mContext.getString(R.string.minutePlaceHolder, String.valueOf(data.getQualifiedCostTime() / 60));
             String resultTime = mContext.getString(R.string.targetTime) + " : " + time;
             holder.setText(R.id.tvTargetTime, resultTime);
         }

@@ -17,6 +17,7 @@ import com.tim.app.util.BitmapLoader;
  * 排行数据的headerview
  */
 public class RankingDataHeadView extends LinearLayout {
+    private Context context;
 
     RoundedImageView rivFirstAvatar;
     RoundedImageView rivSecondAvatar;
@@ -33,6 +34,7 @@ public class RankingDataHeadView extends LinearLayout {
 
     public RankingDataHeadView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
     }
 
     @Override
@@ -66,13 +68,13 @@ public class RankingDataHeadView extends LinearLayout {
             BitmapLoader.ins().loadImage(data[2].getAvatar(), R.drawable.ic_default_avatar, rivThirdAvatar);
         }
         if (AppConstant.TYPE_COST_TIME == type) {
-            tvFirstUnit.setText(data[0].getCostValue() +"分钟");
-            tvSecondUnit.setText(data[1].getCostValue() +"分钟");
-            tvThirdUnit.setText(data[2].getCostValue() +"分钟");
+            tvFirstUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[0].getCostValue())));
+            tvSecondUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[1].getCostValue())));
+            tvThirdUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[2].getCostValue())));
         } else {
-            tvFirstUnit.setText(data[0].getCostValue() +"千卡");
-            tvSecondUnit.setText(data[1].getCostValue() +"千卡");
-            tvThirdUnit.setText(data[2].getCostValue() +"千卡");
+            tvFirstUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[0].getCostValue())));
+            tvSecondUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[1].getCostValue())));
+            tvThirdUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[2].getCostValue())));
         }
     }
 

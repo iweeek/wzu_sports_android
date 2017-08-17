@@ -177,7 +177,7 @@
                         android:id="@+id/tvTargetTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/minute"
+                        android:text="@string/minutePlaceHolder"
                         android:textColor="@color/black_60"
                         android:textSize="14dp"/>
 

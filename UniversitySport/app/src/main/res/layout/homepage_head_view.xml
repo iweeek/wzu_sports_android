@@ -106,7 +106,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:text="@string/accumulTime"
+                                android:text="@string/minuteText"
                                 android:textColor="#868892"
                                 android:textSize="14dp" />
 

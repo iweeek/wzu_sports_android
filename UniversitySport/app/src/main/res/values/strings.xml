@@ -141,20 +141,13 @@
     <!--空白页面的提示文案-->
 
     <!-- 首页 -->
-    <string name="joinPrompt">%s人正在参加</string>
+    <string name="joinPrompt">当前%s人正在参加</string>
     <string name="meter">米</string>
     <string name="speed">米/秒</string>
-    <string name="minute">%s分钟</string>
     <string name="step">步</string>
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTime">达标时间</string>
     <string name="qualifiedDistance">达标距离</string>
-    <string name="targetTitleStep">达标步数</string>
-    <string name="curTermTargetCount">学期目标次数：%s次</string>
-    <string name="curTermAccuCountLabel">本学期累计运动（次）</string>
-    <string name="accumulCostEnergy">累计消耗热量：%s千卡</string>
-    <string name="totalCost">%s 千卡</string>
-    <string name="completeCount">%s 段</string>
     <string name="curConsumeEnergy">本次消耗热量: %s大卡</string>
     <string name="sportCostTime">本次运动时长:%s分钟</string>
     <string name="accumTimesPer">本周累计次数（次）</string>
@@ -162,7 +155,6 @@
     <string name="ReachTargetTimes">达标(次)</string>
     <string name="curTermSportsCount">本学期累计运动(次)</string>
     <string name="accumulEnergy">消耗(卡)</string>
-    <string name="accumulTime">耗时(分钟)</string>
     <string name="outsideScore">课外成绩(分)</string>
     <string name="percent">%s</string>
     <string name="slash">/</string>
@@ -173,4 +165,14 @@
     <!-- -->
     <string name="score">得分:%s</string>
     <string name="scoreDesc">成绩:%s</string>
+
+    <string name="calorie">大卡</string>
+    <string name="calorieText">消耗（大卡）</string>
+    <string name="caloriePlaceholder">%s 大卡</string>
+
+    <string name="minute">分钟</string>
+    <string name="minuteText">耗时（分钟）</string>
+    <string name="minutePlaceHolder">%s 分钟</string>
+
+
 </resources>
