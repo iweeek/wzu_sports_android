@@ -63,11 +63,11 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
 
         if (SportEntry.RUNNING_SPORT == data.getType()) {
 
-            if (data.getParticipantNum() > 0) {
+//            if (data.getParticipantNum() > 0) {
                 holder.setText(R.id.tvParticipantNum, mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
-            }else{
-                holder.setText(R.id.tvParticipantNum, "当前没有人正在进行运动");
-            }
+//            }else{
+//                holder.setText(R.id.tvParticipantNum, "当前没有人正在进行运动");
+//            }
 
             if (data.getQualifiedDistance() > 0) {
                 /** TODO: 这里 {@link R.string.percent}    需要改掉，统一使用 %s米  */

@@ -190,18 +190,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     Intent intent = new Intent(MainActivity.this, HistorySportActivity.class);
                                     startActivity(intent);
                                     break;
-                                case R.id.nav_fitness_test://体测数据
-                                    Intent intentBodyTestData = new Intent(MainActivity.this, BodyCheckDataActivity.class);
-                                    startActivity(intentBodyTestData);
-                                    break;
-                                case R.id.nav_sports_achievement://体育成绩
-                                    Intent intentScore = new Intent(MainActivity.this, SportsScoreActivity.class);
-                                    startActivity(intentScore);
-                                    break;
-                                case R.id.nav_approval://审批
-                                    break;
-                                case R.id.nav_customer_service://客服
-                                    break;
+                                //// TODO: 2017/8/17  
+//                                case R.id.nav_fitness_test://体测数据
+//                                    Intent intentBodyTestData = new Intent(MainActivity.this, BodyCheckDataActivity.class);
+//                                    startActivity(intentBodyTestData);
+//                                    break;
+//                                case R.id.nav_sports_achievement://体育成绩
+//                                    Intent intentScore = new Intent(MainActivity.this, SportsScoreActivity.class);
+//                                    startActivity(intentScore);
+//                                    break;
+//                                case R.id.nav_approval://审批
+//                                    break;
+//                                case R.id.nav_customer_service://客服
+//                                    break;
                                 case R.id.nav_set://设置
                                     Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
                                     startActivity(intentSetting);

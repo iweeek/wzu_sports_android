@@ -588,8 +588,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         tvParticipantNum.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
-                        btStart.setVisibility(View.VISIBLE);
-                        btStart.setText("查看锻炼结果");
+//                        btStart.setVisibility(View.VISIBLE);
+//                        btStart.setText("查看锻炼结果");
 
                         myBinder.stopLocationInService();
                         aMap.setOnMyLocationChangeListener(null);
