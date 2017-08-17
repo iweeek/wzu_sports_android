@@ -92,6 +92,7 @@ public class LoginActivity extends BaseActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
 
 //        etStudentNo.setText("nijun");
+//        etStudentNo.setText("15210231110");
 //        etPassword.setText("123456");
 
         queryUniversities();
@@ -209,7 +210,7 @@ public class LoginActivity extends BaseActivity {
                 String password = etPassword.getText().toString().trim();
 
                 if (!checkLogin(username, password)) {
-
+                    //客户端初步验证不通过
                 } else {
                     login(username, password);
                 }
@@ -383,6 +384,9 @@ public class LoginActivity extends BaseActivity {
                     }
                     return true;
                 } else {
+                    hideLoadingDialog();
+                    //TODO 密码或者用户名不匹配，网络接口返回不明确
+                    ToastUtil.showToast(getString(R.string.usernamePasswordMismatching));
                     return false;
                 }
             }

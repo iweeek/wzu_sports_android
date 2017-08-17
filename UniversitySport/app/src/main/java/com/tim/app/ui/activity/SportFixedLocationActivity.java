@@ -245,11 +245,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         } else {
             tvTargetTime.setText("-");
         }
-        //// TODO:    tvAreaDesc  由于接口还未提供。
-        //        if (sportEntry.getParticipantNum() > 0) {
-        //            tvSportJoinNumber.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-        //        }
-
 
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
@@ -400,7 +395,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             tvElapsedTime.setText(elapseTime / 60 + " 分钟");
         }
 
-        //// TODO: 这部分待看
         Bundle bundle = location.getExtras();
         if (bundle != null) {
             errorCode = bundle.getInt(MyLocationStyle.ERROR_CODE);

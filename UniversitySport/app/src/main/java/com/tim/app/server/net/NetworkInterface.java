@@ -96,8 +96,6 @@ public class NetworkInterface {
             if (cache == CacheMode.IF_NONE_CACHE_REQUEST) {
                 cacheTime = 30000L;
             }
-            Log.d("NetworkInterface", params.toString());
-
 
             post(requestUrl).params(params).cacheMode(cache).cacheTime(cacheTime).tag(apiTag).execute(new StringCallback() {
                 //CacheMode#DEFAULT
