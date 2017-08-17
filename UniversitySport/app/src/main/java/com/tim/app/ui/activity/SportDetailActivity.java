@@ -438,9 +438,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     tvCurrentDistance.setText(String.valueOf(currentDistance));
                     double d = currentDistance;
                     double t = elapseTime;
+                    //解决速度过大
                     BigDecimal bd = new BigDecimal(d / t);
-                    bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                    tvAverSpeed.setText(String.valueOf(bd));
+                    if(bd.compareTo(new BigDecimal(10)) < 0) {
+                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                        tvAverSpeed.setText(String.valueOf(bd));
+                    }
                 }
 
                 ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
