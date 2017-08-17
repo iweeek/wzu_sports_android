@@ -91,8 +91,8 @@ public class LoginActivity extends BaseActivity {
         tvUniversity = (TextView) findViewById(R.id.tvUniversity);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
-        etStudentNo.setText("nijun");
-        etPassword.setText("123456");
+//        etStudentNo.setText("nijun");
+//        etPassword.setText("123456");
 
         queryUniversities();
 
