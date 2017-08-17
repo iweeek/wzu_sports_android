@@ -79,13 +79,14 @@ public class SplashActivity extends BaseActivity {
         User user = null;
         SharedPreferences sp =  getSharedPreferences(User.USER_SHARED_PREFERENCE,MODE_PRIVATE);
         String temp = sp.getString(User.USER, null);
+        if(temp == null){
+            return null;
+        }
         ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
         try {
             ObjectInputStream ois = new ObjectInputStream(bais);
             user = (User) ois.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return user;
