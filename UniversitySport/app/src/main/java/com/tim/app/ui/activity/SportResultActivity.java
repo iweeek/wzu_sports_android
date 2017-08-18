@@ -29,6 +29,7 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
@@ -118,7 +119,6 @@ public class SportResultActivity extends BaseActivity {
     private LatLng center = new LatLng(39.993167, 116.473274);// 中心点
     private Button btncenter;
     private Button btnzoom;
-    private List<LatLng> pointList = new ArrayList<LatLng>();
 
     private float zoomLevel = 15;//地图缩放级别，范围3-19,越大越精细
 
@@ -152,8 +152,11 @@ public class SportResultActivity extends BaseActivity {
         }
     }
 
-    private ArrayList<DrawPoint> drawPoints = new ArrayList<DrawPoint>();
-    private List<LatLng> points = new ArrayList<LatLng>();
+    private List<DrawPoint> mDrawPoints = new ArrayList<DrawPoint>();
+    //符合要求的DrawPoint，isNormal 和 locationtype 都符合要求将放入此集合中
+    private List<DrawPoint> mNormalDrawPoints = new ArrayList<DrawPoint>();
+    private List<LatLng> mPoints = new ArrayList<LatLng>();
+    private List<LatLng> mNormalPoints = new ArrayList<LatLng>();
 
     private Animation showAnimation;
     private Animation hideAnimation;
@@ -235,6 +238,7 @@ public class SportResultActivity extends BaseActivity {
         }
 
 
+
         aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         //        String text = "调整屏幕缩放比例：" + zoomLevel;
         //        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -277,35 +281,42 @@ public class SportResultActivity extends BaseActivity {
                 if (errCode == 0) {
                     try {
 
-                        drawPoints.clear();
+                        mDrawPoints.clear();
                         JSONArray jsonArray = json.getJSONObject("data").getJSONObject("areaActivity").getJSONArray("data");
                         if (jsonArray.length() == 0) {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
                             return true;
                         }
-                        //画线
+
+                        //添加画线点
                         for (int i = 0; i < jsonArray.length(); i++) {
                             LatLng ll = new LatLng(jsonArray.getJSONObject(i).getDouble("latitude"),
                                     jsonArray.getJSONObject(i).getDouble("longitude"));
                             DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getInt("locationType"));
-                            points.add(ll);
-                            drawPoints.add(dp);
+                            mPoints.add(ll);
+                            mDrawPoints.add(dp);
                         }
 
-                        if (drawPoints.size() > 0) {
-                            oldLatLng = drawPoints.get(0).getLL();//起始坐标
-                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+                        //获取信息完毕，接下来处理坐标点
+                        mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
+                        mNormalPoints  = getNormalPoints(mNormalDrawPoints);
 
+                        //设置起始坐标
+                        if (mNormalDrawPoints.size() > 0) {
+                            oldLatLng = mNormalDrawPoints.get(0).getLL();
+                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
                             CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                             aMap.moveCamera(cu);
                         } else {
                             Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
                         }
 
+
                         JSONObject jsonObject = json.getJSONObject("data").getJSONObject("areaActivity");
 
                         boolean qualified = jsonObject.getBoolean("qualified");
 
+                        //判断最终达标情况
                         if (historySportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
@@ -401,34 +412,39 @@ public class SportResultActivity extends BaseActivity {
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
-                        drawPoints.clear();
+                        mDrawPoints.clear();
                         JSONArray jsonArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
                         if (jsonArray.length() == 0) {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
                             return true;
                         }
 
-                        //画线
+                        //添加画线点
                         for (int i = 0; i < jsonArray.length(); i++) {
                             LatLng ll = new LatLng(jsonArray.getJSONObject(i).getDouble("latitude"),
                                     jsonArray.getJSONObject(i).getDouble("longitude"));
                             DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getBoolean("isNormal"),
                                     jsonArray.getJSONObject(i).getInt("locationType"));
-                            points.add(ll);
-                            drawPoints.add(dp);
+                            mPoints.add(ll);
+                            mDrawPoints.add(dp);
                         }
 
-                        if (drawPoints.size() > 0) {
-                            oldLatLng = drawPoints.get(0).getLL();//起始坐标
-                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+                        //获取信息完毕，接下来处理坐标点
+                        mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
+                        mNormalPoints  = getNormalPoints(mNormalDrawPoints);
 
+                        //设置起始坐标
+                        if (mNormalDrawPoints.size() > 0) {
+                            oldLatLng = mNormalDrawPoints.get(0).getLL();
+                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));//添加标记
                             CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                             aMap.moveCamera(cu);
+
                         } else {
                             Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
                         }
 
-                        //                        llCurrentInfo.setVisibility(View.VISIBLE);
+                        // llCurrentInfo.setVisibility(View.VISIBLE);
                         JSONObject jsonObject = json.getJSONObject("data").getJSONObject("runningActivity");
                         currentDistance = jsonObject.getInt("distance");
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
@@ -500,6 +516,7 @@ public class SportResultActivity extends BaseActivity {
 
     /**
      * 绘制两个坐标点之间的线段,从以前位置到现在位置
+     * todo  locationType字段是否要考虑
      */
     private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
         // 绘制曲线
@@ -532,6 +549,36 @@ public class SportResultActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 给定一组 List<DrawPoint>，返回符合要求的的 List<DrawPoint> 对象集合
+     * @param oldDrawPoints
+     * @return 符合要求的 DrawPoint 集合
+     */
+    public List<DrawPoint> getNormalDrawPoints(List<DrawPoint> oldDrawPoints,int targetLocationType) {
+        List<DrawPoint> normalDrawPoints= new ArrayList<>();
+        for (int i = 0; i < oldDrawPoints.size(); i++) {
+            if (oldDrawPoints.get(i).getLocationType() == targetLocationType) {
+                normalDrawPoints.add(oldDrawPoints.get(i));
+            }
+        }
+        return normalDrawPoints;
+    }
+
+    /**
+     * 给定一组符合要求的 List<DrawPoint>，取出其中的 List<LatLng>  并返回
+     * @param normalDrawPoints
+     * @return 正常的 LatLng 集合
+     */
+    public List<LatLng> getNormalPoints(List<DrawPoint> normalDrawPoints) {
+        List<LatLng> normalPoints= new ArrayList<>();
+        for (int i = 0; i < normalDrawPoints.size(); i++) {
+            normalPoints.add(normalDrawPoints.get(i).getLL());
+        }
+        return normalPoints;
+    }
+
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -543,45 +590,51 @@ public class SportResultActivity extends BaseActivity {
 
                 LatLng ll = oldLatLng;
 
-                DLOG.d(TAG, "onClick drawPoints.size: " + drawPoints.size());
+                DLOG.d(TAG, "onClick mDrawPoints.size: " + mDrawPoints.size());
                 if (historySportEntry instanceof HistoryAreaSportEntry) {
-                    for (int i = 1; i < drawPoints.size(); i++) {
-                        if (drawPoints.get(i).getLocationType() == 1) {
-                            drawLine(ll, drawPoints.get(i).getLL());
-                            ll = drawPoints.get(i).getLL();
-                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
+                    for (int i = 1; i < mDrawPoints.size(); i++) {
+                        if (mDrawPoints.get(i).getLocationType() == 1) {
+                            drawLine(ll, mDrawPoints.get(i).getLL());
+                            ll = mDrawPoints.get(i).getLL();
+                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
                                     ", i: " + i);
                         }
                     }
                 } else if (historySportEntry instanceof HistoryRunningSportEntry) {
-                    for (int i = 1; i < drawPoints.size(); i++) {
-                        if (drawPoints.get(i).getLocationType() == 1 && drawPoints.get(i).isNormal()) {
-                            drawLine(ll, drawPoints.get(i).getLL(), drawPoints.get(i).isNormal());
-                            ll = drawPoints.get(i).getLL();
-                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + drawPoints.get(i).getLocationType() +
+                    for (int i = 1; i < mDrawPoints.size(); i++) {
+                        if (mDrawPoints.get(i).getLocationType() == 1 && mDrawPoints.get(i).isNormal()) {
+                            drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                            ll = mDrawPoints.get(i).getLL();
+                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
                                     ", i: " + i);
                         }
                     }
                 }
+                //测试不达标的路径
+//                for (int i = 1; i < mPoints.size(); i++) {
+//                    drawLine(ll, mPoints.get(i));
+//                    ll = mPoints.get(i);
+//                    DLOG.d(TAG, "onClick drawLine ll: " + ll + ", mPoints.get(i): " + mPoints.get(i) +
+//                            ", i: " + i);
+//                }
 
                 //运动轨迹动态跟踪
-                if (points.size() > 1) {
-                    // 获取轨迹坐标点
-                    initPointList(points);
-                    //                    LatLngBounds bounds = getLatLngBounds(points.get(0), pointList);//以中心点缩放
-                    LatLngBounds bounds = getLatLngBounds(pointList);  //根据提供的点缩放至屏幕可见范围。
+                if (mNormalPoints.size() > 1) {
+
+                    //方式一：LatLngBounds bounds = getLatLngBounds(mPoints.get(0), pointList);//以中心点缩放
+                    //方式二：如下
+                    LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
 
                     aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250)); //平滑移动
-                    //                    aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 250));
 
                     SmoothMoveMarker smoothMarker = new SmoothMoveMarker(aMap);
                     // 设置滑动的图标
                     smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
 
-                    LatLng drivePoint = points.get(0);
-                    Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(points, drivePoint);
-                    points.set(pair.first, drivePoint);
-                    List<LatLng> subList = points.subList(pair.first, points.size());
+                    LatLng drivePoint = mNormalPoints.get(0);
+                    Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(mNormalPoints, drivePoint);
+                    mNormalPoints.set(pair.first, drivePoint);
+                    List<LatLng> subList = mNormalPoints.subList(pair.first, mNormalPoints.size());
 
                     // 设置滑动的轨迹左边点
                     smoothMarker.setPoints(subList);
@@ -591,11 +644,11 @@ public class SportResultActivity extends BaseActivity {
                     smoothMarker.startSmoothMove();
                 }
 
-
-                if (drawPoints.size() > 0) {
-                    Marker marker = aMap.addMarker(new MarkerOptions().position(drawPoints.get(drawPoints.size() - 1).getLL()).title("终点"));
+                if (mDrawPoints.size() > 0) {
+                    Marker marker = aMap.addMarker(new MarkerOptions().position(
+                            mNormalDrawPoints.get(mNormalDrawPoints.size() - 1).getLL()).title("终点"));
                 } else {
-
+                    //// TODO: 2017/8/18
                 }
                 break;
             case R.id.ivLocation:
@@ -605,7 +658,7 @@ public class SportResultActivity extends BaseActivity {
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 break;
             case R.id.btTest:
-                markerOverlay = new MarkerOverlay(aMap, points, points.get(0));
+                markerOverlay = new MarkerOverlay(aMap, this.mPoints, this.mPoints.get(0));
                 markerOverlay.addToMap();
                 markerOverlay.zoomToSpanWithCenter();
                 zoomToSpanWithCenter();
@@ -656,15 +709,6 @@ public class SportResultActivity extends BaseActivity {
             //                break;
         }
 
-    }
-
-    //初始化list
-    private void initPointList(List<LatLng> points) {
-        if (points != null && points.size() > 0) {
-            for (LatLng point : points) {
-                pointList.add(point);
-            }
-        }
     }
 
     //根据中心点和自定义内容获取缩放bounds
@@ -797,22 +841,6 @@ public class SportResultActivity extends BaseActivity {
         return R.layout.activity_sport_result;
     }
 
-    private List<LatLng> getPointList() {
-        List<LatLng> pointList = new ArrayList<LatLng>();
-        pointList.add(new LatLng(39.993755, 116.467987));
-        pointList.add(new LatLng(39.985589, 116.469306));
-        pointList.add(new LatLng(39.990946, 116.48439));
-        pointList.add(new LatLng(40.000466, 116.463384));
-        pointList.add(new LatLng(39.975426, 116.490079));
-        pointList.add(new LatLng(40.016392, 116.464343));
-        pointList.add(new LatLng(39.959215, 116.464882));
-        pointList.add(new LatLng(39.962136, 116.495418));
-        pointList.add(new LatLng(39.994012, 116.426363));
-        pointList.add(new LatLng(39.960666, 116.444798));
-        pointList.add(new LatLng(39.972976, 116.424517));
-        pointList.add(new LatLng(39.951329, 116.455913));
-        return pointList;
-    }
 
     private void zoomToSpanWithCenter() {
         markerOverlay.zoomToSpanWithCenter();

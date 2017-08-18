@@ -105,7 +105,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     //全局变量
     private int interval = 0;
-    private int speedLimitation = 10;//米
+    private int speedLimitation = 5;//米
     private int currentDistance = 0;
     private long elapseTime = 0;
     private int currentSteps = 0;
