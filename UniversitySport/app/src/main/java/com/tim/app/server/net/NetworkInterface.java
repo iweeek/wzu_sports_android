@@ -1,8 +1,9 @@
 package com.tim.app.server.net;
 
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.application.library.log.DLOG;
+import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.lzy.okhttputils.cache.CacheEntity;
 import com.lzy.okhttputils.cache.CacheMode;
@@ -14,8 +15,6 @@ import com.lzy.okhttputils.request.BaseRequest;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
-import com.application.library.log.DLOG;
-import com.application.library.net.ResponseCallback;
 
 import java.io.File;
 import java.net.UnknownHostException;
@@ -52,6 +51,10 @@ public class NetworkInterface {
 
     public HttpHeaders getCommonHeaders() {
         return OkHttpUtils.getInstance().getCommonHeaders();
+    }
+
+    public  void setCommonHeaders(HttpHeaders headers){
+        OkHttpUtils.getInstance().addCommonHeaders(headers);
     }
 
     /**

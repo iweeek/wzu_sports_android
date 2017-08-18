@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
@@ -24,6 +25,7 @@ import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
 import com.application.library.util.StringUtil;
 import com.lzy.okhttputils.OkHttpUtils;
+import com.lzy.okhttputils.model.HttpHeaders;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
@@ -32,6 +34,7 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.Student;
 import com.tim.app.server.entry.University;
 import com.tim.app.server.entry.User;
+import com.tim.app.server.net.NetworkInterface;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.EncryptUtil;
@@ -372,6 +375,15 @@ public class LoginActivity extends BaseActivity {
 
                     user.setExpiredDate(json.optLong("expiredDate"));
                     user.setToken(json.optString("token"));
+
+                    //同时获取Android_ID
+                    String android_id = Settings.Secure.getString(getContentResolver(),
+                            Settings.Secure.ANDROID_ID);
+                    //添加token 至 HttpHeader
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.put("token",user.getToken());
+                    headers.put("androidId",android_id);
+                    NetworkInterface.instance().setCommonHeaders(headers);
 
                     user.setUsername(username);
                     user.setPassword(md5Password);

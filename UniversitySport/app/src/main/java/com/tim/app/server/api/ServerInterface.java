@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.cache.CacheMode;
-import com.lzy.okhttputils.model.HttpHeaders;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;
@@ -76,7 +75,7 @@ public class ServerInterface {
 
     public void queryStudent(int userId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  student(id: " + userId + ") {\n" +
+                "  student(userId: " + userId + ") {\n" +
                 "    id\n" +
                 "    userId\n" +
                 "    studentNo\n" +
@@ -209,7 +208,7 @@ public class ServerInterface {
 
     public void query(String queryStr, ResponseCallback callback) {
         String url = API_SCHEME + QUERY_INTERFACE;
-        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+//        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
         HashMap params = new HashMap();
         //        Log.d(TAG, "queryRunningSports: headers.toString()" + headers.toString());
 
