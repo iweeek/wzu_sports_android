@@ -76,12 +76,13 @@ public class ServerInterface {
 
     public void queryStudent(int userId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                "  student(userId: " + userId + ") {\n" +
+                "  student(id: " + userId + ") {\n" +
                 "    id\n" +
-                "    universityId\n" +
                 "    userId\n" +
                 "    studentNo\n" +
                 "    name\n" +
+                "    isMan\n" +
+                "    universityId\n" +
                 "    classId\n" +
                 "  }\n" +
                 "}\n";
@@ -210,7 +211,7 @@ public class ServerInterface {
         String url = API_SCHEME + QUERY_INTERFACE;
         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
         HashMap params = new HashMap();
-        Log.d(TAG, "queryRunningSports: headers.toString()" + headers.toString());
+        //        Log.d(TAG, "queryRunningSports: headers.toString()" + headers.toString());
 
         //        headers.put("Content-Type", "application/json;charset=UTF-8");
         //        Log.d(TAG, "headers: " + headers);
@@ -230,9 +231,9 @@ public class ServerInterface {
      * @param universityId
      * @param callback
      */
-    public void queryRunningSports(int universityId, ResponseCallback callback) {
+    public void queryRunningSports(int universityId, boolean isEnabled, boolean isMan, ResponseCallback callback) {
         queryStr = "{\n" +
-                "  runningSports(universityId: " + universityId + ") {\n" +
+                "  runningSports(universityId:" + universityId + ",isEnabled: " + isEnabled + ",isMan:" + isMan + ") {\n" +
                 "    acquisitionInterval\n" +
                 "    participantNum\n" +
                 "    id\n" +
@@ -460,7 +461,7 @@ public class ServerInterface {
     }
 
     public void queryAppVersion(ResponseCallback callback) {
-        String queryStr="{\n" +
+        String queryStr = "{\n" +
                 "  latestVerison(platformId:0) {\n" +
                 "    id\n" +
                 "    versionName\n" +

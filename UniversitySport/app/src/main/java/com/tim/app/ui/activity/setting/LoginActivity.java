@@ -329,6 +329,7 @@ public class LoginActivity extends BaseActivity {
                     student.setStudentNo(jsonObject.optString("studentNo"));
                     student.setClassId(jsonObject.optInt("classId"));
                     student.setUserId(jsonObject.optInt("userId"));
+                    student.setMan(jsonObject.optBoolean("isMan"));
 
                     Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
                     if (student != null) {

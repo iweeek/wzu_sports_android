@@ -557,7 +557,7 @@ public class SportResultActivity extends BaseActivity {
     public List<DrawPoint> getNormalDrawPoints(List<DrawPoint> oldDrawPoints,int targetLocationType) {
         List<DrawPoint> normalDrawPoints= new ArrayList<>();
         for (int i = 0; i < oldDrawPoints.size(); i++) {
-            if (oldDrawPoints.get(i).getLocationType() == targetLocationType) {
+            if (oldDrawPoints.get(i).getLocationType() == targetLocationType && oldDrawPoints.get(i).isNormal()) {
                 normalDrawPoints.add(oldDrawPoints.get(i));
             }
         }

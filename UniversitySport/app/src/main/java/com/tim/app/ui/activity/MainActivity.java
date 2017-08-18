@@ -60,8 +60,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private static final String TAG = "MainActivity";
 
-    public static User  user;
-    public static Student  student;
+    public static User user;
+    public static Student student;
+    private static boolean mIsEnable = true;
 
     private MainActivity context;
 
@@ -90,31 +91,31 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     /*
     * 微信
     * */
-//    private IWXAPI api;
-//
-//    private void regToWx() {
-//        api = WXAPIFactory.createWXAPI(this, AppConstant.APP_ID);
-//        api.registerApp(AppConstant.APP_ID);
-//    }
+    //    private IWXAPI api;
+    //
+    //    private void regToWx() {
+    //        api = WXAPIFactory.createWXAPI(this, AppConstant.APP_ID);
+    //        api.registerApp(AppConstant.APP_ID);
+    //    }
 
     /**
      * 发送数据到微信
-     *
-//     */
-//    private void sendToWx(String text) {
-//        WXTextObject textObj = new WXTextObject();
-//        textObj.text = text;
-//
-//        WXMediaMessage msg = new WXMediaMessage();
-//        msg.mediaObject = textObj;
-//        msg.description = text;
-//
-//        SendMessageToWX.Req req = new SendMessageToWX.Req();
-//        req.transaction = String.valueOf(System.currentTimeMillis());
-//
-//        api.sendReq(req);
-//    }
-
+     * <p>
+     * //
+     */
+    //    private void sendToWx(String text) {
+    //        WXTextObject textObj = new WXTextObject();
+    //        textObj.text = text;
+    //
+    //        WXMediaMessage msg = new WXMediaMessage();
+    //        msg.mediaObject = textObj;
+    //        msg.description = text;
+    //
+    //        SendMessageToWX.Req req = new SendMessageToWX.Req();
+    //        req.transaction = String.valueOf(System.currentTimeMillis());
+    //
+    //        api.sendReq(req);
+    //    }
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
@@ -122,8 +123,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     public static void start(Context context, User user, Student student) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("user",user);
-        intent.putExtra("student",student);
+        intent.putExtra("user", user);
+        intent.putExtra("student", student);
         context.startActivity(intent);
     }
 
@@ -191,18 +192,18 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     startActivity(intent);
                                     break;
                                 //// TODO: 2017/8/17  
-//                                case R.id.nav_fitness_test://体测数据
-//                                    Intent intentBodyTestData = new Intent(MainActivity.this, BodyCheckDataActivity.class);
-//                                    startActivity(intentBodyTestData);
-//                                    break;
-//                                case R.id.nav_sports_achievement://体育成绩
-//                                    Intent intentScore = new Intent(MainActivity.this, SportsScoreActivity.class);
-//                                    startActivity(intentScore);
-//                                    break;
-//                                case R.id.nav_approval://审批
-//                                    break;
-//                                case R.id.nav_customer_service://客服
-//                                    break;
+                                //                                case R.id.nav_fitness_test://体测数据
+                                //                                    Intent intentBodyTestData = new Intent(MainActivity.this, BodyCheckDataActivity.class);
+                                //                                    startActivity(intentBodyTestData);
+                                //                                    break;
+                                //                                case R.id.nav_sports_achievement://体育成绩
+                                //                                    Intent intentScore = new Intent(MainActivity.this, SportsScoreActivity.class);
+                                //                                    startActivity(intentScore);
+                                //                                    break;
+                                //                                case R.id.nav_approval://审批
+                                //                                    break;
+                                //                                case R.id.nav_customer_service://客服
+                                //                                    break;
                                 case R.id.nav_set://设置
                                     Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
                                     startActivity(intentSetting);
@@ -284,7 +285,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 查询首页底部运动方式
      */
     public void queryRunningSport() {
-        ServerInterface.instance().queryRunningSports(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningSports(AppConstant.UNIVERSITY_ID, mIsEnable, student.isMan(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -293,7 +294,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         for (int i = 0; i < sportArray.length(); i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
 
-                            if(!jsonObject.optBoolean("isEnabled")){
+                            if (!jsonObject.optBoolean("isEnabled")) {
                                 continue;
                             }
 
@@ -369,7 +370,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      */
     public void queryCurTermData() {
 
-        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, student.getId() , new JsonResponseCallback() {
+        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, student.getId(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -460,6 +461,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void initData() {
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
+
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 //                String versionName = "";

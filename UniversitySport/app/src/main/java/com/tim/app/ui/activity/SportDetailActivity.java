@@ -409,7 +409,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                //                DLOG.writeToInternalFile(msg);
+                //DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "oldLatLng: " + oldLatLng);
@@ -420,29 +420,31 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         "， 当前电量: " + batteryLevel + "%";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                if (moveDistance / sportEntry.getAcquisitionInterval() > speedLimitation) {
-                    //位置漂移
-                    //                        return;
-                    toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getAcquisitionInterval();
-                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                    isNormal = false;
-                    drawLine(oldLatLng, newLatLng, isNormal);
-                } else {
-                    isNormal = true;
-                    drawLine(oldLatLng, newLatLng, isNormal);
-                    currentDistance += moveDistance;
+                if (locationType == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                    if (moveDistance / sportEntry.getAcquisitionInterval() > speedLimitation) {
+                        //位置漂移
+                        //                        return;
+                        toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getAcquisitionInterval();
+                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                        isNormal = false;
+                        drawLine(oldLatLng, newLatLng, isNormal);
+                    } else {
+                        isNormal = true;
+                        drawLine(oldLatLng, newLatLng, isNormal);
+                        currentDistance += moveDistance;
 
-                    if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
-                        targetFinishedTime = elapseTime;
-                    }
-                    tvCurrentDistance.setText(String.valueOf(currentDistance));
-                    double d = currentDistance;
-                    double t = elapseTime;
-                    //解决速度过大
-                    BigDecimal bd = new BigDecimal(d / t);
-                    if(bd.compareTo(new BigDecimal(10)) < 0) {
-                        bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                        tvAverSpeed.setText(String.valueOf(bd));
+                        if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                            targetFinishedTime = elapseTime;
+                        }
+                        tvCurrentDistance.setText(String.valueOf(currentDistance));
+                        double d = currentDistance;
+                        double t = elapseTime;
+                        //解决速度过大
+                        BigDecimal bd = new BigDecimal(d / t);
+                        if (bd.compareTo(new BigDecimal(10)) < 0) {
+                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            tvAverSpeed.setText(String.valueOf(bd));
+                        }
                     }
                 }
 
@@ -503,11 +505,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvSportName.setText(sportEntry.getName());
         }
 
-//        if (sportEntry.getParticipantNum() > 0) {
-            tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-//        }else{
-//            tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-//        }
+        //        if (sportEntry.getParticipantNum() > 0) {
+        tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+        //        }else{
+        //            tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+        //        }
 
         if (sportEntry.getQualifiedDistance() > 0) {
             tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getQualifiedDistance())));
@@ -591,8 +593,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         tvParticipantNum.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
-//                        btStart.setVisibility(View.VISIBLE);
-//                        btStart.setText("查看锻炼结果");
+                        //                        btStart.setVisibility(View.VISIBLE);
+                        //                        btStart.setText("查看锻炼结果");
 
                         myBinder.stopLocationInService();
                         aMap.setOnMyLocationChangeListener(null);

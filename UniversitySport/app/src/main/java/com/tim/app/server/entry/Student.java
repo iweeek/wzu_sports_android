@@ -13,6 +13,7 @@ public class Student implements Serializable{
     private  int id;
     private String name;
     private String studentNo;
+    private boolean isMan;
     private int userId;
     private int classId;
     private int universityId;
@@ -23,6 +24,7 @@ public class Student implements Serializable{
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", studentNo='" + studentNo + '\'' +
+                ", isMan=" + isMan +
                 ", userId=" + userId +
                 ", classId=" + classId +
                 ", universityId=" + universityId +
@@ -51,6 +53,14 @@ public class Student implements Serializable{
 
     public void setStudentNo(String studentNo) {
         this.studentNo = studentNo;
+    }
+
+    public boolean isMan() {
+        return isMan;
+    }
+
+    public void setMan(boolean man) {
+        isMan = man;
     }
 
     public int getUserId() {
