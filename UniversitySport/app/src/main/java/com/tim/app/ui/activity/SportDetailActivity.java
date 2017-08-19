@@ -171,6 +171,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private LocationService.MyBinder myBinder = null;
 
+    public static final String NETWORK_ERROR_MSG = "网络请求失败，请检查网络状态";
+
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -676,24 +678,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                break;
             case R.id.btStart:
                 if (state == STATE_NORMAL) {
-                    state = STATE_STARTED;
-                    startTime = System.currentTimeMillis();
-                    //                    ibBack.setVisibility(View.GONE);
-                    llCurrentInfo.setVisibility(View.VISIBLE);
-                    rlCurConsumeEnergy.setVisibility(View.GONE);
-                    llTargetContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.black_30));
-                    btStart.setVisibility(View.GONE);
-                    rlBottom.setVisibility(View.GONE);
-                    slideUnlockView.setVisibility(View.VISIBLE);
-                    tvPause.setVisibility(View.VISIBLE);
-
-                    initData();
-                    startTimer();
-                    Intent bindIntent = new Intent(this, LocationService.class);
-                    bindService(bindIntent, connection, BIND_AUTO_CREATE);
-
-
                     Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
+                    startTime = System.currentTimeMillis();
                     ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -709,12 +695,28 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                 public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                                     if (status == 0) {
                                                         DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
+                                                        state = STATE_STARTED;
+
+                                                        //                    ibBack.setVisibility(View.GONE);
+                                                        llCurrentInfo.setVisibility(View.VISIBLE);
+                                                        rlCurConsumeEnergy.setVisibility(View.GONE);
+                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        btStart.setVisibility(View.GONE);
+                                                        rlBottom.setVisibility(View.GONE);
+                                                        slideUnlockView.setVisibility(View.VISIBLE);
+                                                        tvPause.setVisibility(View.VISIBLE);
+
+                                                        initData();
+                                                        startTimer();
+                                                        Intent bindIntent = new Intent(SportDetailActivity.this, LocationService.class);
+                                                        bindService(bindIntent, connection, BIND_AUTO_CREATE);
                                                         return true;
                                                     } else {
-                                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-                                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-                                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                                        DLOG.writeToInternalFile(msg);
+//                                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+//                                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+//                                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+//                                                        DLOG.writeToInternalFile(msg);
+                                                        Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                                         return false;
                                                     }
                                                 }
@@ -725,7 +727,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 }
                                 return true;
                             } else {
-                                Log.d(TAG, "errMsg:" + errMsg);
+                                //TODO
+                                Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "errMsg: " + errMsg);
                                 return false;
                             }
                         }
@@ -977,7 +981,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
+
         btStart = (Button) findViewById(R.id.btStart);
+        btStart.setOnClickListener(this);
+        btStart.setVisibility(View.GONE);
+
+
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
@@ -994,7 +1003,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
         ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
 
-        btStart.setOnClickListener(this);
+
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
