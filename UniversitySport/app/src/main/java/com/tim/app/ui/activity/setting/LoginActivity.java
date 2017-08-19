@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.net.JsonResponseCallback;
-import com.application.library.net.ResponseCallback;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
 import com.application.library.util.StringUtil;
