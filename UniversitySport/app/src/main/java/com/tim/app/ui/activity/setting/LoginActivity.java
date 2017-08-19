@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.net.JsonResponseCallback;
+import com.application.library.net.ResponseCallback;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
 import com.application.library.util.StringUtil;
@@ -42,6 +43,7 @@ import com.tim.app.util.SoftKeyboardUtil;
 import com.tim.app.util.ToastUtil;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -76,6 +78,10 @@ public class LoginActivity extends BaseActivity {
     private User user;
     private Student student;
     private Context context = this;
+    private String deviceId;
+
+    //TODO
+    private int expirationTime = 1;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -166,6 +172,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        //同时获取Android_ID
+        deviceId = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 
     private void queryUniversities() {
@@ -359,41 +368,43 @@ public class LoginActivity extends BaseActivity {
         int index = (int) tvUniversity.getTag();
         University university = universities.get(index);
         Log.d(TAG, "universities.get(index):" + universities.get(index));
-        ServerInterface.instance().tokens(TAG, university.getId(), username, md5Password, 2, new JsonResponseCallback() {
+        ServerInterface.instance().tokens(TAG, university.getId(), username, md5Password, deviceId, expirationTime, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     user = new User();
-                    user.setUid(json.optInt("userId"));
+                    try {
+                        user.setUid(json.getJSONObject("obj").optInt("userId"));
 
-                    List<String> roles = new ArrayList<>();
-                    JSONArray roleArray = json.optJSONArray("roles");
-                    for (int i = 0; i < roles.size(); i++) {
-                        roles.add(roleArray.optString(i));
-                    }
-                    user.setRoles(roles.toArray(new String[roles.size()]));
+                        List<String> roles = new ArrayList<>();
+                        JSONArray roleArray = json.getJSONObject("obj").optJSONArray("roles");
+                        for (int i = 0; i < roles.size(); i++) {
+                            roles.add(roleArray.optString(i));
+                        }
+                        user.setRoles(roles.toArray(new String[roles.size()]));
 
-                    user.setExpiredDate(json.optLong("expiredDate"));
-                    user.setToken(json.optString("token"));
+                        user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDate"));
+                        user.setToken(json.getJSONObject("obj").optString("token"));
 
-                    //同时获取Android_ID
-                    String android_id = Settings.Secure.getString(getContentResolver(),
-                            Settings.Secure.ANDROID_ID);
-                    //添加token 至 HttpHeader
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.put("token",user.getToken());
-                    headers.put("androidId",android_id);
-                    NetworkInterface.instance().setCommonHeaders(headers);
 
-                    user.setUsername(username);
-                    user.setPassword(md5Password);
-                    Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
+                        //添加token 至 HttpHeader
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.put("Authorization", user.getToken());
+                        NetworkInterface.instance().setCommonHeaders(headers);
 
-                    if (user != null) {
-                        //说明用户登录成功
-                        queryStudent(user.getUid());
-                    } else {
-                        //TODO 查找用户信息失败
+                        user.setUsername(username);
+                        user.setPassword(md5Password);
+                        Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
+
+                        if (user != null) {
+                            //说明用户登录成功
+                            queryStudent(user.getUid());
+                        } else {
+                            //TODO 查找用户信息失败
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                     return true;
                 } else {
