@@ -446,24 +446,24 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
                     }
-                }
 
-                ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
-                        location.getLongitude(), location.getLatitude(), locationType, isNormal, new ResponseCallback() {
-                            @Override
-                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                                if (status == 0) {
-                                    DLOG.d(TAG, "runningActivityData succeed");
-                                    return true;
-                                } else {
-                                    String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-                                    msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-                                    msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                    DLOG.writeToInternalFile(msg);
-                                    return false;
+                    ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
+                            location.getLongitude(), location.getLatitude(), locationType, isNormal, new ResponseCallback() {
+                                @Override
+                                public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                    if (status == 0) {
+                                        DLOG.d(TAG, "runningActivityData succeed");
+                                        return true;
+                                    } else {
+                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                        DLOG.writeToInternalFile(msg);
+                                        return false;
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
 
             oldLatLng = newLatLng;

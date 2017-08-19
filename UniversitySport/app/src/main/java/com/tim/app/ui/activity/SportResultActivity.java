@@ -45,6 +45,7 @@ import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.MarkerOverlay;
+import com.tim.app.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -307,8 +308,10 @@ public class SportResultActivity extends BaseActivity {
                             Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
                             CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                             aMap.moveCamera(cu);
-                        } else {
-                            Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
+                        } else{
+                            Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
+                            //说明坐标位置点都不符合要求，需要把显示信息置为零
+
                         }
 
 
@@ -602,7 +605,7 @@ public class SportResultActivity extends BaseActivity {
                     }
                 } else if (historySportEntry instanceof HistoryRunningSportEntry) {
                     for (int i = 1; i < mDrawPoints.size(); i++) {
-                        if (mDrawPoints.get(i).getLocationType() == 1 && mDrawPoints.get(i).isNormal()) {
+                     if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE && mDrawPoints.get(i).isNormal()) {
                             drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
                             ll = mDrawPoints.get(i).getLL();
                             DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
@@ -644,11 +647,12 @@ public class SportResultActivity extends BaseActivity {
                     smoothMarker.startSmoothMove();
                 }
 
-                if (mDrawPoints.size() > 0) {
+                if (mNormalDrawPoints.size() > 0) {
                     Marker marker = aMap.addMarker(new MarkerOptions().position(
                             mNormalDrawPoints.get(mNormalDrawPoints.size() - 1).getLL()).title("终点"));
                 } else {
-                    //// TODO: 2017/8/18
+                    //// TODO: 2017/8/18  说明坐标位置点都不符合要求，需要把距离置为零
+                    ToastUtil.showToast(noSportDataMsg);
                 }
                 break;
             case R.id.ivLocation:
