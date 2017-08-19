@@ -75,7 +75,7 @@ public class LoginActivity extends BaseActivity {
 
     private List<University> universities = new ArrayList<>();
     private List<String> universityNames = new ArrayList<>();
-    private User user;
+    public User user;
     private Student student;
     private Context context = this;
     private String deviceId;
@@ -386,11 +386,11 @@ public class LoginActivity extends BaseActivity {
                         user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDate"));
                         user.setToken(json.getJSONObject("obj").optString("token"));
 
-
-                        //添加token 至 HttpHeader
-                        HttpHeaders headers = new HttpHeaders();
+//                        //添加token 至 HttpHeader
+                        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
                         headers.put("Authorization", user.getToken());
                         NetworkInterface.instance().setCommonHeaders(headers);
+                        Log.d(TAG, "headers:" + headers);
 
                         user.setUsername(username);
                         user.setPassword(md5Password);
