@@ -126,17 +126,17 @@ public class SportResultActivity extends BaseActivity {
 
     class DrawPoint {
         LatLng ll;
-        Boolean isNormal;
+        Boolean isNormal = true;
         int locationType;
 
-        DrawPoint(LatLng llOut, boolean isNormalOut, int type) {
-            ll = llOut;
-            isNormal = isNormalOut;
+        DrawPoint(LatLng ll, boolean isNormal, int type) {
+            this.ll = ll;
+            this.isNormal = isNormal;
             locationType = type;
         }
 
-        DrawPoint(LatLng llOut, int type) {
-            ll = llOut;
+        DrawPoint(LatLng ll, int type) {
+            this.ll = ll;
             locationType = type;
         }
 
@@ -264,24 +264,11 @@ public class SportResultActivity extends BaseActivity {
     }
 
     private void queryAreaActivity(long id) {
-/*08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║ {
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║     "errors": [],
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║     "data": {
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║         "areaActivity": {
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║             "costTime": 2,
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║             "qualifiedCostTime": 3600,
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║             "qualified": false
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║         }
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║     },
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║     "extensions": null
-08-06 16:58:34.309 18683-18683/com.tim.moli D/http: ║ }
-*/
         ServerInterface.instance().queryAreaActivity(id, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     try {
-
                         mDrawPoints.clear();
                         JSONArray jsonArray = json.getJSONObject("data").getJSONObject("areaActivity").getJSONArray("data");
                         if (jsonArray.length() == 0) {

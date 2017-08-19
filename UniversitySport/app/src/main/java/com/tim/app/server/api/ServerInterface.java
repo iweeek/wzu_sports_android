@@ -300,7 +300,6 @@ public class ServerInterface {
                 "    data {\n" +
                 "      longitude\n" +
                 "      latitude\n" +
-                "      isNormal\n" +
                 "      locationType\n" +
                 "      acquisitionTime\n" +
                 "    }\n" +
