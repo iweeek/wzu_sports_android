@@ -377,12 +377,12 @@ public class LoginActivity extends BaseActivity {
                     user.setToken(json.optString("token"));
 
                     //同时获取Android_ID
-                    String android_id = Settings.Secure.getString(getContentResolver(),
+                    String deviceId = Settings.Secure.getString(getContentResolver(),
                             Settings.Secure.ANDROID_ID);
                     //添加token 至 HttpHeader
                     HttpHeaders headers = new HttpHeaders();
                     headers.put("token",user.getToken());
-                    headers.put("androidId",android_id);
+                    headers.put("deviceId",deviceId);
                     NetworkInterface.instance().setCommonHeaders(headers);
 
                     user.setUsername(username);

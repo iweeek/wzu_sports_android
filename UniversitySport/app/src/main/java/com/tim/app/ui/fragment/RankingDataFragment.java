@@ -138,7 +138,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             }
                             headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
 
-                            for (int i = 0; i < rankingDataArray.length(); i++) {
+                            for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
                                 data.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
