@@ -116,7 +116,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     private void initData() {
         if (type == AppConstant.TYPE_COST_ENERGY) {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -172,7 +172,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
             });
         } else {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime++, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -301,7 +301,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 lrvLoadMore.loadMoreFinish(false, false);
             }
         } else {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoTime++, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
