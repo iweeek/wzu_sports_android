@@ -26,7 +26,7 @@ public abstract class JsonResponseCallback extends ResponseCallback {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DLOG.d("json parse error!");
+            DLOG.d("json parse error，json: " + result);
             return onJsonResponse(null, -1, "", id, fromCache);
         }
         return true;

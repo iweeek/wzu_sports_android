@@ -173,6 +173,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     public static final String NETWORK_ERROR_MSG = "网络请求失败，请检查网络状态";
 
+    public static final String COMMIT_FALIED_MSG = "网络错误，数据提交失败，请随后查看历史记录";
+
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -186,7 +188,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             myBinder.startLocationInService(interval);
         }
     };
-
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -866,7 +867,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
                         if (errCode == 0) {
-
                             historySportEntry = new HistoryAreaSportEntry();
 
                             historySportEntry.setId(json.optInt("id"));
@@ -894,58 +894,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, String.valueOf(historySportEntry.getKcalConsumed())));
                             return true;
                         } else {
-                            //在每次运动完进行提交，如果提交不成功，则需要保存在本地数据库。
-                            //                            int result = SQLite.getInstance(context).saveRunningSportsRecord(
-                            //                                    runningSportId, sportRecordId, studentId, currentDistance,
-                            //                                    elapseTime, startTime, currentSteps, System.currentTimeMillis());
-                            //
-                            //                            Log.d(TAG, "result:" + result);
+                            Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                             return false;
                         }
                     }
                 });
-        /*如果本地有未上传的数据*/
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                //查询数据库中的记录。
-//                String queryStr = "select * from  " + RunningSportsCallback.TABLE_RUNNING_SPORTS;
-//
-//                List<RunningSportsRecordOld> list = SQLite.query(
-//                        RunningSportsCallback.TABLE_RUNNING_SPORTS, queryStr, null);
-//
-//                for (final RunningSportsRecordOld record : list) {
-//                    Log.d(TAG, "record:" + record);
-//                    ServerInterface.instance().runningActivitiesEnd(
-//                            TAG, record.getAcitivityId(),
-//                            record.getCurrentDistance(),
-//                            record.getSteps(),
-//                            record.getElapseTime(),
-//                            targetFinishedTime,
-//                            new JsonResponseCallback() {
-//                                //提交未数据库中为提交的记录
-//                                @Override
-//                                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-//                                    Log.d(TAG, "errCode: " + errCode);
-//                                    if (errCode == 0) {
-//                                        //提交成功，把数据库中记录删除。
-//                                        int result = SQLite.getInstance(context).deleteSportsRecord(
-//                                                RunningSportsCallback.TABLE_RUNNING_SPORTS,
-//                                                "startTime = ?", new String[]{record.getStartTime().toString()});
-//                                        Log.d(TAG, "delete result: " + result);
-//                                        Log.d(TAG, "record.getStartTime(): " + record.getStartTime());
-//
-//                                        return true;
-//                                    } else {
-//                                        Log.d(TAG, "onJsonResponse errMsg: " + errMsg);
-//                                        return false;
-//                                    }
-//                                }
-//                            });
-//                }
-//            }
-//        };
-//        new Thread(runnable).start();
     }
 
     @Override

@@ -129,7 +129,7 @@ public class NetworkInterface {
                 public void onError(Call call, Response response, Exception e) {
                     super.onError(call, response, e);
                     if (e instanceof UnknownHostException) {
-                        callback.onResponse(null, -1, RT.getString(R.string.httpconnection_text_not_network), 0, false);
+                        callback.onResponse(null, -1, RT.getString(R.string.def_net_error_text), 0, false);
                     } else {
                         callback.onResponse(null, -1, "", 0, false);
                     }
@@ -139,7 +139,7 @@ public class NetworkInterface {
                 public void onCacheError(Call call, Exception e) {
                     super.onCacheError(call, e);
                     if (e instanceof UnknownHostException) {
-                        callback.onResponse(null, -1, RT.getString(R.string.httpconnection_text_not_network), 0, true);
+                        callback.onResponse(null, -1, RT.getString(R.string.def_net_error_text), 0, true);
                     } else {
                         callback.onResponse(null, -1, "", 0, true);
                     }
@@ -187,7 +187,7 @@ public class NetworkInterface {
             public void onError(Call call, Response response, Exception e) {
                 super.onError(call, response, e);
                 if (e instanceof UnknownHostException) {
-                    callback.onResponse(null, -1, RT.getString(R.string.httpconnection_text_not_network), 0, false);
+                    callback.onResponse(null, -1, RT.getString(R.string.def_net_error_text), 0, false);
                 } else {
                     callback.onResponse(null, -1, "", 0, false);
                 }
@@ -197,7 +197,7 @@ public class NetworkInterface {
             public void onCacheError(Call call, Exception e) {
                 super.onCacheError(call, e);
                 if (e instanceof UnknownHostException) {
-                    callback.onResponse(null, -1, RT.getString(R.string.httpconnection_text_not_network), 0, true);
+                    callback.onResponse(null, -1, RT.getString(R.string.def_net_error_text), 0, true);
                 } else {
                     callback.onResponse(null, -1, "", 0, true);
                 }
@@ -253,7 +253,7 @@ public class NetworkInterface {
             public void onError(Call call, Response response, Exception e) {
                 super.onError(call, response, e);
                 if (e instanceof UnknownHostException) {
-                    callback.onResponse(null, -1, RT.getString(R.string.httpconnection_text_not_network), 0, false);
+                    callback.onResponse(null, -1, RT.getString(R.string.def_net_error_text), 0, false);
                 } else {
                     callback.onResponse(null, -1, RT.getString(R.string.upload_picture_failed), 0, false);
                 }
@@ -263,7 +263,7 @@ public class NetworkInterface {
             public void onCacheError(Call call, Exception e) {
                 super.onCacheError(call, e);
                 if (e instanceof UnknownHostException) {
-                    callback.onResponse(null, -1, RT.getString(R.string.httpconnection_text_not_network), 0, true);
+                    callback.onResponse(null, -1, RT.getString(R.string.def_net_error_text), 0, true);
                 } else {
                     callback.onResponse(null, -1, RT.getString(R.string.upload_picture_failed), 0, true);
                 }
