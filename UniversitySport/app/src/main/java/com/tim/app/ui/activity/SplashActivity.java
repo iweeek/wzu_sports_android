@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.concurrent.TimeUnit;
 
+import static com.tim.app.ui.activity.setting.LoginActivity.student;
+import static com.tim.app.ui.activity.setting.LoginActivity.user;
+
 public class SplashActivity extends BaseActivity {
 
     private static final String TAG = "SplashActivity";
@@ -62,7 +65,7 @@ public class SplashActivity extends BaseActivity {
             UserManager.instance().cleanCache();
         }
         Log.d(TAG, "initData");
-        User user = getUserFromCache();
+        user = getUserFromCache();
         if (user != null) {
             showLoadingDialog();
             try {
@@ -70,22 +73,27 @@ public class SplashActivity extends BaseActivity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            MainActivity.start(this,user,user.getStudent());
+
+            student = user.getStudent();
+            MainActivity.start(this);
+            finish();
         }
     }
 
 
     private User getUserFromCache() {
         User user = null;
-        SharedPreferences sp =  getSharedPreferences(User.USER_SHARED_PREFERENCE,MODE_PRIVATE);
+        SharedPreferences sp =  getSharedPreferences(User.USER_SHARED_PREFERENCE, MODE_PRIVATE);
         String temp = sp.getString(User.USER, null);
-        if(temp == null){
+        if (temp == null) {
             return null;
         }
         ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
         try {
             ObjectInputStream ois = new ObjectInputStream(bais);
             user = (User) ois.readObject();
+
+            Log.d(TAG, "user: " + user);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

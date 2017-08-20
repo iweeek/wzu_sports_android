@@ -63,8 +63,7 @@ import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONObject;
 
-import static com.tim.app.ui.activity.MainActivity.student;
-
+import static com.tim.app.ui.activity.setting.LoginActivity.student;
 
 /**
  * @创建者 倪军

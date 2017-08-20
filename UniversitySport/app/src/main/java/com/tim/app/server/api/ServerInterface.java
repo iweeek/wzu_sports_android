@@ -12,7 +12,6 @@ import com.tim.app.server.net.NetworkInterface;
 import java.util.HashMap;
 
 import static com.lzy.okhttputils.utils.OkLogger.tag;
-import static com.tim.app.ui.activity.MainActivity.user;
 
 /**
  * 接口
@@ -108,11 +107,6 @@ public class ServerInterface {
         params.put("studentId", studentId);
         params.put("startTime", startTime);
         Log.d(TAG, "params: " + params);
-
-//        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
-//        headers.put("Authorization", user.getToken());
-//        NetworkInterface.instance().setCommonHeaders(headers);
-//        Log.d(TAG, "headers:" + headers);
 
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }

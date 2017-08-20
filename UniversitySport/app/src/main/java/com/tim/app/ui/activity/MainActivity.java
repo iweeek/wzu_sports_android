@@ -53,6 +53,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tim.app.ui.activity.setting.LoginActivity.student;
+import static com.tim.app.ui.activity.setting.LoginActivity.user;
+
 /**
  * 首页
  */
@@ -60,8 +63,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private static final String TAG = "MainActivity";
 
-    public static User user;
-    public static Student student;
+//    public static User user;
+//    public static Student student;
     private static boolean mIsEnable = true;
 
     private MainActivity context;
@@ -121,12 +124,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         context.startActivity(intent);
     }
 
-    public static void start(Context context, User user, Student student) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra("user", user);
-        intent.putExtra("student", student);
-        context.startActivity(intent);
-    }
+//    public static void start(Context context, User user, Student student) {
+//        Intent intent = new Intent(context, MainActivity.class);
+//        intent.putExtra("user", user);
+//        intent.putExtra("student", student);
+//        context.startActivity(intent);
+//    }
 
 
     private boolean isOpen;
@@ -146,10 +149,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        user = (User) getIntent().getSerializableExtra("user");
-        student = (Student) getIntent().getSerializableExtra("student");
-        Log.d(TAG, "user:" + user);
-        Log.d(TAG, "student:" + student);
+//        user = (User) getIntent().getSerializableExtra("user");
+//        student = (Student) getIntent().getSerializableExtra("student");
+//        Log.d(TAG, "user:" + user);
+//        Log.d(TAG, "student:" + student);
     }
 
     @Override
