@@ -63,7 +63,7 @@ public class SplashActivity extends BaseActivity {
         }
         Log.d(TAG, "initData");
         User user = getUserFromCache();
-        if(user!=null){
+        if (user != null) {
             showLoadingDialog();
             try {
                 TimeUnit.SECONDS.sleep(1);

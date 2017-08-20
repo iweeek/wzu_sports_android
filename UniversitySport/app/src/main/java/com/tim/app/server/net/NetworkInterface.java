@@ -1,6 +1,7 @@
 package com.tim.app.server.net;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.application.library.log.DLOG;
 import com.application.library.net.ResponseCallback;
@@ -24,8 +25,10 @@ import okhttp3.Call;
 import okhttp3.Response;
 
 import static com.lzy.okhttputils.OkHttpUtils.post;
+import static com.lzy.okhttputils.interceptor.LoggerInterceptor.TAG;
 import static com.tim.app.server.net.HttpMethod.GET;
 import static com.tim.app.server.net.HttpMethod.POST;
+import static com.tim.app.ui.activity.MainActivity.user;
 
 public class NetworkInterface {
 
@@ -74,7 +77,17 @@ public class NetworkInterface {
             return;
         }
         if (isSign) {
-            //加密的流程
+            //添加token 至 HttpHeader
+            HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+            headers.put("Authorization", user.getToken());
+            NetworkInterface.instance().setCommonHeaders(headers);
+            Log.d(TAG, "headers:" + headers);
+
+            if (method == POST) {
+                connectedByPost(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);
+            } else if (method == GET) {
+                connectedByGet(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);
+            }
         } else {
             if (method == POST) {
                 connectedByPost(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);

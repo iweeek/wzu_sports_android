@@ -385,7 +385,7 @@ public class LoginActivity extends BaseActivity {
                         user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDate"));
                         user.setToken(json.getJSONObject("obj").optString("token"));
 
-//                        //添加token 至 HttpHeader
+                        //添加token 至 HttpHeader
                         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
                         headers.put("Authorization", user.getToken());
                         NetworkInterface.instance().setCommonHeaders(headers);

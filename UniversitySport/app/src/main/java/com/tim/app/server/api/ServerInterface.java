@@ -114,7 +114,7 @@ public class ServerInterface {
 //        NetworkInterface.instance().setCommonHeaders(headers);
 //        Log.d(TAG, "headers:" + headers);
 
-        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
     /**
@@ -136,7 +136,7 @@ public class ServerInterface {
         params.put("stepCount", stepCount);
         params.put("costTime", costTime);
         params.put("targetFinishedTime", targetFinishedTime);
-        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
     /**
@@ -164,7 +164,7 @@ public class ServerInterface {
         params.put("latitude", latitude);
         params.put("locationType", locationType);
         params.put("isNormal", isNormal);
-        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
     /**
@@ -180,7 +180,7 @@ public class ServerInterface {
         HashMap params = new HashMap();
         params.put("areaSportId", areaSportId);
         params.put("studentId", studentId);
-        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
     /**
@@ -193,7 +193,7 @@ public class ServerInterface {
     public void areaActivitiesEnd(String tag, int areaSportRecordId, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITIES + "/" + areaSportRecordId;
         HashMap params = new HashMap();
-        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
     /**
@@ -211,7 +211,7 @@ public class ServerInterface {
         params.put("longitude", longitude);
         params.put("latitude", latitude);
         params.put("locationType", locationType);
-        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
+        NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
 
