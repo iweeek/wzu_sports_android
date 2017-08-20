@@ -108,11 +108,11 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      */
     public void setData(String curTermSportCount, String KcalComsuption, String costedTime,
                         String curTermQualifiedTimes, String curTermTargetCount) {
-        tvCurTermAccuTimes.setText(getContext().getString(R.string.percent, curTermSportCount));
-        tvAccumulCostEnergy.setText(getContext().getString(R.string.percent, KcalComsuption));
-        tvAccumulCostTime.setText((getContext().getString(R.string.percent, costedTime)));
-        tvCurQualifiedTimes.setText((getContext().getString(R.string.percent, curTermQualifiedTimes)) + "/");
-        tvCurTermTargetTimes.setText((getContext().getString(R.string.percent, curTermTargetCount)));
+        tvCurTermAccuTimes.setText(getContext().getString(R.string.digitalPlaceholder, curTermSportCount));
+        tvAccumulCostEnergy.setText(getContext().getString(R.string.digitalPlaceholder, KcalComsuption));
+        tvAccumulCostTime.setText((getContext().getString(R.string.digitalPlaceholder, costedTime)));
+        tvCurQualifiedTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermQualifiedTimes)) + "/");
+        tvCurTermTargetTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermTargetCount)));
 
         float q = Float.valueOf(curTermQualifiedTimes);
         float t = Float.valueOf(curTermTargetCount);

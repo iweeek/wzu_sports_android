@@ -62,7 +62,6 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.server.entry.db.RunningSportsRecordOld;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
 import com.tim.app.sport.SQLite;
@@ -73,7 +72,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -515,7 +513,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        }
 
         if (sportEntry.getQualifiedDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.percent, String.valueOf(sportEntry.getQualifiedDistance())));
+            tvTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(sportEntry.getQualifiedDistance())));
         }
 
         if (sportEntry.getTargetTime() > 0) {
@@ -523,9 +521,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
 
         tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvTargetSpeed.setText(getString(R.string.percent, sportEntry.getTargetSpeed()));
+        tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()));
 
-        tvCurrentDistance.setText(getString(R.string.percent, String.valueOf(currentDistance)));
+        tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)));
         tvElapseTime.setText(String.valueOf(elapseTime / 60));
         tvCurrentStep.setText("0 步");
         tvAverSpeed.setText("0.0");
@@ -887,7 +885,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             }
                             tvResult.setVisibility(View.VISIBLE);
                             rlCurConsumeEnergy.setVisibility(View.VISIBLE);
-                            tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, String.valueOf(historySportEntry.getKcalConsumed())));
+                            tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergyTemp, String.valueOf(historySportEntry.getKcalConsumed())));
                             return true;
                         } else {
                             Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();

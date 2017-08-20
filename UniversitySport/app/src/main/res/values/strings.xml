@@ -148,7 +148,7 @@
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTime">达标时间</string>
     <string name="qualifiedDistance">达标距离</string>
-    <string name="curConsumeEnergy">本次消耗热量: %s大卡</string>
+    <!--<string name="curConsumeEnergy">本次消耗热量: %s大卡</string>-->
     <string name="sportCostTime">本次运动时长:%s分钟</string>
     <string name="accumTimesPer">本周累计次数（次）</string>
     <string name="totalNumber">总目标次数:%s次</string>
@@ -156,12 +156,12 @@
     <string name="curTermSportsCount">本学期累计运动(次)</string>
     <string name="accumulEnergy">消耗(卡)</string>
     <string name="outsideScore">课外成绩(分)</string>
-    <string name="percent">%s</string>
     <string name="slash">/</string>
 
     <string name="qualifiedCostTime">达标时间 ： %s分钟   </string>
 
-
+    <!--公用-->
+    <string name="digitalPlaceholder">%s</string>
 
     <string name="score">得分:%s</string>
     <string name="scoreDesc">成绩:%s</string>
@@ -169,7 +169,9 @@
     <string name="calorie">大卡</string>
     <string name="calorieText">消耗（大卡）</string>
     <string name="caloriePlaceholder">%s 大卡</string>
-
+    <string name="curConsumeEnergy">本次消耗热量：</string>
+    <string name="curConsumeEnergyTemp">本次消耗热量: %s大卡</string>
+    
     <string name="minute">分钟</string>
     <string name="minuteText">耗时（分钟）</string>
     <string name="minutePlaceHolder">%s 分钟</string>

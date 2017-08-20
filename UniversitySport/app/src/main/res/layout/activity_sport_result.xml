@@ -104,8 +104,8 @@
                             android:id="@+id/tvCurrentDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#868892"
                             android:text="0 "
+                            android:textColor="#868892"
                             android:textSize="20dp"
                             android:textStyle="bold"/>
 
@@ -143,8 +143,8 @@
                             android:id="@+id/tvElapsedTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#868892"
                             android:text="0:00:00"
+                            android:textColor="#868892"
                             android:textSize="20dp"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -176,8 +176,8 @@
                             android:id="@+id/tvAverSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#868892"
                             android:text="0 "
+                            android:textColor="#868892"
                             android:textSize="20dp"
                             android:textStyle="bold"/>
 
@@ -198,27 +198,51 @@
                 android:layout_height="0.5dp"
                 android:background="@color/view_background_color"/>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/rlCurConsumeEnergy"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:background="@color/white"
-                android:visibility="gone">
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="visible">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/view_background_color"/>
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="0.5dp"-->
+                <!--android:background="@color/view_background_color"/>-->
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@string/curConsumeEnergy"/>
 
                 <TextView
                     android:id="@+id/tvCurConsumeEnergy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="@string/curConsumeEnergy"/>
+                    android:textSize="20dp"
+                    android:text="@string/digitalPlaceholder"/>
 
-            </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="12dp"
+                    android:text="@string/calorie"/>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/view_background_color"/>
+
 
             <LinearLayout
                 android:id="@+id/llTargetContainer"
@@ -253,7 +277,7 @@
                             android:id="@+id/tvTargetDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/percent"
+                            android:text="@string/digitalPlaceholder"
                             android:textColor="#000"
                             android:textSize="20dp"
                             android:textStyle="bold"/>
@@ -293,7 +317,7 @@
                             android:id="@+id/tvTargetTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/percent"
+                            android:text="@string/digitalPlaceholder"
                             android:textColor="#000"
                             android:textSize="20dp"
                             android:textStyle="bold"/>
@@ -335,7 +359,7 @@
                             android:id="@+id/tvTargetValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/percent"
+                            android:text="@string/digitalPlaceholder"
                             android:textColor="#000"
                             android:textSize="20dp"
                             android:textStyle="bold"/>
@@ -410,7 +434,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="70dp"
-            android:background="@drawable/ic_location"/>
+            android:background="@drawable/ic_location"
+            android:visibility="gone"/>
 
 
         <com.tim.app.ui.view.SlideUnlockView
@@ -440,10 +465,10 @@
 
         <Button
             android:id="@+id/btTest"
-            android:text="缩放"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="缩放"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

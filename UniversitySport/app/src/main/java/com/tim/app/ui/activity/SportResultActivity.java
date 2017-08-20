@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -101,7 +102,7 @@ public class SportResultActivity extends BaseActivity {
     private SlideUnlockView slideUnlockView;
 
     private LinearLayout llCurrentInfo;
-    private RelativeLayout rlCurConsumeEnergy;
+    private LinearLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
     private TextView tvTitle;
     private TextView tvPause;
@@ -487,7 +488,7 @@ public class SportResultActivity extends BaseActivity {
                         }
 
                         String curConsumeEnergy = json.getJSONObject("data").getJSONObject("runningActivity").getString("kcalConsumed");
-                        tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergy, curConsumeEnergy));
+                        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy)+ " ");
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
                         return true;
@@ -577,6 +578,7 @@ public class SportResultActivity extends BaseActivity {
                 break;
             case R.id.btDrawLine:
                 btDrawLine.setVisibility(View.GONE);
+                llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportResultActivity.this, R.color.black_30));
 
                 LatLng ll = oldLatLng;
 
@@ -768,7 +770,7 @@ public class SportResultActivity extends BaseActivity {
         tvTitle.setText("锻炼成果");
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
-        rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
+        rlCurConsumeEnergy = (LinearLayout) findViewById(R.id.rlCurConsumeEnergy);
         tvCurConsumeEnergy = (TextView) findViewById(R.id.tvCurConsumeEnergy);
 
 
