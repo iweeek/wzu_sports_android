@@ -596,6 +596,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         myBinder.stopLocationInService();
                         aMap.setOnMyLocationChangeListener(null);
+                        aMap.setMyLocationEnabled(false);
                     }
                 }
             }
