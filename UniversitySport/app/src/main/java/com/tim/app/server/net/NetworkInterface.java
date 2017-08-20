@@ -138,8 +138,7 @@ public class NetworkInterface {
                     if (response.code() == 401) {
 //                        ViewGT.gotoLoginActivity(RT.application.getApplicationContext());
                         Intent intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                         try {
                             JSONObject object = new JSONObject(s);
@@ -214,8 +213,7 @@ public class NetworkInterface {
                 if (response.code() == 401) {
 //                        ViewGT.gotoLoginActivity(RT.application.getApplicationContext());
                     Intent intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
                     try {
                         JSONObject object = new JSONObject(s);
