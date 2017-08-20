@@ -166,6 +166,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 (NavigationView) findViewById(R.id.nv_main_navigation);
         llContainer = (LinearLayout) findViewById(R.id.llContainer);
         wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
+
         emptyLayout = new EmptyLayout(this, llContainer);
         emptyLayout.showLoading();
         emptyLayout.setEmptyButtonShow(false);
@@ -357,7 +358,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     queryAreaSport();
                     return true;
                 } else {
-                    //emptyLayout.showEmptyOrError(errCode);
+                    //TODO
+                    emptyLayout.showEmptyOrError(errCode);
                     return false;
                 }
             }
@@ -412,6 +414,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         return false;
                     }
                 } else {
+                    emptyLayout.showEmptyOrError(errCode);
                     Log.d(TAG, "onJsonResponse: errcode != 0");
                     return false;
                 }
@@ -450,6 +453,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     }
                     return true;
                 } else {
+                    //TODO
+                    emptyLayout.showEmptyOrError(errCode);
                     Log.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
                     return false;
                 }

@@ -15,7 +15,7 @@
 
     <!-- 网络 -->
     <string name="crashhandler_sorry_error">Sorry,程序错误.</string>
-    <string name="httpconnection_text_not_network">网络不给力，请稍候再试</string>
+    <!--<string name="httpconnection_text_not_network">网络不给力，请稍候再试</string>-->
     <string name="httpconnection_not_network">网络不给力，请检查网络</string>
     <string name="network_interrupt">网络中断</string>
     <string name="upload_picture_failed">上传失败</string>
