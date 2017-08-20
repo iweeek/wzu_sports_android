@@ -574,12 +574,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     if (state == STATE_STARTED) {
                         state = STATE_END;
                         stopTimer();
-                        //已经没有暂停了
-                        //                        if (state == STATE_PAUSE) {
-                        //                            state = STATE_END;
-                        //                        }
 
-                        //                        tvAverSpeedLabel.setText("平均速度");
                         //做保护
                         if (elapseTime != 0) {
                             double d = currentDistance;
@@ -596,8 +591,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         tvParticipantNum.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
-                        //                        btStart.setVisibility(View.VISIBLE);
-                        //                        btStart.setText("查看锻炼结果");
+                        btStart.setVisibility(View.VISIBLE);
+                        btStart.setText("查看锻炼结果");
 
                         myBinder.stopLocationInService();
                         aMap.setOnMyLocationChangeListener(null);
