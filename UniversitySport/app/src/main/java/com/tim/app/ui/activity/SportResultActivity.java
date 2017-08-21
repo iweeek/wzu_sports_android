@@ -3,6 +3,7 @@ package com.tim.app.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -240,7 +241,6 @@ public class SportResultActivity extends BaseActivity {
         }
 
 
-
         aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
         //        String text = "调整屏幕缩放比例：" + zoomLevel;
         //        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
@@ -288,15 +288,19 @@ public class SportResultActivity extends BaseActivity {
 
                         //获取信息完毕，接下来处理坐标点
                         mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
-                        mNormalPoints  = getNormalPoints(mNormalDrawPoints);
+                        mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
                         if (mNormalDrawPoints.size() > 0) {
                             oldLatLng = mNormalDrawPoints.get(0).getLL();
-                            Marker marker = aMap.addMarker(new MarkerOptions().position(oldLatLng).title("出发点"));
+                            MarkerOptions markerOption = new MarkerOptions();
+                            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                                    .decodeResource(getResources(), R.drawable.icon_starting_point)));
+                            markerOption.position(oldLatLng).title("出发点");
+                            Marker marker = aMap.addMarker(markerOption);
                             CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
                             aMap.moveCamera(cu);
-                        } else{
+                        } else {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
                             //说明坐标位置点都不符合要求，需要把显示信息置为零
 
@@ -422,7 +426,7 @@ public class SportResultActivity extends BaseActivity {
 
                         //获取信息完毕，接下来处理坐标点
                         mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
-                        mNormalPoints  = getNormalPoints(mNormalDrawPoints);
+                        mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
                         if (mNormalDrawPoints.size() > 0) {
@@ -488,7 +492,7 @@ public class SportResultActivity extends BaseActivity {
                         }
 
                         String curConsumeEnergy = json.getJSONObject("data").getJSONObject("runningActivity").getString("kcalConsumed");
-                        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy)+ " ");
+                        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
                         return true;
@@ -542,11 +546,12 @@ public class SportResultActivity extends BaseActivity {
 
     /**
      * 给定一组 List<DrawPoint>，返回符合要求的的 List<DrawPoint> 对象集合
+     *
      * @param oldDrawPoints
      * @return 符合要求的 DrawPoint 集合
      */
-    public List<DrawPoint> getNormalDrawPoints(List<DrawPoint> oldDrawPoints,int targetLocationType) {
-        List<DrawPoint> normalDrawPoints= new ArrayList<>();
+    public List<DrawPoint> getNormalDrawPoints(List<DrawPoint> oldDrawPoints, int targetLocationType) {
+        List<DrawPoint> normalDrawPoints = new ArrayList<>();
         for (int i = 0; i < oldDrawPoints.size(); i++) {
             if (oldDrawPoints.get(i).getLocationType() == targetLocationType && oldDrawPoints.get(i).isNormal()) {
                 normalDrawPoints.add(oldDrawPoints.get(i));
@@ -557,17 +562,17 @@ public class SportResultActivity extends BaseActivity {
 
     /**
      * 给定一组符合要求的 List<DrawPoint>，取出其中的 List<LatLng>  并返回
+     *
      * @param normalDrawPoints
      * @return 正常的 LatLng 集合
      */
     public List<LatLng> getNormalPoints(List<DrawPoint> normalDrawPoints) {
-        List<LatLng> normalPoints= new ArrayList<>();
+        List<LatLng> normalPoints = new ArrayList<>();
         for (int i = 0; i < normalDrawPoints.size(); i++) {
             normalPoints.add(normalDrawPoints.get(i).getLL());
         }
         return normalPoints;
     }
-
 
 
     @Override
@@ -594,7 +599,7 @@ public class SportResultActivity extends BaseActivity {
                     }
                 } else if (historySportEntry instanceof HistoryRunningSportEntry) {
                     for (int i = 1; i < mDrawPoints.size(); i++) {
-                     if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE && mDrawPoints.get(i).isNormal()) {
+                        if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE && mDrawPoints.get(i).isNormal()) {
                             drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
                             ll = mDrawPoints.get(i).getLL();
                             DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
@@ -603,12 +608,12 @@ public class SportResultActivity extends BaseActivity {
                     }
                 }
                 //测试不达标的路径
-//                for (int i = 1; i < mPoints.size(); i++) {
-//                    drawLine(ll, mPoints.get(i));
-//                    ll = mPoints.get(i);
-//                    DLOG.d(TAG, "onClick drawLine ll: " + ll + ", mPoints.get(i): " + mPoints.get(i) +
-//                            ", i: " + i);
-//                }
+                //                for (int i = 1; i < mPoints.size(); i++) {
+                //                    drawLine(ll, mPoints.get(i));
+                //                    ll = mPoints.get(i);
+                //                    DLOG.d(TAG, "onClick drawLine ll: " + ll + ", mPoints.get(i): " + mPoints.get(i) +
+                //                            ", i: " + i);
+                //                }
 
                 //运动轨迹动态跟踪
                 if (mNormalPoints.size() > 1) {
@@ -637,8 +642,11 @@ public class SportResultActivity extends BaseActivity {
                 }
 
                 if (mNormalDrawPoints.size() > 0) {
-                    Marker marker = aMap.addMarker(new MarkerOptions().position(
-                            mNormalDrawPoints.get(mNormalDrawPoints.size() - 1).getLL()).title("终点"));
+                    MarkerOptions markerOption = new MarkerOptions();
+                    markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                            .decodeResource(getResources(), R.drawable.icon_termination)));
+                    markerOption.position(mNormalDrawPoints.get(mNormalDrawPoints.size() - 1).getLL()).title("终点");
+                    Marker marker = aMap.addMarker(markerOption);
                 } else {
                     //// TODO: 2017/8/18  说明坐标位置点都不符合要求，需要把距离置为零
                     ToastUtil.showToast(noSportDataMsg);

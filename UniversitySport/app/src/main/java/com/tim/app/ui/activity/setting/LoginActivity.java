@@ -102,13 +102,11 @@ public class LoginActivity extends BaseActivity {
 //        etStudentNo.setText("nijun");
 //        etStudentNo.setText("15210231110");
 //        etPassword.setText("123456");
-
         queryUniversities();
 
         if (!NetUtils.isConnection(this)) {
             ToastUtil.showToast(getString(R.string.httpconnection_not_network));
         }
-
 
         tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
         tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
@@ -348,7 +346,7 @@ public class LoginActivity extends BaseActivity {
                         saveUser(User.USER_SHARED_PREFERENCE,User.USER,user);
                         MainActivity.start(context, user, student);
                     }else{
-
+                        //TODO
                     }
 
                     return true;

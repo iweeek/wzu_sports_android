@@ -382,7 +382,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 .optJSONObject("currentTerm").optJSONObject("termSportsTask")
                                 .optInt("targetSportsTimes"));
 
-
                         String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
                         String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
 
