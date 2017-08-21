@@ -139,7 +139,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="@string/percent"
+                        android:text="@string/digitalPlaceholder"
                         android:textColor="#868892"
                         android:textSize="20dp"
                         android:textStyle="bold"
