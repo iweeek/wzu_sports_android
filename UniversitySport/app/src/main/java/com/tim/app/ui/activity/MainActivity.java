@@ -34,6 +34,7 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.ui.activity.setting.LoginActivity;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
@@ -577,6 +578,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.tvLogout:
+                startActivity(new Intent(this,LoginActivity.class));
                 finish();
                 break;
             case R.id.llBadNetworkFresh:
