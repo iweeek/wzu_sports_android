@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.event.EventManager;
@@ -410,7 +411,9 @@ public class LoginActivity extends BaseActivity {
                         }
 
                     } catch (JSONException e) {
+                        hideLoadingDialog();
                         e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
                     }
                     return true;
                 } else {
