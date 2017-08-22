@@ -40,7 +40,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.tim.app.ui.activity.MainActivity.student;
+import static com.tim.app.ui.activity.setting.LoginActivity.student;
+
 
 /**
  * 历史数据

@@ -74,8 +74,10 @@ public class LoginActivity extends BaseActivity {
 
     private List<University> universities = new ArrayList<>();
     private List<String> universityNames = new ArrayList<>();
-    public User user;
-    private Student student;
+
+    public static User user;
+    public static Student student;
+
     private Context context = this;
     private String deviceId;
 
@@ -343,10 +345,10 @@ public class LoginActivity extends BaseActivity {
                     Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
                     if (student != null) {
                         user.setStudent(student);
-                        saveUser(User.USER_SHARED_PREFERENCE,User.USER,user);
-                        MainActivity.start(context, user, student);
-                    }else{
-                        //TODO
+                        saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
+                        MainActivity.start(context);
+                    } else {
+                        //// TODO  
                     }
 
                     return true;
@@ -369,7 +371,10 @@ public class LoginActivity extends BaseActivity {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    user = new User();
+                    if (user == null) {
+                        user = new User();
+                    }
+
                     try {
                         user.setUid(json.getJSONObject("obj").optInt("userId"));
 
@@ -381,7 +386,9 @@ public class LoginActivity extends BaseActivity {
                         user.setRoles(roles.toArray(new String[roles.size()]));
 
                         user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDate"));
-                        user.setToken(json.getJSONObject("obj").optString("token"));
+
+                        String token = json.getJSONObject("obj").optString("token");
+                        user.setToken(token);
 
                         //添加token 至 HttpHeader
                         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
@@ -419,16 +426,31 @@ public class LoginActivity extends BaseActivity {
      *
      * @param user
      */
-    private void saveUser(String preferenceName,String key,User user) {
+    private void saveUser(String preferenceName, String key, User user) {
         SharedPreferences.Editor editor = getSharedPreferences(preferenceName, MODE_PRIVATE).edit();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
         try {
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(user);
-            String temp = new String(Base64.encode(baos.toByteArray(),Base64.DEFAULT));
-            editor.putString(key,temp);
+            String temp = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
+            Log.d(TAG, "temp: " + temp);
+
+            String value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
+            Log.d(TAG, "value: " + value);
+
+            editor.remove(key);
+
+            value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
+            Log.d(TAG, "after remove value: " + value);
+
+            editor.putString(key, temp);
+
+            value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
+            Log.d(TAG, "after put value: " + value);
+
             editor.apply();
+            Log.d(TAG, "key: " + getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, ""));
         } catch (IOException e) {
             e.printStackTrace();
         }

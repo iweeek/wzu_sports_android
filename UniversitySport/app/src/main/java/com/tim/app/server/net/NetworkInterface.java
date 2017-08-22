@@ -1,7 +1,9 @@
 package com.tim.app.server.net;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.application.library.log.DLOG;
 import com.application.library.net.ResponseCallback;
@@ -16,8 +18,14 @@ import com.lzy.okhttputils.request.BaseRequest;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
+import com.tim.app.ui.activity.setting.LoginActivity;
+import com.tim.app.util.ViewGT;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
@@ -28,7 +36,7 @@ import static com.lzy.okhttputils.OkHttpUtils.post;
 import static com.lzy.okhttputils.interceptor.LoggerInterceptor.TAG;
 import static com.tim.app.server.net.HttpMethod.GET;
 import static com.tim.app.server.net.HttpMethod.POST;
-import static com.tim.app.ui.activity.MainActivity.user;
+import static com.tim.app.ui.activity.setting.LoginActivity.user;
 
 public class NetworkInterface {
 
@@ -126,7 +134,24 @@ public class NetworkInterface {
                     if (RT.DEBUG && !TextUtils.isEmpty(s)) {
                         DLOG.json(AppConstant.HTTP_TAG, s);
                     }
-                    callback.onResponse(s.getBytes(), 0, "", 0, false);
+
+                    if (response.code() == 401) {
+//                        ViewGT.gotoLoginActivity(RT.application.getApplicationContext());
+                        Intent intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                        try {
+                            JSONObject object = new JSONObject(s);
+                            Toast.makeText(RT.application.getApplicationContext(), object.getString("statusMsg"), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        RT.application.getApplicationContext().startActivity(intent);
+
+                    } else {
+                        callback.onResponse(s.getBytes(), 0, "", 0, false);
+                    }
                 }
 
                 @Override
@@ -184,7 +209,23 @@ public class NetworkInterface {
                 if (RT.DEBUG && !TextUtils.isEmpty(s)) {
                     DLOG.json(AppConstant.HTTP_TAG, s);
                 }
-                callback.onResponse(s.getBytes(), 0, "", 0, false);
+
+                if (response.code() == 401) {
+//                        ViewGT.gotoLoginActivity(RT.application.getApplicationContext());
+                    Intent intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                    try {
+                        JSONObject object = new JSONObject(s);
+                        Toast.makeText(RT.application.getApplicationContext(), object.getString("statusMsg"), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    RT.application.getApplicationContext().startActivity(intent);
+                } else {
+                    callback.onResponse(s.getBytes(), 0, "", 0, false);
+                }
             }
 
             @Override

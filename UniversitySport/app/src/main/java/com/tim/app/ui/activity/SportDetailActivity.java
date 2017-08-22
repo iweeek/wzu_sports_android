@@ -77,8 +77,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.tim.app.ui.activity.MainActivity.student;
-
+import static com.tim.app.ui.activity.setting.LoginActivity.student;
 
 /**
  * 跑步运动详情页
@@ -152,7 +151,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Runnable elapseTimeRunnable;
-    private ScheduledFuture<?> timerHandler;
+    private ScheduledFuture<?> timerHandler = null;
     private long timerInterval = 1000;
 
     private View rlAnimView;
@@ -223,8 +222,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
     private void stopTimer() {
-        timerHandler.cancel(true);
-        scheduler.shutdown();
+        if (timerHandler != null) {
+            timerHandler.cancel(true);
+            scheduler.shutdown();
+            timerHandler = null;
+        }
     }
 
     private void initGPS() {
@@ -998,6 +1000,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Intent stopIntent = new Intent(this, LocationService.class);
         stopService(stopIntent);
         unregisterReceiver(lowBatteryReceiver);
+
+        stopTimer();
 
         DLOG.closeInternalFile();
 

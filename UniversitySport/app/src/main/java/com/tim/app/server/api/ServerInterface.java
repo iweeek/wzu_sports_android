@@ -107,11 +107,6 @@ public class ServerInterface {
         params.put("startTime", startTime);
         Log.d(TAG, "params: " + params);
 
-//        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
-//        headers.put("Authorization", user.getToken());
-//        NetworkInterface.instance().setCommonHeaders(headers);
-//        Log.d(TAG, "headers:" + headers);
-
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
