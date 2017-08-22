@@ -348,7 +348,7 @@ public class LoginActivity extends BaseActivity {
                         saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
                         MainActivity.start(context);
                     } else {
-                        //// TODO  
+                        //// TODO
                     }
 
                     return true;
@@ -385,7 +385,7 @@ public class LoginActivity extends BaseActivity {
                         }
                         user.setRoles(roles.toArray(new String[roles.size()]));
 
-                        user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDate"));
+                        user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDatmaine"));
 
                         String token = json.getJSONObject("obj").optString("token");
                         user.setToken(token);

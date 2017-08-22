@@ -21,6 +21,7 @@
         android:id="@+id/tvTitle"
         style="@style/TitleTextStyle"
         android:layout_marginStart="50dp"
+        android:layout_centerInParent="true"
         android:text="课外体育锻炼"/>
 
     <ImageView
