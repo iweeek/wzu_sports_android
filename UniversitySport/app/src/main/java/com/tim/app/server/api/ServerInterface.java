@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.cache.CacheMode;
-import com.lzy.okhttputils.model.HttpHeaders;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.net.HttpMethod;
 import com.tim.app.server.net.NetworkInterface;

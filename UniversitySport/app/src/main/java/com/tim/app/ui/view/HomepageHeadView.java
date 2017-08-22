@@ -29,8 +29,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
     private RelativeLayout rlTop;
     private RelativeLayout rlRank;
-    private RelativeLayout rlHeadView;
-    private RelativeLayout rlSecond;
+    private LinearLayout rlHeadView;
+//    private RelativeLayout rlSecond;
     private LinearLayout llBadNetworkFresh;
     private Context ctx;
     private ProgressBar pbReachTargetTimes;
@@ -50,16 +50,15 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         tvCurTermTargetTimes = (TextView) findViewById(R.id.tvCurTermTargetTimes);
         pbReachTargetTimes = (ProgressBar) findViewById(R.id.pbReachTargetTimes);
 
-        rlSecond = (RelativeLayout) findViewById(R.id.rlSecond);
-        rlSecond.setOnClickListener(this);
-        rlHeadView = (RelativeLayout) findViewById(R.id.rlHeadView);
+//        rlSecond = (RelativeLayout) findViewById(R.id.rlSecond);
+//        rlSecond.setOnClickListener(this);
+        rlHeadView = (LinearLayout) findViewById(R.id.llHeadView);
         rlHeadView.setOnClickListener(this);
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
         rlRank.setOnClickListener(this);
         rlTop = (RelativeLayout) findViewById(R.id.rlTop);
         rlTop.setOnClickListener(this);
 
-        rlHeadView = (RelativeLayout) findViewById(R.id.rlHeadView);
         llBadNetworkFresh = (LinearLayout) findViewById(R.id.llBadNetworkFresh);
 
     }
@@ -74,10 +73,10 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
             case R.id.rlTop:
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
-            case R.id.rlSecond:
-                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
-                break;
-            case R.id.rlHeadView:
+//            case R.id.rlSecond:
+//                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
+//                break;
+            case R.id.llHeadView:
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
         }
@@ -111,7 +110,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         tvCurTermAccuTimes.setText(getContext().getString(R.string.digitalPlaceholder, curTermSportCount));
         tvAccumulCostEnergy.setText(getContext().getString(R.string.digitalPlaceholder, KcalComsuption));
         tvAccumulCostTime.setText((getContext().getString(R.string.digitalPlaceholder, costedTime)));
-        tvCurQualifiedTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermQualifiedTimes)) + "/");
+        tvCurQualifiedTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermQualifiedTimes)));
         tvCurTermTargetTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermTargetCount)));
 
         float q = Float.valueOf(curTermQualifiedTimes);

@@ -105,13 +105,11 @@ public class LoginActivity extends BaseActivity {
 //        etStudentNo.setText("nijun");
 //        etStudentNo.setText("15210231110");
 //        etPassword.setText("123456");
-
         queryUniversities();
 
         if (!NetUtils.isConnection(this)) {
             ToastUtil.showToast(getString(R.string.httpconnection_not_network));
         }
-
 
         tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
         tvPasswordErrorPrmpt = (TextView) findViewById(R.id.tvPasswordErrorPrmpt);
@@ -347,11 +345,10 @@ public class LoginActivity extends BaseActivity {
 
                     Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
                     if (student != null) {
-                        user.setStudent(student);
                         saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
                         MainActivity.start(context);
                     } else {
-
+                        //// TODO
                     }
 
                     return true;
@@ -388,7 +385,7 @@ public class LoginActivity extends BaseActivity {
                         }
                         user.setRoles(roles.toArray(new String[roles.size()]));
 
-                        user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDate"));
+                        user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDatmaine"));
 
                         String token = json.getJSONObject("obj").optString("token");
                         user.setToken(token);

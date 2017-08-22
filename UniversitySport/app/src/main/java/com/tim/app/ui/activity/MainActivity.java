@@ -34,8 +34,7 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.server.entry.Student;
-import com.tim.app.server.entry.User;
+import com.tim.app.ui.activity.setting.LoginActivity;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
@@ -54,7 +53,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tim.app.ui.activity.setting.LoginActivity.student;
-import static com.tim.app.ui.activity.setting.LoginActivity.user;
 
 /**
  * 首页
@@ -294,6 +292,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
+                    Log.d(TAG, "sportArray.length():" + sportArray.length());
                     try {
                         for (int i = 0; i < sportArray.length(); i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
@@ -334,7 +333,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     break;
                                 default:
                                     sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    continue;
+                                    break;
                             }
 
                             sportEntry.setParticipantNum(participantNum);
@@ -349,6 +348,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                         if (sportEntryDataList.size() == 0) {
+                            Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();
@@ -384,7 +384,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String curTermTargetTimes = String.valueOf(json.optJSONObject("data").optJSONObject("university")
                                 .optJSONObject("currentTerm").optJSONObject("termSportsTask")
                                 .optInt("targetSportsTimes"));
-
 
                         String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
                         String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
@@ -579,6 +578,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             case R.id.tvLogout:
+                startActivity(new Intent(this,LoginActivity.class));
                 finish();
                 break;
             case R.id.llBadNetworkFresh:

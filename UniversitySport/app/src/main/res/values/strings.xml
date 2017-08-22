@@ -17,9 +17,7 @@
     <string name="crashhandler_sorry_error">Sorry,程序错误.</string>
     <!--<string name="httpconnection_text_not_network">网络不给力，请稍候再试</string>-->
     <string name="httpconnection_not_network">网络不给力，请检查网络</string>
-    <string name="network_interrupt">网络中断</string>
     <string name="upload_picture_failed">上传失败</string>
-    <string name="uploading">上传中&#8230;</string>
     <string name="download_failed">下载失败</string>
     <string name="download_success">下载完成</string>
 
@@ -31,11 +29,8 @@
     <string name="main_tab_title_4">私信</string>
     <string name="main_tab_title_5">我</string>
     <!--修改密码-->
-    <string name="modify_password">修改密码</string>
     <string name="modify_first_password">修改初始密码</string>
-    <string name="modify_password_success">修改成功</string>
     <string name="find_password">忘记密码</string>
-    <string name="check_phone">手机验证</string>
     <string name="get_sms_mark">点击获取验证码</string>
     <string name="input_phone_num">请输入手机号码</string>
     <string name="input_sms_mark">请输入短信验证码</string>
@@ -44,10 +39,6 @@
     <string name="txt_bind_resend">秒后重发</string>
     <string name="action_enter">确定</string>
     <string name="action_register_enter">确定注册</string>
-    <string name="input_phone_num_error">请输入格式正确的11位手机号</string>
-    <string name="loading_verify">获取验证码中&#8230;</string>
-    <string name="tag_bind_phone_enter_re">请重新输入手机号</string>
-    <string name="tag_bind_verify_enter">请输入验证码</string>
 
     <!--系统设置-->
     <string name="system_setting">设置</string>
@@ -127,8 +118,6 @@
     <!--登录-->
     <string name="error_mobile_empty">请输入手机号。</string>
     <string name="error_mobile_error">手机号错误，请重新输入。</string>
-    <string name="error_login">学号或密码错误，请重新输入。</string>
-    <string name="error_sno_error">学号错误，请重新输入。</string>
     <string name="error_mobile_vertify">请输入验证码。</string>
     <string name="error_smscode_error">验证码错误</string>
     <string name="error_password">请输入6&#8211;12位字母或数字密码</string>
@@ -143,22 +132,17 @@
     <!-- 首页 -->
     <string name="joinPrompt">当前%s人正在参加</string>
     <string name="meter">米</string>
-    <string name="speed">米/秒</string>
-    <string name="step">步</string>
+    <string name="speedNotation">米/秒</string>
+
+    <string name="averageSpeed">平均速度</string>
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTime">达标时间</string>
+
+    <string name="distanceText">距离</string>
     <string name="qualifiedDistance">达标距离</string>
-    <!--<string name="curConsumeEnergy">本次消耗热量: %s大卡</string>-->
-    <string name="sportCostTime">本次运动时长:%s分钟</string>
-    <string name="accumTimesPer">本周累计次数（次）</string>
-    <string name="totalNumber">总目标次数:%s次</string>
+    <string name="accumTimesPer">本周累计次数(次)</string>
     <string name="ReachTargetTimes">达标(次)</string>
     <string name="curTermSportsCount">本学期累计运动(次)</string>
-    <string name="accumulEnergy">消耗(卡)</string>
-    <string name="outsideScore">课外成绩(分)</string>
-    <string name="slash">/</string>
-
-    <string name="qualifiedCostTime">达标时间 ： %s分钟   </string>
 
     <!--公用-->
     <string name="digitalPlaceholder">%s</string>
@@ -166,14 +150,15 @@
     <string name="score">得分:%s</string>
     <string name="scoreDesc">成绩:%s</string>
 
-    <string name="calorie">大卡</string>
-    <string name="calorieText">消耗（大卡）</string>
-    <string name="caloriePlaceholder">%s 大卡</string>
+    <string name="calorie">千卡</string>
+    <string name="consumeCalorie">消耗(千卡)</string>
+    <string name="caloriePlaceholder">%s 千卡</string>
     <string name="curConsumeEnergy">本次消耗热量：</string>
-    <string name="curConsumeEnergyTemp">本次消耗热量: %s大卡</string>
+    <string name="curConsumeEnergyTemp">本次消耗热量: %s千卡</string>
     
     <string name="minute">分钟</string>
-    <string name="minuteText">耗时（分钟）</string>
+    <string name="consumeMinute">耗时(分钟)</string>
+    <string name="consumeTime">耗时</string>
     <string name="minutePlaceHolder">%s 分钟</string>
 
 
