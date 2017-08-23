@@ -52,6 +52,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tim.app.ui.activity.SportDetailActivity.NETWORK_ERROR_MSG;
+
 /**
  * 登录
  */
@@ -196,6 +198,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     return true;
                 } else {
+                    Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }

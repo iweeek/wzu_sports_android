@@ -168,7 +168,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private LocationService.MyBinder myBinder = null;
 
-    public static final String NETWORK_ERROR_MSG = "网络请求失败，请检查网络状态";
+    public static final String NETWORK_ERROR_MSG = "网络请求失败，请检查网络状态或稍后再试";
 
     public static final String COMMIT_FALIED_MSG = "网络错误，数据提交失败，请随后查看历史记录";
 
