@@ -36,7 +36,7 @@ public class RT {
 
     public static Application application = null;
 
-    public static final NetworkHost HOST = NetworkHost.DEVELOP;
+    public static final NetworkHost HOST = NetworkHost.DEBUG;
 
     /**
      * The m local external path.

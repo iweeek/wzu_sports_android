@@ -101,7 +101,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:background="@drawable/icon_hide_sport_info_open"/>
+                        android:background="@drawable/icon_sport_info_closed_toggle"/>
 
 
                 </LinearLayout>
@@ -539,7 +539,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/icon_show_sport_info_closed"
+        android:background="@drawable/icon_sport_info_closed_toggle"
         android:visibility="gone"/>
 
 
