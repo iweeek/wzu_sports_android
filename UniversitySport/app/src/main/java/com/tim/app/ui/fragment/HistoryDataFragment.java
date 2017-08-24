@@ -178,11 +178,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
 
                         if (type == AppConstant.THIS_WEEK) {
-                            headView.setData("本周累计次数（次）", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            headView.setData("本周累计运动(次)", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                         } else if (type == AppConstant.THIS_MONTH) {
-                            headView.setData("本月累计次数（次）", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            headView.setData("本月累计运动(次)", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                         } else {
-                            headView.setData("本学期累计次数（次）", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            headView.setData("本学期累计运动(次)", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                         }
 
                         JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");

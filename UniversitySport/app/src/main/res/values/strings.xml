@@ -140,7 +140,7 @@
 
     <string name="distanceText">距离</string>
     <string name="qualifiedDistance">达标距离</string>
-    <string name="accumTimesPer">本周累计次数(次)</string>
+    <string name="accumTimesPer">本周累计运动(次)</string>
     <string name="ReachTargetTimes">达标(次)</string>
     <string name="curTermSportsCount">本学期累计运动(次)</string>
 

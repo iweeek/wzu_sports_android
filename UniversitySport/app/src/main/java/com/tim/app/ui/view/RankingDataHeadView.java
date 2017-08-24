@@ -68,9 +68,9 @@ public class RankingDataHeadView extends LinearLayout {
             BitmapLoader.ins().loadImage(data[2].getAvatar(), R.drawable.ic_default_avatar, rivThirdAvatar);
         }
         if (AppConstant.TYPE_COST_TIME == type) {
-            tvFirstUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[0].getCostValue())));
-            tvSecondUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[1].getCostValue())));
-            tvThirdUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[2].getCostValue())));
+            tvFirstUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[0].getCostValue() / 60)));
+            tvSecondUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[1].getCostValue() / 60)));
+            tvThirdUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[2].getCostValue() / 60)));
         } else {
             tvFirstUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[0].getCostValue())));
             tvSecondUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[1].getCostValue())));
