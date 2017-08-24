@@ -347,7 +347,7 @@ public class LoginActivity extends BaseActivity {
                     Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
                     if (student != null) {
                         saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
-                        MainActivity.start(context);
+                        MainActivity.start(context,user);
                     } else {
                         //// TODO
                     }

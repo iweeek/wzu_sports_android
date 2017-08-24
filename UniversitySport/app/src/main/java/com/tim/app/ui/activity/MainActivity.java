@@ -34,6 +34,7 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.setting.LoginActivity;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
@@ -61,7 +62,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private static final String TAG = "MainActivity";
 
-//    public static User user;
+    public static User user;
 //    public static Student student;
     private static boolean mIsEnable = true;
 
@@ -73,6 +74,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private ImageView ibMenu;
     private ImageView ibNotify;
     private TextView tvLogout;
+    private TextView tvUserName;
 
     private LinearLayout llContainer;
     private WrapRecyclerView wrvSportType;
@@ -117,7 +119,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     //
     //        api.sendReq(req);
     //    }
-    public static void start(Context context) {
+    public static void start(Context context, User usr) {
+        user = usr;
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
@@ -165,6 +168,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         tvLogout.setOnClickListener(this);
         navigationView =
                 (NavigationView) findViewById(R.id.nv_main_navigation);
+
         llContainer = (LinearLayout) findViewById(R.id.llContainer);
         wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
 
@@ -179,9 +183,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public void onClick(View v) {
                 emptyLayout.showLoading();
                 initData();
-            }
-        });
         if (navigationView != null) {
+            //动态加载headerView
+            View headerView = navigationView.inflateHeaderView(R.layout.navigation_header);
+            tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
@@ -466,6 +471,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     public void initData() {
+        tvUserName.setText(user.getUsername());
+
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
 
