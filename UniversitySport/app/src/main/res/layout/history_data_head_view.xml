@@ -49,13 +49,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="start"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="达标（次）"
+                    android:text="@string/ReachTargetTimes"
                     android:textColor="#7f858e"
                     android:textSize="16sp" />
 
@@ -95,13 +95,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="耗时（分钟）"
+                    android:text="@string/consumeMinute"
                     android:textColor="#7f858e"
                     android:textSize="16sp" />
 
