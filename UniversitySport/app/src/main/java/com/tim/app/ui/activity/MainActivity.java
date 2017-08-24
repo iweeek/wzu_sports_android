@@ -183,6 +183,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public void onClick(View v) {
                 emptyLayout.showLoading();
                 initData();
+            }
+        });
+
         if (navigationView != null) {
             //动态加载headerView
             View headerView = navigationView.inflateHeaderView(R.layout.navigation_header);
