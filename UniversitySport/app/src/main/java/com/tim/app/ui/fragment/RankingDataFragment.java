@@ -149,10 +149,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             }
                             adapter.notifyDataSetChanged();
                             //see #663_1
-                            if (dataList.size() > 3) {
+                            if (dataList.size() > 0) {
                                 emptyLayout.showContent();
-                            } else if (dataList.size() > 0) {
-                                emptyLayout.showContent();
+                                //} else if (dataList.size() > 0) {
+                                // emptyLayout.showContent();
+                                // }else{
                             }else{
                                 emptyLayout.showEmpty();
                             }
