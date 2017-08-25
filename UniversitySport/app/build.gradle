@@ -13,8 +13,9 @@ android {
         manifestPlaceholders = [YOUR_APP_KEY: "57c68fab67e58ecacf002627"]
         multiDexEnabled true
         ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86","arm64-v8a","x86_64"
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "arm64-v8a", "x86_64"
         }
+
     }
 
     dexOptions {
@@ -22,12 +23,16 @@ android {
         javaMaxHeapSize "2g"
     }
 
+    def keystorePropertiesFile = file("keystore.properties")
+    def keystoreProperties = new Properties()
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
     signingConfigs {
         wzu_sports_config {
-            keyAlias 'wzu_sports'
-            keyPassword '2wsx@WSX'
-            storeFile file('app.keystore.jks')
-            storePassword '1qaz!QAZ'
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
         }
     }
 
@@ -46,6 +51,13 @@ android {
     }
 
     productFlavors {
+        free {
+
+            signingConfig signingConfigs.wzu_sports_config
+        }
+        paid{
+
+        }
     }
 }
 
@@ -60,10 +72,10 @@ dependencies {
     compile project(':BaseLibrary')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:23.1.1'
-//    compile 'com.amap.api:map3d-native:latest.integration'
+    //    compile 'com.amap.api:map3d-native:latest.integration'
     compile 'com.amap.api:3dmap:latest.integration'
     compile 'com.amap.api:location:latest.integration'
-    compile group: 'joda-time', name: 'joda-time', version: '2.9.9'
+    compile 'joda-time:joda-time:2.9.9'
     //微信 SDK
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }
