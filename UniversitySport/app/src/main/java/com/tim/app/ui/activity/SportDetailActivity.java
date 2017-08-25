@@ -77,7 +77,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.tim.app.ui.activity.setting.LoginActivity.student;
+import static com.tim.app.constant.AppConstant.student;
 
 /**
  * 跑步运动详情页

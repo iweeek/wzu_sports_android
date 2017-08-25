@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">温州大学运动</string>
     <string name="app_exit">再次点击退出</string>
+    <string name="app_home">课外体育锻炼</string>
+    <string name="app_history">历史运动概况</string>
 
     <!-- 通用动作 -->
     <string name="action_back">返回</string>

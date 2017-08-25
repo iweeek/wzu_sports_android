@@ -1,5 +1,8 @@
 package com.tim.app.constant;
 
+import com.tim.app.server.entry.Student;
+import com.tim.app.server.entry.User;
+
 public class AppConstant {
 
     /**
@@ -37,19 +40,14 @@ public class AppConstant {
 
     public static final int VERTIFY_SECONDS = 60;//验证码倒数秒数
 
-
     public static final int THIS_WEEK = 1;
     public static final int THIS_MONTH = 2;
     public static final int THIS_TERM = 3;
-
-
 
     /*
     * 微信
     * */
     public static  final  String APP_ID = "wxc602178d95890ea2";
-
-
 
     /*
     * 运动类型
@@ -57,6 +55,11 @@ public class AppConstant {
     public static final int RUNNING_TYPE = 1;
     public static final int AREA_TYPE = 2;
 
+    /**
+     * 全局的用户/学生对象
+     */
+    public static User user;
+    public static Student student;
 }
 
 

@@ -19,13 +19,11 @@ import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.activity.setting.LoginActivity;
-import com.tim.app.util.ViewGT;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
@@ -34,9 +32,9 @@ import okhttp3.Response;
 
 import static com.lzy.okhttputils.OkHttpUtils.post;
 import static com.lzy.okhttputils.interceptor.LoggerInterceptor.TAG;
+import static com.tim.app.constant.AppConstant.user;
 import static com.tim.app.server.net.HttpMethod.GET;
 import static com.tim.app.server.net.HttpMethod.POST;
-import static com.tim.app.ui.activity.setting.LoginActivity.user;
 
 public class NetworkInterface {
 

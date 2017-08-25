@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.concurrent.TimeUnit;
 
-import static com.tim.app.ui.activity.setting.LoginActivity.user;
-import static com.tim.app.ui.activity.setting.LoginActivity.student;
+import static com.tim.app.constant.AppConstant.student;
+import static com.tim.app.constant.AppConstant.user;
 
 public class SplashActivity extends BaseActivity {
 
@@ -75,7 +75,7 @@ public class SplashActivity extends BaseActivity {
             }
 
             student = user.getStudent();
-            MainActivity.start(this,user);
+            MainActivity.start(this);
             finish();
         }
     }
