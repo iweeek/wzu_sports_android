@@ -63,8 +63,6 @@ import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.sport.RunningSportsCallback;
-import com.tim.app.sport.SQLite;
 import com.tim.app.sport.SensorService;
 import com.tim.app.ui.view.SlideUnlockView;
 
@@ -94,7 +92,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     //第三方
     private MapView mapView;
     private AMap aMap;
-    private LatLng oldLatLng = null;
+    private LatLng previousLatLng = null;
     private UiSettings uiSettings;
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
     private Location firstLocation;
@@ -105,10 +103,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int speedLimitation = 5;//米
     private int currentDistance = 0;
     private long elapseTime = 0;
+    private long previousTime = 0;
     private int currentSteps = 0;
+    private int previousSteps = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
+    private int stride = 0; //步幅
+    private int stepsPerSecond = 0; //步幅
 
     private TextView tvSportName;
     private TextView tvParticipantNum;
@@ -123,7 +125,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
     private TextView tvStepTitle;
-//    private TextView tvCurrentStep;//暂时注释，记得全部放开注释
+    //    private TextView tvCurrentStep;//暂时注释，记得全部放开注释
     private LinearLayout llTargetContainer;
 
     private RelativeLayout rlBottom;
@@ -191,7 +193,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         intent.putExtra("sportEntry", sportEntry);
         context.startActivity(intent);
     }
-
 
 
     private void startTimer() {
@@ -369,7 +370,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 Log.d(TAG, "newLatLng: " + newLatLng);
                 // 判断第一次，第一次会提示
-                if (oldLatLng == null) {
+                if (previousLatLng == null) {
                     String errText = "定位成功";
                     firstLocation = location;
                     firstLocationType = locationType;
@@ -392,26 +393,34 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
-                Log.d(TAG, "oldLatLng: " + oldLatLng);
-                float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+                Log.d(TAG, "previousLatLng: " + previousLatLng);
+                float distancePerAcquisitionInterval = AMapUtils.calculateLineDistance(newLatLng, previousLatLng);
+                //TODO  厘米
+                int stepsAcquisitionInterval = currentSteps - previousSteps;
+                stride = (int)(distancePerAcquisitionInterval * 100 / stepsAcquisitionInterval + 0.5);
+                Log.d(TAG, "stride:" + stride);
 
-                toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
-                        + "， 本次移动距离： " + moveDistance + "， 当前步数： " + currentSteps +
+                long timeAcquisitionInterval = elapseTime - previousTime;
+                stepsPerSecond = (int) (stepsAcquisitionInterval / timeAcquisitionInterval + 0.5);
+                Log.d(TAG, "stepsPerSecond:" + stepsPerSecond);
+
+                toastText = "绘制曲线，上一次坐标： " + previousLatLng + "， 新坐标：" + newLatLng
+                        + "， 本次移动距离： " + distancePerAcquisitionInterval + "， 当前步数： " + currentSteps +
                         "， 当前电量: " + batteryLevel + "%";
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                 if (locationType == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                    if (moveDistance / sportEntry.getAcquisitionInterval() > speedLimitation) {
+                    if (distancePerAcquisitionInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
                         //位置漂移
                         //                        return;
-                        toastText = "异常移动，每秒位移：" + moveDistance / sportEntry.getAcquisitionInterval();
+                        toastText = "异常移动，每秒位移：" + distancePerAcquisitionInterval / sportEntry.getAcquisitionInterval();
                         Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                         isNormal = false;
-                        drawLine(oldLatLng, newLatLng, isNormal);
+                        drawLine(previousLatLng, newLatLng, isNormal);
                     } else {
                         isNormal = true;
-                        drawLine(oldLatLng, newLatLng, isNormal);
-                        currentDistance += moveDistance;
+                        drawLine(previousLatLng, newLatLng, isNormal);
+                        currentDistance += distancePerAcquisitionInterval;
 
                         if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
                             targetFinishedTime = elapseTime;
@@ -428,7 +437,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
 
                     ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
-                            location.getLongitude(), location.getLatitude(), locationType, isNormal, new ResponseCallback() {
+                            location.getLongitude(), location.getLatitude(), String.valueOf(stride),String.valueOf(stepsPerSecond),
+                            locationType, isNormal, new ResponseCallback() {
                                 @Override
                                 public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                     if (status == 0) {
@@ -446,7 +456,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
             }
 
-            oldLatLng = newLatLng;
+            previousTime = elapseTime;
+            previousSteps = currentSteps;
+            previousLatLng = newLatLng;
             DLOG.d(TAG, toastText);
         } else {
             String errText = "定位失败：" + errorInfo;
@@ -495,16 +507,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             tvTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(sportEntry.getQualifiedDistance())));
         }
 
-//        if (sportEntry.getTargetTime() > 0) {
-//            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
-//        }
+        //        if (sportEntry.getTargetTime() > 0) {
+        //            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
+        //        }
 
         tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
         tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()));
 
         tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)));
-//        tvElapseTime.setText(String.valueOf(elapseTime / 60));
-//        tvCurrentStep.setText("0 步");
+        //        tvElapseTime.setText(String.valueOf(elapseTime / 60));
+        //        tvCurrentStep.setText("0 步");
         tvAverSpeed.setText("0.0");
         initSteps = 0;
         currentSteps = 0;
@@ -664,7 +676,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                                     //第一次向服务器提交数据,默认第一次是正常的数据
                                     ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
-                                            firstLocation.getLongitude(), firstLocation.getLatitude(), firstLocationType, true, new ResponseCallback() {
+                                            firstLocation.getLongitude(), firstLocation.getLatitude(), String.valueOf(stride),String.valueOf(stepsPerSecond),
+                                            firstLocationType, true, new ResponseCallback() {
                                                 @Override
                                                 public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                                     if (status == 0) {
@@ -686,10 +699,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         bindService(bindIntent, connection, BIND_AUTO_CREATE);
                                                         return true;
                                                     } else {
-//                                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-//                                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-//                                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-//                                                        DLOG.writeToInternalFile(msg);
+                                                        //                                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                                        //                                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                                        //                                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                                        //                                                        DLOG.writeToInternalFile(msg);
                                                         Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                                         return false;
                                                     }
@@ -766,12 +779,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             case R.id.ivLocation:
                 //修改地图的中心点位置
                 //                CameraPosition cp = aMap.getCameraPosition();
-                //                CameraPosition cpNew = CameraPosition.fromLatLngZoom(oldLatLng, cp.zoom);
+                //                CameraPosition cpNew = CameraPosition.fromLatLngZoom(previousLatLng, cp.zoom);
                 //                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
                 //                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                 //                aMap.moveCamera(cu);
                 //点击定位图标 实现定位到当前位置
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(previousLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
                 break;
             case R.id.ivShowSportInfo:
@@ -831,7 +844,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      */
     private void runningActivitiesEnd(final int runningSportId, final int studentId, final long targetFinishedTime) {
         //必须先初始化。
-        SQLite.init(context, RunningSportsCallback.getInstance());
+//        SQLite.init(context, RunningSportsCallback.getInstance());
         Log.d(TAG, "runningActivitiesEnd");
         //提交本次运动数据，更新UI
         ServerInterface.instance().runningActivitiesEnd(
@@ -899,7 +912,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
-//        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
+        //        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
@@ -917,8 +930,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
         tvResult = (TextView) findViewById(R.id.tvResult);
-//        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
-//        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
+        //        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
+        //        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
@@ -950,7 +963,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             initSteps = steps;
                         } else {
                             currentSteps = steps - initSteps - pauseStateSteps;
-//                            tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+                            //                            tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
                         }
                     } else {
                         if (initSteps != 0) {
