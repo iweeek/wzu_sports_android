@@ -10,7 +10,6 @@ public class User implements Serializable {
     public static final String USER = "user";
     public static final String USER_SHARED_PREFERENCE = "user_shared_preference";
 
-
     private int uid;
     private String phone;
     private String username;
@@ -21,6 +20,7 @@ public class User implements Serializable {
     private Long expiredDate;
     private String token;
     private Student student;
+
 
 
     @Override
