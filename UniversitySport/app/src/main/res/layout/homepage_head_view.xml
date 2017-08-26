@@ -16,11 +16,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
             android:orientation="vertical"
             android:paddingTop="10dp"
-            android:paddingBottom="20dp"
             android:id="@+id/llHeadView"
             android:layout_height="wrap_content">
 
@@ -45,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginEnd="25dp"
                     android:background="@drawable/ic_right_arrow"/>
 
             </RelativeLayout>
@@ -54,7 +52,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
                 android:gravity="center">
 
                 <TextView
@@ -114,8 +111,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:max="100"
-                    android:paddingEnd="30dp"
-                    android:paddingStart="30dp"
+                    android:paddingEnd="60dp"
+                    android:paddingStart="60dp"
                     android:progress="69"
                     android:progressDrawable="@drawable/layer_pd"/>
             </LinearLayout>
@@ -123,7 +120,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <LinearLayout

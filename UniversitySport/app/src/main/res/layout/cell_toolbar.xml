@@ -5,17 +5,24 @@
     android:id="@+id/tb"
     style="@style/TitleBarStyle"
     android:background="@color/blue"
-    android:padding="10dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/ibMenu"
+    <FrameLayout
+        android:id="@+id/flMenu"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="20dp"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_menu"/>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ibMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:layout_gravity="center"
+            android:paddingStart="15dp"
+            android:paddingEnd="10dp"
+            android:src="@drawable/ic_menu"/>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvTitle"
