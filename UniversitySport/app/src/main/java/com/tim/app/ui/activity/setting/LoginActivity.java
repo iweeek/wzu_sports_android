@@ -88,7 +88,7 @@ public class LoginActivity extends BaseActivity {
     private String deviceId;
 
     //TODO
-    private int expirationTime = 4320;
+    private int expirationTime = 2160;
 
     @Override
     protected void onBeforeSetContentLayout() {
