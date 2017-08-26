@@ -519,7 +519,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                             }
                                         }
                                     });
-                            builder.setMessage(changeLog);
+                            builder.setMessage(changeLog.replace("\\n"," \n"));
 
                             if (isForced) {//强制升级
                                 builder.setCancelable(false);

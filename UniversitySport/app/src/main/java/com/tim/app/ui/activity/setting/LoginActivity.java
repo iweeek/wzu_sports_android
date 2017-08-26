@@ -108,8 +108,9 @@ public class LoginActivity extends BaseActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
 
 //        etStudentNo.setText("nijun");
-        etStudentNo.setText("15211040107");
-        etPassword.setText("123456");
+//        etStudentNo.setText("15211040107");
+//        etStudentNo.setText("15211031102");
+//        etPassword.setText("123456");
         queryUniversities();
 
         if (!NetUtils.isConnection(this)) {
