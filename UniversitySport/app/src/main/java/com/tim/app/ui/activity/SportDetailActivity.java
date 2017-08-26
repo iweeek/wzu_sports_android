@@ -363,7 +363,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             Log.d(TAG, "locationType:" + locationType);
             //定位成功
-            if (errorCode != 0 || locationType != 1 || state != STATE_STARTED) {
+            if (errorCode != 0 || locationType != 1) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;

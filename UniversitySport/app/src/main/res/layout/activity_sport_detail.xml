@@ -98,8 +98,8 @@
 
                     <ImageView
                         android:id="@+id/ivHideSportInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_centerVertical="true"
                         android:background="@drawable/icon_sport_info_closed_toggle"/>
 
@@ -425,24 +425,24 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/distanceText"
+                            android:textSize="12sp"
                             android:textColor="@color/white"/>
 
                         <TextView
                             android:id="@+id/tvCurrentDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="40dp"
+                            android:layout_marginStart="30dp"
                             android:textColor="#FBDD17"
                             android:textSize="18sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_marginStart="9dp"
                             android:text="@string/meter"
                             android:textColor="@color/white"
-                            android:textSize="12dp"/>
+                            android:textSize="12sp"/>
                     </LinearLayout>
 
 
@@ -455,6 +455,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textSize="12sp"
                             android:text="@string/averageSpeed"
                             android:textColor="@color/white"/>
 
@@ -462,19 +463,17 @@
                             android:id="@+id/tvAverSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
+                            android:layout_marginStart="20dp"
                             android:textColor="#FBDD17"
                             android:textSize="18sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_marginStart="9dp"
-                            android:gravity="center"
                             android:text="@string/speedNotation"
                             android:textColor="@color/white"
-                            android:textSize="12dp"/>
+                            android:textSize="12sp"/>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -492,6 +491,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/consumeTime"
+                        android:textSize="12sp"
                         android:textColor="@color/white"/>
 
                     <TextView
@@ -535,11 +535,11 @@
 
     <ImageView
         android:id="@+id/ivShowSportInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/icon_sport_info_closed_toggle"
         android:visibility="gone"/>
 
