@@ -70,9 +70,15 @@ public class ViewHolder extends BaseRecyclerAdapter.BaseRecyclerViewHolder {
         return this;
     }
 
-    public ViewHolder addView(int parentId,View childView){
+    public ViewHolder addView(int parentId, View childView){
         ViewGroup parent = findView(parentId);
         parent.addView(childView);
+        return this;
+    }
+
+    public ViewHolder removeAllViews(int parentId){
+        ViewGroup parent = findView(parentId);
+        parent.removeAllViews();
         return this;
     }
 

@@ -51,7 +51,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
         int totalEnergyCost = 0;
         final ViewHolder viewHolder = (ViewHolder) holder;
-
+        viewHolder.removeAllViews(R.id.llSportItem);
 
         for (int i = 0; i < data.historySportEntryList.size(); i++) {
             final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
