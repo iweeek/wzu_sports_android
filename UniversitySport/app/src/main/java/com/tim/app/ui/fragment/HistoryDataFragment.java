@@ -40,7 +40,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-import static com.tim.app.ui.activity.setting.LoginActivity.student;
+import static com.tim.app.constant.AppConstant.student;
 
 
 /**

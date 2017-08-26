@@ -53,6 +53,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.tim.app.ui.activity.SportDetailActivity.NETWORK_ERROR_MSG;
+import static com.tim.app.constant.AppConstant.student;
+import static com.tim.app.constant.AppConstant.user;
 
 /**
  * 登录
@@ -78,14 +80,15 @@ public class LoginActivity extends BaseActivity {
     private List<University> universities = new ArrayList<>();
     private List<String> universityNames = new ArrayList<>();
 
-    public static User user;
-    public static Student student;
+    // TODO
+//    public static User user;
+//    public static Student student;
 
     private Context context = this;
     private String deviceId;
 
     //TODO
-    private int expirationTime = 1;
+    private int expirationTime = 2160;
 
     @Override
     protected void onBeforeSetContentLayout() {
@@ -177,6 +180,7 @@ public class LoginActivity extends BaseActivity {
         //同时获取Android_ID
         deviceId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+        Log.d(TAG+"deviceId", deviceId);
     }
 
     private void queryUniversities() {
@@ -350,7 +354,7 @@ public class LoginActivity extends BaseActivity {
                     Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
                     if (student != null) {
                         saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
-                        MainActivity.start(context,user);
+                        MainActivity.start(context);
                     } else {
                         //// TODO
                     }

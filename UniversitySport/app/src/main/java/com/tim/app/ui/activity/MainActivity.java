@@ -34,7 +34,6 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.setting.LoginActivity;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
@@ -53,7 +52,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tim.app.ui.activity.setting.LoginActivity.student;
+import static com.tim.app.constant.AppConstant.student;
+import static com.tim.app.constant.AppConstant.user;
 
 /**
  * 首页
@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private static final String TAG = "MainActivity";
 
-    public static User user;
+//    public static User user;
 //    public static Student student;
     private static boolean mIsEnable = true;
 
@@ -119,8 +119,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     //
     //        api.sendReq(req);
     //    }
-    public static void start(Context context, User usr) {
-        user = usr;
+    public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
