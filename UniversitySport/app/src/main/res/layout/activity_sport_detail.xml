@@ -245,157 +245,157 @@
 
 
             <!--<LinearLayout-->
-                <!--android:id="@+id/llCurrentInfo"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/white"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:visibility="visible">-->
+            <!--android:id="@+id/llCurrentInfo"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/white"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:visibility="visible">-->
 
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:gravity="center"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:padding="10dp">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="10dp">-->
 
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="当前距离"-->
-                        <!--android:textColor="@color/black_60"-->
-                        <!--android:textSize="14dp"/>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="当前距离"-->
+            <!--android:textColor="@color/black_60"-->
+            <!--android:textSize="14dp"/>-->
 
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="@string/digitalPlaceholder"-->
-                            <!--android:textColor="#868892"-->
-                            <!--android:textSize="20dp"-->
-                            <!--android:textStyle="bold"/>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/digitalPlaceholder"-->
+            <!--android:textColor="#868892"-->
+            <!--android:textSize="20dp"-->
+            <!--android:textStyle="bold"/>-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:paddingLeft="@dimen/dimen_2"-->
-                            <!--android:text="@string/meter"-->
-                            <!--android:textColor="#868892"-->
-                            <!--android:textSize="12dp"/>-->
-                    <!--</LinearLayout>-->
-                <!--</LinearLayout>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/dimen_2"-->
+            <!--android:text="@string/meter"-->
+            <!--android:textColor="#868892"-->
+            <!--android:textSize="12dp"/>-->
+            <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:gravity="center"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:padding="10dp">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="10dp">-->
 
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="当前耗时"-->
-                        <!--android:textColor="@color/black_60"-->
-                        <!--android:textSize="14dp"/>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="当前耗时"-->
+            <!--android:textColor="@color/black_60"-->
+            <!--android:textSize="14dp"/>-->
 
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="@string/digitalPlaceholder"-->
-                            <!--android:textColor="#868892"-->
-                            <!--android:textSize="20dp"-->
-                            <!--android:textStyle="bold"/>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/digitalPlaceholder"-->
+            <!--android:textColor="#868892"-->
+            <!--android:textSize="20dp"-->
+            <!--android:textStyle="bold"/>-->
 
-                        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:text="@string/minute"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:paddingLeft="@dimen/dimen_2"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:textColor="#868892"&ndash;&gt;-->
-                        <!--&lt;!&ndash;android:textSize="12dp"/>&ndash;&gt;-->
-                    <!--</LinearLayout>-->
-                <!--</LinearLayout>-->
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:text="@string/minute"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:paddingLeft="@dimen/dimen_2"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textColor="#868892"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textSize="12dp"/>&ndash;&gt;-->
+            <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:gravity="center"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:padding="10dp">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="10dp">-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/tvAverSpeedLabel"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="平均速度"-->
-                        <!--android:textColor="@color/black_60"-->
-                        <!--android:textSize="14dp"/>-->
+            <!--<TextView-->
+            <!--android:id="@+id/tvAverSpeedLabel"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="平均速度"-->
+            <!--android:textColor="@color/black_60"-->
+            <!--android:textSize="14dp"/>-->
 
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:orientation="horizontal">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal">-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text=""-->
-                            <!--android:textColor="#868892"-->
-                            <!--android:textSize="20dp"-->
-                            <!--android:textStyle="bold"/>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text=""-->
+            <!--android:textColor="#868892"-->
+            <!--android:textSize="20dp"-->
+            <!--android:textStyle="bold"/>-->
 
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:paddingLeft="@dimen/dimen_2"-->
-                            <!--android:text="@string/speedNotation"-->
-                            <!--android:textColor="#868892"-->
-                            <!--android:textSize="12dp"/>-->
-                    <!--</LinearLayout>-->
-                <!--</LinearLayout>-->
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/dimen_2"-->
+            <!--android:text="@string/speedNotation"-->
+            <!--android:textColor="#868892"-->
+            <!--android:textSize="12dp"/>-->
+            <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
 
-                <!--<LinearLayout-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_alignParentBottom="true"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:gravity="center"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:padding="10dp"-->
-                    <!--android:visibility="gone">-->
+            <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="10dp"-->
+            <!--android:visibility="gone">-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/tvStepTitle"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="步数"-->
-                        <!--android:textColor="@color/black_60"-->
-                        <!--android:textSize="14dp"/>-->
+            <!--<TextView-->
+            <!--android:id="@+id/tvStepTitle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="步数"-->
+            <!--android:textColor="@color/black_60"-->
+            <!--android:textSize="14dp"/>-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/tvCurrentStep"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:textColor="@color/black_60"-->
-                        <!--android:textSize="16dp"/>-->
-                <!--</LinearLayout>-->
+            <!--<TextView-->
+            <!--android:id="@+id/tvCurrentStep"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@color/black_60"-->
+            <!--android:textSize="16dp"/>-->
+            <!--</LinearLayout>-->
 
             <!--</LinearLayout>-->
 
@@ -410,8 +410,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
@@ -483,9 +483,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -616,29 +616,34 @@
         android:layout_marginBottom="70dp"
         android:background="@drawable/ic_location"/>
 
-
-    <com.tim.app.ui.view.SlideUnlockView
-        android:id="@+id/slideUnlockView"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:visibility="gone"
-        test:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
-        test:slideUnlockBlockResource="@drawable/ic_lock"
-        tool:visibility="visible"/>
+        android:layout_centerHorizontal="true">
 
-    <TextView
-        android:id="@+id/tvPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="85dp"
-        android:text="滑动停止"
-        android:textColor="@color/white"
-        android:textSize="18dp"
-        android:visibility="gone"/>
+        <com.tim.app.ui.view.SlideUnlockView
+            android:id="@+id/slideUnlockView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="80dp"
+            android:visibility="gone"
+            test:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
+            test:slideUnlockBlockResource="@drawable/ic_lock"
+            tool:visibility="visible"/>
 
+        <TextView
+            android:id="@+id/tvPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="滑动停止"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:textSize="18dp"
+            android:translationZ="20px"
+            android:visibility="gone"/>
+    </FrameLayout>
 </RelativeLayout>

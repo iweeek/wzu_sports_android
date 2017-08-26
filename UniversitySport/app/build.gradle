@@ -52,11 +52,11 @@ android {
 
     productFlavors {
         free {
-
+            //TODO
             signingConfig signingConfigs.wzu_sports_config
         }
         paid{
-
+            //TODO
         }
     }
 }
