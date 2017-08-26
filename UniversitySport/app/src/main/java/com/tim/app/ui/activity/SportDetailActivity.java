@@ -353,11 +353,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
         DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
-        if (screenOffTimeout <= screenKeepLightTime && Double.compare(params.screenBrightness, 0.1) == 0) {
+        if (screenOffTimeout <= screenKeepLightTime && Double.compare(params.screenBrightness, 0.1) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
             Log.d(TAG, "onMyLocationChange turn down light");
         }
+
         if (location != null) {
             Log.d(TAG, "locationType:" + locationType);
             //定位成功
