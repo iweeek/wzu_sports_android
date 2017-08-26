@@ -473,7 +473,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     public void initData() {
-        tvUserName.setText(user.getUsername());
+        tvUserName.setText(user.getStudent().getName());
 
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;

@@ -135,19 +135,9 @@ public class ServerInterface {
     /**
      * 向服务器提交数据
      * {@link com.tim.app.ui.activity.SportDetailActivity}  调用
-     *
-     * @param tag
-     * @param activityId
-     * @param stepCount
-     * @param distance
-     * @param longitude
-     * @param latitude
-     * @param locationType
-     * @param isNormal
-     * @param callback
      */
     public void runningActivityData(String tag, int activityId, int stepCount, int distance, double longitude,
-                                    double latitude, int locationType, boolean isNormal, ResponseCallback callback) {
+                                    double latitude, String stride, String stepsPerSecond, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", activityId);
@@ -155,6 +145,8 @@ public class ServerInterface {
         params.put("distance", distance);
         params.put("longitude", longitude);
         params.put("latitude", latitude);
+        params.put("stride", stride);
+        params.put("stepsPerSecond", stepsPerSecond);
         params.put("locationType", locationType);
         params.put("isNormal", isNormal);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
@@ -210,7 +202,7 @@ public class ServerInterface {
 
     public void query(String queryStr, ResponseCallback callback) {
         String url = API_SCHEME + QUERY_INTERFACE;
-//        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+        //        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
         HashMap params = new HashMap();
         //        Log.d(TAG, "queryRunningSports: headers.toString()" + headers.toString());
 

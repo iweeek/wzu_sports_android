@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -64,6 +65,7 @@ import com.tim.app.ui.view.SlideUnlockView;
 import org.json.JSONObject;
 
 import static com.tim.app.constant.AppConstant.student;
+import static com.tim.app.ui.activity.SportDetailActivity.REQUEST_PERMISSION_WRITE_FINE_LOCATION;
 
 /**
  * @创建者 倪军
@@ -415,7 +417,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         if (location != null) {
             //定位成功
-            if (errorCode != 0 & locationType != -1 && locationType != 1 && state != STATE_STARTED) {
+            if (errorCode != 0 || locationType != 1 || state != STATE_STARTED) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;
@@ -542,40 +544,49 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         return false;
     }
 
+
+
     @Override
     public void onClick(View v) {
         turnUpScreen();
 
         switch (v.getId()) {
             case R.id.btStart:
-                //判断是否在运动范围内
-                boolean isContains = circle.contains(oldLatLng);
-                if (!isContains && state == STATE_NORMAL) {
-                    Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                    builder.setTitle("注意");
-//                    builder.setMessage("您当前不再指定的运动区域，确定要开始运动吗？");
-//                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            allowStart();
-//                        }
-//                    });
-//                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//
-//                        }
-//                    });
-//                    builder.show();
-                } else if (isContains && state == STATE_NORMAL) {
+                //先检查定位权限
+                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                }else {
+                    //判断是否在运动范围内
+                    boolean isContains = circle.contains(oldLatLng);
+                    if (!isContains && state == STATE_NORMAL) {
+                        Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
+                        //                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        //                    builder.setTitle("注意");
+                        //                    builder.setMessage("您当前不再指定的运动区域，确定要开始运动吗？");
+                        //                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        //                        @Override
+                        //                        public void onClick(DialogInterface dialog, int which) {
+                        //                            allowStart();
+                        //                        }
+                        //                    });
+                        //                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        //                        @Override
+                        //                        public void onClick(DialogInterface dialog, int which) {
+                        //
+                        //                        }
+                        //                    });
+                        //                    builder.show();
+                    } else if (isContains && state == STATE_NORMAL) {
+                        allowStart();
+                    } else if (state == STATE_END) {
+                        SportResultActivity.start(this, historySportEntry);
+                        finish();
+                    }
                     allowStart();
-                } else if (state == STATE_END) {
-                    SportResultActivity.start(this, historySportEntry);
-                    finish();
+                    break;
                 }
-                allowStart();
-                break;
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
@@ -655,7 +666,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

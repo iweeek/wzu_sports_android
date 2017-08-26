@@ -106,7 +106,7 @@ public class SlideUnlockView extends View {
         // 取出自定义属性中滑块图片
         int slideUnlockBlockResource = attrs.getAttributeResourceValue(
                 namespace, "slideUnlockBlockResource", -1);
-        slideUnlockBackgroundResource = R.drawable.ic_lock_bg;
+        slideUnlockBackgroundResource = R.drawable.icon_progress_bar;
         slideUnlockBlockResource = R.drawable.btn_right_arrow;
         // 取出自定义属性中当前状态
         // 如果解锁状态是true，说明已经解锁
