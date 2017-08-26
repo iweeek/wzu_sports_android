@@ -21,7 +21,7 @@ public class ServerAddressManager {
         String stateServerDomain = "";
         switch (RT.HOST) {
             case DEVELOP:
-                stateServerDomain = "http://192.168.1.107:8080/";
+                stateServerDomain = "http://192.168.1.108:8080/";
                 break;
             case DEBUG:
                 stateServerDomain = "http://120.77.72.16:8080/";

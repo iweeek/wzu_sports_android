@@ -17,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +35,6 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.ui.activity.setting.LoginActivity;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
@@ -72,8 +72,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private DrawerLayout mDrawerLayout;
 
     private ImageView ibMenu;
+    private FrameLayout flMenu;
     private ImageView ibNotify;
-    private TextView tvLogout;
+//    private TextView tvLogout;
     private TextView tvUserName;
 
     private LinearLayout llContainer;
@@ -159,12 +160,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main_drawer);
         ibMenu = (ImageView) findViewById(R.id.ibMenu);
+        flMenu = (FrameLayout) findViewById(R.id.flMenu);
         ibNotify = (ImageView) findViewById(R.id.ibNotify);
-        tvLogout = (TextView) findViewById(R.id.tvLogout);
+//        tvLogout = (TextView) findViewById(tvLogout);
         //        badNetworkView = (BadNetworkView) findViewById(R.id.bnvContainer);
-        ibMenu.setOnClickListener(this);
+//        ibMenu.setOnClickListener(this);
+        flMenu.setOnClickListener(this);
         ibNotify.setOnClickListener(this);
-        tvLogout.setOnClickListener(this);
+//        tvLogout.setOnClickListener(this);
         navigationView =
                 (NavigationView) findViewById(R.id.nv_main_navigation);
 
@@ -582,14 +585,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibMenu:
+            case R.id.flMenu:
                 Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
-            case R.id.tvLogout:
-                startActivity(new Intent(this,LoginActivity.class));
-                finish();
-                break;
+//            case tvLogout:
+//                startActivity(new Intent(this,LoginActivity.class));
+//                finish();
+//                break;
             case R.id.llBadNetworkFresh:
                 queryCurTermData();
                 Log.d(TAG, "onClick llBadNetworkFresh");

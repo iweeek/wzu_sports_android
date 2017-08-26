@@ -76,20 +76,20 @@
             app:itemTextColor="@color/menu_text_color_selector"
             app:menu="@menu/drawer_view" />
 
-        <TextView
-            android:id="@+id/tvLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginRight="20dp"
-            android:clickable="true"
-            android:drawableLeft="@drawable/bt_logout_selector"
-            android:drawablePadding="10dp"
-            android:padding="5dp"
-            android:text="退出帐号"
-            android:textColor="@color/logout_text_color_selector"
-            android:textSize="15dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/tvLogout"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginBottom="20dp"-->
+            <!--android:layout_marginRight="20dp"-->
+            <!--android:clickable="true"-->
+            <!--android:drawableLeft="@drawable/bt_logout_selector"-->
+            <!--android:drawablePadding="10dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="退出帐号"-->
+            <!--android:textColor="@color/logout_text_color_selector"-->
+            <!--android:textSize="15dp" />-->
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
