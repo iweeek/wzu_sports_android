@@ -106,7 +106,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long elapseTime = 0;
 //    private long previousTime = 0;
     private int currentSteps = 0;
-    private int previousSteps = 0;
+    private int lastSteps = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
@@ -398,14 +398,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 Log.d(TAG, "lastLatLng: " + lastLatLng);
                 float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
-                int stepsInterval = currentSteps - previousSteps;
-                BigDecimal bd = new BigDecimal(distanceInterval / stepsInterval + 0.5);
-                distancePerStep = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-                Log.d(TAG, "distancePerStep:" + distancePerStep);
+                //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
+                int stepsInterval = currentSteps - lastSteps;
+                BigDecimal bd;
+                if(stepsInterval == 0){
+                    distancePerStep = 0;
+                    stepPerSecond = 0;
+                }else {
+                    bd = new BigDecimal(distanceInterval / stepsInterval + 0.5);
+                    distancePerStep = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
+                    Log.d(TAG, "distancePerStep:" + distancePerStep);
 
-                bd = new BigDecimal(stepsInterval / interval + 0.5);
-                stepPerSecond = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-                Log.d(TAG, "stepPerSecond:" + stepPerSecond);
+                    bd = new BigDecimal(stepsInterval / interval + 0.5);
+                    stepPerSecond = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
+                    Log.d(TAG, "stepPerSecond:" + stepPerSecond);
+                }
 
                 toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
                         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + currentSteps +
@@ -459,7 +466,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
             }
 
-            previousSteps = currentSteps;
+            lastSteps = currentSteps;
             lastLatLng = newLatLng;
             DLOG.d(TAG, toastText);
         } else {
@@ -513,7 +520,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
         //        }
 
-        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
+//        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
         tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()));
 
         tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)));
@@ -577,7 +584,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvAverSpeed.setText("0.0");
                         }
 
-                        runningActivitiesEnd(sportEntry.getId(), student.getId(), targetFinishedTime);
+                        runningActivitiesEnd(targetFinishedTime);
 
                         tvParticipantNum.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
@@ -738,10 +745,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                             bindService(bindIntent, connection, BIND_AUTO_CREATE);
                                                             return true;
                                                         } else {
-                                                            //                                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-                                                            //                                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-                                                            //                                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                                            //                                                        DLOG.writeToInternalFile(msg);
+                                                            // String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                                            // msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                                            // msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                                            // DLOG.writeToInternalFile(msg);
                                                             Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                                             return false;
                                                         }
@@ -833,7 +840,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     /**
      * 提交运动数据
      */
-    private void runningActivitiesEnd(final int runningSportId, final int studentId, final long targetFinishedTime) {
+    private void runningActivitiesEnd(final long targetFinishedTime) {
         //必须先初始化。
 //        SQLite.init(context, RunningSportsCallback.getInstance());
         Log.d(TAG, "runningActivitiesEnd");
@@ -872,6 +879,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             return true;
                         } else {
                             Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
+                            //TODO 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
+                            btStart.setVisibility(View.GONE);
                             return false;
                         }
                     }
