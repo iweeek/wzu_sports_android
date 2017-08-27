@@ -137,7 +137,7 @@ public class ServerInterface {
      * {@link com.tim.app.ui.activity.SportDetailActivity}  调用
      */
     public void runningActivityData(String tag, int activityId, int stepCount, int distance, double longitude,
-                                    double latitude, String stride, String stepsPerSecond, int locationType, boolean isNormal, ResponseCallback callback) {
+                                    double latitude, String distancePerStep, String stepPerSecond, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", activityId);
@@ -145,8 +145,8 @@ public class ServerInterface {
         params.put("distance", distance);
         params.put("longitude", longitude);
         params.put("latitude", latitude);
-        params.put("stride", stride);
-        params.put("stepsPerSecond", stepsPerSecond);
+        params.put("distancePerStep", distancePerStep);
+        params.put("stepPerSecond", stepPerSecond);
         params.put("locationType", locationType);
         params.put("isNormal", isNormal);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
