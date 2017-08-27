@@ -40,7 +40,6 @@ import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.util.EncryptUtil;
 import com.tim.app.util.SoftKeyboardUtil;
-import com.tim.app.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,8 +80,8 @@ public class LoginActivity extends BaseActivity {
     private List<String> universityNames = new ArrayList<>();
 
     // TODO
-//    public static User user;
-//    public static Student student;
+    //    public static User user;
+    //    public static Student student;
 
     private Context context = this;
     private String deviceId;
@@ -107,14 +106,14 @@ public class LoginActivity extends BaseActivity {
         tvUniversity = (TextView) findViewById(R.id.tvUniversity);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
-//        etStudentNo.setText("nijun");
-//        etStudentNo.setText("15211040107");
-//        etStudentNo.setText("15211031102");
-//        etPassword.setText("123456");
+        //        etStudentNo.setText("nijun");
+        //        etStudentNo.setText("15211040107");
+        //        etStudentNo.setText("15211031102");
+        //        etPassword.setText("123456");
         queryUniversities();
 
         if (!NetUtils.isConnection(this)) {
-            ToastUtil.showToast(getString(R.string.httpconnection_not_network));
+            Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
         }
 
         tvNoErrorPrmpt = (TextView) findViewById(R.id.tvStuNoErrorPrmpt);
@@ -181,7 +180,7 @@ public class LoginActivity extends BaseActivity {
         //同时获取Android_ID
         deviceId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        Log.d(TAG+"deviceId", deviceId);
+        Log.d(TAG + "deviceId", deviceId);
     }
 
     private void queryUniversities() {
@@ -250,7 +249,7 @@ public class LoginActivity extends BaseActivity {
                 final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
 
                 if (!NetUtils.isConnection(this)) {
-                    ToastUtil.showToast(getString(R.string.httpconnection_not_network));
+                    Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                 builder.setTitle("请选择您的学校");
@@ -353,12 +352,8 @@ public class LoginActivity extends BaseActivity {
                     user.setStudent(student);
 
                     Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
-                    if (student != null) {
-                        saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
-                        MainActivity.start(context);
-                    } else {
-                        //// TODO
-                    }
+                    saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
+                    MainActivity.start(context);
 
                     return true;
                 } else {
@@ -371,11 +366,11 @@ public class LoginActivity extends BaseActivity {
     private void login(final String username, final String password) {
         showLoadingDialog();
 
-        final String md5Password= EncryptUtil.md5(password);
+        final String md5Password = EncryptUtil.md5(password);
         //判断选择的是哪所学校
         int index = (int) tvUniversity.getTag();
         University university = universities.get(index);
-        Log.d(TAG, "universities.get(index):" + universities.get(index));
+//        Log.d(TAG, "universities.get(index):" + universities.get(index));
         ServerInterface.instance().tokens(TAG, university.getId(), username, md5Password, deviceId, expirationTime, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -425,7 +420,7 @@ public class LoginActivity extends BaseActivity {
                 } else {
                     hideLoadingDialog();
                     //TODO 密码或者用户名不匹配，网络接口返回不明确
-                    ToastUtil.showToast(getString(R.string.usernamePasswordMismatching));
+                    Toast.makeText(context, getString(R.string.usernamePasswordMismatching), Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -445,23 +440,23 @@ public class LoginActivity extends BaseActivity {
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(user);
             String temp = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
-            Log.d(TAG, "temp: " + temp);
+//            Log.d(TAG, "temp: " + temp);
 
             String value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
-            Log.d(TAG, "value: " + value);
+//            Log.d(TAG, "value: " + value);
 
             editor.remove(key);
 
             value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
-            Log.d(TAG, "after remove value: " + value);
+//            Log.d(TAG, "after remove value: " + value);
 
             editor.putString(key, temp);
 
             value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
-            Log.d(TAG, "after put value: " + value);
+//            Log.d(TAG, "after put value: " + value);
 
             editor.apply();
-            Log.d(TAG, "key: " + getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, ""));
+//            Log.d(TAG, "key: " + getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, ""));
         } catch (IOException e) {
             e.printStackTrace();
         }

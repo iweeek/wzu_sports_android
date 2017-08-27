@@ -70,6 +70,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -109,8 +110,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
-    private int distancePerStep = 0; //步幅
-    private int stepPerSecond = 0; //步幅
+    private float distancePerStep = 0; //步幅
+    private float stepPerSecond = 0; //步幅
 
     private TextView tvSportName;
     private TextView tvParticipantNum;
@@ -379,9 +380,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
 
                     //TODO 待删除
-                    //                    aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                    //                    toastText = "调整屏幕缩放比例：" + zoomLevel;
-                    //                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                     CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
                     aMap.moveCamera(cu);
@@ -398,10 +399,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
                 int stepsInterval = currentSteps - previousSteps;
-                distancePerStep = (int)(distanceInterval / stepsInterval + 0.5);
+                BigDecimal bd = new BigDecimal(distanceInterval / stepsInterval + 0.5);
+                distancePerStep = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                 Log.d(TAG, "distancePerStep:" + distancePerStep);
 
-                stepPerSecond = (int) (stepsInterval / interval + 0.5);
+                bd = new BigDecimal(stepsInterval / interval + 0.5);
+                stepPerSecond = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                 Log.d(TAG, "stepPerSecond:" + stepPerSecond);
 
                 toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
@@ -429,7 +432,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         double d = currentDistance;
                         double t = elapseTime;
                         //解决速度过大
-                        BigDecimal bd = new BigDecimal(d / t);
+                        bd = new BigDecimal(d / t);
                         if (bd.compareTo(new BigDecimal(10)) < 0) {
                             bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
                             tvAverSpeed.setText(String.valueOf(bd));
