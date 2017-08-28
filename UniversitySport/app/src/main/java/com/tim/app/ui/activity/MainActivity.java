@@ -30,7 +30,6 @@ import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
-import com.bumptech.glide.Glide;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
@@ -40,6 +39,7 @@ import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
+import com.tim.app.ui.cell.GlideApp;
 import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
@@ -53,6 +53,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.tim.app.constant.AppConstant.student;
 import static com.tim.app.constant.AppConstant.user;
 
@@ -479,9 +480,20 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initData() {
         tvUserName.setText(user.getStudent().getName());
-        Glide.with(this)
+
+        GlideApp.with(this)
                 .load("http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg")
+                .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
+                .error(R.drawable.ic_default_avatar) // if a load fails.
+                .fallback(R.drawable.ic_default_avatar) // If a fallback is not set, null models will cause the error drawable to be displayed. If the error drawable is not set, the placeholder will be displayed.
+//                .fitCenter()
+//                .centerCrop()
+//                .miniThumb(50)
+                .circleCrop()
+                .transition(withCrossFade())
                 .into(ivAvatar);
+
+
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
 
