@@ -381,6 +381,7 @@ public class ServerInterface {
                 "    accuAreaActivityCount(timeRange: " + timeRange + ")\n" +
                 "    qualifiedRunningActivityCount(timeRange: " + timeRange + ")\n" +
                 "    qualifiedAreaActivityCount(timeRange: " + timeRange + ")\n" +
+                "    signInCount(timeRange: " + timeRange + ")\n" +
                 "    runningActivityTimeCosted(timeRange: " + timeRange + ")\n" +
                 "    areaActivityTimeCosted(timeRange: " + timeRange + ")\n" +
                 "    runningActivityKcalConsumption(timeRange: " + timeRange + ")\n" +

@@ -163,8 +163,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         int accuRunningActivityCount = student.optInt("accuRunningActivityCount");
                         int accuAreaActivityCount = student.optInt("accuAreaActivityCount");
 
-                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
-                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
+//                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
+//                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
+
+                        int signInCount = student.optInt("signInCount");
+                        String totalSignInCount = String.valueOf(signInCount);
 
                         int runningActivityTimeCosted = student.optInt("runningActivityTimeCosted");
                         int areaActivityTimeCosted = student.optInt("areaActivityTimeCosted");
@@ -173,16 +176,16 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         int areaActivityKcalConsumption = student.optInt("areaActivityKcalConsumption");
 
                         String totalActivityCount = String.valueOf(accuAreaActivityCount + accuRunningActivityCount);
-                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
+//                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
                         String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
                         String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
 
                         if (type == AppConstant.THIS_WEEK) {
-                            headView.setData("本周累计运动(次)", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            headView.setData("本周累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                         } else if (type == AppConstant.THIS_MONTH) {
-                            headView.setData("本月累计运动(次)", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            headView.setData("本月累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                         } else {
-                            headView.setData("本学期累计运动(次)", totalActivityCount, totalqualifiedActivityCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            headView.setData("本学期累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                         }
 
                         JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");
