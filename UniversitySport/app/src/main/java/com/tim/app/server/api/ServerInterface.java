@@ -396,6 +396,7 @@ public class ServerInterface {
                 "        startTime\n" +
                 "        sportDate\n" +
                 "        endedAt\n" +
+                "        isValid\n" +
                 "        runningSport {\n" +
                 "          name\n" +
                 "        }\n" +

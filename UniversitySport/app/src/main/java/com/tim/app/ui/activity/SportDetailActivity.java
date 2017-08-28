@@ -923,7 +923,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btStart = (Button) findViewById(R.id.btStart);
         btStart.setOnClickListener(this);
         //TODO
-        btStart.setVisibility(View.VISIBLE);
+//        btStart.setVisibility(View.VISIBLE);
 
 
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
