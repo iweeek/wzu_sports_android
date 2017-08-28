@@ -397,8 +397,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
                         String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
 
-                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
-                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
+//                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
+//                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
 
                         String curTermAreaCostedTime = jsonObject.optString("areaActivityTimeCosted");
                         String curTermRunningCostedTime = jsonObject.optString("runningActivityTimeCosted");
@@ -408,7 +408,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
 
                         String totalCount = String.valueOf(Integer.valueOf(curTermAreaCounts) + Integer.valueOf(curTermRunningCounts));
-                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
+//                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
+                        String totalSignInCount = String.valueOf(jsonObject.optInt("signInCount"));
                         String totalKcalComsuption = String.valueOf(Integer.valueOf(curTermAreaKcalConsumption) + Integer.valueOf(curTermRunningKcalConsumption));
                         double totalCostedTime = Double.valueOf(curTermAreaCostedTime) + Double.valueOf(curTermRunningCostedTime);
 
@@ -416,7 +417,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         totalCostedTime = totalCostedTime / 60;
                         BigDecimal bd = new BigDecimal(totalCostedTime);
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
-                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalQualifiedCount, curTermTargetTimes);
+                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
                         return true;
