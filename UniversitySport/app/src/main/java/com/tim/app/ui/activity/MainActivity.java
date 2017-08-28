@@ -30,6 +30,7 @@ import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
+import com.bumptech.glide.Glide;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
@@ -76,6 +77,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private ImageView ibNotify;
 //    private TextView tvLogout;
     private TextView tvUserName;
+    private ImageView ivAvatar;
 
     private LinearLayout llContainer;
     private WrapRecyclerView wrvSportType;
@@ -192,6 +194,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             //动态加载headerView
             View headerView = navigationView.inflateHeaderView(R.layout.navigation_header);
             tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
+            ivAvatar = (ImageView) headerView.findViewById(R.id.ivAvatar);
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
@@ -476,7 +479,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initData() {
         tvUserName.setText(user.getStudent().getName());
-
+        Glide.with(this)
+                .load("http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg")
+                .into(ivAvatar);
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
 
