@@ -40,7 +40,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
-//        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        //        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -69,17 +69,15 @@ public class SplashActivity extends BaseActivity {
             showLoadingDialog();
 
             student = user.getStudent();
-            if(student != null) {// if student is null, ignore it.
-                MainActivity.start(this);
-                finish();
-            }
+            MainActivity.start(this);
+            finish();
         }
     }
 
 
     private User getUserFromCache() {
         User user = null;
-        SharedPreferences sp =  getSharedPreferences(User.USER_SHARED_PREFERENCE, MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(User.USER_SHARED_PREFERENCE, MODE_PRIVATE);
         String temp = sp.getString(User.USER, null);
         if (temp == null) {
             return null;

@@ -21,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.ActivityManager;
@@ -41,7 +42,6 @@ import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
-import com.tim.app.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -616,7 +616,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         }
         long current_time = System.currentTimeMillis();
         if (current_time - last_back_time > 2000) {
-            ToastUtil.showToast(getString(R.string.app_exit));
+            Toast.makeText(context, getString(R.string.app_exit), Toast.LENGTH_SHORT).show();
             last_back_time = current_time;
         } else {
             ActivityManager.ins().AppExit(this);

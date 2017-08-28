@@ -47,7 +47,6 @@ import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.MarkerOverlay;
-import com.tim.app.util.ToastUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -649,7 +648,7 @@ public class SportResultActivity extends BaseActivity {
                     Marker marker = aMap.addMarker(markerOption);
                 } else {
                     //// TODO: 2017/8/18  说明坐标位置点都不符合要求，需要把距离置为零
-                    ToastUtil.showToast(noSportDataMsg);
+                    Toast.makeText(context, noSportDataMsg, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.ivLocation:
