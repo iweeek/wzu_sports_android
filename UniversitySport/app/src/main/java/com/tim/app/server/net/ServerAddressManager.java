@@ -10,7 +10,7 @@ import com.tim.app.RT;
  */
 public class ServerAddressManager {
 
-    private static final String DEFAULT_BASE_ADDRESS = "http://120.77.72.16:8080/";//默认的状态服务器地址
+    private static final String DEFAULT_BASE_ADDRESS = "http://api.guangyangyundong.com/";//默认的状态服务器地址
 
     /**
      * 获取服务器状态的域名
