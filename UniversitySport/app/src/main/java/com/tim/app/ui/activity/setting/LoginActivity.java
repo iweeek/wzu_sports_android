@@ -370,7 +370,7 @@ public class LoginActivity extends BaseActivity {
         //判断选择的是哪所学校
         int index = (int) tvUniversity.getTag();
         University university = universities.get(index);
-//        Log.d(TAG, "universities.get(index):" + universities.get(index));
+        //        Log.d(TAG, "universities.get(index):" + universities.get(index));
         ServerInterface.instance().tokens(TAG, university.getId(), username, md5Password, deviceId, expirationTime, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -404,12 +404,7 @@ public class LoginActivity extends BaseActivity {
                         user.setPassword(md5Password);
                         Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
 
-                        if (user != null) {
-                            //说明用户登录成功
-                            queryStudent(user.getUid());
-                        } else {
-                            //TODO 查找用户信息失败
-                        }
+                        queryStudent(user.getUid());
 
                     } catch (JSONException e) {
                         hideLoadingDialog();
@@ -440,23 +435,23 @@ public class LoginActivity extends BaseActivity {
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(user);
             String temp = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
-//            Log.d(TAG, "temp: " + temp);
+            //            Log.d(TAG, "temp: " + temp);
 
             String value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
-//            Log.d(TAG, "value: " + value);
+            //            Log.d(TAG, "value: " + value);
 
             editor.remove(key);
 
             value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
-//            Log.d(TAG, "after remove value: " + value);
+            //            Log.d(TAG, "after remove value: " + value);
 
             editor.putString(key, temp);
 
             value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
-//            Log.d(TAG, "after put value: " + value);
+            //            Log.d(TAG, "after put value: " + value);
 
             editor.apply();
-//            Log.d(TAG, "key: " + getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, ""));
+            //            Log.d(TAG, "key: " + getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, ""));
         } catch (IOException e) {
             e.printStackTrace();
         }

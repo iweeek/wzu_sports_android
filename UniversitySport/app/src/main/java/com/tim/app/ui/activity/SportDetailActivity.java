@@ -405,11 +405,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     distancePerStep = 0;
                     stepPerSecond = 0;
                 }else {
-                    bd = new BigDecimal(distanceInterval / stepsInterval + 0.5);
+                    bd = new BigDecimal(distanceInterval / stepsInterval);
                     distancePerStep = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                     Log.d(TAG, "distancePerStep:" + distancePerStep);
 
-                    bd = new BigDecimal(stepsInterval / interval + 0.5);
+                    bd = new BigDecimal(stepsInterval / interval);
                     stepPerSecond = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                     Log.d(TAG, "stepPerSecond:" + stepPerSecond);
                 }
