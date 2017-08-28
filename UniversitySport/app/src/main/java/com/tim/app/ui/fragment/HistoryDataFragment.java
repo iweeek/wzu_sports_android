@@ -206,6 +206,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                     //过滤不完整数据
                                     //                                    if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
                                     entry.setEndedAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
+                                    entry.setValid(runningSportArray.optJSONObject(i).getBoolean("isValid"));
                                     //                                    } else {
                                     //                                        continue;
                                     //                                    }

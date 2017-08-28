@@ -73,11 +73,16 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                     tvSportQualified.setText("非正常结束");
                     tvSportQualified.setTextColor(Color.parseColor("#FFAA2B"));
                 } else {
-                    if (runningData.isQualified()) {
-                        tvSportQualified.setText("达标");
-                        tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                    if (runningData.isValid()) {
+                        if (runningData.isQualified()) {
+                            tvSportQualified.setText("达标");
+                            tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                        } else {
+                            tvSportQualified.setText("不达标");
+                            tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                        }
                     } else {
-                        tvSportQualified.setText("不达标");
+                        tvSportQualified.setText("数据异常");
                         tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
                     }
                 }
@@ -173,7 +178,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
         //当天日期
         viewHolder.setText(R.id.tvSportDate, data.date);
         //一天的热量消耗
-        viewHolder.setText(R.id.tvEnergyCost,mContext.getString(R.string.caloriePlaceholder,String.valueOf(totalEnergyCost)));
+        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.caloriePlaceholder, String.valueOf(totalEnergyCost)));
     }
 
     @Override
