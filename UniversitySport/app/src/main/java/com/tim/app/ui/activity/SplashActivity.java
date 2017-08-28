@@ -67,7 +67,7 @@ public class SplashActivity extends BaseActivity {
         user = getUserFromCache();
         if (user != null) {
             showLoadingDialog();
-            
+
             student = user.getStudent();
             MainActivity.start(this);
             finish();

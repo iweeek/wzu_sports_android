@@ -104,7 +104,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int speedLimitation = 5;//米
     private int currentDistance = 0;
     private long elapseTime = 0;
-//    private long previousTime = 0;
+    //    private long previousTime = 0;
     private int currentSteps = 0;
     private int lastSteps = 0;
     private long startTime;//开始时间
@@ -401,10 +401,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
                 int stepsInterval = currentSteps - lastSteps;
                 BigDecimal bd;
-                if(stepsInterval == 0){
+                if (stepsInterval == 0) {
                     distancePerStep = 0;
                     stepPerSecond = 0;
-                }else {
+                } else {
                     bd = new BigDecimal(distanceInterval / stepsInterval);
                     distancePerStep = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
                     Log.d(TAG, "distancePerStep:" + distancePerStep);
@@ -447,7 +447,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
 
                     ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
-                            location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep),String.valueOf(stepPerSecond),
+                            location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
                             locationType, isNormal, new ResponseCallback() {
                                 @Override
                                 public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
@@ -520,7 +520,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
         //        }
 
-//        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
+        //        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
         tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()));
 
         tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)));
@@ -643,11 +643,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     public static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 0x01;
     public static final int REQUEST_PERMISSION_WRITE_FINE_LOCATION = 0x02;
-//    public static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 0x03;
+    //    public static final int WRITE_COARSE_LOCATION_REQUEST_CODE = 0x03;
 
 
     /**
-     *
      * @param requestCode
      * @param permissions
      * @param grantResults 记录的是授权的结果，如果申请了两个授权，那么数组的length就是2
@@ -655,7 +654,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     UserManager.instance().cleanCache();
@@ -663,14 +662,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 break;
             case REQUEST_PERMISSION_WRITE_FINE_LOCATION:
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //已授权
-                    Toast.makeText(this,"已授权定位服务",Toast.LENGTH_SHORT).show();
-                }else{
+                    Toast.makeText(this, "已授权定位服务", Toast.LENGTH_SHORT).show();
+                } else {
                     //未授权
-                    Toast.makeText(this,"已禁止定位服务",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "已禁止定位服务", Toast.LENGTH_SHORT).show();
                 }
-                    break;
+                break;
             default:
                 break;
         }
@@ -697,83 +696,83 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                break;
             case R.id.btStart:
                 //先检查定位权限
-//                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-//                        != PackageManager.PERMISSION_GRANTED){
-//                    if(ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                            Manifest.permission.ACCESS_FINE_LOCATION)) {
-//                        Toast.makeText(this,"shouldShowRequestPermissionRationale",Toast.LENGTH_SHORT).show();
-//
-//                    }else {
-//                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-//                                REQUEST_PERMISSION_WRITE_FINE_LOCATION);
-//
-//                    }
-//                }else {
-                    if (state == STATE_NORMAL) {
-                        Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
-                        startTime = System.currentTimeMillis();
-                        ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
-                            @Override
-                            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                                if (errCode == 0) {
-                                    try {
-                                        sportRecordId = json.getInt("id");
-                                        Log.d(TAG, "sportRecordId:" + sportRecordId);
+                //                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                //                        != PackageManager.PERMISSION_GRANTED){
+                //                    if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+                //                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //                        Toast.makeText(this,"shouldShowRequestPermissionRationale",Toast.LENGTH_SHORT).show();
+                //
+                //                    }else {
+                //                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                //                                REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                //
+                //                    }
+                //                }else {
+                if (state == STATE_NORMAL) {
+                    Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
+                    startTime = System.currentTimeMillis();
+                    ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
+                        @Override
+                        public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                            if (errCode == 0) {
+                                try {
+                                    sportRecordId = json.getInt("id");
+                                    Log.d(TAG, "sportRecordId:" + sportRecordId);
 
-                                        //第一次向服务器提交数据,默认第一次是正常的数据
-                                        ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
-                                                firstLocation.getLongitude(), firstLocation.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
-                                                firstLocationType, true, new ResponseCallback() {
-                                                    @Override
-                                                    public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                                                        if (status == 0) {
-                                                            DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
-                                                            state = STATE_STARTED;
+                                    //第一次向服务器提交数据,默认第一次是正常的数据
+                                    ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
+                                            firstLocation.getLongitude(), firstLocation.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
+                                            firstLocationType, true, new ResponseCallback() {
+                                                @Override
+                                                public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                                    if (status == 0) {
+                                                        DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
+                                                        state = STATE_STARTED;
 
-                                                            //                    ibBack.setVisibility(View.GONE);
-                                                            llCurrentInfo.setVisibility(View.VISIBLE);
-                                                            rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                            llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
-                                                            btStart.setVisibility(View.GONE);
-                                                            rlBottom.setVisibility(View.GONE);
-                                                            slideUnlockView.setVisibility(View.VISIBLE);
-                                                            tvPause.setVisibility(View.VISIBLE);
+                                                        //                    ibBack.setVisibility(View.GONE);
+                                                        llCurrentInfo.setVisibility(View.VISIBLE);
+                                                        rlCurConsumeEnergy.setVisibility(View.GONE);
+                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        btStart.setVisibility(View.GONE);
+                                                        rlBottom.setVisibility(View.GONE);
+                                                        slideUnlockView.setVisibility(View.VISIBLE);
+                                                        tvPause.setVisibility(View.VISIBLE);
 
-                                                            initData();
-                                                            startTimer();
-                                                            Intent bindIntent = new Intent(SportDetailActivity.this, LocationService.class);
-                                                            bindService(bindIntent, connection, BIND_AUTO_CREATE);
-                                                            return true;
-                                                        } else {
-                                                            // String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-                                                            // msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-                                                            // msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                                            // DLOG.writeToInternalFile(msg);
-                                                            Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
-                                                            return false;
-                                                        }
+                                                        initData();
+                                                        startTimer();
+                                                        Intent bindIntent = new Intent(SportDetailActivity.this, LocationService.class);
+                                                        bindService(bindIntent, connection, BIND_AUTO_CREATE);
+                                                        return true;
+                                                    } else {
+                                                        // String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                                        // msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                                        // msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                                        // DLOG.writeToInternalFile(msg);
+                                                        Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
+                                                        return false;
                                                     }
-                                                });
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                        Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
-                                    }
-                                    return true;
-                                } else {
-                                    //TODO
-                                    Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "errMsg: " + errMsg);
-                                    return false;
+                                                }
+                                            });
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
                                 }
+                                return true;
+                            } else {
+                                //TODO
+                                Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "errMsg: " + errMsg);
+                                return false;
                             }
-                        });
+                        }
+                    });
 
-                    } else if (state == STATE_END) {//运动结束时，查看锻炼结果
-                        finish();
-                        SportResultActivity.start(this, historySportEntry);
-                    }
-                    break;
-//                }
+                } else if (state == STATE_END) {//运动结束时，查看锻炼结果
+                    finish();
+                    SportResultActivity.start(this, historySportEntry);
+                }
+                break;
+            //                }
             case R.id.ivLocation:
                 //修改地图的中心点位置
                 //                CameraPosition cp = aMap.getCameraPosition();
@@ -842,7 +841,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      */
     private void runningActivitiesEnd(final long targetFinishedTime) {
         //必须先初始化。
-//        SQLite.init(context, RunningSportsCallback.getInstance());
+        //        SQLite.init(context, RunningSportsCallback.getInstance());
         Log.d(TAG, "runningActivitiesEnd");
         //提交本次运动数据，更新UI
         ServerInterface.instance().runningActivitiesEnd(
