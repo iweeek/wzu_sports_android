@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.tim.app.ui.view.HistoryDataHeadView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                                         android:layout_width="match_parent"
+                                         android:layout_height="match_parent"
+                                         android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,9 +22,9 @@
                 android:id="@+id/tvLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#868892"
                 android:text="@string/accumTimesPer"
-                android:textSize="16dp" />
+                android:textColor="#868892"
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/tvAccumTimes"
@@ -32,9 +32,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:textColor="#868892"
                 android:text="10"
-                android:textSize="25dp" />
+                android:textColor="#868892"
+                android:textSize="25dp"/>
 
         </LinearLayout>
 
@@ -49,23 +49,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="start"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ReachTargetTimes"
-                    android:textColor="#7f858e"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvQualifiedTimes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="8"
-                    android:textColor="#474b4f"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ReachTargetTimes"
+                        android:textColor="#7f858e"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/tvQualifiedTimes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="8"
+                        android:textColor="#474b4f"
+                        android:textSize="16sp"/>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -75,43 +82,57 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/consumeCalorie"
-                    android:textColor="#7f858e"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvEnergyCost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1200"
-                    android:textColor="#474b4f"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/consumeCalorie"
+                        android:textColor="#7f858e"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/tvEnergyCost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1200"
+                        android:layout_gravity="center"
+                        android:textColor="#474b4f"
+                        android:textSize="16sp"/>
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="end"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/consumeMinute"
-                    android:textColor="#7f858e"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvTimeCost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="120"
-                    android:textColor="#474b4f"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/consumeMinute"
+                        android:textColor="#7f858e"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:id="@+id/tvTimeCost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="120"
+                        android:textColor="#474b4f"
+                        android:textSize="16sp"/>
+                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -119,14 +140,14 @@
     </RelativeLayout>
 
     <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:background="#edf0f2"-->
-        <!--android:gravity="left|center_vertical"-->
-        <!--android:paddingLeft="15dp"-->
-        <!--android:text="锻炼明细"-->
-        <!--android:textColor="@color/black"-->
-        <!--android:textSize="15dp" />-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:background="#edf0f2"-->
+    <!--android:gravity="left|center_vertical"-->
+    <!--android:paddingLeft="15dp"-->
+    <!--android:text="锻炼明细"-->
+    <!--android:textColor="@color/black"-->
+    <!--android:textSize="15dp" />-->
 
 
 </com.tim.app.ui.view.HistoryDataHeadView>
