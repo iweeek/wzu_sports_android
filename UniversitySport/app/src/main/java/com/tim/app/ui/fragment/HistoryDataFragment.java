@@ -166,8 +166,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 //                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
 //                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
 
-                        int signInCount = student.optInt("signInCount");
-                        String totalSignInCount = String.valueOf(signInCount);
+                        String totalSignInCount = String.valueOf(student.optInt("signInCount"));
 
                         int runningActivityTimeCosted = student.optInt("runningActivityTimeCosted");
                         int areaActivityTimeCosted = student.optInt("areaActivityTimeCosted");
