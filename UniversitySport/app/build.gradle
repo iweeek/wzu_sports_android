@@ -49,6 +49,7 @@ android {
             debuggable true
         }
     }
+//    flavorDimensions "paid","free"
 
     productFlavors {
         free {

@@ -23,7 +23,6 @@ import com.tim.app.util.ViewGT;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.concurrent.TimeUnit;
 
 import static com.tim.app.constant.AppConstant.student;
 import static com.tim.app.constant.AppConstant.user;
@@ -68,15 +67,12 @@ public class SplashActivity extends BaseActivity {
         user = getUserFromCache();
         if (user != null) {
             showLoadingDialog();
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             student = user.getStudent();
-            MainActivity.start(this);
-            finish();
+            if(student != null) {// if student is null, ignore it.
+                MainActivity.start(this);
+                finish();
+            }
         }
     }
 
