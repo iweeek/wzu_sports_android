@@ -91,6 +91,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SportEntry sportEntry;
     private HistorySportEntry historySportEntry;
 
+    //TODO
+    //    private FileOutputStream fos;
+    //    private int counter = 0;
+
     //第三方
     private MapView mapView;
     private AMap aMap;
@@ -111,8 +115,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
-    private float distancePerStep = 0; //步幅
-    private float stepPerSecond = 0; //步幅
+    private double distancePerStep = 0; //步幅
+    private double stepPerSecond = 0; //步幅
     private LocationManager locationManager;
 
     private TextView tvSportName;
@@ -273,7 +277,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
                     finish();
                 return false;
             }
@@ -434,7 +438,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                //DLOG.writeToInternalFile(msg);
+                //                DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "lastLatLng: " + lastLatLng);
@@ -442,18 +446,29 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                 //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
                 int stepsInterval = currentSteps - lastSteps;
-                BigDecimal bd;
+                BigDecimal bdDividend;
+                BigDecimal bdDevisor;
                 if (stepsInterval == 0) {
                     distancePerStep = 0;
                     stepPerSecond = 0;
                 } else {
-                    bd = new BigDecimal(distanceInterval / stepsInterval);
-                    distancePerStep = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-                    Log.d(TAG, "distancePerStep:" + distancePerStep);
+                    bdDividend = new BigDecimal(distanceInterval);
+                    bdDevisor = new BigDecimal(stepsInterval);
+                    distancePerStep = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
 
-                    bd = new BigDecimal(stepsInterval / interval);
-                    stepPerSecond = (float) bd.setScale(2, RoundingMode.HALF_UP).doubleValue();
-                    Log.d(TAG, "stepPerSecond:" + stepPerSecond);
+                    bdDividend = new BigDecimal(stepsInterval);
+                    bdDevisor = new BigDecimal(sportEntry.getAcquisitionInterval());
+                    stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
+                    //                    try {
+                    //                        //                        fos = openFileOutput("testMode", MODE_PRIVATE);
+                    //                        fos.write(((++counter) + ">>>" + s1 + s + "\n").getBytes());
+                    //                    } catch (FileNotFoundException e) {
+                    //                        e.printStackTrace();
+                    //                    } catch (IOException e) {
+                    //                        e.printStackTrace();
+                    //                    } finally {
+                    //
+                    //                    }
                 }
 
                 toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
@@ -477,14 +492,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
                             targetFinishedTime = elapseTime;
                         }
+
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
-                        double d = currentDistance;
-                        double t = elapseTime;
+                        bdDividend = new BigDecimal(currentDistance);
+                        bdDevisor = new BigDecimal(elapseTime);
+                        BigDecimal bdResult = bdDividend.divide(bdDevisor, 2, BigDecimal.ROUND_HALF_UP);
                         //解决速度过大
-                        bd = new BigDecimal(d / t);
-                        if (bd.compareTo(new BigDecimal(10)) < 0) {
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                            tvAverSpeed.setText(String.valueOf(bd));
+                        if (bdResult.compareTo(new BigDecimal(10)) < 0) {
+                            tvAverSpeed.setText(String.valueOf(bdResult));
                         }
                     }
 
@@ -737,6 +752,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                finish();
             //                break;
             case R.id.btStart:
+                //                try {
+                //                    fos = openFileOutput("testMode", MODE_PRIVATE);
+                //                } catch (FileNotFoundException e) {
+                //                    e.printStackTrace();
+                //                }
                 //先检查定位权限
                 //                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 //                        != PackageManager.PERMISSION_GRANTED){
@@ -774,7 +794,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         //                    ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-//                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        //                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
                                                         btStart.setVisibility(View.GONE);
                                                         rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
@@ -1062,6 +1082,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         stopTimer();
 
         DLOG.closeInternalFile();
+        //        if (fos != null) {
+        //            try {
+        //                fos.close();
+        //            } catch (IOException e) {
+        //                e.printStackTrace();
+        //            }
+        //        }
     }
 
     private BroadcastReceiver lowBatteryReceiver = new BroadcastReceiver() {
