@@ -64,6 +64,7 @@ import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.SensorService;
+import com.tim.app.ui.dialog.SportDialog;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONException;
@@ -90,6 +91,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SportEntry sportEntry;
     private HistorySportEntry historySportEntry;
 
+
     //第三方
     private MapView mapView;
     private AMap aMap;
@@ -112,6 +114,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int initSteps = 0;//初始化的步数
     private float distancePerStep = 0; //步幅
     private float stepPerSecond = 0; //步幅
+    private LocationManager locationManager;
 
     private TextView tvSportName;
     private TextView tvParticipantNum;
@@ -129,12 +132,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     //    private TextView tvCurrentStep;//暂时注释，记得全部放开注释
     private LinearLayout llTargetContainer;
 
+    private TextView tvRemainPower;
+
+    private RelativeLayout rlRoot;
     private RelativeLayout rlBottom;
     private Button btStart;
     private LinearLayout llBottom;
     private Button btContinue;
     private Button btStop;
     private SlideUnlockView slideUnlockView;
+    private SportDialog mDialog;
 
     private LinearLayout llCurrentInfo;
     private RelativeLayout rlCurConsumeEnergy;
@@ -209,7 +216,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
     private void initGPS() {
-        LocationManager locationManager = (LocationManager) this
+        locationManager = (LocationManager) this
                 .getSystemService(Context.LOCATION_SERVICE);
         // 判断GPS模块是否开启，如果没有则开启
         if (!locationManager
@@ -228,13 +235,30 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
                         }
                     });
-            //            dialog.setNeutralButton("取消", new android.content.DialogInterface.OnClickListener() {
+            //            mDialog.setNeutralButton("取消", new android.content.DialogInterface.OnClickListener() {
             //                @Override
             //                public void onClick(DialogInterface arg0, int arg1) {
             //                    arg0.dismiss();
             //                }
             //            });
             dialog.show();
+        }else{
+            mDialog.show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        LocationManager locationManager = (LocationManager) this
+                .getSystemService(Context.LOCATION_SERVICE);
+        if (requestCode == 0) {
+            if (locationManager
+                    .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                mDialog.show();
+            } else {
+                Toast.makeText(this,"需要打开GPS才能开始运动...",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -242,7 +266,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
         DLOG.d(TAG, "init");
+        mDialog = new SportDialog(this);
+        //// TODO:   
+//        mDialog.setCancelable(false);
 
+        float level = getBatteryLevel();
+        tvRemainPower = (TextView) mDialog.findViewById(R.id.tvRemainPower);
+        tvRemainPower.setText(getResources().getString(R.string.remainPower,String.valueOf(level)));
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
@@ -256,7 +286,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
 
         startService(new Intent(this, LocationService.class));
-
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
         //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -378,6 +407,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                    if(mDialog.isShowing()) {
+                        mDialog.dismiss();
+                    }
+
 
                     //TODO 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
@@ -416,7 +449,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                 toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
                         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + currentSteps +
-                        "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType ;
+                        "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
                 Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                 if (locationType == MyLocationStyle.LOCATION_TYPE_LOCATE) {
@@ -919,11 +952,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
+        rlRoot = (RelativeLayout) findViewById(R.id.rlRoot);
 
         btStart = (Button) findViewById(R.id.btStart);
         btStart.setOnClickListener(this);
         //TODO
-//        btStart.setVisibility(View.VISIBLE);
+        //        btStart.setVisibility(View.VISIBLE);
 
 
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
@@ -1019,7 +1053,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         stopTimer();
 
         DLOG.closeInternalFile();
-
     }
 
     private BroadcastReceiver lowBatteryReceiver = new BroadcastReceiver() {
