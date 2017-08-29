@@ -24,6 +24,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,6 +182,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     public static final String COMMIT_FALIED_MSG = "网络错误，数据提交失败，请随后查看历史记录";
 
+    public static final String OPEN_GPS_MSG = "需要打开GPS才能开始运动...";
+
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
@@ -241,7 +244,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                }
             //            });
             dialog.show();
-        }else{
+        } else {
             mDialog.show();
         }
     }
@@ -256,7 +259,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
                 mDialog.show();
             } else {
-                Toast.makeText(this,"需要打开GPS才能开始运动...",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, OPEN_GPS_MSG, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -267,11 +270,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         DLOG.d(TAG, "init");
         mDialog = new SportDialog(this);
         //// TODO:   
-//        mDialog.setCancelable(false);
+        mDialog.setCancelable(false);
+        mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+                    finish();
+                return false;
+            }
+        });
 
         float level = getBatteryLevel();
         tvRemainPower = (TextView) mDialog.findViewById(R.id.tvRemainPower);
-        tvRemainPower.setText(getResources().getString(R.string.remainPower,String.valueOf(level)));
+        tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level)));
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
@@ -406,7 +417,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    if(mDialog.isShowing()) {
+                    if (mDialog.isShowing()) {
                         mDialog.dismiss();
                     }
 
