@@ -24,7 +24,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private TextView tvCurTermAccuTimes;
     private TextView tvAccumulCostEnergy;
     private TextView tvAccumulCostTime;
-    private TextView tvCurQualifiedTimes;
+    private TextView tvCurSignInCount;
     private TextView tvCurTermTargetTimes;
 
     private RelativeLayout rlTop;
@@ -46,7 +46,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         tvCurTermAccuTimes = (TextView) findViewById(R.id.tvCurTermAccuTimes);
         tvAccumulCostEnergy = (TextView) findViewById(R.id.tvAccumulCostEnergy);
         tvAccumulCostTime = (TextView) findViewById(R.id.tvAccumulCostTime);
-        tvCurQualifiedTimes = (TextView) findViewById(R.id.tvCurQualifiedTimes);
+        tvCurSignInCount = (TextView) findViewById(R.id.tvCurSignInCount);
         tvCurTermTargetTimes = (TextView) findViewById(R.id.tvCurTermTargetTimes);
         pbReachTargetTimes = (ProgressBar) findViewById(R.id.pbReachTargetTimes);
 
@@ -106,14 +106,14 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      * 刷新界面
      */
     public void setData(String curTermSportCount, String KcalComsuption, String costedTime,
-                        String curTermQualifiedTimes, String curTermTargetCount) {
+                        String curTermSignInCount, String curTermTargetCount) {
         tvCurTermAccuTimes.setText(getContext().getString(R.string.digitalPlaceholder, curTermSportCount));
         tvAccumulCostEnergy.setText(getContext().getString(R.string.digitalPlaceholder, KcalComsuption));
         tvAccumulCostTime.setText((getContext().getString(R.string.digitalPlaceholder, costedTime)));
-        tvCurQualifiedTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermQualifiedTimes)));
+        tvCurSignInCount.setText((getContext().getString(R.string.digitalPlaceholder, curTermSignInCount)));
         tvCurTermTargetTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermTargetCount)));
 
-        float q = Float.valueOf(curTermQualifiedTimes);
+        float q = Float.valueOf(curTermSignInCount);
         float t = Float.valueOf(curTermTargetCount);
         float r = q / t;
 

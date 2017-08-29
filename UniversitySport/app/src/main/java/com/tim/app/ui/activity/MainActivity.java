@@ -39,6 +39,7 @@ import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
+import com.tim.app.ui.cell.GlideApp;
 import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
@@ -52,6 +53,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.tim.app.constant.AppConstant.student;
 import static com.tim.app.constant.AppConstant.user;
 
@@ -76,6 +78,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private ImageView ibNotify;
 //    private TextView tvLogout;
     private TextView tvUserName;
+    private ImageView ivAvatar;
 
     private LinearLayout llContainer;
     private WrapRecyclerView wrvSportType;
@@ -192,6 +195,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             //动态加载headerView
             View headerView = navigationView.inflateHeaderView(R.layout.navigation_header);
             tvUserName = (TextView) headerView.findViewById(R.id.tvUserName);
+            ivAvatar = (ImageView) headerView.findViewById(R.id.ivAvatar);
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
@@ -397,8 +401,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
                         String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
 
-                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
-                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
+//                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
+//                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
 
                         String curTermAreaCostedTime = jsonObject.optString("areaActivityTimeCosted");
                         String curTermRunningCostedTime = jsonObject.optString("runningActivityTimeCosted");
@@ -408,7 +412,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
 
                         String totalCount = String.valueOf(Integer.valueOf(curTermAreaCounts) + Integer.valueOf(curTermRunningCounts));
-                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
+//                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
+                        String totalSignInCount = String.valueOf(jsonObject.optInt("signInCount"));
                         String totalKcalComsuption = String.valueOf(Integer.valueOf(curTermAreaKcalConsumption) + Integer.valueOf(curTermRunningKcalConsumption));
                         double totalCostedTime = Double.valueOf(curTermAreaCostedTime) + Double.valueOf(curTermRunningCostedTime);
 
@@ -416,7 +421,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         totalCostedTime = totalCostedTime / 60;
                         BigDecimal bd = new BigDecimal(totalCostedTime);
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
-                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalQualifiedCount, curTermTargetTimes);
+                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         adapter.notifyDataSetChanged();
                         return true;
@@ -476,6 +481,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initData() {
         tvUserName.setText(user.getStudent().getName());
+
+        GlideApp.with(this)
+                .load("http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg")
+                .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
+                .error(R.drawable.ic_default_avatar) // if a load fails.
+                .fallback(R.drawable.ic_default_avatar) // If a fallback is not set, null models will cause the error drawable to be displayed. If the error drawable is not set, the placeholder will be displayed.
+//                .fitCenter()
+//                .centerCrop()
+//                .miniThumb(50)
+                .circleCrop()
+                .transition(withCrossFade())
+                .into(ivAvatar);
+
 
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
