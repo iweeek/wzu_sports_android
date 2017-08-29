@@ -455,19 +455,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     bdDividend = new BigDecimal(distanceInterval);
                     bdDevisor = new BigDecimal(stepsInterval);
                     distancePerStep = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
-                    String s1 = "distanceInterval =(" + distanceInterval +
-                            ") / stepsInterval(" + stepsInterval +
-                            ") = distancePerStep(" + distancePerStep + ")\n";
-                    Log.d(TAG, s1);
 
                     bdDividend = new BigDecimal(stepsInterval);
                     bdDevisor = new BigDecimal(sportEntry.getAcquisitionInterval());
                     stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
-                    String s = "stepsInterval(" + stepsInterval +
-                            ") / sportEntry.getAcquisitionInterval(" +
-                            sportEntry.getAcquisitionInterval() +
-                            ") = stepPerSecond(" + stepPerSecond + ")\n";
-                    Log.d(TAG, s);
                     //                    try {
                     //                        //                        fos = openFileOutput("testMode", MODE_PRIVATE);
                     //                        fos.write(((++counter) + ">>>" + s1 + s + "\n").getBytes());
