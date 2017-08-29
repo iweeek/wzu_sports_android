@@ -91,7 +91,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SportEntry sportEntry;
     private HistorySportEntry historySportEntry;
 
-
     //第三方
     private MapView mapView;
     private AMap aMap;
