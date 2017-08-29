@@ -89,6 +89,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SportEntry sportEntry;
     private HistorySportEntry historySportEntry;
 
+    //TODO
+//    private FileOutputStream fos;
+//    private int counter = 0;
+
     //第三方
     private MapView mapView;
     private AMap aMap;
@@ -363,35 +367,35 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             Log.d(TAG, "locationType:" + locationType);
             //定位成功
-            //            if (errorCode != 0 || locationType != 1) {
-            //                String errText = "正在定位中，GPS信号弱";
-            //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-            //                return;
-            //            } else {
-            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            Log.d(TAG, "newLatLng: " + newLatLng);
-            // 判断第一次，第一次会提示
-            if (lastLatLng == null) {
-                String errText = "定位成功";
-                firstLocation = location;
-                firstLocationType = locationType;
-                llLacationHint.setVisibility(View.GONE);
+            if (errorCode != 0 || locationType != 1) {
+                String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                return;
+            } else {
+                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.d(TAG, "newLatLng: " + newLatLng);
+                // 判断第一次，第一次会提示
+                if (lastLatLng == null) {
+                    String errText = "定位成功";
+                    firstLocation = location;
+                    firstLocationType = locationType;
+                    llLacationHint.setVisibility(View.GONE);
+                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
 
-                //TODO 待删除
-                //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                //toastText = "调整屏幕缩放比例：" + zoomLevel;
-                //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    //TODO 待删除
+                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                aMap.moveCamera(cu);
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                    aMap.moveCamera(cu);
 
-                btStart.setVisibility(View.VISIBLE);
+                    btStart.setVisibility(View.VISIBLE);
+                }
             }
-            //            }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                //DLOG.writeToInternalFile(msg);
+//                DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
                 Log.d(TAG, "lastLatLng: " + lastLatLng);
@@ -408,15 +412,29 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     bdDividend = new BigDecimal(distanceInterval);
                     bdDevisor = new BigDecimal(stepsInterval);
                     distancePerStep = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
-                    Log.d(TAG, "distanceInterval =(" + distanceInterval + ") / stepsInterval(" + stepsInterval + ") = distancePerStep(" + distancePerStep + ")");
+                    String s1 = "distanceInterval =(" + distanceInterval +
+                            ") / stepsInterval(" + stepsInterval +
+                            ") = distancePerStep(" + distancePerStep + ")\n";
+                    Log.d(TAG, s1);
 
                     bdDividend = new BigDecimal(stepsInterval);
                     bdDevisor = new BigDecimal(sportEntry.getAcquisitionInterval());
                     stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
-                    Log.d(TAG, "stepsInterval =(" + stepsInterval +
-                            ") / sportEntry.getAcquisitionInterval()(" +
+                    String s = "stepsInterval(" + stepsInterval +
+                            ") / sportEntry.getAcquisitionInterval(" +
                             sportEntry.getAcquisitionInterval() +
-                            ") = stepPerSecond(" + stepPerSecond + ")");
+                            ") = stepPerSecond(" + stepPerSecond + ")\n";
+                    Log.d(TAG, s);
+//                    try {
+//                        //                        fos = openFileOutput("testMode", MODE_PRIVATE);
+//                        fos.write(((++counter) + ">>>" + s1 + s + "\n").getBytes());
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } finally {
+//
+//                    }
                 }
 
                 toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
@@ -700,6 +718,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                finish();
             //                break;
             case R.id.btStart:
+//                try {
+//                    fos = openFileOutput("testMode", MODE_PRIVATE);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
                 //先检查定位权限
                 //                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 //                        != PackageManager.PERMISSION_GRANTED){
@@ -1025,6 +1048,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         DLOG.closeInternalFile();
 
+//        if (fos != null) {
+//            try {
+//                fos.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private BroadcastReceiver lowBatteryReceiver = new BroadcastReceiver() {
