@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:test="http://schemas.android.com/apk/res-auto"
                 xmlns:tool="http://schemas.android.com/tools"
+                android:id="@+id/rlRoot"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -425,8 +426,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/distanceText"
-                            android:textSize="12sp"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white"
+                            android:textSize="12sp"/>
 
                         <TextView
                             android:id="@+id/tvCurrentDistance"
@@ -455,9 +456,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="12sp"
                             android:text="@string/averageSpeed"
-                            android:textColor="@color/white"/>
+                            android:textColor="@color/white"
+                            android:textSize="12sp"/>
 
                         <TextView
                             android:id="@+id/tvAverSpeed"
@@ -491,8 +492,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/consumeTime"
-                        android:textSize="12sp"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/white"
+                        android:textSize="12sp"/>
 
                     <TextView
                         android:id="@+id/tvElapsedTime"
@@ -638,12 +639,13 @@
             android:id="@+id/tvPause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="滑动停止"
-            android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
+            android:text="滑动停止"
+            android:textColor="@color/white"
             android:textSize="18dp"
             android:translationZ="20px"
             android:visibility="gone"/>
     </FrameLayout>
+
 </RelativeLayout>
