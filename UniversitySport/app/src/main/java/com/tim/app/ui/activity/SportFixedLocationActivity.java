@@ -55,7 +55,6 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
-import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.RunningSportsCallback;
@@ -90,7 +89,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
     private FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint;
-    private HistorySportEntry historySportEntry;
+    private HistoryAreaSportEntry historySportEntry;
 
     /*基本控件*/
     private LinearLayout llLacationHint;
@@ -731,7 +730,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             historySportEntry = new HistoryAreaSportEntry();
 
                             historySportEntry.setId(jsonObject.optInt("id"));
-                            historySportEntry.setSportId(jsonObject.optInt("areaSportId"));
+                            historySportEntry.setAreaSportId(jsonObject.optInt("areaSportId"));
                             historySportEntry.setStudentId(jsonObject.optInt("studentId"));
                             historySportEntry.setCostTime(jsonObject.optInt("costTime"));
                             historySportEntry.setStartTime(jsonObject.optLong("startTime"));

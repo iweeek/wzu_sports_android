@@ -166,7 +166,13 @@
 
     <string name="usernamePasswordMismatching">用户名和密码不匹配</string>
 
+    <!--运动准备-->
     <string name="gpsLocationing">GPS定位中...</string>
     <string name="readyToSport">请做好热身准备</string>
     <string name="remainPower">当前剩余电量%s%%</string>
+
+    <!--锻炼结果-->
+    <string name="abnormalData">数据异常</string>
+    <string name="qualified">已达标</string>
+    <string name="notQualified">未达标</string>
 </resources>

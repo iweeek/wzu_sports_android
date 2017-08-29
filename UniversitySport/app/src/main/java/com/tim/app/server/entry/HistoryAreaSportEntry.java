@@ -21,16 +21,6 @@ public class HistoryAreaSportEntry extends HistorySportEntry {
         this.areaSportId = areaSportId;
     }
 
-    @Override
-    public void setSportId(int sportId) {
-        setAreaSportId(sportId);
-    }
-
-    @Override
-    public int getSportId() {
-        return getAreaSportId();
-    }
-
     public String getAreaName() {
         return areaName;
     }
@@ -38,6 +28,7 @@ public class HistoryAreaSportEntry extends HistorySportEntry {
     public void setAreaName(String areaName) {
         this.areaName = areaName;
     }
+
 
 
 }
