@@ -301,6 +301,7 @@ public class ServerInterface {
      * @param callback
      */
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
+        String timeRange = "CURRENT_WEEK";
         String queryStr = "{\n" +
                 "  student(id: " + studentId + ") {\n" +
                 "    areaActivityKcalConsumption\n" +
@@ -311,6 +312,7 @@ public class ServerInterface {
                 "    currentTermQualifiedRunningActivityCount\n" +
                 "    currentTermAreaActivityCount\n" +
                 "    currentTermRunningActivityCount\n" +
+                "    signInCount(timeRange: " + timeRange + ")\n" +
                 "  }\n" +
                 "  university(id: " + universityId + ") {\n" +
                 "    currentTerm {\n" +
@@ -381,6 +383,7 @@ public class ServerInterface {
                 "    accuAreaActivityCount(timeRange: " + timeRange + ")\n" +
                 "    qualifiedRunningActivityCount(timeRange: " + timeRange + ")\n" +
                 "    qualifiedAreaActivityCount(timeRange: " + timeRange + ")\n" +
+                "    signInCount(timeRange: " + timeRange + ")\n" +
                 "    runningActivityTimeCosted(timeRange: " + timeRange + ")\n" +
                 "    areaActivityTimeCosted(timeRange: " + timeRange + ")\n" +
                 "    runningActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
