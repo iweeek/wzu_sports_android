@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -582,7 +581,7 @@ public class SportResultActivity extends BaseActivity {
                 break;
             case R.id.btDrawLine:
                 btDrawLine.setVisibility(View.GONE);
-                llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportResultActivity.this, R.color.black_30));
+//                llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportResultActivity.this, R.color.black_30));
 
                 LatLng ll = oldLatLng;
 
