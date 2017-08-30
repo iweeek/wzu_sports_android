@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -32,7 +31,6 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
-import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
@@ -615,33 +613,61 @@ public class SportResultActivity extends BaseActivity {
 
                 //运动轨迹动态跟踪
                 if (mNormalPoints.size() > 1) {
-
-                    //方式一：LatLngBounds bounds = getLatLngBounds(mPoints.get(0), pointList);//以中心点缩放
-                    //方式二：如下
+                    //方式一：
+                    LatLngBounds bounds = getLatLngBounds(mPoints.get(0), mNormalPoints);//以中心点缩放
                     DLOG.d(TAG, "onClick mNormalPoints.size: " + mNormalPoints.size());
+//                    LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
                     for (LatLng point : mNormalPoints) {
                         Log.d(TAG, "point.latitude:" + point.latitude);
                         Log.d(TAG, "point.longitude:" + point.longitude);
 //                        DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
                     }
-                    LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
+                    //方式二：如下
+//                    LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
 
                     aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); //平滑移动
 
-                    SmoothMoveMarker smoothMarker = new SmoothMoveMarker(aMap);
+                    final SmoothMoveMarker smoothMarker = new SmoothMoveMarker(aMap);
                     // 设置滑动的图标
                     smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
 
+                    /*
                     LatLng drivePoint = mNormalPoints.get(0);
                     //计算一个点在线上的垂足，如果垂足在线上的某一顶点，则直接返回顶点的下标
                     Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(mNormalPoints, drivePoint);
                     mNormalPoints.set(pair.first, drivePoint);
                     List<LatLng> subList = mNormalPoints.subList(pair.first, mNormalPoints.size());
+                    */
+
 
                     // 设置滑动的轨迹左边点
-                    smoothMarker.setPoints(subList);
+                    smoothMarker.setPoints(mNormalPoints);
                     // 设置滑动的总时间
                     smoothMarker.setTotalDuration(10);
+
+                    aMap.setInfoWindowAdapter(infoWindowAdapter);
+                    smoothMarker.setMoveListener(
+                            new SmoothMoveMarker.MoveListener() {
+                                @Override
+                                public void move(final double distance) {
+
+                                    Log.i("MY","distance:  "+distance);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (infoWindowLayout != null && title != null && smoothMarker.getMarker().isInfoWindowShown()) {
+                                                title.setText("距离终点还有： " + (int) distance + "米");
+                                            }
+                                            if(distance == 0){
+                                                smoothMarker.getMarker().hideInfoWindow();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                    smoothMarker.getMarker().showInfoWindow();
+
+
                     // 开始滑动
                     smoothMarker.startSmoothMove();
                 }
@@ -715,6 +741,42 @@ public class SportResultActivity extends BaseActivity {
             //                break;
         }
 
+    }
+
+    AMap.InfoWindowAdapter infoWindowAdapter = new AMap.InfoWindowAdapter() {
+        @Override
+        public View getInfoWindow(Marker marker) {
+
+            return getInfoWindowView(marker);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+
+
+            return getInfoWindowView(marker);
+        }
+    };
+
+    LinearLayout infoWindowLayout;
+    TextView title;
+    TextView snippet;
+
+    private View getInfoWindowView(Marker marker) {
+        if (infoWindowLayout == null) {
+            infoWindowLayout = new LinearLayout(SportResultActivity.this);
+            infoWindowLayout.setOrientation(LinearLayout.VERTICAL);
+            title = new TextView(SportResultActivity.this);
+            snippet = new TextView(SportResultActivity.this);
+            title.setTextColor(Color.BLACK);
+            snippet.setTextColor(Color.BLACK);
+            infoWindowLayout.setBackgroundResource(R.drawable.infowindow_bg);
+
+            infoWindowLayout.addView(title);
+            infoWindowLayout.addView(snippet);
+        }
+
+        return infoWindowLayout;
     }
 
     //根据中心点和自定义内容获取缩放bounds
