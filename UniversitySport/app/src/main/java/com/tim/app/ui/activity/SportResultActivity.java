@@ -659,7 +659,7 @@ public class SportResultActivity extends BaseActivity {
                                 @Override
                                 public void move(final double distance) {
 
-                                    Log.i("MY", "distance:  " + distance);
+//                                    Log.i("MY", "distance:  " + distance);
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
