@@ -496,12 +496,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     .transition(withCrossFade())
                     .into(ivAvatar);
         }else{
-            GlideApp.with(this)
-                    .load(null)
-                    .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
-                    .error(R.drawable.ic_default_avatar) // if a load fails.
-                    .circleCrop()
-                    .into(ivAvatar);
+//            GlideApp.with(this)
+//                    .load(null)
+//                    .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
+//                    .error(R.drawable.ic_default_avatar) // if a load fails.
+//                    .circleCrop()
+//                    .into(ivAvatar);
         }
 
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
