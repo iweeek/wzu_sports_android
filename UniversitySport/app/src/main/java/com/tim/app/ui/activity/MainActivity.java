@@ -495,8 +495,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     .circleCrop()
                     .transition(withCrossFade())
                     .into(ivAvatar);
-        }else{
-            // ignore it 
+        } else {
+            // ignore it
         }
 
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
