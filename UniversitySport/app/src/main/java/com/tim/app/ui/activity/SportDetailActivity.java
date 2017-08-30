@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
@@ -17,6 +18,7 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -30,6 +32,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,15 +41,23 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.Circle;
+import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
@@ -71,6 +83,8 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -81,7 +95,7 @@ import static com.tim.app.constant.AppConstant.student;
 /**
  * 跑步运动详情页
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
+public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMapLocationListener {
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
@@ -93,6 +107,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     //TODO
     //    private FileOutputStream fos;
     //    private int counter = 0;
+
+    // 定位精度圈标扩散效果
+    private LocationSource.OnLocationChangedListener mListener;
+    private Marker locMarker;
+    private Circle ac;
+    private Circle c;
+    private TimerTask mTimerTask;
+    private Timer mTimer = new Timer();
+    private long start;
+    private final Interpolator interpolator1 = new LinearInterpolator();
+
 
     //第三方
     private MapView mapView;
@@ -362,6 +387,97 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         aMap.setMyLocationStyle(myLocationStyle);
     }
 
+    private Marker addMarker(LatLng point) {
+        Bitmap bMap = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.navi_map_gps_locked);
+        BitmapDescriptor des = BitmapDescriptorFactory.fromBitmap(bMap);
+        Marker marker = aMap.addMarker(new MarkerOptions().position(point).icon(des)
+                .anchor(0.5f, 0.5f));
+        return marker;
+    }
+
+    private void addLocationMarker(AMapLocation aMapLocation) {
+        LatLng mylocation = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+        float accuracy = aMapLocation.getAccuracy();
+        if (locMarker == null) {
+            locMarker = addMarker(mylocation);
+            ac = aMap.addCircle(new CircleOptions().center(mylocation)
+                    .fillColor(Color.argb(100, 255, 218, 185)).radius(accuracy)
+                    .strokeColor(Color.argb(255, 255, 228, 185)).strokeWidth(5));
+            c = aMap.addCircle(new CircleOptions().center(mylocation)
+                    .fillColor(Color.argb(70, 255, 218, 185))
+                    .radius(accuracy).strokeColor(Color.argb(255, 255, 228, 185))
+                    .strokeWidth(0));
+        } else {
+            locMarker.setPosition(mylocation);
+            ac.setCenter(mylocation);
+            ac.setRadius(accuracy);
+            c.setCenter(mylocation);
+            c.setRadius(accuracy);
+        }
+        Scalecircle(c);
+    }
+
+    public void Scalecircle(final Circle circle) {
+        start = SystemClock.uptimeMillis();
+        mTimerTask = new circleTask(circle, 1000);
+        mTimer.schedule(mTimerTask, 0, 30);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (mListener != null && aMapLocation != null) {
+            if (mTimerTask != null) {
+                mTimerTask.cancel();
+                mTimerTask = null;
+            }
+            if (aMapLocation != null && aMapLocation.getErrorCode() == 0) {
+                LatLng mylocation = new LatLng(aMapLocation.getLatitude(),
+                        aMapLocation.getLongitude());
+                aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mylocation, 19));
+                addLocationMarker(aMapLocation);
+            } else {
+                String errText = "定位失败," + aMapLocation.getErrorCode() + ": "
+                        + aMapLocation.getErrorInfo();
+                Log.e("AmapErr", errText);
+            }
+        }
+    }
+
+    private  class circleTask extends TimerTask {
+        private double r;
+        private Circle circle;
+        private long duration = 1000;
+
+        public circleTask(Circle circle, long rate){
+            this.circle = circle;
+            this.r = circle.getRadius();
+            if (rate > 0 ) {
+                this.duration = rate;
+            }
+        }
+        @Override
+        public void run() {
+            try {
+                long elapsed = SystemClock.uptimeMillis() - start;
+                float input = (float)elapsed / duration;
+                //                外圈循环缩放
+                //                float t = interpolator.getInterpolation((float)(input-0.25));//return (float)(Math.sin(2 * mCycles * Math.PI * input))
+                //                double r1 = (t + 2) * r;
+                //                外圈放大后消失
+                float t = interpolator1.getInterpolation(input);
+                double r1 = (t + 1) * r;
+                circle.setRadius(r1);
+                if (input > 2){
+                    start = SystemClock.uptimeMillis();
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         WindowManager.LayoutParams params = getWindow().getAttributes();
@@ -370,6 +486,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Log.d(TAG, "onTouchEvent turn up light");
         return false;
     }
+
 
     @Override
     public void onMyLocationChange(Location location) {
@@ -405,11 +522,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             Log.d(TAG, "locationType:" + locationType);
             //定位成功
-            if (errorCode != 0 || locationType != 1) {
-                String errText = "正在定位中，GPS信号弱";
-                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
+//            if (errorCode != 0 || locationType != 1) {
+//                String errText = "正在定位中，GPS信号弱";
+//                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+//                return;
+//            } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 Log.d(TAG, "newLatLng: " + newLatLng);
                 // 判断第一次，第一次会提示
@@ -433,7 +550,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     btStart.setVisibility(View.VISIBLE);
                 }
-            }
+//            }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 //                DLOG.writeToInternalFile(msg);
