@@ -67,7 +67,7 @@
                             android:layout_centerInParent="true"
                             android:text="60"
                             android:textColor="#000"
-                            android:textSize="60dp"/>
+                            android:textSize="40dp"/>
 
                     </RelativeLayout>
 
@@ -88,6 +88,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:orientation="horizontal">
 
                             <TextView
@@ -118,6 +119,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:max="100"
+                            android:layout_marginTop="5dp"
                             android:paddingEnd="60dp"
                             android:paddingStart="60dp"
                             android:progress="69"
@@ -127,7 +129,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="5dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -184,6 +186,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4px"
+                android:layout_marginTop="5dp"
                 android:background="@color/view_background_color"
                 />
 
@@ -198,9 +201,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="15dp"
                     android:drawablePadding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:drawableStart="@drawable/ic_charts"
                     android:text="校园排行榜"
                     android:textColor="#868892"
@@ -448,7 +451,6 @@
         <!--android:background="@drawable/ic_right_arrow"/>-->
         <!--</RelativeLayout>-->
 
-
         <LinearLayout
             android:id="@+id/llBadNetworkFresh"
             android:layout_width="match_parent"
@@ -460,7 +462,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="网络不好，请点击刷新"
-                android:textSize="14dp"></TextView>
+                android:textSize="14dp"/>
         </LinearLayout>
     </FrameLayout>
 
@@ -471,11 +473,13 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="53.5dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="运动方式"
-        android:textColor="@color/black"
-        android:textSize="15dp"/>
-
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="#324252"
+        android:textStyle="bold"
+        android:textSize="16dp"/>
 
 </com.tim.app.ui.view.HomepageHeadView>
