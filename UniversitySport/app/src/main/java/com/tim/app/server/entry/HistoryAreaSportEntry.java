@@ -9,27 +9,7 @@ package com.tim.app.server.entry;
 public class HistoryAreaSportEntry extends HistorySportEntry {
 
     private static final long serialVersionUID = 6187447685293862071L;
-    private int areaSportId;
     private String areaName;
-
-
-    public int getAreaSportId() {
-        return areaSportId;
-    }
-
-    public void setAreaSportId(int areaSportId) {
-        this.areaSportId = areaSportId;
-    }
-
-    @Override
-    public void setSportId(int sportId) {
-        setAreaSportId(sportId);
-    }
-
-    @Override
-    public int getSportId() {
-        return getAreaSportId();
-    }
 
     public String getAreaName() {
         return areaName;
@@ -38,6 +18,7 @@ public class HistoryAreaSportEntry extends HistorySportEntry {
     public void setAreaName(String areaName) {
         this.areaName = areaName;
     }
+
 
 
 }

@@ -57,24 +57,24 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
             final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
             if (data.historySportEntryList.get(i).getType() == AppConstant.RUNNING_TYPE) {
                 //向下转型
-                final HistoryRunningSportEntry runningData = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
+                final HistoryRunningSportEntry runningSportEntry = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
                 //                ll.setClickable(true);
-                ll.setTag(runningData);
+                ll.setTag(runningSportEntry);
 
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
                 iv.setBackgroundResource(R.drawable.ic_run_sport);
 
                 //运动名字
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
-                tvSportDesc.setText(runningData.getSportName());
+                tvSportDesc.setText(runningSportEntry.getSportName());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-                if (runningData.getEndedAt() == 0) {
+                if (runningSportEntry.getEndedAt() == 0) {
                     tvSportQualified.setText("非正常结束");
                     tvSportQualified.setTextColor(Color.parseColor("#FFAA2B"));
                 } else {
-                    if (runningData.isValid()) {
-                        if (runningData.isQualified()) {
+                    if (runningSportEntry.isValid()) {
+                        if (runningSportEntry.isQualified()) {
                             tvSportQualified.setText("达标");
                             tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
                         } else {
@@ -89,29 +89,29 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
                 SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
-                tvSportTime.setText(sdf.format(runningData.getStartTime()));
+                tvSportTime.setText(sdf.format(runningSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
                 //距离
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                tvLeft.setText(runningData.getDistance() + "");
+                tvLeft.setText(runningSportEntry.getDistance() + "");
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
-                String time = com.tim.app.util.TimeUtil.formatMillisTime(runningData.getCostTime() * 1000);
+                String time = com.tim.app.util.TimeUtil.formatMillisTime(runningSportEntry.getCostTime() * 1000);
                 tvMiddle.setText(time);
 
                 //消耗热量
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
-                tvRight.setText(runningData.getKcalConsumed() + "");
+                tvRight.setText(runningSportEntry.getKcalConsumed() + "");
 
                 //累加总共消耗热量
-                totalEnergyCost += runningData.getKcalConsumed();
+                totalEnergyCost += runningSportEntry.getKcalConsumed();
 
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SportResultActivity.start(mContext, runningData);
+                        SportResultActivity.start(mContext, runningSportEntry);
                     }
                 });
 

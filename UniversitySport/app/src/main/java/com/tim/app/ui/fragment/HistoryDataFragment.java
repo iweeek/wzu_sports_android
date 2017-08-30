@@ -196,7 +196,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             item.historySportEntryList = null;
                             for (int i = 0; i < runningSportArray.length(); i++) {
                                 if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
-                                    HistorySportEntry entry = new HistoryRunningSportEntry();
+                                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
                                     entry.setId(runningSportArray.optJSONObject(i).optInt("id"));
                                     entry.setSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
                                     entry.setCostTime(Integer.valueOf(runningSportArray.optJSONObject(i).optString("costTime")));
@@ -224,7 +224,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
                             for (int i = 0; i < areaSportArray.length(); i++) {
                                 if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
-                                    HistorySportEntry entry = new HistoryAreaSportEntry();
+                                    HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
                                     entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
                                     entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
                                     entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));

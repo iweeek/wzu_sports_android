@@ -59,8 +59,7 @@ import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.HistoryAreaSportEntry;
-import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.SensorService;
@@ -89,7 +88,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     //重要实体
     private SportEntry sportEntry;
-    private HistorySportEntry historySportEntry;
+    private HistoryRunningSportEntry historySportEntry;
 
     //TODO
     //    private FileOutputStream fos;
@@ -423,7 +422,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     if (mDialog.isShowing()) {
                         mDialog.dismiss();
                     }
-
 
                     //TODO 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
@@ -912,34 +910,51 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
                         if (errCode == 0) {
-                            historySportEntry = new HistoryAreaSportEntry();
+                            historySportEntry = new HistoryRunningSportEntry();
 
                             historySportEntry.setId(json.optInt("id"));
-                            historySportEntry.setSportId(json.optInt("areaSportId"));
+                            historySportEntry.setSportId(json.optInt("runningSportId"));
                             historySportEntry.setStudentId(json.optInt("studentId"));
+                            historySportEntry.setDistance(json.optInt("distance"));
+                            historySportEntry.setStepCount(json.optInt("stepCount"));
                             historySportEntry.setCostTime(json.optInt("costTime"));
+                            historySportEntry.setSpeed(json.optInt("speed"));
+                            historySportEntry.setStepPerSecond(json.optDouble("stepPerSecond"));
+                            historySportEntry.setDistancePerStep(json.optInt("distancePerStep"));
+                            historySportEntry.setTargetFinishedTime(json.optLong("targetFinishedTime"));
                             historySportEntry.setStartTime(json.optLong("startTime"));
                             historySportEntry.setKcalConsumed(json.optInt("kcalConsumed"));
                             historySportEntry.setQualified(json.optBoolean("qualified"));
+                            historySportEntry.setValid(json.optBoolean("isValid"));
+                            historySportEntry.setQualifiedDistance(json.optInt("qualifiedDistance"));
                             historySportEntry.setQualifiedCostTime(json.optInt("qualifiedCostTime"));
+                            historySportEntry.setMinCostTime(json.optLong("minCostTime"));
                             historySportEntry.setCreatedAt(json.optLong("createdAt"));
                             historySportEntry.setUpdatedAt(json.optLong("updatedAt"));
                             historySportEntry.setEndedAt(json.optLong("endedAt"));
                             historySportEntry.setEndedBy(json.optBoolean("endedBy"));
                             historySportEntry.setType(AppConstant.RUNNING_TYPE);
-                            if (historySportEntry.isQualified()) {
-                                tvResult.setText("达标");
-                                tvResult.setTextColor(Color.GREEN);
+
+                            if (historySportEntry.isValid()) {
+                                if (historySportEntry.isQualified()) {
+                                    tvResult.setText(R.string.qualified);
+                                    tvResult.setTextColor(Color.GREEN);
+                                } else {
+                                    tvResult.setText(R.string.notQualified);
+                                    tvResult.setTextColor(Color.RED);
+                                }
                             } else {
-                                tvResult.setText("未达标");
+                                tvResult.setText(R.string.abnormalData);
                                 tvResult.setTextColor(Color.RED);
                             }
+
                             tvResult.setVisibility(View.VISIBLE);
                             rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                             tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergyTemp, String.valueOf(historySportEntry.getKcalConsumed())));
                             return true;
                         } else {
                             Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, COMMIT_FALIED_MSG);
                             //TODO 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
                             btStart.setVisibility(View.GONE);
                             return false;
