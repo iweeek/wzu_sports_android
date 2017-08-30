@@ -42,7 +42,6 @@ import com.tim.app.util.EncryptUtil;
 import com.tim.app.util.SoftKeyboardUtil;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -51,9 +50,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tim.app.ui.activity.SportDetailActivity.NETWORK_ERROR_MSG;
 import static com.tim.app.constant.AppConstant.student;
 import static com.tim.app.constant.AppConstant.user;
+import static com.tim.app.ui.activity.SportDetailActivity.NETWORK_ERROR_MSG;
 
 /**
  * 登录
@@ -379,38 +378,40 @@ public class LoginActivity extends BaseActivity {
                         user = new User();
                     }
 
-                    try {
-                        user.setUid(json.getJSONObject("obj").optInt("userId"));
+                    //                    try {
+                    JSONObject jsonObject = json.optJSONObject("obj");
+                    user.setUid(jsonObject.optInt("userId"));
 
-                        List<String> roles = new ArrayList<>();
-                        JSONArray roleArray = json.getJSONObject("obj").optJSONArray("roles");
-                        for (int i = 0; i < roles.size(); i++) {
-                            roles.add(roleArray.optString(i));
-                        }
-                        user.setRoles(roles.toArray(new String[roles.size()]));
-
-                        user.setExpiredDate(json.getJSONObject("obj").optLong("expiredDatmaine"));
-
-                        String token = json.getJSONObject("obj").optString("token");
-                        user.setToken(token);
-
-                        //添加token 至 HttpHeader
-                        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
-                        headers.put("Authorization", user.getToken());
-                        NetworkInterface.instance().setCommonHeaders(headers);
-                        Log.d(TAG, "headers:" + headers);
-
-                        user.setUsername(username);
-                        user.setPassword(md5Password);
-                        Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
-
-                        queryStudent(user.getUid());
-
-                    } catch (JSONException e) {
-                        hideLoadingDialog();
-                        e.printStackTrace();
-                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
+                    List<String> roles = new ArrayList<>();
+                    JSONArray roleArray = jsonObject.optJSONArray("roles");
+                    for (int i = 0; i < roles.size(); i++) {
+                        roles.add(roleArray.optString(i));
                     }
+                    user.setRoles(roles.toArray(new String[roles.size()]));
+
+                    user.setExpiredDate(jsonObject.optLong("expiredDate"));
+
+                    String token = jsonObject.optString("token");
+                    user.setToken(token);
+
+                    user.setAvatarUrl(jsonObject.optString("avatarUrl"));
+
+                    //添加token 至 HttpHeader
+                    HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+                    headers.put("Authorization", user.getToken());
+                    NetworkInterface.instance().setCommonHeaders(headers);
+                    Log.d(TAG, "headers:" + headers);
+
+                    user.setUsername(username);
+                    user.setPassword(md5Password);
+                    Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
+
+                    queryStudent(user.getUid());
+                    //                    } catch (JSONException e) {
+                    //                        hideLoadingDialog();
+                    //                        e.printStackTrace();
+                    //                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
+                    //                    }
                     return true;
                 } else {
                     hideLoadingDialog();

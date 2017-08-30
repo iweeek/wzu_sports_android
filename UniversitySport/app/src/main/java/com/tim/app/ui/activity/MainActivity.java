@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -64,8 +65,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private static final String TAG = "MainActivity";
 
-//    public static User user;
-//    public static Student student;
+    //    public static User user;
+    //    public static Student student;
     private static boolean mIsEnable = true;
 
     private MainActivity context;
@@ -76,7 +77,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private ImageView ibMenu;
     private FrameLayout flMenu;
     private ImageView ibNotify;
-//    private TextView tvLogout;
+    //    private TextView tvLogout;
     private TextView tvUserName;
     private ImageView ivAvatar;
 
@@ -128,12 +129,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         context.startActivity(intent);
     }
 
-//    public static void start(Context context, User user, Student student) {
-//        Intent intent = new Intent(context, MainActivity.class);
-//        intent.putExtra("user", user);
-//        intent.putExtra("student", student);
-//        context.startActivity(intent);
-//    }
+    //    public static void start(Context context, User user, Student student) {
+    //        Intent intent = new Intent(context, MainActivity.class);
+    //        intent.putExtra("user", user);
+    //        intent.putExtra("student", student);
+    //        context.startActivity(intent);
+    //    }
 
 
     private boolean isOpen;
@@ -153,10 +154,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     protected void init(Bundle savedInstanceState) {
-//        user = (User) getIntent().getSerializableExtra("user");
-//        student = (Student) getIntent().getSerializableExtra("student");
-//        Log.d(TAG, "user:" + user);
-//        Log.d(TAG, "student:" + student);
+        //        user = (User) getIntent().getSerializableExtra("user");
+        //        student = (Student) getIntent().getSerializableExtra("student");
+        //        Log.d(TAG, "user:" + user);
+        //        Log.d(TAG, "student:" + student);
     }
 
     @Override
@@ -165,12 +166,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         ibMenu = (ImageView) findViewById(R.id.ibMenu);
         flMenu = (FrameLayout) findViewById(R.id.flMenu);
         ibNotify = (ImageView) findViewById(R.id.ibNotify);
-//        tvLogout = (TextView) findViewById(tvLogout);
+        //        tvLogout = (TextView) findViewById(tvLogout);
         //        badNetworkView = (BadNetworkView) findViewById(R.id.bnvContainer);
-//        ibMenu.setOnClickListener(this);
+        //        ibMenu.setOnClickListener(this);
         flMenu.setOnClickListener(this);
         ibNotify.setOnClickListener(this);
-//        tvLogout.setOnClickListener(this);
+        //        tvLogout.setOnClickListener(this);
         navigationView =
                 (NavigationView) findViewById(R.id.nv_main_navigation);
 
@@ -401,8 +402,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
                         String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
 
-//                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
-//                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
+                        //                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
+                        //                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
 
                         String curTermAreaCostedTime = jsonObject.optString("areaActivityTimeCosted");
                         String curTermRunningCostedTime = jsonObject.optString("runningActivityTimeCosted");
@@ -412,7 +413,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
 
                         String totalCount = String.valueOf(Integer.valueOf(curTermAreaCounts) + Integer.valueOf(curTermRunningCounts));
-//                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
+                        //                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
                         String totalSignInCount = String.valueOf(jsonObject.optInt("signInCount"));
                         String totalKcalComsuption = String.valueOf(Integer.valueOf(curTermAreaKcalConsumption) + Integer.valueOf(curTermRunningKcalConsumption));
                         double totalCostedTime = Double.valueOf(curTermAreaCostedTime) + Double.valueOf(curTermRunningCostedTime);
@@ -482,18 +483,26 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void initData() {
         tvUserName.setText(user.getStudent().getName());
 
-        GlideApp.with(this)
-                .load("http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg")
-                .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
-                .error(R.drawable.ic_default_avatar) // if a load fails.
-                .fallback(R.drawable.ic_default_avatar) // If a fallback is not set, null models will cause the error drawable to be displayed. If the error drawable is not set, the placeholder will be displayed.
-//                .fitCenter()
-//                .centerCrop()
-//                .miniThumb(50)
-                .circleCrop()
-                .transition(withCrossFade())
-                .into(ivAvatar);
-
+        if (!TextUtils.isEmpty(user.getAvatarUrl())) {
+            GlideApp.with(this)
+                    .load(user.getAvatarUrl())
+                    .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
+                    .error(R.drawable.ic_default_avatar) // if a load fails.
+                    .fallback(R.drawable.ic_default_avatar) // If a fallback is not set, null models will cause the error drawable to be displayed. If the error drawable is not set, the placeholder will be displayed.
+                    //                .fitCenter()
+                    //                .centerCrop()
+                    //                .miniThumb(50)
+                    .circleCrop()
+                    .transition(withCrossFade())
+                    .into(ivAvatar);
+        }else{
+            GlideApp.with(this)
+                    .load(null)
+                    .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
+                    .error(R.drawable.ic_default_avatar) // if a load fails.
+                    .circleCrop()
+                    .into(ivAvatar);
+        }
 
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
@@ -539,7 +548,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                             }
                                         }
                                     });
-                            builder.setMessage(changeLog.replace("\\n"," \n"));
+                            builder.setMessage(changeLog.replace("\\n", " \n"));
 
                             if (isForced) {//强制升级
                                 builder.setCancelable(false);
@@ -606,10 +615,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
-//            case tvLogout:
-//                startActivity(new Intent(this,LoginActivity.class));
-//                finish();
-//                break;
+            //            case tvLogout:
+            //                startActivity(new Intent(this,LoginActivity.class));
+            //                finish();
+            //                break;
             case R.id.llBadNetworkFresh:
                 queryCurTermData();
                 Log.d(TAG, "onClick llBadNetworkFresh");
