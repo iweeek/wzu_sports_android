@@ -730,7 +730,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             historySportEntry = new HistoryAreaSportEntry();
 
                             historySportEntry.setId(jsonObject.optInt("id"));
-                            historySportEntry.setAreaSportId(jsonObject.optInt("areaSportId"));
+                            historySportEntry.setSportId(jsonObject.optInt("areaSportId"));
                             historySportEntry.setStudentId(jsonObject.optInt("studentId"));
                             historySportEntry.setCostTime(jsonObject.optInt("costTime"));
                             historySportEntry.setStartTime(jsonObject.optLong("startTime"));

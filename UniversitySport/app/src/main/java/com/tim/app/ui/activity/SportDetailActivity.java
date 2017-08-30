@@ -913,7 +913,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             historySportEntry = new HistoryRunningSportEntry();
 
                             historySportEntry.setId(json.optInt("id"));
-                            historySportEntry.setRunningSportId(json.optInt("runningSportId"));
+                            historySportEntry.setSportId(json.optInt("runningSportId"));
                             historySportEntry.setStudentId(json.optInt("studentId"));
                             historySportEntry.setDistance(json.optInt("distance"));
                             historySportEntry.setStepCount(json.optInt("stepCount"));

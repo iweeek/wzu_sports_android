@@ -8,22 +8,12 @@ import java.io.Serializable;
  */
 public class HistoryRunningSportEntry extends HistorySportEntry implements Serializable {
     private static final long serialVersionUID = 6187447685293862071L;
-    private int runningSportId;
     private int distance;
     private int stepCount;
     private int speed;//速度
     private double stepPerSecond;
     private double distancePerStep;
     private int qualifiedDistance;
-
-
-    public int getRunningSportId() {
-        return runningSportId;
-    }
-
-    public void setRunningSportId(int runningSportId) {
-        this.runningSportId = runningSportId;
-    }
 
     public int getDistance() {
         return distance;
@@ -76,7 +66,6 @@ public class HistoryRunningSportEntry extends HistorySportEntry implements Seria
     @Override
     public String toString() {
         return "HistoryRunningSportEntry{" +
-                "runningSportId=" + runningSportId +
                 ", distance=" + distance +
                 ", stepCount=" + stepCount +
                 ", speed=" + speed +

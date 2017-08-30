@@ -14,6 +14,7 @@ public class HistorySportEntry implements Serializable {
 
     private long id;
     private int studentId;
+    private int sportId;
     private int costTime;
     private long targetFinishedTime;
     private long startTime;
@@ -45,6 +46,14 @@ public class HistorySportEntry implements Serializable {
 
     public void setStudentId(int studentId) {
         this.studentId = studentId;
+    }
+
+    public int getSportId() {
+        return sportId;
+    }
+
+    public void setSportId(int sportId) {
+        this.sportId = sportId;
     }
 
     public int getCostTime() {

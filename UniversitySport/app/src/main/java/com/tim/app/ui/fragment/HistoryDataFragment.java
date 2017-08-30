@@ -198,7 +198,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                     HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
                                     entry.setId(runningSportArray.optJSONObject(i).optInt("id"));
-                                    entry.setRunningSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
+                                    entry.setSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
                                     entry.setCostTime(Integer.valueOf(runningSportArray.optJSONObject(i).optString("costTime")));
                                     entry.setDistance(Integer.valueOf(runningSportArray.optJSONObject(i).optString("distance")));
                                     entry.setKcalConsumed(Integer.valueOf(runningSportArray.optJSONObject(i).optString("kcalConsumed")));
@@ -226,7 +226,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
                                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
                                     entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
-                                    entry.setAreaSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
+                                    entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
                                     entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));
                                     entry.setKcalConsumed(Integer.valueOf(areaSportArray.optJSONObject(i).optString("kcalConsumed")));
                                     entry.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
