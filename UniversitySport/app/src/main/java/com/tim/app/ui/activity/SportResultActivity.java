@@ -403,7 +403,8 @@ public class SportResultActivity extends BaseActivity {
                 if (errCode == 0) {
                     try {
                         mDrawPoints.clear();
-                        JSONArray jsonArray = json.getJSONObject("data").getJSONObject("runningActivity").getJSONArray("data");
+                        JSONArray jsonArray = json.optJSONObject("data").
+                                optJSONObject("runningActivity").optJSONArray("data");
                         if (jsonArray.length() == 0) {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
                             return true;
@@ -411,10 +412,10 @@ public class SportResultActivity extends BaseActivity {
 
                         //添加画线点
                         for (int i = 0; i < jsonArray.length(); i++) {
-                            LatLng ll = new LatLng(jsonArray.getJSONObject(i).getDouble("latitude"),
-                                    jsonArray.getJSONObject(i).getDouble("longitude"));
-                            DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getBoolean("isNormal"),
-                                    jsonArray.getJSONObject(i).getInt("locationType"));
+                            LatLng ll = new LatLng(jsonArray.optJSONObject(i).optDouble("latitude"),
+                                    jsonArray.optJSONObject(i).optDouble("longitude"));
+                            DrawPoint dp = new DrawPoint(ll, jsonArray.optJSONObject(i).optBoolean("isNormal"),
+                                    jsonArray.optJSONObject(i).optInt("locationType"));
                             mPoints.add(ll);
                             mDrawPoints.add(dp);
                         }
@@ -438,20 +439,26 @@ public class SportResultActivity extends BaseActivity {
                         }
 
                         // llCurrentInfo.setVisibility(View.VISIBLE);
-                        JSONObject jsonObject = json.getJSONObject("data").getJSONObject("runningActivity");
-                        currentDistance = jsonObject.getInt("distance");
+                        JSONObject jsonObject = json.optJSONObject("data").optJSONObject("runningActivity");
+                        currentDistance = jsonObject.optInt("distance");
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
 
-                        boolean qualified = jsonObject.getBoolean("qualified");
+                        boolean qualified = jsonObject.optBoolean("qualified");
+                        boolean isValid = json.optBoolean("isValid");
                         if (historySportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {
-                            if (qualified) {
-                                tvResult.setText("达标");
-                                tvResult.setTextColor(Color.GREEN);
+                            if (isValid) {
+                                if (qualified) {
+                                    tvResult.setText("达标");
+                                    tvResult.setTextColor(Color.GREEN);
+                                } else {
+                                    tvResult.setText("未达标");
+                                    tvResult.setTextColor(Color.RED);
+                                }
                             } else {
-                                tvResult.setText("未达标");
+                                tvResult.setText("数据异常");
                                 tvResult.setTextColor(Color.RED);
                             }
                         }
@@ -581,7 +588,7 @@ public class SportResultActivity extends BaseActivity {
                 break;
             case R.id.btDrawLine:
                 btDrawLine.setVisibility(View.GONE);
-//                llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportResultActivity.this, R.color.black_30));
+                //                llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportResultActivity.this, R.color.black_30));
 
                 LatLng ll = oldLatLng;
 
@@ -618,14 +625,14 @@ public class SportResultActivity extends BaseActivity {
                     //方式一：
                     LatLngBounds bounds = getLatLngBounds(mPoints.get(0), mNormalPoints);//以中心点缩放
                     DLOG.d(TAG, "onClick mNormalPoints.size: " + mNormalPoints.size());
-//                    LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
+                    //                    LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
                     for (LatLng point : mNormalPoints) {
                         Log.d(TAG, "point.latitude:" + point.latitude);
                         Log.d(TAG, "point.longitude:" + point.longitude);
-//                        DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
+                        //                        DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
                     }
                     //方式二：如下
-//                    LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
+                    //                    LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
 
                     aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); //平滑移动
 
@@ -652,14 +659,14 @@ public class SportResultActivity extends BaseActivity {
                                 @Override
                                 public void move(final double distance) {
 
-                                    Log.i("MY","distance:  "+distance);
+//                                    Log.i("MY", "distance:  " + distance);
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (infoWindowLayout != null && title != null && smoothMarker.getMarker().isInfoWindowShown()) {
                                                 title.setText("距离终点还有： " + (int) distance + "米");
                                             }
-                                            if(distance == 0){
+                                            if (distance == 0) {
                                                 smoothMarker.getMarker().hideInfoWindow();
                                             }
                                         }
