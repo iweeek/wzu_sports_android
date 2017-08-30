@@ -14,14 +14,11 @@ public class User implements Serializable {
     private String phone;
     private String username;
     private String password;
-    private String headpicthumb;
-    private String headpic;
     private String[] roles;
     private Long expiredDate;
     private String token;
+    private String avatarUrl;
     private Student student;
-
-
 
     @Override
     public String toString() {
@@ -30,11 +27,10 @@ public class User implements Serializable {
                 ", phone='" + phone + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", headpicthumb='" + headpicthumb + '\'' +
-                ", headpic='" + headpic + '\'' +
                 ", roles=" + Arrays.toString(roles) +
                 ", expiredDate=" + expiredDate +
                 ", token='" + token + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
                 ", student=" + student +
                 '}';
     }
@@ -71,22 +67,6 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public String getHeadpicthumb() {
-        return headpicthumb;
-    }
-
-    public void setHeadpicthumb(String headpicthumb) {
-        this.headpicthumb = headpicthumb;
-    }
-
-    public String getHeadpic() {
-        return headpic;
-    }
-
-    public void setHeadpic(String headpic) {
-        this.headpic = headpic;
-    }
-
     public String[] getRoles() {
         return roles;
     }
@@ -109,6 +89,14 @@ public class User implements Serializable {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public Student getStudent() {
