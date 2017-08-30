@@ -48,7 +48,7 @@
                             android:layout_centerInParent="true"
                             android:text="@string/curTermSportsCount"
                             android:textColor="#868892"
-                            android:textSize="14sp"/>
+                            android:textSize="14dp"/>
 
                     </RelativeLayout>
 
@@ -67,7 +67,7 @@
                             android:layout_centerInParent="true"
                             android:text="60"
                             android:textColor="#000"
-                            android:textSize="60sp"/>
+                            android:textSize="60dp"/>
 
                     </RelativeLayout>
 
@@ -83,7 +83,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/signInCount"
                             android:textColor="#868892"
-                            android:textSize="14sp"/>
+                            android:textSize="14dp"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -95,13 +95,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000"
-                                android:textSize="20sp"/>
+                                android:textSize="20dp"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="/"
-                                android:textSize="20sp"/>
+                                android:textSize="20dp"/>
 
 
                             <TextView
@@ -109,7 +109,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000"
-                                android:textSize="20sp"/>
+                                android:textSize="20dp"/>
                         </LinearLayout>
 
                         <ProgressBar
@@ -142,14 +142,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/consumeCalorie"
                                 android:textColor="#868892"
-                                android:textSize="14sp"/>
+                                android:textSize="14dp"/>
 
                             <TextView
                                 android:id="@+id/tvAccumulCostEnergy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000"
-                                android:textSize="20sp"/>
+                                android:textSize="20dp"/>
                         </LinearLayout>
 
                         <LinearLayout
@@ -166,7 +166,7 @@
                                 android:layout_centerVertical="true"
                                 android:text="@string/consumeMinute"
                                 android:textColor="#868892"
-                                android:textSize="14sp"/>
+                                android:textSize="14dp"/>
 
                             <TextView
                                 android:id="@+id/tvAccumulCostTime"
@@ -175,7 +175,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:textColor="#000"
-                                android:textSize="20sp"/>
+                                android:textSize="20dp"/>
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -204,7 +204,7 @@
                     android:drawableStart="@drawable/ic_charts"
                     android:text="校园排行榜"
                     android:textColor="#868892"
-                    android:textSize="16sp"/>
+                    android:textSize="16dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
