@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -31,6 +32,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
+import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
@@ -631,20 +633,19 @@ public class SportResultActivity extends BaseActivity {
                     // 设置滑动的图标
                     smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
 
-                    /*
-                    LatLng drivePoint = mNormalPoints.get(0);
+                    //当移动Marker的当前位置不在轨迹起点，先从当前位置移动到轨迹上，再开始平滑移动
+                    LatLng drivePoint = mNormalPoints.get(0);//设置当前位置，可以是任意点，这里直接设置为轨迹起点
                     //计算一个点在线上的垂足，如果垂足在线上的某一顶点，则直接返回顶点的下标
                     Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(mNormalPoints, drivePoint);
                     mNormalPoints.set(pair.first, drivePoint);
                     List<LatLng> subList = mNormalPoints.subList(pair.first, mNormalPoints.size());
-                    */
-
 
                     // 设置滑动的轨迹左边点
                     smoothMarker.setPoints(mNormalPoints);
                     // 设置滑动的总时间
                     smoothMarker.setTotalDuration(10);
 
+                    //设置距离终点还剩多少米
                     aMap.setInfoWindowAdapter(infoWindowAdapter);
                     smoothMarker.setMoveListener(
                             new SmoothMoveMarker.MoveListener() {
@@ -666,7 +667,6 @@ public class SportResultActivity extends BaseActivity {
                                 }
                             });
                     smoothMarker.getMarker().showInfoWindow();
-
 
                     // 开始滑动
                     smoothMarker.startSmoothMove();
