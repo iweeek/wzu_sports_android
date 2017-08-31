@@ -7,7 +7,7 @@ package com.tim.app.constant;
  */
 
 public class AppStatusManager {
-    public int appStatus= AppStatusConstant.STATUS_FORCE_KILLED;        //APP状态 初始值为没启动 不在前台状态
+    public int appStatus = AppStatusConstant.STATUS_FORCE_KILLED;        //APP状态 初始值为没启动 不在前台状态
 
     public static AppStatusManager appStatusManager;
 

@@ -32,7 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
              */
             case AppStatusConstant.STATUS_FORCE_KILLED:
                 //跳到主页,主页lauchmode SINGLETASK
-                protectApp();
+                restartApp();
                 break;
             /**
              * 用户被踢或者TOKEN失效
@@ -55,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    protected void protectApp() {
+    protected void restartApp() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(AppStatusConstant.KEY_HOME_ACTION, AppStatusConstant.ACTION_RESTART_APP);
         startActivity(intent);

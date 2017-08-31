@@ -132,9 +132,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     //TODO https://juejin.im/entry/582180a3bf22ec0068e2285d
     @Override
-    protected void protectApp() {
-        Toast.makeText(getApplicationContext(),"应用被回收重启走流程",Toast.LENGTH_LONG).show();
-        Log.d(TAG, "应用被回收重启走流程");
+    protected void restartApp() {
+//        Toast.makeText(getApplicationContext(), "应用被回收重启走流程", Toast.LENGTH_LONG).show();
+//        Log.d(TAG, "应用被回收重启走流程");
         startActivity(new Intent(this, SplashActivity.class));
         finish();
     }
@@ -145,7 +145,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         int action = intent.getIntExtra(AppStatusConstant.KEY_HOME_ACTION, AppStatusConstant.ACTION_BACK_TO_HOME);
         switch (action) {
             case AppStatusConstant.ACTION_RESTART_APP:
-                protectApp();
+                restartApp();
                 break;
             case AppStatusConstant.ACTION_KICK_OUT:
                 break;

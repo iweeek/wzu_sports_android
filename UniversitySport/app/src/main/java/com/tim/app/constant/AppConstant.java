@@ -47,7 +47,7 @@ public class AppConstant {
     /*
     * 微信
     * */
-    public static  final  String APP_ID = "wxc602178d95890ea2";
+    public static final String APP_ID = "wxc602178d95890ea2";
 
     /*
     * 运动类型
