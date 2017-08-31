@@ -24,7 +24,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -81,7 +80,7 @@ import static com.tim.app.constant.AppConstant.student;
 /**
  * 跑步运动详情页
  */
-public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener {
+public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocationChangeListener, AMap.OnMapClickListener {
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
@@ -351,6 +350,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         aMap.getUiSettings().setCompassEnabled(true);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位`蓝点并不进行定位，默认是false。
+        aMap.setOnMapClickListener(this);
+    }
+
+    /**
+     * 高德地图自己的回调
+     * @param lng
+     */
+    @Override
+    public void onMapClick(LatLng lng) {
+        turnUpScreen();
     }
 
     private void setupLocationStyle() {
@@ -360,15 +369,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.drawable.navi_map_gps_locked));
         aMap.setMyLocationStyle(myLocationStyle);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.screenBrightness = (float) 1;
-        getWindow().setAttributes(params);
-        Log.d(TAG, "onTouchEvent turn up light");
-        return false;
     }
 
     @Override
