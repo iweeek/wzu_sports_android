@@ -121,7 +121,7 @@
                 android:id="@+id/tvSecondName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#d62a9d"
+                android:textColor="#03a6ff"
                 android:textSize="16dp"/>
 
             <LinearLayout
@@ -133,7 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="#d62a9d"
+                    android:textColor="#03a6ff"
                     android:textSize="14dp"
                     />
 
@@ -141,7 +141,7 @@
                     android:id="@+id/tvSecondUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#d62a9d"
+                    android:textColor="#03a6ff"
                     android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -157,7 +157,7 @@
                 android:id="@+id/tvFirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ed317f"
+                android:textColor="#0080ff"
                 android:textSize="16dp"/>
 
             <LinearLayout
@@ -168,14 +168,14 @@
                     android:id="@+id/tvFirst"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ed317f"
+                    android:textColor="#0080ff"
                     android:textSize="14dp"/>
 
                 <TextView
                     android:id="@+id/tvFirstUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#ed317f"
+                    android:textColor="#0080ff"
                     android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
@@ -191,7 +191,7 @@
                 android:id="@+id/tvThirdName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#bf209f"
+                android:textColor="#1ec0ff"
                 android:textSize="16dp"/>
 
             <LinearLayout
@@ -202,14 +202,14 @@
                     android:id="@+id/tvThird"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#bf209f"
+                    android:textColor="#1ec0ff"
                     android:textSize="14dp"/>
 
                 <TextView
                     android:id="@+id/tvThirdUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#bf209f"
+                    android:textColor="#1ec0ff"
                     android:textSize="12dp"/>
             </LinearLayout>
         </LinearLayout>
