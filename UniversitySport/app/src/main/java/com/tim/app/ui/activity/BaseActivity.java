@@ -60,12 +60,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         intent.putExtra(AppStatusConstant.KEY_HOME_ACTION, AppStatusConstant.ACTION_RESTART_APP);
         startActivity(intent);
     }
-    
-    @Override
-    public void onBackPressed() {
-        // 返回默认结束当前页面
-        finish();
-    }
 
     protected void onBeforeSetContentLayout() {
     }
