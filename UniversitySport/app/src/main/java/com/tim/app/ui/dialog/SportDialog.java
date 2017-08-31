@@ -3,8 +3,10 @@ package com.tim.app.ui.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 
 import com.tim.app.R;
 
@@ -25,5 +27,13 @@ public class SportDialog extends Dialog implements OnClickListener{
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public boolean onTouchEvent(@NonNull MotionEvent event) {
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.screenBrightness = (float) 1;
+        getWindow().setAttributes(params);
+        return super.onTouchEvent(event);
     }
 }
