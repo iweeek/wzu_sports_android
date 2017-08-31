@@ -1,110 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.tim.app.ui.view.RankingDataHeadView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+                                         xmlns:app="http://schemas.android.com/apk/res-auto"
+                                         android:layout_width="match_parent"
+                                         android:layout_height="match_parent"
+                                         android:background="@color/white"
+                                         android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="226dp"
+        android:layout_height="130dp"
         android:orientation="horizontal">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center_horizontal|bottom"
+            >
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="102dp">
+                android:layout_height="105dp">
 
                 <com.application.library.widget.roundimg.RoundedImageView
                     android:id="@+id/rivSecondAvatar"
-                    android:layout_width="83.5dp"
-                    android:layout_height="83.5dp"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
                     android:background="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"
                     app:oval="true"
                     app:riv_border_color="@color/white"
-                    app:riv_border_width="3dp" />
+                    app:riv_border_width="3dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:background="@drawable/ic_second_label" />
+                    android:background="@drawable/ic_second_label"/>
             </RelativeLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center_horizontal|bottom">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="129dp">
+                android:layout_height="120dp">
 
                 <com.application.library.widget.roundimg.RoundedImageView
                     android:id="@+id/rivFristAvatar"
-                    android:layout_width="116dp"
-                    android:layout_height="116dp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:background="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"
                     app:oval="true"
                     app:riv_border_color="@color/white"
-                    app:riv_border_width="3dp" />
+                    app:riv_border_width="3dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:background="@drawable/ic_first_label" />
+                    android:background="@drawable/ic_first_label"/>
             </RelativeLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center_horizontal|bottom"
+            >
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="102dp">
+                android:layout_height="95dp">
 
                 <com.application.library.widget.roundimg.RoundedImageView
                     android:id="@+id/rivThirdAvatar"
-                    android:layout_width="83.5dp"
-                    android:layout_height="83.5dp"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
                     android:background="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"
                     app:oval="true"
                     app:riv_border_color="@color/white"
-                    app:riv_border_width="3dp" />
+                    app:riv_border_width="3dp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:background="@drawable/ic_third_label" />
+                    android:background="@drawable/ic_third_label"/>
             </RelativeLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -118,16 +121,29 @@
                 android:id="@+id/tvSecondName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#535353"
-                android:textSize="21dp" />
+                android:textColor="#d62a9d"
+                android:textSize="16dp"/>
 
-            <TextView
-                android:id="@+id/tvSecondUnit"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="#535353"
-                android:textSize="12dp" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvSecond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#d62a9d"
+                    android:textSize="14dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tvSecondUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#d62a9d"
+                    android:textSize="12dp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -137,20 +153,31 @@
             android:gravity="top|center_horizontal"
             android:orientation="vertical">
 
-
             <TextView
                 android:id="@+id/tvFirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#535353"
-                android:textSize="21dp" />
+                android:textColor="#ed317f"
+                android:textSize="16dp"/>
 
-            <TextView
-                android:id="@+id/tvFirstUnit"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#535353"
-                android:textSize="12dp" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvFirst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ed317f"
+                    android:textSize="14dp"/>
+
+                <TextView
+                    android:id="@+id/tvFirstUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ed317f"
+                    android:textSize="12dp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -164,22 +191,34 @@
                 android:id="@+id/tvThirdName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#535353"
-                android:textSize="21dp" />
+                android:textColor="#bf209f"
+                android:textSize="16dp"/>
 
-            <TextView
-                android:id="@+id/tvThirdUnit"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#535353"
-                android:textSize="12dp" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvThird"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#bf209f"
+                    android:textSize="14dp"/>
+
+                <TextView
+                    android:id="@+id/tvThirdUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#bf209f"
+                    android:textSize="12dp"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="#edf0f2" />
+        android:layout_height="10px"
+        android:background="#edf0f2"/>
 
 
 </com.tim.app.ui.view.RankingDataHeadView>

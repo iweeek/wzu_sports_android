@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:paddingLeft="15dp">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="15dp">
 
 
     <LinearLayout
         android:id="@+id/llRight"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingRight="15dp">
+        >
 
         <TextView
             android:id="@+id/tvCostNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:text="1200"
-            android:textColor="#7E848c"
-            android:textSize="25dp" />
+            android:textColor="#6a60a9"
+            android:textSize="14dp"/>
 
         <TextView
             android:id="@+id/tvCostUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#7E848c"
-            android:textSize="15dp" />
+            android:text="@string/calorie"
+            android:textColor="#6a60a9"
+            android:textSize="12dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/llRight"
@@ -50,23 +53,24 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="4"
-            android:textColor="#474A4F"
-            android:textSize="21dp" />
+            android:textColor="#9DC8C8"
+            android:textSize="20dp"/>
 
         <com.application.library.widget.roundimg.RoundedImageView
             android:id="@+id/rivAvatar"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_marginRight="10dp"  android:scaleType="centerCrop"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/ic_default_avatar"
-            app:oval="true" />
+            android:scaleType="centerCrop"
+            app:oval="true"/>
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#474A4F"
-            android:textSize="21dp" />
+            android:textColor="#6a60a9"
+            android:textSize="16dp"/>
     </LinearLayout>
 
     <View
@@ -74,5 +78,5 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
-        android:background="#EDEFF2" />
+        android:background="#EDEFF2"/>
 </RelativeLayout>

@@ -122,12 +122,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                     if (errCode == 0) {
 
                         Log.d(TAG, "pageNoEnergy:" + pageNoEnergy);
-
+                        JSONObject jsonObject = json.optJSONObject("data").optJSONObject("university")
+                                .optJSONObject("kcalConsumptionRanking");
                         try {
-                            pageCountEnergy = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
-                                    .optJSONObject("kcalConsumptionRanking").getString("pagesCount"));
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("kcalConsumptionRanking").
-                                    getJSONArray("data");
+                            pageCountEnergy = Integer.valueOf(jsonObject.optString("pagesCount"));
+                            JSONArray rankingDataArray = jsonObject.optJSONArray("data");
                             RankingData headData[] = new RankingData[3];
                             for (int i = 0; i < 3; i++) {
                                 headData[i] = new RankingData();
@@ -177,11 +176,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
+                        JSONObject jsonObject = json.optJSONObject("data").optJSONObject("university")
+                                .optJSONObject("timeCostedRanking");
                         try {
-                            pageCountEnergy = Integer.valueOf(json.optJSONObject("data").optJSONObject("university")
-                                    .optJSONObject("timeCostedRanking").getString("pagesCount"));
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
-                                    getJSONArray("data");
+                            pageCountEnergy = Integer.valueOf(jsonObject.getString("pagesCount"));
+                            JSONArray rankingDataArray = jsonObject.getJSONArray("data");
                             RankingData headData[] = new RankingData[3];
                             for (int i = 0; i < 3; i++) {
                                 headData[i] = new RankingData();
