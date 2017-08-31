@@ -359,11 +359,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         turnUpScreen();
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        turnUpScreen();
-        return false;
-    }
-
     private void setupLocationStyle() {
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
