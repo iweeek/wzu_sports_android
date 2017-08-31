@@ -33,7 +33,7 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder
-                holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_rank_data, parent,false));
+                holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_rank_data, parent, false));
         return holder;
     }
 
@@ -46,13 +46,13 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
 
         if (data.getCostValue() > 0 && type == AppConstant.TYPE_COST_ENERGY) {
             holder.tvCostNumber.setText(String.valueOf(data.getCostValue()));
-        }else if(data.getCostValue() > 0 && type == AppConstant.TYPE_COST_TIME){
+        } else if (data.getCostValue() > 0 && type == AppConstant.TYPE_COST_TIME) {
             holder.tvCostNumber.setText(String.valueOf(data.getCostValue() / 60));
         }
         if (AppConstant.TYPE_COST_TIME == type) {
-            holder.tvCostUnit.setText(mContext.getString(R.string.minute));
+            holder.tvCostUnit.setText(" " + mContext.getString(R.string.minute));
         } else if (AppConstant.TYPE_COST_ENERGY == type) {
-            holder.tvCostUnit.setText(mContext.getString(R.string.calorie));
+            holder.tvCostUnit.setText(" " + mContext.getString(R.string.calorie));
         }
         if (!TextUtils.isEmpty(data.getUserName())) {
             holder.tvName.setText(data.getUserName());

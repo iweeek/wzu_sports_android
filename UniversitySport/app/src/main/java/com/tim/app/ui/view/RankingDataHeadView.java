@@ -23,13 +23,16 @@ public class RankingDataHeadView extends LinearLayout {
     RoundedImageView rivSecondAvatar;
     RoundedImageView rivThirdAvatar;
 
-    private TextView tvSecondName;
-    private TextView tvSecondUnit;
-
     private TextView tvFirstName;
-    private TextView tvFirstUnit;
-
+    private TextView tvSecondName;
     private TextView tvThirdName;
+
+    private TextView tvFirst;
+    private TextView tvSecond;
+    private TextView tvThird;
+
+    private TextView tvFirstUnit;
+    private TextView tvSecondUnit;
     private TextView tvThirdUnit;
 
     public RankingDataHeadView(Context context, @Nullable AttributeSet attrs) {
@@ -45,10 +48,14 @@ public class RankingDataHeadView extends LinearLayout {
         rivThirdAvatar = (RoundedImageView) findViewById(R.id.rivThirdAvatar);
 
         tvFirstName = (TextView) findViewById(R.id.tvFirstName);
-        tvFirstUnit = (TextView) findViewById(R.id.tvFirstUnit);
         tvSecondName = (TextView) findViewById(R.id.tvSecondName);
-
         tvThirdName = (TextView) findViewById(R.id.tvThirdName);
+
+        tvFirst = (TextView) findViewById(R.id.tvFirst);
+        tvSecond = (TextView) findViewById(R.id.tvSecond);
+        tvThird = (TextView) findViewById(R.id.tvThird);
+
+        tvFirstUnit = (TextView) findViewById(R.id.tvFirstUnit);
         tvSecondUnit = (TextView) findViewById(R.id.tvSecondUnit);
         tvThirdUnit = (TextView) findViewById(R.id.tvThirdUnit);
     }
@@ -68,13 +75,23 @@ public class RankingDataHeadView extends LinearLayout {
             BitmapLoader.ins().loadImage(data[2].getAvatar(), R.drawable.ic_default_avatar, rivThirdAvatar);
         }
         if (AppConstant.TYPE_COST_TIME == type) {
-            tvFirstUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[0].getCostValue() / 60)));
-            tvSecondUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[1].getCostValue() / 60)));
-            tvThirdUnit.setText(context.getString(R.string.minutePlaceHolder,String.valueOf(data[2].getCostValue() / 60)));
+            tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[0].getCostValue() / 60)));
+            tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[1].getCostValue() / 60)));
+            tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[2].getCostValue() / 60)));
+
+            String unit = " " + context.getString(R.string.calorie);
+            tvFirstUnit.setText(unit);
+            tvSecondUnit.setText(unit);
+            tvThirdUnit.setText(unit);
         } else {
-            tvFirstUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[0].getCostValue())));
-            tvSecondUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[1].getCostValue())));
-            tvThirdUnit.setText(context.getString(R.string.caloriePlaceholder,String.valueOf(data[2].getCostValue())));
+            tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[0].getCostValue())));
+            tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[1].getCostValue())));
+            tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[2].getCostValue())));
+
+            String unit = " " + context.getString(R.string.minute);
+            tvFirstUnit.setText(unit);
+            tvSecondUnit.setText(unit);
+            tvThirdUnit.setText(unit);
         }
     }
 
