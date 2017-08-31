@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -16,6 +17,8 @@ import android.widget.Button;
 
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.constant.AppStatusConstant;
+import com.tim.app.constant.AppStatusManager;
 import com.tim.app.server.entry.User;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.util.ViewGT;
@@ -36,6 +39,12 @@ public class SplashActivity extends BaseActivity {
     private static int DELAY_TIME = 500;
 
     private Button btLogin;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        AppStatusManager.getInstance().setAppStatus(AppStatusConstant.STATUS_NORMAL); //进入应用初始化设置成未登录状态
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void onBeforeSetContentLayout() {
