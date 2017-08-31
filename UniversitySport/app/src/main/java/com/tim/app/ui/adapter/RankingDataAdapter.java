@@ -12,7 +12,7 @@ import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
-import com.tim.app.util.BitmapLoader;
+import com.tim.app.ui.cell.GlideApp;
 
 import java.util.List;
 
@@ -21,12 +21,12 @@ import java.util.List;
  */
 public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankingData> {
 
-    private Context mContext;
+    private Context context;
     private int type;
 
     public RankingDataAdapter(Context mContext, List<RankingData> mDataList, int type) {
         super(mDataList);
-        this.mContext = mContext;
+        this.context = mContext;
         this.type = type;
     }
 
@@ -50,15 +50,19 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvCostNumber.setText(String.valueOf(data.getCostValue() / 60));
         }
         if (AppConstant.TYPE_COST_TIME == type) {
-            holder.tvCostUnit.setText(" " + mContext.getString(R.string.minute));
+            holder.tvCostUnit.setText(" " + context.getString(R.string.minute));
         } else if (AppConstant.TYPE_COST_ENERGY == type) {
-            holder.tvCostUnit.setText(" " + mContext.getString(R.string.calorie));
+            holder.tvCostUnit.setText(" " + context.getString(R.string.calorie));
         }
         if (!TextUtils.isEmpty(data.getUserName())) {
             holder.tvName.setText(data.getUserName());
         }
         if (!TextUtils.isEmpty(data.getAvatar())) {
-            BitmapLoader.ins().loadImage(data.getAvatar(), R.drawable.ic_default_avatar, holder.rivAvatar);
+            GlideApp.with(context)
+                    .load(data.getAvatar())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(holder.rivAvatar);
         }
         holder.tvNo.setText(String.valueOf(position + 4));
         if (position != getDataList().size() - 1) {
@@ -89,7 +93,5 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             vLine = (View) itemView.findViewById(R.id.vLine);
         }
-
     }
-
 }

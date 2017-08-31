@@ -11,7 +11,7 @@ import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
-import com.tim.app.util.BitmapLoader;
+import com.tim.app.ui.cell.GlideApp;
 
 /**
  * 排行数据的headerview
@@ -66,13 +66,25 @@ public class RankingDataHeadView extends LinearLayout {
         tvThirdName.setText(data[2].getUserName());
 
         if (!TextUtils.isEmpty(data[0].getAvatar())) {
-            BitmapLoader.ins().loadImage(data[0].getAvatar(), R.drawable.ic_default_avatar, rivFirstAvatar);
+            GlideApp.with(context)
+                    .load(data[0].getAvatar())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(rivFirstAvatar);
         }
         if (!TextUtils.isEmpty(data[1].getAvatar())) {
-            BitmapLoader.ins().loadImage(data[1].getAvatar(), R.drawable.ic_default_avatar, rivSecondAvatar);
+            GlideApp.with(context)
+                    .load(data[1].getAvatar())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(rivSecondAvatar);
         }
         if (!TextUtils.isEmpty(data[2].getAvatar())) {
-            BitmapLoader.ins().loadImage(data[2].getAvatar(), R.drawable.ic_default_avatar, rivThirdAvatar);
+            GlideApp.with(context)
+                    .load(data[2].getAvatar())
+                    .placeholder(R.drawable.ic_default_avatar)
+                    .circleCrop()
+                    .into(rivThirdAvatar);
         }
         if (AppConstant.TYPE_COST_TIME == type) {
             tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[0].getCostValue() / 60)));
