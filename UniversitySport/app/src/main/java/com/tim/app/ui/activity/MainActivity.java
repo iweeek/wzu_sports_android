@@ -34,6 +34,7 @@ import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
+import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
@@ -129,13 +130,29 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         context.startActivity(intent);
     }
 
-    //    public static void start(Context context, User user, Student student) {
-    //        Intent intent = new Intent(context, MainActivity.class);
-    //        intent.putExtra("user", user);
-    //        intent.putExtra("student", student);
-    //        context.startActivity(intent);
-    //    }
+    //TODO https://juejin.im/entry/582180a3bf22ec0068e2285d
+    @Override
+    protected void protectApp() {
+        Toast.makeText(getApplicationContext(),"应用被回收重启走流程",Toast.LENGTH_LONG).show();
+        Log.d(TAG, "应用被回收重启走流程");
+        startActivity(new Intent(this, SplashActivity.class));
+        finish();
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int action = intent.getIntExtra(AppStatusConstant.KEY_HOME_ACTION, AppStatusConstant.ACTION_BACK_TO_HOME);
+        switch (action) {
+            case AppStatusConstant.ACTION_RESTART_APP:
+                protectApp();
+                break;
+            case AppStatusConstant.ACTION_KICK_OUT:
+                break;
+            case AppStatusConstant.ACTION_BACK_TO_HOME:
+                break;
+        }
+    }
 
     private boolean isOpen;
 

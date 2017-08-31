@@ -2,6 +2,7 @@ package com.tim.app.ui.activity;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import com.application.library.base.BaseViewInterface;
 import com.application.library.dialog.LoadingDialog;
 import com.application.library.runtime.ActivityManager;
 import com.lzy.okhttputils.OkHttpUtils;
+import com.tim.app.constant.AppStatusConstant;
+import com.tim.app.constant.AppStatusManager;
 
 
 public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener, BaseViewInterface {
@@ -21,14 +24,47 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityManager.ins().addActivity(this);
-        onBeforeSetContentLayout();
-        if (getLayoutId() > 0) {
-            setContentView(getLayoutId());
+
+        //解决应用被杀死的情况
+        switch (AppStatusManager.getInstance().getAppStatus()) {
+            /**
+             * 应用被强杀
+             */
+            case AppStatusConstant.STATUS_FORCE_KILLED:
+                //跳到主页,主页lauchmode SINGLETASK
+                protectApp();
+                break;
+            /**
+             * 用户被踢或者TOKEN失效
+             */
+            case AppStatusConstant.STATUS_KICK_OUT:
+                //弹出对话框,点击之后跳到主页,清除用户信息,运行退出登录逻辑
+                //                Intent intent=new Intent(this,MainActivity.class);
+                //                startActivity(intent);
+                break;
+            case AppStatusConstant.STATUS_NORMAL:
+                ActivityManager.ins().addActivity(this);
+                onBeforeSetContentLayout();
+                if (getLayoutId() > 0) {
+                    setContentView(getLayoutId());
+                }
+                init(savedInstanceState);
+                initView();
+                initData();
+                break;
         }
-        init(savedInstanceState);
-        initView();
-        initData();
+    }
+
+    protected void protectApp() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(AppStatusConstant.KEY_HOME_ACTION, AppStatusConstant.ACTION_RESTART_APP);
+        startActivity(intent);
+    }
+    
+    @Override
+    public void onBackPressed() {
+        // 返回默认结束当前页面
+        finish();
     }
 
     protected void onBeforeSetContentLayout() {
