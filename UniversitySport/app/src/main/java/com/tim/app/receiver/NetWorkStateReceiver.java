@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 /**
  * @创建者 倪军
@@ -30,13 +29,13 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
             //获取移动数据连接的信息
             NetworkInfo dataNetworkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if (wifiNetworkInfo.isConnected() && dataNetworkInfo.isConnected()) {
-                Toast.makeText(context, "WIFI已连接,移动数据已连接", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "WIFI已连接,移动数据已连接", Toast.LENGTH_LONG).show();
             } else if (wifiNetworkInfo.isConnected() && !dataNetworkInfo.isConnected()) {
-                Toast.makeText(context, "WIFI已连接,移动数据已断开", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "WIFI已连接,移动数据已断开", Toast.LENGTH_LONG).show();
             } else if (!wifiNetworkInfo.isConnected() && dataNetworkInfo.isConnected()) {
-                Toast.makeText(context, "WIFI已断开,移动数据已连接", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "WIFI已断开,移动数据已连接", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(context, "WIFI已断开,移动数据已断开", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "WIFI已断开,移动数据已断开", Toast.LENGTH_LONG).show();
             }
             //API大于23时使用下面的方式进行网络监听
         } else {
@@ -55,7 +54,7 @@ public class NetWorkStateReceiver extends BroadcastReceiver {
                 NetworkInfo networkInfo = connMgr.getNetworkInfo(networks[i]);
                 sb.append(networkInfo.getTypeName() + " connect is " + networkInfo.isConnected());
             }
-            Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, sb.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 }

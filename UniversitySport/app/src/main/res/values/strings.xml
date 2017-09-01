@@ -152,9 +152,9 @@
     <string name="score">得分:%s</string>
     <string name="scoreDesc">成绩:%s</string>
 
-    <string name="calorie">千卡</string>
-    <string name="consumeCalorie">消耗(千卡)</string>
-    <string name="caloriePlaceholder">%s 千卡</string>
+    <string name="kcal">千卡</string>
+    <string name="consumeKcal">消耗(千卡)</string>
+    <string name="kcalPlaceholder">%s 千卡</string>
     <string name="curConsumeEnergy">本次消耗热量：</string>
     <string name="curConsumeEnergyTemp">本次消耗热量: %s千卡</string>
     
