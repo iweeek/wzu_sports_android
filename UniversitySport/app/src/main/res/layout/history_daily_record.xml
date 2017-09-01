@@ -51,7 +51,7 @@
                     android:id="@+id/tvEnergyCost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/calorie"
+                    android:text="@string/kCalorie"
                     android:textColor="#979ea3"
                     android:textSize="14dp" />
             </LinearLayout>
