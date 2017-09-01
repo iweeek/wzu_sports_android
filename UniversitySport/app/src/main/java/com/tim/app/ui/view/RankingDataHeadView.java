@@ -100,7 +100,7 @@ public class RankingDataHeadView extends LinearLayout {
             tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[1].getCostValue())));
             tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[2].getCostValue())));
 
-            String unit = " " + context.getString(R.string.kCalorie);
+            String unit = " " + context.getString(R.string.kcal);
             tvFirstUnit.setText(unit);
             tvSecondUnit.setText(unit);
             tvThirdUnit.setText(unit);

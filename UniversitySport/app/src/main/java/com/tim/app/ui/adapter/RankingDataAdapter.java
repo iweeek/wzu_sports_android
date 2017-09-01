@@ -52,7 +52,7 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (AppConstant.TYPE_COST_TIME == type) {
             holder.tvCostUnit.setText(" " + context.getString(R.string.minute));
         } else if (AppConstant.TYPE_COST_ENERGY == type) {
-            holder.tvCostUnit.setText(" " + context.getString(R.string.kCalorie));
+            holder.tvCostUnit.setText(" " + context.getString(R.string.kcal));
         }
         if (!TextUtils.isEmpty(data.getUserName())) {
             holder.tvName.setText(data.getUserName());
