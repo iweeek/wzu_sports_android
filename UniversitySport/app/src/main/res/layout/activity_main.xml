@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dl_main_drawer"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        android:id="@+id/dl_main_drawer"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,35 +15,35 @@
         <include layout="@layout/cell_toolbar"/>
 
         <!--<RelativeLayout-->
-            <!--android:id="@+id/rlTitle"-->
-            <!--style="@style/TitleBarStyle"-->
-            <!--android:background="@color/blue"-->
-            <!--android:padding="20dp">-->
+        <!--android:id="@+id/rlTitle"-->
+        <!--style="@style/TitleBarStyle"-->
+        <!--android:background="@color/blue"-->
+        <!--android:padding="20dp">-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/ibMenu"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:background="@color/transparent"-->
-                <!--android:src="@drawable/ic_menu" />-->
+        <!--<ImageView-->
+        <!--android:id="@+id/ibMenu"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:background="@color/transparent"-->
+        <!--android:src="@drawable/ic_menu" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvTitle"-->
-                <!--style="@style/TitleTextStyle"-->
-                <!--android:layout_marginStart="50dp"-->
-                <!--android:text="课外体育锻炼" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/tvTitle"-->
+        <!--style="@style/TitleTextStyle"-->
+        <!--android:layout_marginStart="50dp"-->
+        <!--android:text="课外体育锻炼" />-->
 
-            <!--<ImageView-->
-                <!--android:id="@+id/ibNotify"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:background="@color/transparent"-->
-                <!--android:src="@drawable/ic_notify"-->
-                <!--android:visibility="gone" />-->
+        <!--<ImageView-->
+        <!--android:id="@+id/ibNotify"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:background="@color/transparent"-->
+        <!--android:src="@drawable/ic_notify"-->
+        <!--android:visibility="gone" />-->
 
         <!--</RelativeLayout>-->
 
@@ -74,22 +74,22 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             app:itemTextColor="@color/menu_text_color_selector"
-            app:menu="@menu/drawer_view" />
+            app:menu="@menu/drawer_view"/>
 
         <!--<TextView-->
-            <!--android:id="@+id/tvLogout"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_marginBottom="20dp"-->
-            <!--android:layout_marginRight="20dp"-->
-            <!--android:clickable="true"-->
-            <!--android:drawableLeft="@drawable/bt_logout_selector"-->
-            <!--android:drawablePadding="10dp"-->
-            <!--android:padding="5dp"-->
-            <!--android:text="退出帐号"-->
-            <!--android:textColor="@color/logout_text_color_selector"-->
-            <!--android:textSize="15dp" />-->
+        <!--android:id="@+id/tvLogout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:layout_marginRight="20dp"-->
+        <!--android:clickable="true"-->
+        <!--android:drawableLeft="@drawable/bt_logout_selector"-->
+        <!--android:drawablePadding="10dp"-->
+        <!--android:padding="5dp"-->
+        <!--android:text="退出帐号"-->
+        <!--android:textColor="@color/logout_text_color_selector"-->
+        <!--android:textSize="15dp" />-->
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
