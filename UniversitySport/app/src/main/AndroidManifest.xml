@@ -111,7 +111,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.tim.app.ui.activity.SportDetailActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.tim.app.ui.activity.SportFixedLocationActivity"
