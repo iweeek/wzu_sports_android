@@ -20,7 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     private static final String TAG = "BaseActivity";
     private LoadingDialog mLoadingDialog;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

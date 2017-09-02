@@ -5,6 +5,8 @@
     <color name="colorAccent">#eeeeee</color>
 
     <color name="colorTheme">#66A6FE</color>
+    <color name="about_header_background">@color/colorTheme</color>
+
 
     <color name="white">#ffffff</color>
     <color name="login_btn_text_color">#535353</color>
