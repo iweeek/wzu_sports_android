@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
@@ -62,7 +62,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/signInCount"
                         android:textColor="#7f858e"
-                        android:textSize="16sp"/>
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:id="@+id/tvSignInCount"
@@ -71,7 +71,7 @@
                         android:layout_gravity="center"
                         android:text="8"
                         android:textColor="#474b4f"
-                        android:textSize="16sp"/>
+                        android:textSize="16dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/consumeKcal"
                         android:textColor="#7f858e"
-                        android:textSize="16sp"/>
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:id="@+id/tvEnergyCost"
@@ -101,7 +101,7 @@
                         android:text="1200"
                         android:layout_gravity="center"
                         android:textColor="#474b4f"
-                        android:textSize="16sp"/>
+                        android:textSize="16dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -122,7 +122,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/consumeMinute"
                         android:textColor="#7f858e"
-                        android:textSize="16sp"/>
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:id="@+id/tvTimeCost"
@@ -131,7 +131,7 @@
                         android:layout_gravity="center"
                         android:text="120"
                         android:textColor="#474b4f"
-                        android:textSize="16sp"/>
+                        android:textSize="16dp"/>
                 </LinearLayout>
             </LinearLayout>
 
