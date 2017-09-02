@@ -583,7 +583,7 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibMenu:
+            case R.id.ivTitleMenu:
                 finish();
                 break;
             case R.id.btDrawLine:
@@ -844,7 +844,7 @@ public class SportResultActivity extends BaseActivity {
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
-        ibMenu = (ImageView) findViewById(R.id.ibMenu);
+        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
         tvResult = (TextView) findViewById(R.id.tvResult);

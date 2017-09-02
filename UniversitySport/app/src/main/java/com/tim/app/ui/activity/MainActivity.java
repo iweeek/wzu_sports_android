@@ -180,8 +180,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main_drawer);
-        ibMenu = (ImageView) findViewById(R.id.ibMenu);
-        flMenu = (FrameLayout) findViewById(R.id.flMenu);
+        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
+        flMenu = (FrameLayout) findViewById(R.id.flTitleMenu);
         ibNotify = (ImageView) findViewById(R.id.ibNotify);
         //        tvLogout = (TextView) findViewById(tvLogout);
         //        badNetworkView = (BadNetworkView) findViewById(R.id.bnvContainer);
@@ -623,7 +623,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.flMenu:
+            case R.id.flTitleMenu:
                 Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
