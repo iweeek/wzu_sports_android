@@ -7,7 +7,7 @@
     tools:context="com.tim.app.ui.activity.AboutActivity">
 
     <RelativeLayout
-        android:id="@+id/tb"
+        android:id="@+id/toolbar"
         style="@style/TitleBarStyle"
         android:background="@color/blue"
         android:layout_height="@dimen/title_height"
@@ -34,7 +34,7 @@
     <View
         android:id="@+id/line"
         style="@style/vLine"
-        android:layout_below="@id/tb" />
+        android:layout_below="@id/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
