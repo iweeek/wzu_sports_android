@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -15,16 +14,12 @@ import android.widget.Toast;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.PackageUtil;
 import com.tim.app.R;
-import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.BaseActivity;
-import com.tim.app.ui.activity.SportFixedLocationActivity;
 import com.tim.app.util.DownloadAppUtils;
 
 import org.json.JSONObject;
-
-import java.util.Random;
 
 public class SettingActivity extends BaseActivity {
 
@@ -32,10 +27,10 @@ public class SettingActivity extends BaseActivity {
 
     private TextView tvVersionName;
 
-    private RelativeLayout rlModtifyPassword;
+//    private RelativeLayout rlModtifyPassword;
     private RelativeLayout rlAboutUS;
     private RelativeLayout rlCheckUpdate;
-    private RelativeLayout rlTest;
+//    private RelativeLayout rlTest;
 
     public static String noNewVersionMsg = "没有发现新版本";
 
@@ -57,18 +52,18 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        rlModtifyPassword = (RelativeLayout) findViewById(R.id.rlModtifyPassword);
+//        rlModtifyPassword = (RelativeLayout) findViewById(R.id.rlModtifyPassword);
         rlAboutUS = (RelativeLayout) findViewById(R.id.rlAboutUS);
         rlCheckUpdate = (RelativeLayout) findViewById(R.id.rlCheckUpdate);
-        rlTest = (RelativeLayout) findViewById(R.id.rlTest);
+//        rlTest = (RelativeLayout) findViewById(rlTest);
 
         tvVersionName = (TextView) findViewById(R.id.tvVersionName);
 
         findViewById(R.id.ibBack).setOnClickListener(this);
-        rlModtifyPassword.setOnClickListener(this);
+//        rlModtifyPassword.setOnClickListener(this);
         rlAboutUS.setOnClickListener(this);
         rlCheckUpdate.setOnClickListener(this);
-        rlTest.setOnClickListener(this);
+//        rlTest.setOnClickListener(this);
     }
 
 
@@ -82,12 +77,12 @@ public class SettingActivity extends BaseActivity {
     public void onClick(View v) {
         if (v.getId() == R.id.ibBack) {
             finish();
-        } else if (v.getId() == R.id.rlModtifyPassword) {
-            Intent intent = new Intent(this, ModifyPasswordActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
-            intent.putExtras(bundle);
-            startActivity(intent);
+//        } else if (v.getId() == rlModtifyPassword) {
+//            Intent intent = new Intent(this, ModifyPasswordActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
+//            intent.putExtras(bundle);
+//            startActivity(intent);
         } else if (v.getId() == R.id.rlAboutUS) {
             Intent aboutIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutIntent);
@@ -95,12 +90,6 @@ public class SettingActivity extends BaseActivity {
             ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-//                String versionName = "";
-//                int versionCode;
-//                String changeLog = "";
-//                String apkUrl = "";
-//                boolean isForced = false;
-
                     if (errCode == 0) {
                         try {
                             final String versionName = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("versionName");
@@ -168,15 +157,15 @@ public class SettingActivity extends BaseActivity {
                 }
             });
 
-        } else if (v.getId() == R.id.rlTest) {
-            boolean value = new Random().nextBoolean();
-            Intent intent = null;
-            if (value) {
-                intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
-            } else {
-                intent = new Intent(SettingActivity.this, SportFixedLocationActivity.class);
-            }
-            startActivity(intent);
+//        } else if (v.getId() == rlTest) {
+//            boolean value = new Random().nextBoolean();
+//            Intent intent = null;
+//            if (value) {
+//                intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
+//            } else {
+//                intent = new Intent(SettingActivity.this, SportFixedLocationActivity.class);
+//            }
+//            startActivity(intent);
         }
     }
 
