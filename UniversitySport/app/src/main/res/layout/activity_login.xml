@@ -81,7 +81,7 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <View style="@style/vLine" />
+            <View style="@style/horizontalLine" />
 
             <TextView
                 android:id="@+id/tvUniErrorPrmpt"
@@ -139,7 +139,7 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <View style="@style/vLine" />
+            <View style="@style/horizontalLine" />
 
             <TextView
                 android:id="@+id/tvStuNoErrorPrmpt"
@@ -196,7 +196,7 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <View style="@style/vLine" />
+            <View style="@style/horizontalLine" />
 
             <TextView
                 android:id="@+id/tvPasswordErrorPrmpt"
@@ -241,7 +241,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textColor="@color/white"
+            android:textColor="@color/colorWhite"
             android:text="@string/login_forget_password"
             android:textSize="@dimen/text_size_18" />
     </LinearLayout>

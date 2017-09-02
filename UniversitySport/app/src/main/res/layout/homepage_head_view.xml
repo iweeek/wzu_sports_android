@@ -187,7 +187,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="4px"
                 android:layout_marginTop="5dp"
-                android:background="@color/view_background_color"
+                android:background="@color/colorLine"
                 />
 
             <RelativeLayout
@@ -469,7 +469,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        android:background="@color/view_background_color"/>
+        android:background="@color/colorLine"/>
 
     <TextView
         android:layout_width="match_parent"

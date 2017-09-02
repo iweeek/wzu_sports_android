@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/colorWhite">
 
     <RelativeLayout
         android:id="@+id/toolbar"
@@ -50,7 +50,7 @@
             android:textCursorDrawable="@drawable/bg_text_cursor_shape"
             android:textSize="@dimen/text_size_14" />
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                 android:textSize="@dimen/text_size_14" />
 
             <View
-                style="@style/hLine"
+                style="@style/verticalLine"
                 android:layout_marginBottom="@dimen/dimen_12"
                 android:layout_marginTop="@dimen/dimen_12" />
 
@@ -91,7 +91,7 @@
 
         </LinearLayout>
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <EditText
             android:id="@+id/modify_layout_input_password"
@@ -106,7 +106,7 @@
             android:textCursorDrawable="@drawable/bg_text_cursor_shape"
             android:textSize="@dimen/text_size_14" />
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <EditText
             android:id="@+id/modify_layout_input_password_again"
@@ -121,7 +121,7 @@
             android:textCursorDrawable="@drawable/bg_text_cursor_shape"
             android:textSize="@dimen/text_size_14" />
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
 
         <Button

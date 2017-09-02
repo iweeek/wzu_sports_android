@@ -7,8 +7,20 @@
     <color name="colorTheme">#66A6FE</color>
     <color name="about_header_background">@color/colorTheme</color>
 
+    <!--水波纹或5.0以下选择器颜色-->
+    <color name="tabBackground">#777D7D7D</color>
+    <!--item的水波纹颜色-->
+    <color name="itemBackground">#DD7D7D7D</color>
+    <!--item的5.0一下版本选择器颜色-->
+    <color name="itemLowBackground">#d9d9d9</color>
 
-    <color name="white">#ffffff</color>
+    <color name="colorLine">#eeeeee</color>
+    <color name="colorPageBg">#f2f4f5</color>
+    <color name="colorTitle">#666</color>
+    <color name="colorSubtitle">#999</color>
+
+
+    <color name="colorWhite">#ffffff</color>
     <color name="login_btn_text_color">#535353</color>
     <color name="errorTextColor">#57FFDA</color>
     <color name="white_90">#e6ffffff</color>
@@ -34,31 +46,15 @@
     <color name="text_black_40">#66000000</color>
     <color name="text_black_4">#16000000</color>
     <color name="text_yellow">#e4b86e</color>
-    <color name="text_about">@color/black_60</color>
     <color name="title_text_color">@color/black</color>
     <color name="ripple_color">@color/black_6</color>
-    <color name="view_background_color">#eeeeee</color>
-    <color name="title_text_yellow">@color/black</color>
     <color name="list_title_text_color">#fefefe</color>
-    <color name="list_desc_text_color">#fefefe</color>
 
     <!-- default -->
     <color name="def_line_color">@color/black_10</color>
-    <color name="def_text_yellow_color">#ff9600</color>
-    <color name="def_tab_indicator_color">#333333</color>
     <color name="def_tab_text_color">@color/black_50</color>
     <color name="def_tab_text_selector_color">#66a7fe</color>
-    <color name="def_button_dark_color">#333333</color>
 
     <!-- home -->
-    <color name="home_tab_background_color">@color/white</color>
     <color name="home_tab_text_color">#cc333333</color>
-    <color name="home_tab_text_selector_color">#333333</color>
-    <color name="home_area_item_background_color">#303030</color>
-
-    <!--map-->
-    <color name="fill">#3376d4f3</color>
-    <color name="stroke">#cc3f91fc</color>
-    <color name="chambray">#4C5773</color>
-    <color name="sea_buckthorn">#FFAA2B</color>
 </resources>

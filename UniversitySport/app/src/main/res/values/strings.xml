@@ -21,7 +21,6 @@
 
     <!-- 网络 -->
     <string name="crashhandler_sorry_error">Sorry,程序错误.</string>
-    <!--<string name="httpconnection_text_not_network">网络不给力，请稍候再试</string>-->
     <string name="httpconnection_not_network">网络不给力，请检查网络</string>
     <string name="upload_picture_failed">上传失败</string>
     <string name="download_failed">下载失败</string>
@@ -47,6 +46,9 @@
     <string name="action_register_enter">确定注册</string>
 
     <!--系统设置-->
+    <string name="check_update">检查更新</string>
+    <string name="update_log">更新日志</string>
+    <string name="about_us">关于我们</string>
     <string name="prompt_no_update">当前已是最新版本</string>
     <string name="personal_info">基本资料</string>
     <string name="recharge_center">充值中心</string>

@@ -61,7 +61,7 @@
 
         </RelativeLayout>
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <TextView
             android:id="@+id/tvSchoolErrorPrmpt"
@@ -104,7 +104,7 @@
 
         </RelativeLayout>
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <TextView
             android:id="@+id/tvStuNoErrorPrmpt"
@@ -148,7 +148,7 @@
 
         </RelativeLayout>
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <TextView
             android:id="@+id/tvNameErrorPrmpt"
