@@ -8,8 +8,9 @@
     android:orientation="vertical"
     tools:context=".ui.activity.HistorySportActivity">
 
+
     <RelativeLayout
-        android:id="@+id/tb"
+        android:id="@+id/toolbar"
         style="@style/TitleBarStyle"
         android:background="@color/blue"
         android:layout_height="@dimen/title_height"

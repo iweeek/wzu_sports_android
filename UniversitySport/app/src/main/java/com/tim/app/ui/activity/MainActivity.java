@@ -62,7 +62,7 @@ import static com.tim.app.constant.AppConstant.user;
 /**
  * 首页
  */
-public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
+public class MainActivity extends ToolbarActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -180,8 +180,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main_drawer);
-        ibMenu = (ImageView) findViewById(R.id.ibMenu);
-        flMenu = (FrameLayout) findViewById(R.id.flMenu);
+        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
+        flMenu = (FrameLayout) findViewById(R.id.flTitleMenu);
         ibNotify = (ImageView) findViewById(R.id.ibNotify);
         //        tvLogout = (TextView) findViewById(tvLogout);
         //        badNetworkView = (BadNetworkView) findViewById(R.id.bnvContainer);
@@ -623,7 +623,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.flMenu:
+            case R.id.flTitleMenu:
                 Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion "25.0.0"
 
     defaultConfig {
@@ -72,14 +72,16 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':BaseLibrary')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-v4:23.3.0'
     //    compile 'com.amap.api:map3d-native:latest.integration'
     compile 'com.amap.api:3dmap:latest.integration'
     compile 'com.amap.api:location:latest.integration'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.github.bumptech.glide:glide:4.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
-    compile 'com.android.support:design:23.3.0'
+
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:support-v4:25.0.0'
 }
 
 def releaseTime() {
