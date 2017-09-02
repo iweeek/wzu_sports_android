@@ -3,7 +3,6 @@ package com.tim.app.ui.activity;
 import android.content.res.Configuration;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageButton;
 
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.smarttab.SmartTabLayout;
@@ -15,11 +14,10 @@ import com.tim.app.ui.fragment.RankingDataFragment;
 /**
  * 校园排行榜
  */
-public class SchoolRankingActivity extends BaseActivity {
+public class SchoolRankingActivity extends ToolbarActivity {
 
     private static final String TAG = "SchoolRankingActivity";
 
-    private ImageButton ibBack;
     private SmartTabLayout tabLayout;
     private ViewPager vpRanking;
     private TabAdapter pagerAdapter;
@@ -37,12 +35,8 @@ public class SchoolRankingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        ibBack = (ImageButton) findViewById(R.id.ibBack);
         tabLayout = (SmartTabLayout) findViewById(R.id.stbNavBar);
         vpRanking = (ViewPager)findViewById(R.id.vpRanking);
-
-        ibBack.setOnClickListener(this);
-
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(RankingDataFragment.newInstance(AppConstant.TYPE_COST_ENERGY), "累计消耗热量");
@@ -56,7 +50,7 @@ public class SchoolRankingActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        setTitle(getString(R.string.app_school_leaderboard));
     }
 
     @Override
@@ -72,11 +66,6 @@ public class SchoolRankingActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.ibBack:
-                finish();
-                break;
-        }
     }
 
     @Override

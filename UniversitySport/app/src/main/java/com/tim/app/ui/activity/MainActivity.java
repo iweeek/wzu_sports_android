@@ -62,7 +62,7 @@ import static com.tim.app.constant.AppConstant.user;
 /**
  * 首页
  */
-public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
+public class MainActivity extends ToolbarActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -75,9 +75,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private long last_back_time = 0;
     private DrawerLayout mDrawerLayout;
 
-    private ImageView ibMenu;
     private FrameLayout flMenu;
-    private ImageView ibNotify;
+    //    private ImageView ibNotify;
     //    private TextView tvLogout;
     private TextView tvUserName;
     private ImageView ivAvatar;
@@ -133,8 +132,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     //TODO https://juejin.im/entry/582180a3bf22ec0068e2285d
     @Override
     protected void restartApp() {
-//        Toast.makeText(getApplicationContext(), "应用被回收重启走流程", Toast.LENGTH_LONG).show();
-//        Log.d(TAG, "应用被回收重启走流程");
+        //        Toast.makeText(getApplicationContext(), "应用被回收重启走流程", Toast.LENGTH_LONG).show();
+        //        Log.d(TAG, "应用被回收重启走流程");
         startActivity(new Intent(this, SplashActivity.class));
         finish();
     }
@@ -180,15 +179,17 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void initView() {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dl_main_drawer);
-        ibMenu = (ImageView) findViewById(R.id.ibMenu);
-        flMenu = (FrameLayout) findViewById(R.id.flMenu);
-        ibNotify = (ImageView) findViewById(R.id.ibNotify);
+        flMenu = (FrameLayout) findViewById(R.id.flTitleMenu);
+        flMenu.setOnClickListener(this);
+        flMenu.setVisibility(View.VISIBLE);
+
+        //        ibNotify = (ImageView) findViewById(ibNotify);
         //        tvLogout = (TextView) findViewById(tvLogout);
         //        badNetworkView = (BadNetworkView) findViewById(R.id.bnvContainer);
         //        ibMenu.setOnClickListener(this);
-        flMenu.setOnClickListener(this);
-        ibNotify.setOnClickListener(this);
+        //        ibNotify.setOnClickListener(this);
         //        tvLogout.setOnClickListener(this);
+
         navigationView =
                 (NavigationView) findViewById(R.id.nv_main_navigation);
 
@@ -623,7 +624,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.flMenu:
+            case R.id.flTitleMenu:
                 Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
@@ -667,4 +668,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         super.onConfigurationChanged(newConfig);
     }
 
+
+    @Override
+    public boolean canBack() {
+        return false;
+    }
 }

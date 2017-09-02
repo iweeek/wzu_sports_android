@@ -16,23 +16,18 @@ import com.application.library.util.PackageUtil;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.ui.activity.AboutActivity;
-import com.tim.app.ui.activity.BaseActivity;
+import com.tim.app.ui.activity.ToolbarActivity;
 import com.tim.app.util.DownloadAppUtils;
 
 import org.json.JSONObject;
 
-public class SettingActivity extends BaseActivity {
+
+public class SettingActivity extends ToolbarActivity {
 
     private static final String TAG = "SettingActivity";
-
     private TextView tvVersionName;
-
-//    private RelativeLayout rlModtifyPassword;
     private RelativeLayout rlAboutUS;
     private RelativeLayout rlCheckUpdate;
-//    private RelativeLayout rlTest;
-
-    public static String noNewVersionMsg = "没有发现新版本";
 
     /**
      * 启动设置界面的统一接口
@@ -44,7 +39,6 @@ public class SettingActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_setting;
@@ -52,38 +46,23 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void initView() {
-//        rlModtifyPassword = (RelativeLayout) findViewById(R.id.rlModtifyPassword);
         rlAboutUS = (RelativeLayout) findViewById(R.id.rlAboutUS);
         rlCheckUpdate = (RelativeLayout) findViewById(R.id.rlCheckUpdate);
-//        rlTest = (RelativeLayout) findViewById(rlTest);
-
         tvVersionName = (TextView) findViewById(R.id.tvVersionName);
 
-        findViewById(R.id.ibBack).setOnClickListener(this);
-//        rlModtifyPassword.setOnClickListener(this);
         rlAboutUS.setOnClickListener(this);
         rlCheckUpdate.setOnClickListener(this);
-//        rlTest.setOnClickListener(this);
     }
-
 
     @Override
     public void initData() {
+        setTitle(getString(R.string.app_system_setting));
         tvVersionName.setText("当前版本：" + PackageUtil.getVersionName(this));
     }
 
-
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.ibBack) {
-            finish();
-//        } else if (v.getId() == rlModtifyPassword) {
-//            Intent intent = new Intent(this, ModifyPasswordActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
-//            intent.putExtras(bundle);
-//            startActivity(intent);
-        } else if (v.getId() == R.id.rlAboutUS) {
+        if (v.getId() == R.id.rlAboutUS) {
             Intent aboutIntent = new Intent(this, AboutActivity.class);
             startActivity(aboutIntent);
         } else if (v.getId() == R.id.rlCheckUpdate) {
@@ -104,7 +83,7 @@ public class SettingActivity extends BaseActivity {
                             final AlertDialog.Builder builder =
                                     new AlertDialog.Builder(SettingActivity.this);
                             AlertDialog dialog;
-//                                normalDialog.setIcon(R.drawable.icon_dialog);
+                            // normalDialog.setIcon(R.drawable.icon_dialog);
                             builder.setTitle("版本升级");
                             builder.setPositiveButton("确认",
                                     new DialogInterface.OnClickListener() {
@@ -135,9 +114,8 @@ public class SettingActivity extends BaseActivity {
 
                                 dialog = builder.create();
                                 dialog.show();
-
                             } else {
-                                Toast.makeText(SettingActivity.this, noNewVersionMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SettingActivity.this, getString(R.string.prompt_no_update), Toast.LENGTH_SHORT).show();
                             }
 
                             return true;
@@ -156,16 +134,6 @@ public class SettingActivity extends BaseActivity {
                     }
                 }
             });
-
-//        } else if (v.getId() == rlTest) {
-//            boolean value = new Random().nextBoolean();
-//            Intent intent = null;
-//            if (value) {
-//                intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
-//            } else {
-//                intent = new Intent(SettingActivity.this, SportFixedLocationActivity.class);
-//            }
-//            startActivity(intent);
         }
     }
 

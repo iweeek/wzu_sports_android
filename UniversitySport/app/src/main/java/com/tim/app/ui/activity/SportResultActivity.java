@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -60,7 +59,7 @@ import java.util.List;
 /**
  * 运动详情
  */
-public class SportResultActivity extends BaseActivity {
+public class SportResultActivity extends ToolbarActivity {
 
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
@@ -87,7 +86,6 @@ public class SportResultActivity extends BaseActivity {
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
-    private ImageView ibMenu;
     private LinearLayout llTargetContainer;
     private Button btTest;
 
@@ -103,8 +101,6 @@ public class SportResultActivity extends BaseActivity {
     private LinearLayout llCurrentInfo;
     private LinearLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
-    private TextView tvTitle;
-    private TextView tvPause;
 
     private int currentDistance = 0;
     private long elapseTime = 0;
@@ -224,13 +220,14 @@ public class SportResultActivity extends BaseActivity {
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
+        //全屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
 
     @Override
     public void initData() {
-        DLOG.d(TAG, "initData");
+        setTitle(getString(R.string.app_result));
 
         if (historySportEntry.getType() == AppConstant.RUNNING_TYPE) {
             queryRunningActivity(historySportEntry.getId());
@@ -583,9 +580,6 @@ public class SportResultActivity extends BaseActivity {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ibMenu:
-                finish();
-                break;
             case R.id.btDrawLine:
                 btDrawLine.setVisibility(View.GONE);
                 //                llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportResultActivity.this, R.color.black_30));
@@ -842,15 +836,12 @@ public class SportResultActivity extends BaseActivity {
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
-        tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
-        ibMenu = (ImageView) findViewById(R.id.ibMenu);
+//        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
         tvResult = (TextView) findViewById(R.id.tvResult);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
-        tvTitle = (TextView) findViewById(R.id.tvTitle);
-        tvTitle.setText("锻炼成果");
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (LinearLayout) findViewById(R.id.rlCurConsumeEnergy);
@@ -868,10 +859,6 @@ public class SportResultActivity extends BaseActivity {
         btDrawLine.setVisibility(View.VISIBLE);
 
         ivLocation.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ibMenu.setImageDrawable(getDrawable(R.drawable.ic_back_white));
-        }
-        ibMenu.setOnClickListener(this);
 
         btTest = (Button) findViewById(R.id.btTest);
         btTest.setOnClickListener(this);
@@ -921,6 +908,5 @@ public class SportResultActivity extends BaseActivity {
     private void zoomToSpanWithCenter() {
         markerOverlay.zoomToSpanWithCenter();
     }
-
 
 }

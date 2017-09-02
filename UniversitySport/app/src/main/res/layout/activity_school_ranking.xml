@@ -8,29 +8,8 @@
     android:orientation="vertical"
     tools:context=".ui.activity.SchoolRankingActivity">
 
-    <RelativeLayout
-        android:id="@+id/tb"
-        style="@style/TitleBarStyle"
-        android:background="@color/blue"
-        android:layout_height="@dimen/title_height"
-        android:paddingLeft="20dp">
 
-        <ImageButton
-            android:id="@+id/ibBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_back_white" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            style="@style/TitleTextStyle"
-            android:layout_marginLeft="50dp"
-            android:text="校园排行榜" />
-
-    </RelativeLayout>
+    <include layout="@layout/toolbar_base"/>
 
 
     <com.application.library.widget.smarttab.SmartTabLayout

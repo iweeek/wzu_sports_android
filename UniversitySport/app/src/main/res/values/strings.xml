@@ -3,6 +3,10 @@
     <string name="app_exit">再次点击退出</string>
     <string name="app_home">课外体育锻炼</string>
     <string name="app_history">历史运动概况</string>
+    <string name="app_result">锻炼成果</string>
+    <string name="app_school_leaderboard">校园排行榜</string>
+    <string name="app_system_setting">设置</string>
+
 
     <!-- 通用动作 -->
     <string name="action_back">返回</string>
@@ -43,7 +47,7 @@
     <string name="action_register_enter">确定注册</string>
 
     <!--系统设置-->
-    <string name="system_setting">设置</string>
+    <string name="prompt_no_update">当前已是最新版本</string>
     <string name="personal_info">基本资料</string>
     <string name="recharge_center">充值中心</string>
     <string name="security_center">账号绑定</string>

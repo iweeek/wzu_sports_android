@@ -7,7 +7,7 @@
     android:padding="@dimen/padding">
 
     <RelativeLayout
-        android:id="@+id/tb"
+        android:id="@+id/toolbar"
         style="@style/TitleBarStyle"
         android:layout_height="@dimen/title_height"
         android:paddingLeft="20dp">

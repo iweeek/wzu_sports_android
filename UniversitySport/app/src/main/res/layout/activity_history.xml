@@ -1,45 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    tools:context=".ui.activity.HistorySportActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
+              tools:context=".ui.activity.HistorySportActivity">
 
-    <RelativeLayout
-        android:id="@+id/tb"
-        style="@style/TitleBarStyle"
-        android:background="@color/blue"
-        android:layout_height="@dimen/title_height"
-        android:paddingEnd="20dp"
-        android:paddingStart="20dp">
 
-        <ImageButton
-            android:id="@+id/ibBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_back_white" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            style="@style/TitleTextStyle"
-            android:layout_marginStart="50dp"
-            android:text="@string/app_history" />
-
-    </RelativeLayout>
+    <include layout="@layout/toolbar_base"/>
 
 
     <com.application.library.widget.smarttab.SmartTabLayout
         android:id="@+id/stbNavBar"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
-        android:layout_gravity="center_horizontal"
         android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
         app:stl_clickable="true"
         app:stl_defaultTabBackground="@color/transparent"
         app:stl_defaultTabTextAllCaps="true"
@@ -61,10 +39,10 @@
         app:stl_indicatorWithoutPadding="true"
         app:stl_titleOffset="auto_center"
         app:stl_underlineColor="#4D000000"
-        app:stl_underlineThickness="1dp" />
+        app:stl_underlineThickness="1dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpHistoryData"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 </LinearLayout>
