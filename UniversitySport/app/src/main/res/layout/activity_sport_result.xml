@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <include layout="@layout/cell_toolbar"/>
+    <include layout="@layout/toolbar_base"/>
 
 
     <RelativeLayout

@@ -3,7 +3,6 @@ package com.tim.app.ui.activity;
 import android.content.res.Configuration;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageButton;
 
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.smarttab.SmartTabLayout;
@@ -15,11 +14,10 @@ import com.tim.app.ui.fragment.HistoryDataFragment;
 /**
  * 历史运动数据
  */
-public class HistorySportActivity extends BaseActivity {
+public class HistorySportActivity extends ToolbarActivity {
 
     private static final String TAG = "HistorySportActivity";
 
-    private ImageButton ibBack;
     private SmartTabLayout stbNavBar;
     private ViewPager vpHistoryData;
     private TabAdapter pagerAdapter;
@@ -32,11 +30,8 @@ public class HistorySportActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        ibBack = (ImageButton) findViewById(R.id.ibBack);
         stbNavBar = (SmartTabLayout) findViewById(R.id.stbNavBar);
         vpHistoryData = (ViewPager)findViewById(R.id.vpHistoryData);
-
-        ibBack.setOnClickListener(this);
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
         pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK), "本周");
@@ -52,7 +47,7 @@ public class HistorySportActivity extends BaseActivity {
 
     @Override
     public void initData() {
-
+        setTitle(getString(R.string.app_history));
     }
 
     @Override
@@ -68,11 +63,6 @@ public class HistorySportActivity extends BaseActivity {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.ibBack:
-                finish();
-                break;
-        }
     }
 
     @Override
@@ -90,5 +80,4 @@ public class HistorySportActivity extends BaseActivity {
     protected int getLayoutId() {
         return R.layout.activity_history;
     }
-
 }
