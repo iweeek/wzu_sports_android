@@ -21,7 +21,6 @@ import com.tim.app.util.DownloadAppUtils;
 
 import org.json.JSONObject;
 
-
 public class SettingActivity extends ToolbarActivity {
 
     private static final String TAG = "SettingActivity";
@@ -87,7 +86,6 @@ public class SettingActivity extends ToolbarActivity {
                             builder.setTitle("版本升级");
                             builder.setPositiveButton("确认",
                                     new DialogInterface.OnClickListener() {
-
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, apkUrl, "下载新版本");
@@ -109,7 +107,6 @@ public class SettingActivity extends ToolbarActivity {
                                             dialog.dismiss();
                                         }
                                     });
-
                                 }
 
                                 dialog = builder.create();
@@ -117,7 +114,6 @@ public class SettingActivity extends ToolbarActivity {
                             } else {
                                 Toast.makeText(SettingActivity.this, getString(R.string.prompt_no_update), Toast.LENGTH_SHORT).show();
                             }
-
                             return true;
                             //发生以下情况的可能性正常时，是不存在的，所以这里不处理
                         } catch (org.json.JSONException e) {
@@ -127,7 +123,6 @@ public class SettingActivity extends ToolbarActivity {
                             e.printStackTrace();
                             return false;
                         }
-
                     } else {
                         // TODO 网络出现问题？该接口出现问题？
                         return false;
