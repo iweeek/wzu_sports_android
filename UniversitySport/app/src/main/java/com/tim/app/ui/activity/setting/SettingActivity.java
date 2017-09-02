@@ -18,15 +18,15 @@ import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.ui.activity.AboutActivity;
-import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.SportFixedLocationActivity;
+import com.tim.app.ui.activity.ToolbarActivity;
 import com.tim.app.util.DownloadAppUtils;
 
 import org.json.JSONObject;
 
 import java.util.Random;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends ToolbarActivity {
 
     private static final String TAG = "SettingActivity";
 
@@ -36,8 +36,6 @@ public class SettingActivity extends BaseActivity {
     private RelativeLayout rlAboutUS;
     private RelativeLayout rlCheckUpdate;
     private RelativeLayout rlTest;
-
-    public static String noNewVersionMsg = "没有发现新版本";
 
     /**
      * 启动设置界面的统一接口
@@ -64,7 +62,6 @@ public class SettingActivity extends BaseActivity {
 
         tvVersionName = (TextView) findViewById(R.id.tvVersionName);
 
-        findViewById(R.id.ibBack).setOnClickListener(this);
         rlModtifyPassword.setOnClickListener(this);
         rlAboutUS.setOnClickListener(this);
         rlCheckUpdate.setOnClickListener(this);
@@ -74,15 +71,14 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void initData() {
+        setTitle(getString(R.string.app_system_setting));
         tvVersionName.setText("当前版本：" + PackageUtil.getVersionName(this));
     }
 
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.ibBack) {
-            finish();
-        } else if (v.getId() == R.id.rlModtifyPassword) {
+        if (v.getId() == R.id.rlModtifyPassword) {
             Intent intent = new Intent(this, ModifyPasswordActivity.class);
             Bundle bundle = new Bundle();
             bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
@@ -148,7 +144,7 @@ public class SettingActivity extends BaseActivity {
                                 dialog.show();
 
                             } else {
-                                Toast.makeText(SettingActivity.this, noNewVersionMsg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SettingActivity.this, getString(R.string.prompt_no_update), Toast.LENGTH_SHORT).show();
                             }
 
                             return true;

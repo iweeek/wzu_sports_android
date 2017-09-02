@@ -5,30 +5,7 @@
     android:background="#edf0f2"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/toolbar"
-        style="@style/TitleBarStyle"
-        android:layout_height="@dimen/title_height"
-        android:background="@color/blue"
-        android:paddingLeft="20dp">
-
-        <ImageButton
-            android:id="@+id/ibBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:background="@color/transparent"
-            android:src="@drawable/ic_back_white" />
-
-        <TextView
-            android:id="@+id/tvTitle"
-            style="@style/TitleTextStyle"
-            android:layout_marginLeft="50dp"
-            android:text="设置" />
-
-    </RelativeLayout>
-
+    <include layout="@layout/toolbar_base"/>
 
     <RelativeLayout
         android:id="@+id/rlModtifyPassword"

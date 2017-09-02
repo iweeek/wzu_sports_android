@@ -23,6 +23,7 @@
             android:layout_height="match_parent"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:paddingLeft="15dp"
+            android:visibility="gone"
             android:paddingRight="15dp">
 
             <ImageView
@@ -45,13 +46,13 @@
                 android:layout_gravity="center"
                 android:text="@string/app_home"/>
 
-            <ImageView
-                android:id="@+id/ibNotify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_notify"
-                android:visibility="gone"/>
+            <!--<ImageView-->
+                <!--android:id="@+id/ibNotify"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/transparent"-->
+                <!--android:src="@drawable/ic_notify"-->
+                <!--android:visibility="gone"/>-->
 
         </FrameLayout>
 
