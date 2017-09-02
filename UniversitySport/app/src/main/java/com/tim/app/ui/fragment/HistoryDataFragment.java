@@ -131,7 +131,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             wrvHistoryData.setLayoutManager(layoutManager);
-            wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.view_background_color)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
+            wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.colorLine)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
 
             headView = (HistoryDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.history_data_head_view, null);
 

@@ -78,7 +78,7 @@
                 android:visibility="gone" />
         </RelativeLayout>
 
-        <View style="@style/vLine" />
+        <View style="@style/horizontalLine" />
 
         <TextView
             android:id="@+id/tvStuNoErrorPrmpt"

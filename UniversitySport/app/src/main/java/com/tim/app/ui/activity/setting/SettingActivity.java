@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -15,27 +14,19 @@ import android.widget.Toast;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.PackageUtil;
 import com.tim.app.R;
-import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.ui.activity.AboutActivity;
-import com.tim.app.ui.activity.SportFixedLocationActivity;
 import com.tim.app.ui.activity.ToolbarActivity;
 import com.tim.app.util.DownloadAppUtils;
 
 import org.json.JSONObject;
 
-import java.util.Random;
-
 public class SettingActivity extends ToolbarActivity {
 
     private static final String TAG = "SettingActivity";
-
     private TextView tvVersionName;
-
-    private RelativeLayout rlModtifyPassword;
     private RelativeLayout rlAboutUS;
     private RelativeLayout rlCheckUpdate;
-    private RelativeLayout rlTest;
 
     /**
      * 启动设置界面的统一接口
@@ -47,7 +38,6 @@ public class SettingActivity extends ToolbarActivity {
         context.startActivity(intent);
     }
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.activity_setting;
@@ -55,19 +45,13 @@ public class SettingActivity extends ToolbarActivity {
 
     @Override
     public void initView() {
-        rlModtifyPassword = (RelativeLayout) findViewById(R.id.rlModtifyPassword);
         rlAboutUS = (RelativeLayout) findViewById(R.id.rlAboutUS);
         rlCheckUpdate = (RelativeLayout) findViewById(R.id.rlCheckUpdate);
-        rlTest = (RelativeLayout) findViewById(R.id.rlTest);
-
         tvVersionName = (TextView) findViewById(R.id.tvVersionName);
 
-        rlModtifyPassword.setOnClickListener(this);
         rlAboutUS.setOnClickListener(this);
         rlCheckUpdate.setOnClickListener(this);
-        rlTest.setOnClickListener(this);
     }
-
 
     @Override
     public void initData() {
@@ -75,28 +59,14 @@ public class SettingActivity extends ToolbarActivity {
         tvVersionName.setText("当前版本：" + PackageUtil.getVersionName(this));
     }
 
-
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.rlModtifyPassword) {
-            Intent intent = new Intent(this, ModifyPasswordActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else if (v.getId() == R.id.rlAboutUS) {
-            Intent aboutIntent = new Intent(this, AboutActivity.class);
-            startActivity(aboutIntent);
+        if (v.getId() == R.id.rlAboutUS) {
+            AboutActivity.start(this);
         } else if (v.getId() == R.id.rlCheckUpdate) {
             ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-//                String versionName = "";
-//                int versionCode;
-//                String changeLog = "";
-//                String apkUrl = "";
-//                boolean isForced = false;
-
                     if (errCode == 0) {
                         try {
                             final String versionName = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("versionName");
@@ -111,11 +81,10 @@ public class SettingActivity extends ToolbarActivity {
                             final AlertDialog.Builder builder =
                                     new AlertDialog.Builder(SettingActivity.this);
                             AlertDialog dialog;
-//                                normalDialog.setIcon(R.drawable.icon_dialog);
+                            // normalDialog.setIcon(R.drawable.icon_dialog);
                             builder.setTitle("版本升级");
                             builder.setPositiveButton("确认",
                                     new DialogInterface.OnClickListener() {
-
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, apkUrl, "下载新版本");
@@ -137,16 +106,13 @@ public class SettingActivity extends ToolbarActivity {
                                             dialog.dismiss();
                                         }
                                     });
-
                                 }
 
                                 dialog = builder.create();
                                 dialog.show();
-
                             } else {
                                 Toast.makeText(SettingActivity.this, getString(R.string.prompt_no_update), Toast.LENGTH_SHORT).show();
                             }
-
                             return true;
                             //发生以下情况的可能性正常时，是不存在的，所以这里不处理
                         } catch (org.json.JSONException e) {
@@ -156,23 +122,12 @@ public class SettingActivity extends ToolbarActivity {
                             e.printStackTrace();
                             return false;
                         }
-
                     } else {
                         // TODO 网络出现问题？该接口出现问题？
                         return false;
                     }
                 }
             });
-
-        } else if (v.getId() == R.id.rlTest) {
-            boolean value = new Random().nextBoolean();
-            Intent intent = null;
-            if (value) {
-                intent = new Intent(SettingActivity.this, BindStudentNumberActivity.class);
-            } else {
-                intent = new Intent(SettingActivity.this, SportFixedLocationActivity.class);
-            }
-            startActivity(intent);
         }
     }
 

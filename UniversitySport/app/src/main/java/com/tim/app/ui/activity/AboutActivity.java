@@ -31,7 +31,7 @@ public class AboutActivity extends ToolbarActivity {
     public void initView() {
         tvVersion = (TextView) findViewById(R.id.tvVersion);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
-        collapsingToolbarLayout.setTitle("关于");
+        collapsingToolbarLayout.setTitle(getString(R.string.about_us));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

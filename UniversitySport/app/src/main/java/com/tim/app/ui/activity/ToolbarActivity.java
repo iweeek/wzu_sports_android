@@ -35,15 +35,18 @@ public abstract class ToolbarActivity extends BaseActivity {
 
         if(canBack()) {
             setSupportActionBar(mToolbar);
+
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+            //去除默认Title显示
+            // actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setHomeAsUpIndicator(R.drawable.icon_back);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mContext.onBackPressed();
                 }
             });
-//            mToolbar.findViewById(android.R.id.)
         }else{
             // 默认首页不单独设置toolbar
         }
@@ -52,7 +55,6 @@ public abstract class ToolbarActivity extends BaseActivity {
             mAppBar.setElevation(10.6f);
         }
     }
-
 
     /**
      * 子类重写，

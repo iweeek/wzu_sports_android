@@ -80,7 +80,7 @@
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@color/view_background_color"/>
+                android:background="@color/colorLine"/>
 
             <RelativeLayout
                 android:id="@+id/rlAreaDesc"
@@ -106,7 +106,7 @@
                 android:layout_height="0.5dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@color/view_background_color"/>
+                android:background="@color/colorLine"/>
 
             <RelativeLayout
                 android:id="@+id/rlElapsedTime"
@@ -236,7 +236,7 @@
             android:background="#cc66A6FE"
             android:gravity="center"
             android:text="开始运动"
-            android:textColor="@color/white"
+            android:textColor="@color/colorWhite"
             android:textSize="18dp"
             android:visibility="gone"/>
 
@@ -254,7 +254,7 @@
                 android:background="#cc66A6FE"
                 android:gravity="center"
                 android:text="继续"
-                android:textColor="@color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18dp"/>
 
             <Button
@@ -265,7 +265,7 @@
                 android:background="#CCFF0000"
                 android:gravity="center"
                 android:text="结束"
-                android:textColor="@color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18dp"/>
         </LinearLayout>
     </RelativeLayout>
@@ -299,7 +299,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="85dp"
         android:text="滑动停止"
-        android:textColor="@color/white"
+        android:textColor="@color/colorWhite"
         android:textSize="18dp"
         android:visibility="gone"/>
 
