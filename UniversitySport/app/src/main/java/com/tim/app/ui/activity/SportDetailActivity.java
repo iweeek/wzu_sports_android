@@ -23,6 +23,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -227,9 +228,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
             //            Toast.makeText(this, "定位服务未打开，请打开定位服务",
             //                    Toast.LENGTH_SHORT).show();
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this);
-            dialog.setMessage("定位服务未打开，请打开定位服务");
-            dialog.setPositiveButton("确定",
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("定位服务未打开，请打开定位服务");
+            builder.setPositiveButton("确定",
                     new android.content.DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
@@ -245,7 +246,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //                    arg0.dismiss();
             //                }
             //            });
-            dialog.show();
+
+            AlertDialog dialog = builder.show();
+            TextView message = (TextView) dialog.findViewById(android.R.id.message);
+            Button positiveButton = (Button) dialog.findViewById(android.R.id.button1);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+            message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         } else {
             mDialog.show();
         }
