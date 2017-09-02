@@ -62,8 +62,7 @@ public class SettingActivity extends ToolbarActivity {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.rlAboutUS) {
-            Intent aboutIntent = new Intent(this, AboutActivity.class);
-            startActivity(aboutIntent);
+            AboutActivity.start(this);
         } else if (v.getId() == R.id.rlCheckUpdate) {
             ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
                 @Override

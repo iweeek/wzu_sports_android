@@ -143,14 +143,14 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <!--垂直布局线-->
+    <!--水平布局线-->
     <style name="horizontalLine">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">0.5dp</item>
         <item name="android:background">@color/colorLine</item>
     </style>
 
-    <!--水平布局线-->
+    <!--垂直布局线-->
     <style name="verticalLine">
         <item name="android:layout_width">0.5dp</item>
         <item name="android:layout_height">match_parent</item>
