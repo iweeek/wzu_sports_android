@@ -20,14 +20,14 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:text="@string/gpsLocationing"
-        android:textSize="16sp"/>
+        android:textSize="16dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:text="@string/readyToSport"
-        android:textSize="14sp"/>
+        android:textSize="14dp"/>
 
 
     <TextView
@@ -37,5 +37,5 @@
         android:text="@string/remainPower"
         android:id="@+id/tvRemainPower"
         android:textColor="@color/blue"
-        android:textSize="12sp"/>
+        android:textSize="12dp"/>
 </LinearLayout>
