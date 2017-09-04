@@ -378,41 +378,47 @@ public class LoginActivity extends BaseActivity {
                         user = new User();
                     }
 
-                    //                    try {
                     JSONObject jsonObject = json.optJSONObject("obj");
-                    user.setUid(jsonObject.optInt("userId"));
+                    if (jsonObject != null) {
+                        user.setUid(jsonObject.optInt("userId"));
 
-                    List<String> roles = new ArrayList<>();
-                    JSONArray roleArray = jsonObject.optJSONArray("roles");
-                    for (int i = 0; i < roles.size(); i++) {
-                        roles.add(roleArray.optString(i));
+                        List<String> roles = new ArrayList<>();
+                        JSONArray roleArray = jsonObject.optJSONArray("roles");
+                        for (int i = 0; i < roles.size(); i++) {
+                            roles.add(roleArray.optString(i));
+                        }
+                        user.setRoles(roles.toArray(new String[roles.size()]));
+
+                        user.setExpiredDate(jsonObject.optLong("expiredDate"));
+
+                        String token = jsonObject.optString("token");
+                        user.setToken(token);
+
+                        user.setAvatarUrl(jsonObject.optString("avatarUrl"));
+
+                        //添加token 至 HttpHeader
+                        HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
+                        headers.put("Authorization", user.getToken());
+                        NetworkInterface.instance().setCommonHeaders(headers);
+                        Log.d(TAG, "headers:" + headers);
+
+                        user.setUsername(username);
+                        user.setPassword(md5Password);
+                        Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
+
+                        queryStudent(user.getUid());
+                        //                    } catch (JSONException e) {
+                        //                        hideLoadingDialog();
+                        //                        e.printStackTrace();
+                        //                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
+                        //                    }
+                        return true;
+                    } else {
+                        Log.d(TAG, "jsonObject is null");
+                        hideLoadingDialog();
+                        Toast.makeText(context, getString(R.string.usernamePasswordMismatching), Toast.LENGTH_SHORT).show();
+                        return false;
                     }
-                    user.setRoles(roles.toArray(new String[roles.size()]));
-
-                    user.setExpiredDate(jsonObject.optLong("expiredDate"));
-
-                    String token = jsonObject.optString("token");
-                    user.setToken(token);
-
-                    user.setAvatarUrl(jsonObject.optString("avatarUrl"));
-
-                    //添加token 至 HttpHeader
-                    HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
-                    headers.put("Authorization", user.getToken());
-                    NetworkInterface.instance().setCommonHeaders(headers);
-                    Log.d(TAG, "headers:" + headers);
-
-                    user.setUsername(username);
-                    user.setPassword(md5Password);
-                    Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
-
-                    queryStudent(user.getUid());
-                    //                    } catch (JSONException e) {
-                    //                        hideLoadingDialog();
-                    //                        e.printStackTrace();
-                    //                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
-                    //                    }
-                    return true;
                 } else {
                     hideLoadingDialog();
                     //TODO 密码或者用户名不匹配，网络接口返回不明确
