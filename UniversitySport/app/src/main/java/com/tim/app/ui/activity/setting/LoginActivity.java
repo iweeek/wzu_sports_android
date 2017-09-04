@@ -42,6 +42,7 @@ import com.tim.app.util.EncryptUtil;
 import com.tim.app.util.SoftKeyboardUtil;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -379,22 +380,21 @@ public class LoginActivity extends BaseActivity {
                     }
 
                     JSONObject jsonObject = json.optJSONObject("obj");
-                    if (jsonObject != null) {
-                        user.setUid(jsonObject.optInt("userId"));
-
+                    try {
+                        user.setUid(jsonObject.getInt("userId"));
                         List<String> roles = new ArrayList<>();
-                        JSONArray roleArray = jsonObject.optJSONArray("roles");
+                        JSONArray roleArray = jsonObject.getJSONArray("roles");
                         for (int i = 0; i < roles.size(); i++) {
                             roles.add(roleArray.optString(i));
                         }
                         user.setRoles(roles.toArray(new String[roles.size()]));
 
-                        user.setExpiredDate(jsonObject.optLong("expiredDate"));
+                        user.setExpiredDate(jsonObject.getLong("expiredDate"));
 
-                        String token = jsonObject.optString("token");
+                        String token = jsonObject.getString("token");
                         user.setToken(token);
 
-                        user.setAvatarUrl(jsonObject.optString("avatarUrl"));
+                        user.setAvatarUrl(jsonObject.getString("avatarUrl"));
 
                         //添加token 至 HttpHeader
                         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
@@ -413,16 +413,16 @@ public class LoginActivity extends BaseActivity {
                         //                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
                         //                    }
                         return true;
-                    } else {
-                        Log.d(TAG, "jsonObject is null");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                         hideLoadingDialog();
-                        Toast.makeText(context, getString(R.string.usernamePasswordMismatching), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
                     hideLoadingDialog();
                     //TODO 密码或者用户名不匹配，网络接口返回不明确
-                    Toast.makeText(context, getString(R.string.usernamePasswordMismatching), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.username_password_mismatching), Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }

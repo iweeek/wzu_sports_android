@@ -170,7 +170,7 @@
     <string name="minutePlaceHolder">%s 分钟</string>
 
 
-    <string name="usernamePasswordMismatching">用户名和密码不匹配</string>
+    <string name="username_password_mismatching">用户名和密码不匹配</string>
 
     <!--运动准备-->
     <string name="gpsLocationing">GPS定位中...</string>
