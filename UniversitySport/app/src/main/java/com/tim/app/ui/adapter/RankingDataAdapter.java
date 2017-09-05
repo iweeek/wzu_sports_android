@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.roundimg.RoundedImageView;
+import com.bumptech.glide.Glide;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
-import com.tim.app.ui.cell.GlideApp;
 
 import java.util.List;
 
@@ -58,11 +58,14 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvName.setText(data.getUserName());
         }
         if (!TextUtils.isEmpty(data.getAvatar())) {
-            GlideApp.with(context)
+            Glide.with(context)
                     .load(data.getAvatar())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
                     .into(holder.rivAvatar);
+//            GlideApp.with(context)
+//                    .load(data.getAvatar())
+//                    .placeholder(R.drawable.ic_default_avatar)
+//                    .circleCrop()
+//                    .into(holder.rivAvatar);
         }
         holder.tvNo.setText(String.valueOf(position + 4));
         if (position != getDataList().size() - 1) {

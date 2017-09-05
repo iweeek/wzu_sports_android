@@ -11,16 +11,23 @@ android {
         versionCode 14
         versionName "1.0.0"
         manifestPlaceholders = [YOUR_APP_KEY: "57c68fab67e58ecacf002627"]
+        // If you do enable multidex, you must also set
+        // minSdkVersion to 21 or higher.
         multiDexEnabled true
         ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "arm64-v8a", "x86_64"
         }
 
     }
+    // TODO  you need to manually set this property to true when building the release version of your app.
+//    aaptOptions {
+//        cruncherEnabled false
+//    }
 
     dexOptions {
         preDexLibraries = false
-        javaMaxHeapSize "2g"
+        maxProcessCount 8
+//        javaMaxHeapSize "2g"
     }
 
     def keystorePropertiesFile = file("keystore.properties")
@@ -71,13 +78,12 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':BaseLibrary')
-    testCompile 'junit:junit:4.12'
     //    compile 'com.amap.api:map3d-native:latest.integration'
     compile 'com.amap.api:3dmap:latest.integration'
     compile 'com.amap.api:location:latest.integration'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.github.bumptech.glide:glide:4.0.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
