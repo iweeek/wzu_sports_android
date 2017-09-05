@@ -106,7 +106,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     //全局变量
     private int interval = 0;
-    private int speedLimitation = 5;//米
+    private int speedLimitation = 10;//米
     private int currentDistance = 0;
     private long elapseTime = 0;
     //    private long previousTime = 0;
@@ -485,6 +485,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                         isNormal = false;
                         drawLine(lastLatLng, newLatLng, isNormal);
+                        currentDistance += distanceInterval;
                     } else {
                         isNormal = true;
                         drawLine(lastLatLng, newLatLng, isNormal);
@@ -498,12 +499,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         bdDividend = new BigDecimal(currentDistance);
                         bdDevisor = new BigDecimal(elapseTime);
                         BigDecimal bdResult = bdDividend.divide(bdDevisor, 2, BigDecimal.ROUND_HALF_UP);
-                        //解决速度过大
+                        // 解决速度过大
                         if (bdResult.compareTo(new BigDecimal(10)) < 0) {
                             tvAverSpeed.setText(String.valueOf(bdResult));
                         }
                     }
 
+                    // 提交到服务器
                     ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
                             location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
                             locationType, isNormal, new ResponseCallback() {
