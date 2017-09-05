@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.0"
 
     defaultConfig {
-        applicationId "com.guangyangyundong.sport"
+        applicationId "com.tim.moli"
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 14
@@ -52,6 +52,13 @@ android {
 //    flavorDimensions "paid","free"
 
     productFlavors {
+        free {
+            //TODO
+            signingConfig signingConfigs.wzu_sports_config
+        }
+        paid{
+            //TODO
+        }
     }
 }
 
