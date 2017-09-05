@@ -440,8 +440,8 @@ public class SportResultActivity extends ToolbarActivity {
                         currentDistance = jsonObject.optInt("distance");
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
 
-                        boolean qualified = jsonObject.optBoolean("qualified");
-                        boolean isValid = json.optBoolean("isValid");
+                        boolean qualified = jsonObject.getBoolean("qualified");
+                        boolean isValid = jsonObject.getBoolean("isValid");
                         if (historySportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
@@ -493,7 +493,7 @@ public class SportResultActivity extends ToolbarActivity {
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
-                        String curConsumeEnergy = json.getJSONObject("data").getJSONObject("runningActivity").getString("kcalConsumed");
+                        String curConsumeEnergy = jsonObject.getString("kcalConsumed");
                         tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
