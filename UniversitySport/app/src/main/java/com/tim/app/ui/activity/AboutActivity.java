@@ -2,7 +2,6 @@ package com.tim.app.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
@@ -14,7 +13,7 @@ import com.tim.app.util.PhoneInfoUtil;
 public class AboutActivity extends ToolbarActivity {
 
     private TextView tvVersion;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
+//    private CollapsingToolbarLayout collapsingToolbarLayout;
     private Toolbar toolbar;
 
     public static void start(Context context) {
@@ -30,8 +29,8 @@ public class AboutActivity extends ToolbarActivity {
     @Override
     public void initView() {
         tvVersion = (TextView) findViewById(R.id.tvVersion);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
-        collapsingToolbarLayout.setTitle(getString(R.string.about_us));
+//        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+//        collapsingToolbarLayout.setTitle(getString(R.string.about_us));
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -48,6 +47,7 @@ public class AboutActivity extends ToolbarActivity {
 
     @Override
     public void initData() {
+        setTitle(getString(R.string.about_us));
         tvVersion.setText(getString(R.string.about_version, PhoneInfoUtil.getAppVersionName(this)));
     }
 
