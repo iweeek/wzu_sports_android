@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/blue"
-    android:orientation="vertical"
-    android:padding="@dimen/padding">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/blue"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin">
 
     <RelativeLayout
         android:id="@+id/toolbar"
-        style="@style/TitleBarStyle">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
         <ImageButton
             android:id="@+id/ibClose"
@@ -17,14 +19,14 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="@color/transparent"
-            android:src="@drawable/btn_close" />
+            android:src="@drawable/btn_close"/>
 
         <TextView
             android:id="@+id/tvTitle"
             style="@style/TitleTextStyle"
             android:layout_marginLeft="50dp"
             android:layout_toRightOf="@id/ibClose"
-            android:text="@string/login" />
+            android:text="@string/login"/>
 
     </RelativeLayout>
 
@@ -43,7 +45,7 @@
             <TextView
                 style="@style/inputContentTitle"
                 android:gravity="center"
-                android:text="@string/University" />
+                android:text="@string/university"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -59,7 +61,7 @@
                     android:background="@null"
                     android:hint="@string/select_your_university"
                     android:inputType="number"
-                    android:textColorHint="@color/white_80" />
+                    android:textColorHint="@color/white_80"/>
 
                 <ImageView
                     android:id="@+id/ivUniVisiable"
@@ -68,7 +70,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/password_input_selector"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
 
                 <ImageView
                     android:id="@+id/ivDeleteUni"
@@ -78,10 +80,10 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/ivUniVisiable"
                     android:background="@drawable/btn_delete"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </RelativeLayout>
 
-            <View style="@style/horizontalLine" />
+            <View style="@style/horizontalLine"/>
 
             <TextView
                 android:id="@+id/tvUniErrorPrmpt"
@@ -90,7 +92,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:textColor="@color/errorTextColor"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -101,7 +103,7 @@
             <TextView
                 style="@style/inputContentTitle"
                 android:gravity="center"
-                android:text="@string/studentNo" />
+                android:text="@string/student_no"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -117,7 +119,7 @@
                     android:background="@null"
                     android:hint="@string/login_input_num"
                     android:inputType="text"
-                    android:textColorHint="@color/white_80" />
+                    android:textColorHint="@color/white_80"/>
 
                 <ImageView
                     android:id="@+id/ivNoVisiable"
@@ -126,7 +128,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/password_input_selector"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"/>
 
                 <ImageView
                     android:id="@+id/ivDeleteNo"
@@ -136,10 +138,10 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/ivNoVisiable"
                     android:background="@drawable/btn_delete"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </RelativeLayout>
 
-            <View style="@style/horizontalLine" />
+            <View style="@style/horizontalLine"/>
 
             <TextView
                 android:id="@+id/tvStuNoErrorPrmpt"
@@ -148,7 +150,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:textColor="@color/errorTextColor"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -159,7 +161,7 @@
             <TextView
                 style="@style/inputContentTitle"
                 android:gravity="center"
-                android:text="@string/password" />
+                android:text="@string/password"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -175,7 +177,7 @@
                     android:background="@null"
                     android:hint="@string/error_password_noput"
                     android:inputType="textPassword"
-                    android:textColorHint="@color/white_80" />
+                    android:textColorHint="@color/white_80"/>
 
                 <ImageView
                     android:id="@+id/ivPasswordVisiable"
@@ -183,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/password_input_selector" />
+                    android:background="@drawable/password_input_selector"/>
 
                 <ImageView
                     android:id="@+id/ivPasswordDelete"
@@ -193,10 +195,10 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@id/ivPasswordVisiable"
                     android:background="@drawable/btn_delete"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </RelativeLayout>
 
-            <View style="@style/horizontalLine" />
+            <View style="@style/horizontalLine"/>
 
             <TextView
                 android:id="@+id/tvPasswordErrorPrmpt"
@@ -205,7 +207,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:textColor="@color/errorTextColor"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -230,7 +232,7 @@
             android:gravity="center"
             android:text="@string/login"
             android:textColor="@color/login_btn_text_color"
-            android:textSize="@dimen/button_text_size" />
+            android:textSize="@dimen/button_text_size"/>
 
         <TextView
             android:id="@+id/tvForgotPassword"
@@ -241,8 +243,9 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:textColor="@color/colorWhite"
+            android:visibility="invisible"
             android:text="@string/login_forget_password"
-            android:textSize="@dimen/text_size_18" />
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/text_size_18"/>
     </LinearLayout>
 </RelativeLayout>
