@@ -62,7 +62,7 @@ import static com.tim.app.constant.AppConstant.user;
 /**
  * 首页
  */
-public class MainActivity extends ToolbarActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
+public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -666,11 +666,5 @@ public class MainActivity extends ToolbarActivity implements BaseRecyclerAdapter
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-    }
-
-
-    @Override
-    public boolean canBack() {
-        return false;
     }
 }
