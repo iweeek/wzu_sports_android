@@ -77,6 +77,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.amap.api.mapcore.util.db.F;
+import static com.application.library.log.DLOG.i;
 import static com.tim.app.constant.AppConstant.student;
 
 /**
@@ -399,7 +401,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
         DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
-        if (screenOffTimeout <= screenKeepLightTime && Double.compare(params.screenBrightness, 0.1) != 0) {
+        if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
             Log.d(TAG, "onMyLocationChange turn down light");
@@ -644,13 +646,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvAverSpeed.setText("0.0");
                         }
 
-                        runningActivitiesEnd(targetFinishedTime);
-
                         tvParticipantNum.setVisibility(View.GONE);
-                        rlBottom.setVisibility(View.VISIBLE);
-                        llBottom.setVisibility(View.GONE);
-                        btStart.setVisibility(View.VISIBLE);
-                        btStart.setText("查看锻炼结果");
+
+                        runningActivitiesEnd(targetFinishedTime);
 
                         myBinder.stopLocationInService();
                         aMap.setOnMyLocationChangeListener(null);
@@ -915,30 +913,40 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         Log.d(TAG, "errCode:" + errCode);
                         if (errCode == 0) {
-                            historySportEntry = new HistoryRunningSportEntry();
+                            try {
+                                historySportEntry = new HistoryRunningSportEntry();
 
-                            historySportEntry.setId(json.optInt("id"));
-                            historySportEntry.setSportId(json.optInt("runningSportId"));
-                            historySportEntry.setStudentId(json.optInt("studentId"));
-                            historySportEntry.setDistance(json.optInt("distance"));
-                            historySportEntry.setStepCount(json.optInt("stepCount"));
-                            historySportEntry.setCostTime(json.optInt("costTime"));
-                            historySportEntry.setSpeed(json.optInt("speed"));
-                            historySportEntry.setStepPerSecond(json.optDouble("stepPerSecond"));
-                            historySportEntry.setDistancePerStep(json.optInt("distancePerStep"));
-                            historySportEntry.setTargetFinishedTime(json.optLong("targetFinishedTime"));
-                            historySportEntry.setStartTime(json.optLong("startTime"));
-                            historySportEntry.setKcalConsumed(json.optInt("kcalConsumed"));
-                            historySportEntry.setQualified(json.optBoolean("qualified"));
-                            historySportEntry.setValid(json.optBoolean("isValid"));
-                            historySportEntry.setQualifiedDistance(json.optInt("qualifiedDistance"));
-                            historySportEntry.setQualifiedCostTime(json.optInt("qualifiedCostTime"));
-                            historySportEntry.setMinCostTime(json.optLong("minCostTime"));
-                            historySportEntry.setCreatedAt(json.optLong("createdAt"));
-                            historySportEntry.setUpdatedAt(json.optLong("updatedAt"));
-                            historySportEntry.setEndedAt(json.optLong("endedAt"));
-                            historySportEntry.setEndedBy(json.optBoolean("endedBy"));
-                            historySportEntry.setType(AppConstant.RUNNING_TYPE);
+                                historySportEntry.setId(json.getInt("id"));
+                                historySportEntry.setSportId(json.getInt("runningSportId"));
+                                historySportEntry.setStudentId(json.getInt("studentId"));
+                                historySportEntry.setDistance(json.getInt("distance"));
+                                historySportEntry.setStepCount(json.getInt("stepCount"));
+                                historySportEntry.setCostTime(json.getInt("costTime"));
+                                historySportEntry.setSpeed(json.getInt("speed"));
+                                historySportEntry.setStepPerSecond(json.getDouble("stepPerSecond"));
+                                historySportEntry.setDistancePerStep(json.getInt("distancePerStep"));
+                                historySportEntry.setTargetFinishedTime(json.getLong("targetFinishedTime"));
+                                historySportEntry.setStartTime(json.getLong("startTime"));
+                                historySportEntry.setKcalConsumed(json.getInt("kcalConsumed"));
+                                historySportEntry.setQualified(json.getBoolean("qualified"));
+                                historySportEntry.setValid(json.getBoolean("isValid"));
+                                historySportEntry.setQualifiedDistance(json.getInt("qualifiedDistance"));
+                                historySportEntry.setQualifiedCostTime(json.getInt("qualifiedCostTime"));
+                                historySportEntry.setMinCostTime(json.getLong("minCostTime"));
+                                historySportEntry.setCreatedAt(json.getLong("createdAt"));
+                                historySportEntry.setUpdatedAt(json.getLong("updatedAt"));
+                                historySportEntry.setEndedAt(json.getLong("endedAt"));
+                                historySportEntry.setEndedBy(json.getBoolean("endedBy"));
+                                historySportEntry.setType(AppConstant.RUNNING_TYPE);
+                            } catch (org.json.JSONException e) {
+                                Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+
+                            rlBottom.setVisibility(View.VISIBLE);
+                            llBottom.setVisibility(View.GONE);
+                            btStart.setVisibility(View.VISIBLE);
+                            btStart.setText("查看锻炼结果");
 
                             if (historySportEntry.isValid()) {
                                 if (historySportEntry.isQualified()) {
@@ -957,6 +965,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                             tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergyTemp, String.valueOf(historySportEntry.getKcalConsumed())));
                             return true;
+
                         } else {
                             Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                             Log.d(TAG, COMMIT_FALIED_MSG);
