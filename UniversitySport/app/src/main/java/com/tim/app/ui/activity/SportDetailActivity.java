@@ -77,6 +77,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.amap.api.mapcore.util.db.F;
+import static com.application.library.log.DLOG.i;
 import static com.tim.app.constant.AppConstant.student;
 
 /**
@@ -399,7 +401,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
         DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
-        if (screenOffTimeout <= screenKeepLightTime && Double.compare(params.screenBrightness, 0.1) != 0) {
+        if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
             Log.d(TAG, "onMyLocationChange turn down light");
