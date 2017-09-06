@@ -121,9 +121,9 @@ public class SportResultActivity extends ToolbarActivity {
 
 
     class DrawPoint {
-        LatLng ll;
-        Boolean isNormal = true;
-        int locationType;
+        private LatLng ll;
+        private Boolean isNormal = true;
+        private int locationType;
 
         DrawPoint(LatLng ll, boolean isNormal, int type) {
             this.ll = ll;
@@ -150,9 +150,9 @@ public class SportResultActivity extends ToolbarActivity {
     }
 
     private List<DrawPoint> mDrawPoints = new ArrayList<DrawPoint>();
+    private List<LatLng> mPoints = new ArrayList<LatLng>();
     //符合要求的DrawPoint，isNormal 和 locationtype 都符合要求将放入此集合中
     private List<DrawPoint> mNormalDrawPoints = new ArrayList<DrawPoint>();
-    private List<LatLng> mPoints = new ArrayList<LatLng>();
     private List<LatLng> mNormalPoints = new ArrayList<LatLng>();
 
     private Animation showAnimation;
@@ -285,8 +285,8 @@ public class SportResultActivity extends ToolbarActivity {
                         mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
-                        if (mNormalDrawPoints.size() > 0) {
-                            oldLatLng = mNormalDrawPoints.get(0).getLL();
+                        if (mDrawPoints.size() > 0) {
+                            oldLatLng = mDrawPoints.get(0).getLL();
                             MarkerOptions markerOption = new MarkerOptions();
                             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                                     .decodeResource(getResources(), R.drawable.icon_starting_point)));
@@ -422,8 +422,8 @@ public class SportResultActivity extends ToolbarActivity {
                         mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
-                        if (mNormalDrawPoints.size() > 0) {
-                            oldLatLng = mNormalDrawPoints.get(0).getLL();
+                        if (mDrawPoints.size() > 0) {
+                            oldLatLng = mDrawPoints.get(0).getLL();
                             MarkerOptions markerOption = new MarkerOptions();
                             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                                     .decodeResource(getResources(), R.drawable.icon_starting_point)));
@@ -586,22 +586,23 @@ public class SportResultActivity extends ToolbarActivity {
 
                 LatLng ll = oldLatLng;
 
-                DLOG.d(TAG, "onClick mDrawPoints.size: " + mNormalDrawPoints.size());
+                DLOG.d(TAG, "onClick mNormalDrawPoints.size: " + mNormalDrawPoints.size());
+                DLOG.d(TAG, "onClick mDrawPoints.size: " + mDrawPoints.size());
                 if (historySportEntry instanceof HistoryAreaSportEntry) {
-                    for (int i = 0; i < mNormalDrawPoints.size(); i++) {
-                        if (mNormalDrawPoints.get(i).getLocationType() == 1) {
-                            drawLine(ll, mNormalDrawPoints.get(i).getLL());
-                            ll = mNormalDrawPoints.get(i).getLL();
-                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mNormalDrawPoints.get(i).getLocationType() +
+                    for (int i = 0; i < mDrawPoints.size(); i++) {
+                        if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                            drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                            ll = mDrawPoints.get(i).getLL();
+                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
                                     ", i: " + i);
                         }
                     }
                 } else if (historySportEntry instanceof HistoryRunningSportEntry) {
-                    for (int i = 0; i < mNormalDrawPoints.size(); i++) {
-                        if (mNormalDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE && mNormalDrawPoints.get(i).isNormal()) {
-                            drawLine(ll, mNormalDrawPoints.get(i).getLL(), mNormalDrawPoints.get(i).isNormal());
-                            ll = mNormalDrawPoints.get(i).getLL();
-                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mNormalDrawPoints.get(i).getLocationType() +
+                    for (int i = 0; i < mDrawPoints.size(); i++) {
+                        if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                            drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                            ll = mDrawPoints.get(i).getLL();
+                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
                                     ", i: " + i);
                         }
                     }
@@ -615,12 +616,12 @@ public class SportResultActivity extends ToolbarActivity {
                 //                }
 
                 //运动轨迹动态跟踪
-                if (mNormalPoints.size() > 1) {
+                if (mPoints.size() > 1) {
                     //方式一：
-                    LatLngBounds bounds = getLatLngBounds(mPoints.get(0), mNormalPoints);//以中心点缩放
-                    DLOG.d(TAG, "onClick mNormalPoints.size: " + mNormalPoints.size());
+                    LatLngBounds bounds = getLatLngBounds(mPoints.get(0), mPoints);//以中心点缩放
+                    DLOG.d(TAG, "onClick mNormalPoints.size: " + mPoints.size());
                     //                    LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
-                    for (LatLng point : mNormalPoints) {
+                    for (LatLng point : mPoints) {
                         Log.d(TAG, "point.latitude:" + point.latitude);
                         Log.d(TAG, "point.longitude:" + point.longitude);
                         //                        DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
@@ -635,14 +636,14 @@ public class SportResultActivity extends ToolbarActivity {
                     smoothMarker.setDescriptor(BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked));
 
                     //当移动Marker的当前位置不在轨迹起点，先从当前位置移动到轨迹上，再开始平滑移动
-                    LatLng drivePoint = mNormalPoints.get(0);//设置当前位置，可以是任意点，这里直接设置为轨迹起点
+                    LatLng drivePoint = mPoints.get(0);//设置当前位置，可以是任意点，这里直接设置为轨迹起点
                     //计算一个点在线上的垂足，如果垂足在线上的某一顶点，则直接返回顶点的下标
-                    Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(mNormalPoints, drivePoint);
-                    mNormalPoints.set(pair.first, drivePoint);
-                    List<LatLng> subList = mNormalPoints.subList(pair.first, mNormalPoints.size());
+                    Pair<Integer, LatLng> pair = SpatialRelationUtil.calShortestDistancePoint(mPoints, drivePoint);
+                    mPoints.set(pair.first, drivePoint);
+                    List<LatLng> subList = mPoints.subList(pair.first, mPoints.size());
 
                     // 设置滑动的轨迹左边点
-                    smoothMarker.setPoints(mNormalPoints);
+                    smoothMarker.setPoints(mPoints);
                     // 设置滑动的总时间
                     smoothMarker.setTotalDuration(10);
 
@@ -653,7 +654,7 @@ public class SportResultActivity extends ToolbarActivity {
                                 @Override
                                 public void move(final double distance) {
 
-//                                    Log.i("MY", "distance:  " + distance);
+                                    //                                    Log.i("MY", "distance:  " + distance);
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -673,11 +674,11 @@ public class SportResultActivity extends ToolbarActivity {
                     smoothMarker.startSmoothMove();
                 }
 
-                if (mNormalDrawPoints.size() > 0) {
+                if (mDrawPoints.size() > 0) {
                     MarkerOptions markerOption = new MarkerOptions();
                     markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                             .decodeResource(getResources(), R.drawable.icon_termination)));
-                    markerOption.position(mNormalDrawPoints.get(mNormalDrawPoints.size() - 1).getLL()).title("终点");
+                    markerOption.position(mDrawPoints.get(mDrawPoints.size() - 1).getLL()).title("终点");
                     Marker marker = aMap.addMarker(markerOption);
                 } else {
                     //// TODO: 2017/8/18  说明坐标位置点都不符合要求，需要把距离置为零
@@ -837,7 +838,7 @@ public class SportResultActivity extends ToolbarActivity {
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
-//        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
+        //        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
         tvResult = (TextView) findViewById(R.id.tvResult);
