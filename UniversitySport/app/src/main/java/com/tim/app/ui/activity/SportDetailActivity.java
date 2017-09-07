@@ -250,7 +250,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             AlertDialog dialog = builder.show();
             TextView message = (TextView) dialog.findViewById(android.R.id.message);
             Button positiveButton = (Button) dialog.findViewById(android.R.id.button1);
-            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         } else {
             mDialog.show();
@@ -648,9 +648,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         runningActivitiesEnd(targetFinishedTime);
 
-                        if(myBinder != null){
-                            myBinder.stopLocationInService();
-                        }
+                        myBinder.stopLocationInService();
                         aMap.setOnMyLocationChangeListener(null);
                         aMap.setMyLocationEnabled(false);
                     }

@@ -56,6 +56,7 @@ public class LocationService extends Service {
 
     class MyBinder extends Binder {
         private static final String TAG = "MyBinder";
+
         public void startLocationInService(int interval) {
             DLOG.d(TAG, "startLocation");
             startLocation(interval);
@@ -85,8 +86,12 @@ public class LocationService extends Service {
         wakeLock.acquire();
         wifiLock.acquire();
     }
+
     public void stopLocation() {
-        mLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+        }
+
         if (wakeLock.isHeld()) {
             wakeLock.release();
         }
