@@ -289,9 +289,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         });
 
-        float level = getBatteryLevel();
+        Float level = getBatteryLevel();
         tvRemainPower = (TextView) mDialog.findViewById(R.id.tvRemainPower);
-        tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level)));
+        tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level.intValue())));
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
