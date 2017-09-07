@@ -77,9 +77,9 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/llRightTitle"
-                    tool:text="@string/joinPrompt"
                     android:textColor="@color/black_60"
-                    android:textSize="12dp"/>
+                    android:textSize="12dp"
+                    tool:text="@string/joinPrompt"/>
 
                 <LinearLayout
                     android:id="@+id/llRightTitle"
@@ -368,8 +368,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:textSize="16dp"
-                    android:text="@string/curConsumeEnergyTemp"/>
+                    android:text="@string/curConsumeEnergyTemp"
+                    android:textSize="16dp"/>
 
             </RelativeLayout>
 
@@ -391,14 +391,14 @@
 
     <com.application.library.widget.ProgressBarCircular
         android:id="@+id/pbcProgressBar"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
         app:matProg_barColor="@color/progressbar_load_color"
         app:matProg_barWidth="@dimen/progress_border_width"
         app:matProg_circleRadius="@dimen/progress_def_radius"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:matProg_progressIndeterminate="true" />
+        app:matProg_progressIndeterminate="true"/>
 
 
     <LinearLayout

@@ -797,7 +797,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
                                                         // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
-                                                        
+
                                                         // btStart.setVisibility(View.GONE);
                                                         // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
