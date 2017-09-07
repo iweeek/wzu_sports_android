@@ -267,7 +267,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
         Log.d(TAG, "pageNoEnergy:" + pageNoEnergy);
         Log.d(TAG, "pageNoTime:" + pageNoTime);
         if (type == AppConstant.TYPE_COST_ENERGY) {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -296,14 +296,14 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
             });
 
-            if (pageNoEnergy <= pageCountEnergy) {
-
+            if (pageNoEnergy != pageCountEnergy) {
                 lrvLoadMore.loadMoreFinish(false, true);
             } else {
                 lrvLoadMore.loadMoreFinish(false, false);
             }
+            pageNoEnergy++;
         } else {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -330,11 +330,12 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 }
 
             });
-            if (pageNoTime <= pageCountTime) {
+            if (pageNoTime != pageCountTime) {
                 lrvLoadMore.loadMoreFinish(false, true);
             } else {
                 lrvLoadMore.loadMoreFinish(false, false);
             }
+            pageNoTime++;
         }
         adapter.notifyDataSetChanged();
 
