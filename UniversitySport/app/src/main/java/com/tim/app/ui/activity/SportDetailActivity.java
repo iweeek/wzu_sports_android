@@ -77,8 +77,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.amap.api.mapcore.util.db.F;
-import static com.application.library.log.DLOG.i;
 import static com.tim.app.constant.AppConstant.student;
 
 /**
@@ -650,7 +648,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         runningActivitiesEnd(targetFinishedTime);
 
-                        myBinder.stopLocationInService();
+                        if(myBinder != null){
+                            myBinder.stopLocationInService();
+                        }
                         aMap.setOnMyLocationChangeListener(null);
                         aMap.setMyLocationEnabled(false);
                     }
