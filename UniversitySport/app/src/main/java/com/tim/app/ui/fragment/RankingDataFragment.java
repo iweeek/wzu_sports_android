@@ -51,11 +51,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     int type;
     private int universityId = 1;
     private int pageNoEnergy = 1;
-    private int pageSizeEnergy = 6;
+    private int pageSizeEnergy = 10;
     private int pageCountEnergy = -1;
 
     private int pageNoTime = 1;
-    private int pageSizeTime = 6;
+    private int pageSizeTime = 10;
     private int pageCountTime = -1;
 
     public static RankingDataFragment newInstance(int type) {
@@ -121,7 +121,6 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
 
-                        Log.d(TAG, "pageNoEnergy:" + pageNoEnergy);
                         JSONObject jsonObject = json.optJSONObject("data").optJSONObject("university")
                                 .optJSONObject("kcalConsumptionRanking");
                         try {
@@ -179,7 +178,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         JSONObject jsonObject = json.optJSONObject("data").optJSONObject("university")
                                 .optJSONObject("timeCostedRanking");
                         try {
-                            pageCountEnergy = Integer.valueOf(jsonObject.getString("pagesCount"));
+                            pageCountTime = Integer.valueOf(jsonObject.getString("pagesCount"));
                             JSONArray rankingDataArray = jsonObject.getJSONArray("data");
                             RankingData headData[] = new RankingData[3];
                             for (int i = 0; i < 3; i++) {
@@ -265,6 +264,8 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
+        Log.d(TAG, "pageNoEnergy:" + pageNoEnergy);
+        Log.d(TAG, "pageNoTime:" + pageNoTime);
         if (type == AppConstant.TYPE_COST_ENERGY) {
             ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
                 @Override
@@ -295,13 +296,14 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
             });
 
-            if (pageNoEnergy != pageCountEnergy) {
+            if (pageNoEnergy <= pageCountEnergy) {
+
                 lrvLoadMore.loadMoreFinish(false, true);
             } else {
                 lrvLoadMore.loadMoreFinish(false, false);
             }
         } else {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoTime++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime++, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -328,7 +330,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 }
 
             });
-            if (pageNoTime != pageCountTime) {
+            if (pageNoTime <= pageCountTime) {
                 lrvLoadMore.loadMoreFinish(false, true);
             } else {
                 lrvLoadMore.loadMoreFinish(false, false);
