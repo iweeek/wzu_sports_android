@@ -210,6 +210,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private void startTimer() {
         timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
+
     }
 
     private void stopTimer() {
@@ -790,10 +791,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
                                                         state = STATE_STARTED;
 
-                                                        //                    ibBack.setVisibility(View.GONE);
+                                                        // ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                        //                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
                                                         btStart.setVisibility(View.GONE);
                                                         rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
@@ -1077,6 +1078,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
+        aMap.moveCamera(cu);
     }
 
     /**
