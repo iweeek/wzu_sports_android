@@ -749,28 +749,28 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     public void onClick(View v) {
         turnUpScreen();
         switch (v.getId()) {
-            //            case ibBack:
-            //                finish();
-            //                break;
+            // case ibBack:
+            //     finish();
+            //     break;
             case R.id.btStart:
-                //                try {
-                //                    fos = openFileOutput("testMode", MODE_PRIVATE);
-                //                } catch (FileNotFoundException e) {
-                //                    e.printStackTrace();
-                //                }
+                // try {
+                //     fos = openFileOutput("testMode", MODE_PRIVATE);
+                // } catch (FileNotFoundException e) {
+                //     e.printStackTrace();
+                // }
                 //先检查定位权限
-                //                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                //                        != PackageManager.PERMISSION_GRANTED){
-                //                    if(ActivityCompat.shouldShowRequestPermissionRationale(this,
-                //                            Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //                        Toast.makeText(this,"shouldShowRequestPermissionRationale",Toast.LENGTH_SHORT).show();
+                // if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                //         != PackageManager.PERMISSION_GRANTED){
+                //     if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+                //             Manifest.permission.ACCESS_FINE_LOCATION)) {
+                //         Toast.makeText(this,"shouldShowRequestPermissionRationale",Toast.LENGTH_SHORT).show();
                 //
-                //                    }else {
-                //                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                //                                REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                //     }else {
+                //         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                //                 REQUEST_PERMISSION_WRITE_FINE_LOCATION);
                 //
-                //                    }
-                //                }else {
+                //     }
+                // }else {
                 if (state == STATE_NORMAL) {
                     Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     startTime = System.currentTimeMillis();
@@ -792,14 +792,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
                                                         state = STATE_STARTED;
 
-                                                        //                    ibBack.setVisibility(View.GONE);
+                                                        // ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                        //                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
-                                                        btStart.setVisibility(View.GONE);
-                                                        rlBottom.setVisibility(View.GONE);
+                                                        // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        // btStart.setVisibility(View.GONE);
+                                                        // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
+                                                        pbcProgressBar.setVisibility(View.GONE);
 
                                                         initData();
                                                         startTimer();
@@ -819,6 +820,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     // TODO
+                                    btStart.setVisibility(View.VISIBLE);
+                                    pbcProgressBar.setVisibility(View.GONE);
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                     Log.d(TAG, "errMsg: " + errMsg);
                                 }
@@ -843,20 +846,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     SportResultActivity.start(this, historySportEntry);
                 }
                 break;
-            //                }
             case R.id.ivLocation:
                 //修改地图的中心点位置
-                //                CameraPosition cp = aMap.getCameraPosition();
-                //                CameraPosition cpNew = CameraPosition.fromLatLngZoom(lastLatLng, cp.zoom);
-                //                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
-                //                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                //                aMap.moveCamera(cu);
+                // CameraPosition cp = aMap.getCameraPosition();
+                // CameraPosition cpNew = CameraPosition.fromLatLngZoom(lastLatLng, cp.zoom);
+                // CameraUpdate cu = CameraUpdateFactory.newCameraPosition(cpNew);
+                // aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                // aMap.moveCamera(cu);
                 //点击定位图标 实现定位到当前位置
                 CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
                 aMap.moveCamera(cu);
                 break;
             case R.id.ivShowSportInfo:
-                //TODO 指南针的位置要变化，UiSettings 中寻找方法
+                // TODO 指南针的位置要变化，UiSettings 中寻找方法
                 if (null == showAnimation) {
                     showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
                 }
@@ -947,6 +949,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 historySportEntry.setEndedBy(json.getBoolean("endedBy"));
                                 historySportEntry.setType(AppConstant.RUNNING_TYPE);
                             } catch (org.json.JSONException e) {
+                                e.printStackTrace();
                                 Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
