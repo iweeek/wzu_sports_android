@@ -75,10 +75,9 @@ import java.math.RoundingMode;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.amap.api.mapcore.util.db.F;
-import static com.application.library.log.DLOG.i;
 import static com.tim.app.constant.AppConstant.student;
 
 /**
@@ -212,6 +211,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private void startTimer() {
         timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
+
     }
 
     private void stopTimer() {
@@ -252,7 +252,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             AlertDialog dialog = builder.show();
             TextView message = (TextView) dialog.findViewById(android.R.id.message);
             Button positiveButton = (Button) dialog.findViewById(android.R.id.button1);
-            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         } else {
             mDialog.show();
@@ -792,10 +792,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
                                                         state = STATE_STARTED;
 
-                                                        //                    ibBack.setVisibility(View.GONE);
+                                                        // ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                        //                                                        llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
                                                         btStart.setVisibility(View.GONE);
                                                         rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
@@ -1079,6 +1079,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
+        aMap.moveCamera(cu);
     }
 
     /**
