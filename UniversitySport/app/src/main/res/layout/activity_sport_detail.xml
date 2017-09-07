@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:test="http://schemas.android.com/apk/res-auto"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tool="http://schemas.android.com/tools"
                 android:id="@+id/rlRoot"
                 android:layout_width="match_parent"
@@ -389,6 +389,18 @@
         android:visibility="gone"/>
 
 
+    <com.application.library.widget.ProgressBarCircular
+        android:id="@+id/pbcProgressBar"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:matProg_barColor="@color/progressbar_load_color"
+        app:matProg_barWidth="@dimen/progress_border_width"
+        app:matProg_circleRadius="@dimen/progress_def_radius"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:matProg_progressIndeterminate="true" />
+
+
     <LinearLayout
         android:id="@+id/llLacationHint"
         android:layout_width="match_parent"
@@ -475,8 +487,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="80dp"
             android:visibility="gone"
-            test:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
-            test:slideUnlockBlockResource="@drawable/ic_lock"
+            app:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
+            app:slideUnlockBlockResource="@drawable/ic_lock"
             tool:visibility="visible"/>
 
         <TextView

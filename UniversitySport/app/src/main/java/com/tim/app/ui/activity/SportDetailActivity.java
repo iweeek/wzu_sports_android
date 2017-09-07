@@ -55,6 +55,7 @@ import com.application.library.net.ResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
+import com.application.library.widget.ProgressBarCircular;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
@@ -145,6 +146,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private Button btStop;
     private SlideUnlockView slideUnlockView;
     private SportDialog mDialog;
+    private ProgressBarCircular pbcProgressBar;
 
     private LinearLayout llCurrentInfo;
     private RelativeLayout rlCurConsumeEnergy;
@@ -816,17 +818,25 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                             });
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    Log.e(TAG, "runningActivitiesStart onJsonResponse e: " + e);
+                                    // TODO
+                                    Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG, "errMsg: " + errMsg);
                                 }
                                 return true;
                             } else {
-                                //TODO
+                                // TODO
+                                btStart.setVisibility(View.VISIBLE);
+                                pbcProgressBar.setVisibility(View.GONE);
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, "errMsg: " + errMsg);
                                 return false;
                             }
                         }
                     });
+
+                    // 点击开始按钮后立即隐藏开始按钮
+                    btStart.setVisibility(View.GONE);
+                    pbcProgressBar.setVisibility(View.VISIBLE);
 
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
@@ -1015,6 +1025,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //TODO
         //        btStart.setVisibility(View.VISIBLE);
 
+        pbcProgressBar = (ProgressBarCircular) findViewById(R.id.pbcProgressBar);
 
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
         btContinue = (Button) findViewById(R.id.btContinue);
