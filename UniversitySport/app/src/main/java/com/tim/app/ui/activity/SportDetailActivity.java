@@ -77,8 +77,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import static com.amap.api.mapcore.util.db.F;
-import static com.application.library.log.DLOG.i;
 import static com.tim.app.constant.AppConstant.student;
 
 /**
@@ -252,7 +250,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             AlertDialog dialog = builder.show();
             TextView message = (TextView) dialog.findViewById(android.R.id.message);
             Button positiveButton = (Button) dialog.findViewById(android.R.id.button1);
-            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP,14);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         } else {
             mDialog.show();
