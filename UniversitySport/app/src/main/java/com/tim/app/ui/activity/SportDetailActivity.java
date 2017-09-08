@@ -285,7 +285,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         locationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
                     if (locationDialog.isShowing()) {
                         locationDialog.dismiss();
                     }
@@ -1043,7 +1043,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btStart.setOnClickListener(this);
         //TODO
         //        btStart.setVisibility(View.VISIBLE);
-        
+
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
