@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/bg_corners"
+              android:orientation="vertical">
+
+    <com.application.library.widget.ProgressBarCircular
+        android:id="@+id/pbcProgressBar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:visibility="visible"
+        app:matProg_barColor="@color/progressbar_load_color"
+        app:matProg_barWidth="5dp"
+        app:matProg_circleRadius="40dp"
+        app:matProg_progressIndeterminate="true"
+        app:matProg_spinSpeed="0.5"/>
+
+    <!--<fr.castorflex.android.circularprogressbar.CircularProgressBar-->
+    <!--android:id="@+id/pbcProgressBar"-->
+    <!--android:layout_width="100dp"-->
+    <!--android:layout_height="100dp"-->
+    <!--android:indeterminate="true"-->
+    <!--app:cpb_color="#FFee44"-->
+    <!--app:cpb_max_sweep_angle="300"-->
+    <!--app:cpb_min_sweep_angle="10"-->
+    <!--app:cpb_rotation_speed="1.0"-->
+    <!--app:cpb_stroke_width="4dp"-->
+    <!--app:cpb_sweep_speed="1.0"-->
+    <!--/>-->
+
+    <!--style="?android:progressBarStyle"-->
+</LinearLayout>
