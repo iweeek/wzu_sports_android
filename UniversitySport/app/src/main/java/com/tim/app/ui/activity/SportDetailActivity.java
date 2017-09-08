@@ -55,7 +55,6 @@ import com.application.library.net.ResponseCallback;
 import com.application.library.runtime.event.EventListener;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
-import com.application.library.widget.ProgressBarCircular;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
@@ -65,8 +64,8 @@ import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.sport.SensorService;
-import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.dialog.LocationDialog;
+import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
 
 import org.json.JSONException;
@@ -148,7 +147,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SlideUnlockView slideUnlockView;
     private LocationDialog locationDialog;
     private ProgressDialog progressDialog;
-    private ProgressBarCircular pbcProgressBar;
 
     private LinearLayout llCurrentInfo;
     private RelativeLayout rlCurConsumeEnergy;
@@ -812,7 +810,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
-                                                        //                                                        pbcProgressBar.setVisibility(View.GONE);
                                                         if (progressDialog.isShowing()) {
                                                             progressDialog.dismiss();
                                                         }
@@ -836,7 +833,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     e.printStackTrace();
                                     // TODO
                                     btStart.setVisibility(View.VISIBLE);
-                                    //                                    pbcProgressBar.setVisibility(View.GONE);
                                     if (progressDialog.isShowing()) {
                                         progressDialog.dismiss();
                                     }
@@ -847,7 +843,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             } else {
                                 // TODO
                                 btStart.setVisibility(View.VISIBLE);
-                                //                                pbcProgressBar.setVisibility(View.GONE);
                                 if (progressDialog.isShowing()) {
                                     progressDialog.dismiss();
                                 }
@@ -860,7 +855,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     // 点击开始按钮后立即隐藏开始按钮
                     btStart.setVisibility(View.GONE);
-                    //                    pbcProgressBar.setVisibility(View.VISIBLE);
                     progressDialog.show();
 
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
@@ -1049,9 +1043,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btStart.setOnClickListener(this);
         //TODO
         //        btStart.setVisibility(View.VISIBLE);
-
-        pbcProgressBar = (ProgressBarCircular) findViewById(R.id.pbcProgressBar);
-
+        
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
