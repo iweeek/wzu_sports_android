@@ -287,8 +287,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         locationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    if (locationDialog.isShowing()) {
+                        locationDialog.dismiss();
+                    }
                     finish();
+                }
                 return false;
             }
         });
@@ -296,9 +300,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
-        float level = getBatteryLevel();
+        Float level = getBatteryLevel();
         tvRemainPower = (TextView) locationDialog.findViewById(R.id.tvRemainPower);
-        tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level)));
+        tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level.intValue())));
+
         initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
