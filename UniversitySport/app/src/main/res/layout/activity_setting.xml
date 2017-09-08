@@ -66,15 +66,15 @@
                     android:textSize="12dp" />
             </RelativeLayout>
 
-            <View
-                style="@style/horizontalLine"
-                android:layout_marginLeft="10dp" />
+            <!--<View-->
+                <!--style="@style/horizontalLine"-->
+                <!--android:layout_marginLeft="10dp" />-->
 
-            <TextView
-                android:id="@+id/tv_function"
-                style="@style/menuItem"
-                android:clickable="true"
-                android:text="@string/update_log" />
+            <!--<TextView-->
+                <!--android:id="@+id/tv_function"-->
+                <!--style="@style/menuItem"-->
+                <!--android:clickable="true"-->
+                <!--android:text="@string/update_log" />-->
 
             <View
                 style="@style/horizontalLine"

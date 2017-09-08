@@ -441,7 +441,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         totalCostedTime = totalCostedTime / 60;
                         BigDecimal bd = new BigDecimal(totalCostedTime);
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
-                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalSignInCount, curTermTargetTimes);
+                        homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd.intValue()), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
 //                        adapter.notifyDataSetChanged();
                         return true;
