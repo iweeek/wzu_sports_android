@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-         classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:2.3.3'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -20,4 +20,21 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+
+    android = [
+            MIN_SDK_VERSION = 19,
+            TARGET_SDK_VERSION = 22,
+            COMPILE_SDK_VERSION = 25,
+            BUILD_TOOL_SVERSION = "25.0.0",
+            VERSION_CODE = 14,
+            VERSION_NAME = "1.0.0"
+    ]
+
+    dependencies = [
+            SUPPORT_LIBRARY_VERSION = "25.3.1",
+            GLIDE_VERSION = "4.0.0"
+    ]
 }

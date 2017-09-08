@@ -1,21 +1,20 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    compileSdkVersion rootProject.ext.COMPILE_SDK_VERSION
+    buildToolsVersion rootProject.ext.BUILD_TOOL_SVERSION
 
     defaultConfig {
         applicationId "com.guangyangyundong.sport"
-        minSdkVersion 19
-        targetSdkVersion 22
-        versionCode 14
-        versionName "1.0.0"
+        minSdkVersion  rootProject.ext.MIN_SDK_VERSION
+        targetSdkVersion  rootProject.ext.TARGET_SDK_VERSION
+        versionCode rootProject.ext.VERSION_CODE
+        versionName rootProject.ext.VERSION_NAME
         manifestPlaceholders = [YOUR_APP_KEY: "57c68fab67e58ecacf002627"]
         multiDexEnabled true
         ndk { //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
             abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "arm64-v8a", "x86_64"
         }
-
     }
 
     dexOptions {
@@ -70,12 +69,12 @@ dependencies {
     compile 'com.amap.api:3dmap:latest.integration'
     compile 'com.amap.api:location:latest.integration'
     compile 'joda-time:joda-time:2.9.9'
-    compile 'com.github.bumptech.glide:glide:4.0.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    compile "com.github.bumptech.glide:glide:${rootProject.ext.GLIDE_VERSION}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.ext.GLIDE_VERSION}"
 
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:support-v4:25.0.0'
+    compile "com.android.support:appcompat-v7:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:design:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
+    compile "com.android.support:support-v4:${rootProject.ext.SUPPORT_LIBRARY_VERSION}"
 }
 
 def releaseTime() {
