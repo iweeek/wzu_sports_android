@@ -22,7 +22,6 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         return mDataList;
     }
 
-
     /**
      * 这段代码基本没用返回的都是null ， 所以需要子类重写
      * @param parent
@@ -39,31 +38,40 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         return holder;
     }
 
+    public abstract void onBindViewHolder(T holder, int position, D data);
 
     @Override
     public void onBindViewHolder(final BaseRecyclerViewHolder holder, final int position) {
-            //提供点击事件
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mListener != null) {
-                        mListener.onItemClick(v, position, getItemId(position));
-                    }
+        //提供点击事件
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onItemClick(v, position, getItemId(position));
                 }
-            });
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mLongListener != null) {
-                        return mLongListener.onItemLongClick(v, position, getItemId(position));  //todo  这里id没有提供正确。
-                    }
-                    return false;
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mLongListener != null) {
+                    return mLongListener.onItemLongClick(v, position, getItemId(position));  //todo  这里id没有提供正确。
                 }
-            });
-            //调用子类重写的
-            onBindViewHolder((T) holder, position, mDataList.get(position));
+                return false;
+            }
+        });
+        //调用子类重写的
+        onBindViewHolder((T) holder, position, mDataList.get(position));
     }
 
+    public int getItemViewType(int position, D data) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return getItemViewType(position, mDataList.get(position));
+    }
 
     @Override
     public int getItemCount() {
@@ -91,6 +99,7 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         this.mDataList = datas;
         notifyDataSetChanged();
     }
+
     public void updateDataDiff(List<D> datas) {
         this.mDataList = datas;
     }
@@ -104,7 +113,6 @@ public abstract class BaseRecyclerAdapter<T extends BaseRecyclerAdapter.BaseRecy
         return null;
     }
 
-    public abstract void onBindViewHolder(T holder, int position, D data);
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position, long id);
