@@ -296,8 +296,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
-        progressDialog.show();
-
         float level = getBatteryLevel();
         tvRemainPower = (TextView) locationDialog.findViewById(R.id.tvRemainPower);
         tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level)));
@@ -418,35 +416,35 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             Log.d(TAG, "locationType:" + locationType);
             //定位成功
-            //            if (errorCode != 0 || locationType != 1) {
-            //                String errText = "正在定位中，GPS信号弱";
-            //                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-            //                return;
-            //            } else {
-            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            Log.d(TAG, "newLatLng: " + newLatLng);
-            // 判断第一次，第一次会提示
-            if (lastLatLng == null) {
-                String errText = "定位成功";
-                firstLocation = location;
-                firstLocationType = locationType;
-                llLacationHint.setVisibility(View.GONE);
+            if (errorCode != 0 || locationType != 1) {
+                String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                if (locationDialog.isShowing()) {
-                    locationDialog.dismiss();
+                return;
+            } else {
+                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                Log.d(TAG, "newLatLng: " + newLatLng);
+                // 判断第一次，第一次会提示
+                if (lastLatLng == null) {
+                    String errText = "定位成功";
+                    firstLocation = location;
+                    firstLocationType = locationType;
+                    llLacationHint.setVisibility(View.GONE);
+                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                    if (locationDialog.isShowing()) {
+                        locationDialog.dismiss();
+                    }
+
+                    //TODO 待删除
+                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                    aMap.moveCamera(cu);
+
+                    btStart.setVisibility(View.VISIBLE);
                 }
-
-                //TODO 待删除
-                //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                //toastText = "调整屏幕缩放比例：" + zoomLevel;
-                //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                aMap.moveCamera(cu);
-
-                btStart.setVisibility(View.VISIBLE);
             }
-            //            }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 //                DLOG.writeToInternalFile(msg);
@@ -809,7 +807,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
-                                                        pbcProgressBar.setVisibility(View.GONE);
+                                                        //                                                        pbcProgressBar.setVisibility(View.GONE);
+                                                        if (progressDialog.isShowing()) {
+                                                            progressDialog.dismiss();
+                                                        }
 
                                                         initData();
                                                         startTimer();
@@ -830,8 +831,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     e.printStackTrace();
                                     // TODO
                                     btStart.setVisibility(View.VISIBLE);
-//                                    pbcProgressBar.setVisibility(View.GONE);
-                                    if(progressDialog.isShowing()){
+                                    //                                    pbcProgressBar.setVisibility(View.GONE);
+                                    if (progressDialog.isShowing()) {
                                         progressDialog.dismiss();
                                     }
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
@@ -841,8 +842,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             } else {
                                 // TODO
                                 btStart.setVisibility(View.VISIBLE);
-//                                pbcProgressBar.setVisibility(View.GONE);
-                                if(progressDialog.isShowing()){
+                                //                                pbcProgressBar.setVisibility(View.GONE);
+                                if (progressDialog.isShowing()) {
                                     progressDialog.dismiss();
                                 }
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
@@ -854,7 +855,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     // 点击开始按钮后立即隐藏开始按钮
                     btStart.setVisibility(View.GONE);
-//                    pbcProgressBar.setVisibility(View.VISIBLE);
+                    //                    pbcProgressBar.setVisibility(View.VISIBLE);
                     progressDialog.show();
 
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
