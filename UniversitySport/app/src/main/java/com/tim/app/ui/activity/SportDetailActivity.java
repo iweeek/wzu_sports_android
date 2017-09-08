@@ -959,10 +959,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 historySportEntry.setQualifiedDistance(json.getInt("qualifiedDistance"));
                                 historySportEntry.setQualifiedCostTime(json.getInt("qualifiedCostTime"));
                                 historySportEntry.setMinCostTime(json.getLong("minCostTime"));
-                                historySportEntry.setCreatedAt(json.getLong("createdAt"));
-                                historySportEntry.setUpdatedAt(json.getLong("updatedAt"));
+//                                historySportEntry.setCreatedAt(json.getLong("createdAt"));
+//                                historySportEntry.setUpdatedAt(json.getLong("updatedAt"));
                                 historySportEntry.setEndedAt(json.getLong("endedAt"));
-                                historySportEntry.setEndedBy(json.getBoolean("endedBy"));
+//                                historySportEntry.setEndedBy(json.getBoolean("endedBy"));
                                 historySportEntry.setType(AppConstant.RUNNING_TYPE);
                             } catch (org.json.JSONException e) {
                                 e.printStackTrace();
