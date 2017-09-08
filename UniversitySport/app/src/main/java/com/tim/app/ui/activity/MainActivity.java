@@ -65,6 +65,8 @@ import static com.tim.app.constant.AppConstant.user;
 public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    public static final int SPORT_BACKGROUND_WIDTH = 1080;
+    public static final int SPORT_BACKGROUND_HEIGHT = 465;
 
     //    public static User user;
     //    public static Student student;

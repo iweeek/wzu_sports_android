@@ -18,6 +18,9 @@ import com.tim.app.ui.cell.GlideApp;
 
 import java.util.List;
 
+import static com.tim.app.ui.activity.MainActivity.SPORT_BACKGROUND_HEIGHT;
+import static com.tim.app.ui.activity.MainActivity.SPORT_BACKGROUND_WIDTH;
+
 public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportEntry> {
     private Context mContext;
     private boolean isShowSection;
@@ -70,7 +73,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         if (!TextUtils.isEmpty(data.getImgUrl())) {
             GlideApp.with(mContext)
                     .load(data.getImgUrl())
-                    .apply(new RequestOptions().override(1080 * 465))
+                    .apply(new RequestOptions().override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT))
                     .placeholder(R.drawable.ic_bg_run)
                     .centerCrop()
                     .into((ImageView) holder.findView(R.id.rivSportBg));
