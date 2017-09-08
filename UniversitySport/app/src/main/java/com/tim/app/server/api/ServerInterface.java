@@ -234,6 +234,7 @@ public class ServerInterface {
                 "    isEnabled\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
+                "    imgUrl\n" +
                 "  }\n" +
                 "}\n";
         query(queryStr, callback);

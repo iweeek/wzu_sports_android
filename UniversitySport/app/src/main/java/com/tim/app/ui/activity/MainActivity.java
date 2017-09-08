@@ -351,24 +351,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setName(jsonObject.optString("name", "快走"));
                             String name = jsonObject.optString("name", "快走");
 
-                            //// TODO: 2017/8/13 有待改进
-                            switch (name) {
-                                case "快走":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                                    break;
-                                case "快跑":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    break;
-                                case "随机慢跑":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
-                                    break;
-                                case "1000米跑":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    break;
-                                default:
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    break;
-                            }
+                            sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
+                            Log.d(TAG, "imgUrl " + jsonObject.getString("imgUrl"));
+                            sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
 
                             sportEntry.setParticipantNum(participantNum);
                             sportEntry.setQualifiedDistance(distance);

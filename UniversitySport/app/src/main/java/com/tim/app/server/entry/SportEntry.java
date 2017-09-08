@@ -18,7 +18,7 @@ public class SportEntry implements Serializable {
     private int participantNum;//参加人数
     private int qualifiedDistance;//目标距离
     private String targetSpeed;//目标速度
-    private String bgUrl;//背景图片地址
+    private String imgUrl;//背景图片地址
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
 
@@ -69,12 +69,12 @@ public class SportEntry implements Serializable {
         this.qualifiedCostTime = targetTime;
     }
 
-    public String getBgUrl() {
-        return bgUrl;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setBgUrl(String bgUrl) {
-        this.bgUrl = bgUrl;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public int getBgDrawableId() {
@@ -109,7 +109,7 @@ public class SportEntry implements Serializable {
                 ", qualifiedDistance=" + qualifiedDistance +
                 ", targetSpeed='" + targetSpeed + '\'' +
                 ", qualifiedCostTime=" + qualifiedCostTime +
-                ", bgUrl='" + bgUrl + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
                 ", bgDrawableId=" + bgDrawableId +
                 ", type=" + type +
                 ", id=" + id +
