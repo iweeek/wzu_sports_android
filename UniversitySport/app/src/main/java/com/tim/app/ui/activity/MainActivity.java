@@ -302,6 +302,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onItemClick(View view, int position, long id) {
         SportEntry sportEntry = sportEntryDataList.get(position);
 
+        // this block is not work!
         if (BadNetworkAdapter.BAD_NETWORK.equals(view.getTag())) {
             Log.d(TAG, "onItemClick: bad network!");
             queryRunningSport();
