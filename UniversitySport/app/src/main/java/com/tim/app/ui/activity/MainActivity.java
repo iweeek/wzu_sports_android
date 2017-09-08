@@ -302,6 +302,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onItemClick(View view, int position, long id) {
         SportEntry sportEntry = sportEntryDataList.get(position);
 
+        // this block is not work!
         if (BadNetworkAdapter.BAD_NETWORK.equals(view.getTag())) {
             Log.d(TAG, "onItemClick: bad network!");
             queryRunningSport();
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
                         homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd.intValue()), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
-                        adapter.notifyDataSetChanged();
+//                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (Exception e) {
                         Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
@@ -614,6 +615,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
         Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
         queryCurTermData();
+//        queryRunningSport();
     }
 
     @Override
