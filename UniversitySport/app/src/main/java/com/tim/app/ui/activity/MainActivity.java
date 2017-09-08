@@ -327,11 +327,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
-                    Log.d(TAG, "sportArray.length():" + sportArray.length());
+                    JSONArray runningSportArray = json.optJSONObject("data").optJSONArray("runningSports");
+                    Log.d(TAG, "runningSportArray.length():" + runningSportArray.length());
                     try {
-                        for (int i = 0; i < sportArray.length(); i++) {
-                            JSONObject jsonObject = sportArray.getJSONObject(i);
+                        for (int i = 0; i < runningSportArray.length(); i++) {
+                            JSONObject jsonObject = runningSportArray.getJSONObject(i);
 
                             if (!jsonObject.optBoolean("isEnabled")) {
                                 continue;
@@ -369,7 +369,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                         if (sportEntryDataList.size() == 0) {
-                            Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
+                            Log.d(TAG, "queryRunningSport >>>> sportEntryDataList.size():" + sportEntryDataList.size());
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();
@@ -384,6 +384,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 } else {
                     //TODO
                     emptyLayout.showEmptyOrError(errCode);
+                    Log.d(TAG, "获取跑步运动项目失败 错误码：" + errCode);
                     return false;
                 }
             }
@@ -430,7 +431,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
                         homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd.intValue()), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
-//                        adapter.notifyDataSetChanged();
+                        //                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (Exception e) {
                         Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
@@ -457,22 +458,35 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 SportEntry areaSportEntry = new SportEntry();
                 if (errCode == 0) {
-                    //获取接口参数
-                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("areaSports");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.optJSONObject(i);
-                        areaSportEntry.setId(jsonObject.optInt("id"));
-                        areaSportEntry.setName(jsonObject.optString("name"));
-                        areaSportEntry.setType(SportEntry.AREA_SPORT);
-                        //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
-                        areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
-                        areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
-                        areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
-                        //                        areaSportEntry.(jsonObject.optInt("universityId"));
-                        Log.d(TAG, "areaSportEntry:" + areaSportEntry);
+                    try {
+                        JSONArray areaSportArray = json.optJSONObject("data").optJSONArray("areaSports");
+                        Log.d(TAG, "areaSportArray.length():" + areaSportArray.length());
+                        for (int i = 0; i < areaSportArray.length(); i++) {
+                            JSONObject jsonObject = areaSportArray.optJSONObject(i);
+                            areaSportEntry.setId(jsonObject.optInt("id"));
+                            areaSportEntry.setName(jsonObject.optString("name"));
+                            areaSportEntry.setType(SportEntry.AREA_SPORT);
+                            //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
+                            areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
+                            areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
 
-                        sportEntryDataList.add(areaSportEntry);
-                        //                        mAreaSportEntryList.add(areaSportEntry);
+                            Log.d(TAG, "imgUrl " + jsonObject.getString("imgUrl"));
+                            areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
+                            areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
+
+                            sportEntryDataList.add(areaSportEntry);
+                            adapter.notifyDataSetChanged();
+
+                            if (sportEntryDataList.size() == 0) {
+                                Log.d(TAG, "queryAreaSport >>>> sportEntryDataList.size():" + sportEntryDataList.size());
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
+                        }
+                    } catch (JSONException e) {
+                        emptyLayout.showEmpty();
+                        e.printStackTrace();
                     }
                     return true;
                 } else {
@@ -602,7 +616,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
         Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
         queryCurTermData();
-//        queryRunningSport();
+        //        queryRunningSport();
     }
 
     @Override

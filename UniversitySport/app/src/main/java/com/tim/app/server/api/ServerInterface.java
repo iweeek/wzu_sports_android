@@ -499,6 +499,7 @@ public class ServerInterface {
                 "    qualifiedCostTime\n" +
                 "    acquisitionInterval\n" +
                 "    universityId\n" +
+                "    imgUrl\n" +
                 "  }\n" +
                 "}\n" +
                 "\n";

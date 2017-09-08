@@ -73,9 +73,11 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         if (!TextUtils.isEmpty(data.getImgUrl())) {
             GlideApp.with(mContext)
                     .load(data.getImgUrl())
-                    .apply(new RequestOptions().override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT))
+                    .apply(new RequestOptions()
+                            .override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT)
+                            .dontAnimate()
+                            .dontTransform())
                     .placeholder(R.drawable.ic_bg_run)
-                    .centerCrop()
                     .into((ImageView) holder.findView(R.id.rivSportBg));
         } else {
             holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
