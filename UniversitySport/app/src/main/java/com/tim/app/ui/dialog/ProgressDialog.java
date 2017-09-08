@@ -2,7 +2,6 @@ package com.tim.app.ui.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 
 import com.tim.app.R;
@@ -17,8 +16,8 @@ public class ProgressDialog extends Dialog {
 
     public ProgressDialog(@NonNull Context context) {
         super(context, R.style.CommonDialog);
-        getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        getWindow().setDimAmount(0);
+        // this can hide the background，the value is from 0 to 1.
+        //        getWindow().setDimAmount(0);
         setContentView(R.layout.dialog_progress);
     }
 
