@@ -313,7 +313,7 @@ public class ServerInterface {
      * @param callback
      */
     public void queryCurTermData(int universityId, int studentId, ResponseCallback callback) {
-        String timeRange = "CURRENT_WEEK";
+        String timeRange = "CURRENT_TERM";
         String queryStr = "{\n" +
                 "  student(id: " + studentId + ") {\n" +
                 "    areaActivityKcalConsumption\n" +
