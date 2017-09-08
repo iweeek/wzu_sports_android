@@ -135,7 +135,7 @@ public class NetworkInterface {
 
                     if (response.code() == 401) {
                         Object tag = call.request().tag();
-                        String name = LoginActivity.class.getSimpleName();
+                        String loginActivity = LoginActivity.class.getSimpleName();
                         Intent intent = null;
                         String errMsg = null;
 
@@ -146,8 +146,8 @@ public class NetworkInterface {
                             e.printStackTrace();
                         }
 
-                        if (tag.equals(name)) {
-                            // TODO
+                        if (tag.equals(loginActivity)) {
+                            // TODO LoginActivity
                             callback.onResponse(s.getBytes(), 0, errMsg, 0, false);
                         } else {
                             intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
@@ -217,18 +217,27 @@ public class NetworkInterface {
                 }
 
                 if (response.code() == 401) {
-                    //                        ViewGT.gotoLoginActivity(RT.application.getApplicationContext());
-                    Intent intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    Object tag = call.request().tag();
+                    String loginActivity = LoginActivity.class.getSimpleName();
+                    Intent intent = null;
+                    String errMsg = null;
 
                     try {
                         JSONObject object = new JSONObject(s);
-                        Toast.makeText(RT.application.getApplicationContext(), object.getString("statusMsg"), Toast.LENGTH_SHORT).show();
+                        errMsg = object.getString("statusMsg");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    RT.application.getApplicationContext().startActivity(intent);
+                    if (tag.equals(loginActivity)) {
+                        // TODO LoginActivity
+                        callback.onResponse(s.getBytes(), 0, errMsg, 0, false);
+                    } else {
+                        intent = new Intent(RT.application.getApplicationContext(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        RT.application.getApplicationContext().startActivity(intent);
+                        Toast.makeText(RT.application.getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     callback.onResponse(s.getBytes(), 0, "", 0, false);
                 }
