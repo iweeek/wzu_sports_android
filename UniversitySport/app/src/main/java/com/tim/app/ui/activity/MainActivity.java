@@ -442,7 +442,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
                         homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
-                        adapter.notifyDataSetChanged();
+//                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (Exception e) {
                         Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
@@ -614,6 +614,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
         Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
         queryCurTermData();
+//        queryRunningSport();
     }
 
     @Override

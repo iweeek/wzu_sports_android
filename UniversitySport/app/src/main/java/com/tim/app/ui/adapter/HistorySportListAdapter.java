@@ -43,6 +43,11 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    @Override
     public void onBindViewHolder(BaseRecyclerViewHolder holder, final int position, HistoryItem data) {
         boolean isDelimit = false;
         if (data == null) {
