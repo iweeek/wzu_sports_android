@@ -388,18 +388,24 @@
         android:background="@drawable/icon_sport_info_closed_toggle"
         android:visibility="gone"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
 
-    <com.application.library.widget.ProgressBarCircular
-        android:id="@+id/pbcProgressBar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:matProg_barColor="@color/progressbar_load_color"
-        app:matProg_barWidth="@dimen/progress_border_width"
-        app:matProg_circleRadius="@dimen/progress_def_radius"
-        app:matProg_progressIndeterminate="true"/>
+        android:layout_centerInParent="true">
 
+        <com.application.library.widget.ProgressBarCircular
+            android:id="@+id/pbcProgressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:visibility="gone"
+            app:matProg_barColor="@color/progressbar_load_color"
+            app:matProg_barWidth="5dp"
+            app:matProg_circleRadius="@dimen/progress_def_radius"
+            app:matProg_progressIndeterminate="true"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llLacationHint"

@@ -16,8 +16,8 @@ import com.tim.app.R;
  * @描述
  */
 
-public class SportDialog extends Dialog implements OnClickListener{
-    public SportDialog(@NonNull Context context) {
+public class LocationDialog extends Dialog implements OnClickListener{
+    public LocationDialog(@NonNull Context context) {
         super(context, R.style.CommonDialog);
 
         setContentView(R.layout.dialog_sport);
