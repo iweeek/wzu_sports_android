@@ -283,8 +283,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP)
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    if (mDialog.isShowing()) {
+                        mDialog.dismiss();
+                    }
                     finish();
+                }
                 return false;
             }
         });
