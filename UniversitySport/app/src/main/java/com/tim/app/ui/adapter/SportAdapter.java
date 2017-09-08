@@ -39,7 +39,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         BaseRecyclerViewHolder holder = null;
         if (viewType == SportEntry.RUNNING_SPORT) {
             holder = new ViewHolder(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null));
-        } else if(viewType == SportEntry.AREA_SPORT){
+        } else if (viewType == SportEntry.AREA_SPORT) {
             holder = new ViewHolder(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null));
             holder.findView(R.id.llBottom).setVisibility(View.GONE);
         }
