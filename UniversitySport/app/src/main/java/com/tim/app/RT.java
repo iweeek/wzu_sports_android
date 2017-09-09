@@ -36,7 +36,15 @@ public class RT {
 
     public static Application application = null;
 
-    public static final NetworkHost HOST = NetworkHost.DEBUG;
+    public static NetworkHost HOST = null;
+
+    static {
+        if (BuildConfig.DEBUG) {
+            HOST = NetworkHost.DEBUG;
+        } else {
+            HOST = NetworkHost.PUBLISH;
+        }
+    }
 
     /**
      * The m local external path.
