@@ -9,13 +9,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
+import com.bumptech.glide.request.RequestOptions;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.adapter.viewholder.ViewHolder;
-import com.tim.app.util.BitmapLoader;
+import com.tim.app.ui.cell.GlideApp;
 
 import java.util.List;
+
+import static com.tim.app.ui.activity.MainActivity.SPORT_BACKGROUND_HEIGHT;
+import static com.tim.app.ui.activity.MainActivity.SPORT_BACKGROUND_WIDTH;
 
 public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportEntry> {
     private Context mContext;
@@ -66,23 +70,25 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
 
         holder.setLayoutParams(R.id.rlContainer, new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
 
-        if (!TextUtils.isEmpty(data.getBgUrl())) {
-            BitmapLoader.ins().loadImage(data.getBgUrl(), R.drawable.ic_def_empty, (ImageView) holder.findView(R.id.rivSportBg));
-        } else {
-            holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
-        }
-
         if (!TextUtils.isEmpty(data.getName())) {
             holder.setText(R.id.tvSportName, data.getName());
         }
 
         if (SportEntry.RUNNING_SPORT == data.getType()) {
+            if (!TextUtils.isEmpty(data.getImgUrl())) {
+                GlideApp.with(mContext)
+                        .load(data.getImgUrl())
+                        .apply(new RequestOptions()
+                                .override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT)
+                                .dontAnimate()
+                                .dontTransform())
+                        .placeholder(R.drawable.ic_bg_run)
+                        .into((ImageView) holder.findView(R.id.rivSportBg));
+            } else {
+                holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
+            }
 
-            //            if (data.getParticipantNum() > 0) {
             holder.setText(R.id.tvParticipantNum, mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
-            //            }else{
-            //                holder.setText(R.id.tvParticipantNum, "当前没有人正在进行运动");
-            //            }
 
             if (data.getQualifiedDistance() > 0) {
                 holder.setText(R.id.tvTargetDistance, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedDistance())) + "米");
@@ -95,7 +101,19 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
                 holder.setText(R.id.tvTargetValue, mContext.getString(R.string.digitalPlaceholder, data.getTargetSpeed()) + "米/秒");
             }
         } else if (SportEntry.AREA_SPORT == data.getType()) {
-//            holder.setVisible(R.id.llBottom, false);
+            //            holder.setVisible(R.id.llBottom, false);
+            if (!TextUtils.isEmpty(data.getImgUrl())) {
+                GlideApp.with(mContext)
+                        .load(data.getImgUrl())
+                        .apply(new RequestOptions()
+                                .override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT)
+                                .dontAnimate()
+                                .dontTransform())
+                        .placeholder(R.drawable.ic_bg_area)
+                        .into((ImageView) holder.findView(R.id.rivSportBg));
+            } else {
+                holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
+            }
         }
     }
 

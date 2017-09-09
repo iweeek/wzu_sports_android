@@ -234,6 +234,7 @@ public class ServerInterface {
                 "    isEnabled\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
+                "    imgUrl\n" +
                 "  }\n" +
                 "}\n";
         query(queryStr, callback);
@@ -498,6 +499,7 @@ public class ServerInterface {
                 "    qualifiedCostTime\n" +
                 "    acquisitionInterval\n" +
                 "    universityId\n" +
+                "    imgUrl\n" +
                 "  }\n" +
                 "}\n" +
                 "\n";
