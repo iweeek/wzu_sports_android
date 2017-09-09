@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -24,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.ActivityManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
@@ -62,6 +62,8 @@ import static com.tim.app.constant.AppConstant.user;
 public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.OnItemClickListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    public static final int SPORT_BACKGROUND_WIDTH = 1080;
+    public static final int SPORT_BACKGROUND_HEIGHT = 465;
 
     //    public static User user;
     //    public static Student student;
@@ -306,8 +308,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         //            queryRunningSport();
         //        }
 
-        Log.d(TAG, "position:" + position);
-        Log.d(TAG, "sportEntry:" + sportEntry);
+        DLOG.d(TAG, "position:" + position);
+        DLOG.d(TAG, "sportEntry:" + sportEntry);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
             SportDetailActivity.start(this, sportEntry);
         } else {
@@ -323,12 +325,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
-                    Log.d(TAG, "sportArray.length():" + sportArray.length());
+                    JSONArray runningSportArray = json.optJSONObject("data").optJSONArray("runningSports");
                     try {
                         sportEntryDataList.clear();
-                        for (int i = 0; i < sportArray.length(); i++) {
-                            JSONObject jsonObject = sportArray.getJSONObject(i);
+                        for (int i = 0; i < runningSportArray.length(); i++) {
+                            JSONObject jsonObject = runningSportArray.getJSONObject(i);
 
                             if (!jsonObject.optBoolean("isEnabled")) {
                                 continue;
@@ -350,24 +351,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setName(jsonObject.optString("name", "快走"));
                             String name = jsonObject.optString("name", "快走");
 
-                            //// TODO: 2017/8/13 有待改进
-                            switch (name) {
-                                case "快走":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_brisk_walking);
-                                    break;
-                                case "快跑":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    break;
-                                case "随机慢跑":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_jogging);
-                                    break;
-                                case "1000米跑":
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    break;
-                                default:
-                                    sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                                    break;
-                            }
+                            sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
+                            sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
 
                             sportEntry.setParticipantNum(participantNum);
                             sportEntry.setQualifiedDistance(distance);
@@ -377,11 +362,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                             sportEntryDataList.add(sportEntry);
                         }
-                        wrvSportType.setAdapter(adapter);
+                        // wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                         if (sportEntryDataList.size() == 0) {
-                            Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();
@@ -396,6 +380,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 } else {
                     //TODO
                     emptyLayout.showEmptyOrError(errCode);
+                    DLOG.d(TAG, "获取跑步运动项目失败 错误码：" + errCode);
                     return false;
                 }
             }
@@ -445,12 +430,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         //                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (Exception e) {
-                        Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
+                        DLOG.e(TAG, "queryCurTermData JSONException e: " + e.toString());
                         return false;
                     }
                 } else {
                     emptyLayout.showEmptyOrError(errCode);
-                    Log.d(TAG, "onJsonResponse: errcode != 0");
+                    DLOG.d(TAG, "onJsonResponse: errcode != 0");
                     return false;
                 }
             }
@@ -469,28 +454,39 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 SportEntry areaSportEntry = new SportEntry();
                 if (errCode == 0) {
-                    //获取接口参数
-                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("areaSports");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.optJSONObject(i);
-                        areaSportEntry.setId(jsonObject.optInt("id"));
-                        areaSportEntry.setName(jsonObject.optString("name"));
-                        areaSportEntry.setType(SportEntry.AREA_SPORT);
-                        //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
-                        areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
-                        areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
-                        areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
-                        //                        areaSportEntry.(jsonObject.optInt("universityId"));
-                        Log.d(TAG, "areaSportEntry:" + areaSportEntry);
+                    try {
+                        JSONArray areaSportArray = json.optJSONObject("data").optJSONArray("areaSports");
+                        DLOG.d(TAG, "areaSportArray.length():" + areaSportArray.length());
+                        for (int i = 0; i < areaSportArray.length(); i++) {
+                            JSONObject jsonObject = areaSportArray.optJSONObject(i);
+                            areaSportEntry.setId(jsonObject.optInt("id"));
+                            areaSportEntry.setName(jsonObject.optString("name"));
+                            areaSportEntry.setType(SportEntry.AREA_SPORT);
+                            //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
+                            areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
+                            areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
 
-                        sportEntryDataList.add(areaSportEntry);
-                        //                        mAreaSportEntryList.add(areaSportEntry);
+                            areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
+                            areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
+
+                            sportEntryDataList.add(areaSportEntry);
+
+                            if (sportEntryDataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        emptyLayout.showEmpty();
+                        e.printStackTrace();
                     }
                     return true;
                 } else {
                     //TODO
                     emptyLayout.showEmptyOrError(errCode);
-                    Log.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
+                    DLOG.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
                     return false;
                 }
             }
@@ -540,8 +536,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
 
-                        Log.d(TAG, "服务器版本" + versionCode);
-                        Log.d(TAG, "客户端版本" + info.versionCode);
+                        DLOG.d(TAG, "服务器版本" + versionCode);
+                        DLOG.d(TAG, "客户端版本" + info.versionCode);
                         if (versionCode > info.versionCode) {
 
                             final AlertDialog.Builder builder =
@@ -572,7 +568,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     public void onClick(DialogInterface dialog, int which) {
                                         //TODO
                                         dialog.dismiss();
-                                        queryHomePagedata();
+                                        // queryHomePagedata();
                                     }
                                 });
                             }
@@ -581,7 +577,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             dialog.show();
 
                         } else {
-                            queryHomePagedata();
+                            // queryHomePagedata();
                         }
 
                         return true;
@@ -596,7 +592,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                 } else {
                     // TODO 网络出现问题？该接口出现问题？
-                    queryHomePagedata();
+                    // queryHomePagedata();
                     return false;
                 }
             }
@@ -612,9 +608,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     protected void onResume() {
         super.onResume();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
-        Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
         queryCurTermData();
-         queryRunningSport();
+        queryRunningSport();
+        wrvSportType.smoothScrollToPosition(0);
     }
 
     @Override
@@ -626,7 +622,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.flTitleMenu:
-                Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             // case tvLogout:
