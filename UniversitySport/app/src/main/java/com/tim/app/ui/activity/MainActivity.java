@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -363,7 +362,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                             sportEntryDataList.add(sportEntry);
                         }
-                        wrvSportType.setAdapter(adapter);
+                        // wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                         if (sportEntryDataList.size() == 0) {
@@ -471,7 +470,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
 
                             sportEntryDataList.add(areaSportEntry);
-                            adapter.notifyDataSetChanged();
 
                             if (sportEntryDataList.size() == 0) {
                                 emptyLayout.showEmpty();
@@ -479,6 +477,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 emptyLayout.showContent();
                             }
                         }
+                        adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         emptyLayout.showEmpty();
                         e.printStackTrace();
@@ -569,7 +568,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     public void onClick(DialogInterface dialog, int which) {
                                         //TODO
                                         dialog.dismiss();
-                                        queryHomePagedata();
+                                        // queryHomePagedata();
                                     }
                                 });
                             }
@@ -578,7 +577,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             dialog.show();
 
                         } else {
-                            queryHomePagedata();
+                            // queryHomePagedata();
                         }
 
                         return true;
@@ -593,7 +592,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                 } else {
                     // TODO 网络出现问题？该接口出现问题？
-                    queryHomePagedata();
+                    // queryHomePagedata();
                     return false;
                 }
             }
@@ -611,6 +610,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
         queryCurTermData();
         queryRunningSport();
+        wrvSportType.smoothScrollToPosition(0);
     }
 
     @Override

@@ -70,24 +70,23 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
 
         holder.setLayoutParams(R.id.rlContainer, new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
 
-        if (!TextUtils.isEmpty(data.getImgUrl())) {
-            GlideApp.with(mContext)
-                    .load(data.getImgUrl())
-                    .apply(new RequestOptions()
-                            .override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT)
-                            .dontAnimate()
-                            .dontTransform())
-                    .placeholder(R.drawable.ic_bg_run)
-                    .into((ImageView) holder.findView(R.id.rivSportBg));
-        } else {
-            holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
-        }
-
         if (!TextUtils.isEmpty(data.getName())) {
             holder.setText(R.id.tvSportName, data.getName());
         }
 
         if (SportEntry.RUNNING_SPORT == data.getType()) {
+            if (!TextUtils.isEmpty(data.getImgUrl())) {
+                GlideApp.with(mContext)
+                        .load(data.getImgUrl())
+                        .apply(new RequestOptions()
+                                .override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT)
+                                .dontAnimate()
+                                .dontTransform())
+                        .placeholder(R.drawable.ic_bg_run)
+                        .into((ImageView) holder.findView(R.id.rivSportBg));
+            } else {
+                holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
+            }
 
             holder.setText(R.id.tvParticipantNum, mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
 
@@ -103,6 +102,18 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             }
         } else if (SportEntry.AREA_SPORT == data.getType()) {
             //            holder.setVisible(R.id.llBottom, false);
+            if (!TextUtils.isEmpty(data.getImgUrl())) {
+                GlideApp.with(mContext)
+                        .load(data.getImgUrl())
+                        .apply(new RequestOptions()
+                                .override(SPORT_BACKGROUND_WIDTH, SPORT_BACKGROUND_HEIGHT)
+                                .dontAnimate()
+                                .dontTransform())
+                        .placeholder(R.drawable.ic_bg_area)
+                        .into((ImageView) holder.findView(R.id.rivSportBg));
+            } else {
+                holder.setBackground(R.id.rivSportBg, mContext.getResources().getDrawable(data.getBgDrawableId()));
+            }
         }
     }
 
