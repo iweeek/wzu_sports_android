@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.ActivityManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
@@ -308,8 +309,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         //            queryRunningSport();
         //        }
 
-        Log.d(TAG, "position:" + position);
-        Log.d(TAG, "sportEntry:" + sportEntry);
+        DLOG.d(TAG, "position:" + position);
+        DLOG.d(TAG, "sportEntry:" + sportEntry);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
             SportDetailActivity.start(this, sportEntry);
         } else {
@@ -326,7 +327,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
                     JSONArray runningSportArray = json.optJSONObject("data").optJSONArray("runningSports");
-                    Log.d(TAG, "runningSportArray.length():" + runningSportArray.length());
                     try {
                         sportEntryDataList.clear();
                         for (int i = 0; i < runningSportArray.length(); i++) {
@@ -353,7 +353,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             String name = jsonObject.optString("name", "快走");
 
                             sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
-                            Log.d(TAG, "imgUrl " + jsonObject.getString("imgUrl"));
                             sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
 
                             sportEntry.setParticipantNum(participantNum);
@@ -368,7 +367,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         adapter.setOnItemClickListener(context);
                         adapter.notifyDataSetChanged();
                         if (sportEntryDataList.size() == 0) {
-                            Log.d(TAG, "queryRunningSport >>>> sportEntryDataList.size():" + sportEntryDataList.size());
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();
@@ -383,7 +381,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 } else {
                     //TODO
                     emptyLayout.showEmptyOrError(errCode);
-                    Log.d(TAG, "获取跑步运动项目失败 错误码：" + errCode);
+                    DLOG.d(TAG, "获取跑步运动项目失败 错误码：" + errCode);
                     return false;
                 }
             }
@@ -433,12 +431,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         //                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (Exception e) {
-                        Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
+                        DLOG.e(TAG, "queryCurTermData JSONException e: " + e.toString());
                         return false;
                     }
                 } else {
                     emptyLayout.showEmptyOrError(errCode);
-                    Log.d(TAG, "onJsonResponse: errcode != 0");
+                    DLOG.d(TAG, "onJsonResponse: errcode != 0");
                     return false;
                 }
             }
@@ -459,7 +457,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 if (errCode == 0) {
                     try {
                         JSONArray areaSportArray = json.optJSONObject("data").optJSONArray("areaSports");
-                        Log.d(TAG, "areaSportArray.length():" + areaSportArray.length());
+                        DLOG.d(TAG, "areaSportArray.length():" + areaSportArray.length());
                         for (int i = 0; i < areaSportArray.length(); i++) {
                             JSONObject jsonObject = areaSportArray.optJSONObject(i);
                             areaSportEntry.setId(jsonObject.optInt("id"));
@@ -469,7 +467,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
                             areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
 
-                            Log.d(TAG, "imgUrl " + jsonObject.getString("imgUrl"));
                             areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
                             areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
 
@@ -477,7 +474,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             adapter.notifyDataSetChanged();
 
                             if (sportEntryDataList.size() == 0) {
-                                Log.d(TAG, "queryAreaSport >>>> sportEntryDataList.size():" + sportEntryDataList.size());
                                 emptyLayout.showEmpty();
                             } else {
                                 emptyLayout.showContent();
@@ -491,7 +487,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 } else {
                     //TODO
                     emptyLayout.showEmptyOrError(errCode);
-                    Log.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
+                    DLOG.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
                     return false;
                 }
             }
@@ -541,8 +537,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
 
-                        Log.d(TAG, "服务器版本" + versionCode);
-                        Log.d(TAG, "客户端版本" + info.versionCode);
+                        DLOG.d(TAG, "服务器版本" + versionCode);
+                        DLOG.d(TAG, "客户端版本" + info.versionCode);
                         if (versionCode > info.versionCode) {
 
                             final AlertDialog.Builder builder =
@@ -613,7 +609,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     protected void onResume() {
         super.onResume();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
-        Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
         queryCurTermData();
         queryRunningSport();
     }
@@ -627,7 +622,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.flTitleMenu:
-                Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
             // case tvLogout:
