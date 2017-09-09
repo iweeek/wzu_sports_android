@@ -95,6 +95,7 @@
                                 android:id="@+id/tvCurSignInCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="0"
                                 android:textColor="#000"
                                 android:textSize="20dp"/>
 
@@ -109,6 +110,7 @@
                                 android:id="@+id/tvCurTermTargetTimes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="0"
                                 android:textColor="#000"
                                 android:textSize="20dp"/>
                         </LinearLayout>
@@ -122,7 +124,7 @@
                             android:layout_marginTop="5dp"
                             android:paddingEnd="60dp"
                             android:paddingStart="60dp"
-                            android:progress="69"
+                            android:progress="0"
                             android:progressDrawable="@drawable/layer_pd"/>
                     </LinearLayout>
 
