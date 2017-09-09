@@ -459,6 +459,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         DLOG.d(TAG, "areaSportArray.length():" + areaSportArray.length());
                         for (int i = 0; i < areaSportArray.length(); i++) {
                             JSONObject jsonObject = areaSportArray.optJSONObject(i);
+
+                            if (!jsonObject.optBoolean("isEnabled")) {
+                                continue;
+                            }
+
                             areaSportEntry.setId(jsonObject.optInt("id"));
                             areaSportEntry.setName(jsonObject.optString("name"));
                             areaSportEntry.setType(SportEntry.AREA_SPORT);
