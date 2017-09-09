@@ -553,7 +553,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                             if (isForced) {
                                                 //无操作
                                             } else {
-                                                queryHomePagedata();
+                                                // queryHomePagedata();
                                             }
                                         }
                                     });
@@ -608,8 +608,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     protected void onResume() {
         super.onResume();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
-        queryCurTermData();
-        queryRunningSport();
+        queryHomePagedata();
         wrvSportType.smoothScrollToPosition(0);
     }
 
