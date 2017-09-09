@@ -180,7 +180,7 @@ public class LoginActivity extends BaseActivity {
         //同时获取Android_ID
         deviceId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        Log.d(TAG + "deviceId", deviceId);
+        Log.d(TAG + ">>>>>>deviceId<<<<<<", deviceId);
     }
 
     private void queryUniversities() {
@@ -380,6 +380,12 @@ public class LoginActivity extends BaseActivity {
                     }
 
                     JSONObject jsonObject = json.optJSONObject("obj");
+                    if (jsonObject == null) {
+                        hideLoadingDialog();
+                        Toast.makeText(context, errMsg, Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
                     try {
                         user.setUid(jsonObject.getInt("userId"));
                         List<String> roles = new ArrayList<>();
@@ -407,22 +413,19 @@ public class LoginActivity extends BaseActivity {
                         Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
 
                         queryStudent(user.getUid());
-                        //                    } catch (JSONException e) {
-                        //                        hideLoadingDialog();
-                        //                        e.printStackTrace();
-                        //                        Toast.makeText(LoginActivity.this, json.optString("statusMsg"), Toast.LENGTH_SHORT).show();
-                        //                    }
+
                         return true;
                     } catch (JSONException e) {
                         e.printStackTrace();
                         hideLoadingDialog();
-                        Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, errMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
+                    // TODO or other Runtime Exception(Uncheck Exception).
                 } else {
-                    hideLoadingDialog();
                     //TODO 密码或者用户名不匹配，网络接口返回不明确
-                    Toast.makeText(context, getString(R.string.username_password_mismatching), Toast.LENGTH_SHORT).show();
+                    hideLoadingDialog();
+                    Toast.makeText(context, errMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
