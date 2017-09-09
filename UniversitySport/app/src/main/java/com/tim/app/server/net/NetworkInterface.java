@@ -78,7 +78,7 @@ public class NetworkInterface {
                           final HashMap<String, Object> params, final CacheMode cache,
                           boolean isSign, final ResponseCallback callback) {
         final String url = getRequsetUrl(request);
-        if (!url.contains("http://")) {
+        if (!url.contains("http")) {
             DLOG.e(AppConstant.HTTP_TAG, "Bad request url ==" + url);
             return;
         }

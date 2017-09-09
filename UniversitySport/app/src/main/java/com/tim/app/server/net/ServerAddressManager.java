@@ -10,7 +10,7 @@ import com.tim.app.RT;
  */
 public class ServerAddressManager {
 
-    private static final String DEFAULT_BASE_ADDRESS = "http://api.guangyangyundong.com/";//默认的状态服务器地址
+    private static final String DEFAULT_BASE_ADDRESS = "https://api.guangyangyundong.com/";//默认的状态服务器地址
 
     /**
      * 获取服务器状态的域名
@@ -21,7 +21,7 @@ public class ServerAddressManager {
         String stateServerDomain = "";
         switch (RT.HOST) {
             case DEVELOP:
-                stateServerDomain = "http://192.168.1.108:8080/";
+                stateServerDomain = "http://192.168.1.111:8080/";
                 break;
             case DEBUG:
                 stateServerDomain = "http://120.77.72.16:8080/";
