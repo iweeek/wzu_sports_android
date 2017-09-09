@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.tim.app.R;
 import com.tim.app.ui.activity.HistorySportActivity;
-import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.activity.SchoolRankingActivity;
 
 /**
@@ -31,7 +30,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private RelativeLayout rlRank;
     private LinearLayout rlHeadView;
 //    private RelativeLayout rlSecond;
-    private LinearLayout llBadNetworkFresh;
+//    private LinearLayout llBadNetworkFresh;
     private Context ctx;
     private ProgressBar pbReachTargetTimes;
 
@@ -59,7 +58,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         rlTop = (RelativeLayout) findViewById(R.id.rlTop);
         rlTop.setOnClickListener(this);
 
-        llBadNetworkFresh = (LinearLayout) findViewById(R.id.llBadNetworkFresh);
+//        llBadNetworkFresh = (LinearLayout) findViewById(R.id.llBadNetworkFresh);
 
     }
 
@@ -93,13 +92,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
     public void displayBadNetworkLayout() {
         rlHeadView.setVisibility(View.INVISIBLE);
-        llBadNetworkFresh.setVisibility(View.VISIBLE);
-        llBadNetworkFresh.setOnClickListener((MainActivity) ctx);
+//        llBadNetworkFresh.setVisibility(View.VISIBLE);
+//        llBadNetworkFresh.setOnClickListener((MainActivity) ctx);
     }
 
     public void displayNormalLayout() {
         rlHeadView.setVisibility(View.VISIBLE);
-        llBadNetworkFresh.setVisibility(View.INVISIBLE);
+//        llBadNetworkFresh.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -119,5 +118,4 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
         pbReachTargetTimes.setProgress((int) (r * 100));
     }
-
 }
