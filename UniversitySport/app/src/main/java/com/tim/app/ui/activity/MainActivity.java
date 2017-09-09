@@ -36,13 +36,10 @@ import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
-import com.tim.app.server.entry.BadNetWork;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
-import com.tim.app.ui.adapter.BadNetworkAdapter;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.cell.GlideApp;
-import com.tim.app.ui.view.BadNetworkView;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
 
@@ -85,16 +82,16 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private WrapRecyclerView wrvSportType;
 
     private SportAdapter adapter;
-    private BadNetworkAdapter badNetworkAdapter;
+    //    private BadNetworkAdapter badNetworkAdapter;
     private List<SportEntry> sportEntryDataList;
-    private List<BadNetWork> networkDataList;
+    //    private List<BadNetWork> networkDataList;
 
     private EmptyLayout emptyLayout;
 
     private NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
-    private BadNetworkView badNetworkView;
+    //    private BadNetworkView badNetworkView;
 
     /*
     * 微信
@@ -201,6 +198,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         emptyLayout.setEmptyButtonShow(false);
         emptyLayout.setErrorButtonShow(true);
         emptyLayout.setEmptyDrawable(R.drawable.ic_empty_sport_data);
+        emptyLayout.setErrorDrawable(R.drawable.ic_empty_sport_data);
         emptyLayout.setEmptyText("当前没有数据");
         emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
             @Override
@@ -271,7 +269,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view, null);
         wrvSportType.addHeaderView(homepageHeadView);
-        badNetworkView = (BadNetworkView) LayoutInflater.from(this).inflate(R.layout.bad_network_view, null);
+        //        badNetworkView = (BadNetworkView) LayoutInflater.from(this).inflate(R.layout.bad_network_view, null);
         /**
          * 添加底部留白
          */
@@ -284,9 +282,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         adapter = new SportAdapter(this, sportEntryDataList);
         wrvSportType.setAdapter(adapter);
 
-        networkDataList = new ArrayList<>();
-        networkDataList.add(new BadNetWork());
-        badNetworkAdapter = new BadNetworkAdapter(this, networkDataList);
+        //        networkDataList = new ArrayList<>();
+        //        networkDataList.add(new BadNetWork());
+        //        badNetworkAdapter = new BadNetworkAdapter(this, networkDataList);
         //        wrvSportType.invalidate();
     }
 
@@ -303,10 +301,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         SportEntry sportEntry = sportEntryDataList.get(position);
 
         // this block is not work!
-        if (BadNetworkAdapter.BAD_NETWORK.equals(view.getTag())) {
-            Log.d(TAG, "onItemClick: bad network!");
-            queryRunningSport();
-        }
+        //        if (BadNetworkAdapter.BAD_NETWORK.equals(view.getTag())) {
+        //            Log.d(TAG, "onItemClick: bad network!");
+        //            queryRunningSport();
+        //        }
 
         Log.d(TAG, "position:" + position);
         Log.d(TAG, "sportEntry:" + sportEntry);
@@ -328,6 +326,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     JSONArray sportArray = json.optJSONObject("data").optJSONArray("runningSports");
                     Log.d(TAG, "sportArray.length():" + sportArray.length());
                     try {
+                        sportEntryDataList.clear();
                         for (int i = 0; i < sportArray.length(); i++) {
                             JSONObject jsonObject = sportArray.getJSONObject(i);
 
@@ -443,7 +442,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         bd = bd.setScale(1, RoundingMode.HALF_UP);
                         homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd.intValue()), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
-//                        adapter.notifyDataSetChanged();
+                        //                        adapter.notifyDataSetChanged();
                         return true;
                     } catch (Exception e) {
                         Log.e(TAG, "queryCurTermData JSONException e: " + e.toString());
@@ -615,7 +614,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
         Log.d(TAG, "onResume:开始查询学生当前学期的运动数据......");
         queryCurTermData();
-//        queryRunningSport();
+         queryRunningSport();
     }
 
     @Override
@@ -630,18 +629,18 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 Log.d(TAG, "onClick: ibMenu");
                 mDrawerLayout.openDrawer(Gravity.LEFT);
                 break;
-            //            case tvLogout:
-            //                startActivity(new Intent(this,LoginActivity.class));
-            //                finish();
-            //                break;
-            case R.id.llBadNetworkFresh:
-                queryCurTermData();
-                Log.d(TAG, "onClick llBadNetworkFresh");
-                break;
-            case R.id.llBadNetworkContainer:
-                queryRunningSport();
-                Log.d(TAG, "onClick llBadNetworkContainer");
-                break;
+            // case tvLogout:
+            //     startActivity(new Intent(this,LoginActivity.class));
+            //     finish();
+            //     break;
+            // case R.id.llBadNetworkFresh:
+            //     queryCurTermData();
+            //     Log.d(TAG, "onClick llBadNetworkFresh");
+            //     break;
+            // case R.id.llBadNetworkContainer:
+            //     queryRunningSport();
+            //     Log.d(TAG, "onClick llBadNetworkContainer");
+            //     break;
         }
     }
 
