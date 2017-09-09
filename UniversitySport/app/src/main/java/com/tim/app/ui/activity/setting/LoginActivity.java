@@ -261,9 +261,6 @@ public class LoginActivity extends BaseActivity {
 
                     final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
 
-                    if (!NetUtils.isConnection(this)) {
-                        Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
-                    }
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setTitle("请选择您的学校");
                     builder.setItems(names, new DialogInterface.OnClickListener() {
@@ -277,11 +274,10 @@ public class LoginActivity extends BaseActivity {
                         }
                     });
 
-                    if(progressDialog.isShowing()){
+                    if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
                     builder.show();
-
                 }
                 break;
         }
