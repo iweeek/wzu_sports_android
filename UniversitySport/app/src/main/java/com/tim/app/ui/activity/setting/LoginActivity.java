@@ -38,6 +38,7 @@ import com.tim.app.server.entry.User;
 import com.tim.app.server.net.NetworkInterface;
 import com.tim.app.ui.activity.BaseActivity;
 import com.tim.app.ui.activity.MainActivity;
+import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.util.EncryptUtil;
 import com.tim.app.util.SoftKeyboardUtil;
 
@@ -72,9 +73,9 @@ public class LoginActivity extends BaseActivity {
     private TextView tvForgotPassword;
     private ImageView ivDeleteNo;
     private ImageView ivPasswordDelete;
-    private boolean sFirstLogin;
     private boolean mHasEditFirstPassword;
     private TextView tvUniversity;
+    private ProgressDialog progressDialog;
 
     private List<University> universities = new ArrayList<>();
     private List<String> universityNames = new ArrayList<>();
@@ -105,6 +106,9 @@ public class LoginActivity extends BaseActivity {
         etStudentNo = (EditText) findViewById(R.id.etStudentNo);
         tvUniversity = (TextView) findViewById(R.id.tvUniversity);
         etPassword = (EditText) findViewById(R.id.etPassword);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
 
         //        etStudentNo.setText("nijun");
         //        etStudentNo.setText("15211040107");
@@ -200,8 +204,14 @@ public class LoginActivity extends BaseActivity {
                         universityNames.add(name);
                         universities.add(university);
                     }
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                     return true;
                 } else {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                     Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -243,28 +253,36 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.tvUniversity:
+                progressDialog.show();
+
                 if (universityNames.size() == 0) {
                     queryUniversities();
-                }
-                final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
+                } else {
 
-                if (!NetUtils.isConnection(this)) {
-                    Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                builder.setTitle("请选择您的学校");
-                builder.setItems(names, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
-                        tvUniversity.setText(names[which]);
-                        Log.d(TAG, "which:" + which);
-                        Log.d(TAG, "names[which]:" + names[which]);
-                        tvUniversity.setTag(which);
+                    final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
+
+                    if (!NetUtils.isConnection(this)) {
+                        Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
                     }
-                });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setTitle("请选择您的学校");
+                    builder.setItems(names, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // the user clicked on colors[which]
+                            tvUniversity.setText(names[which]);
+                            Log.d(TAG, "which:" + which);
+                            Log.d(TAG, "names[which]:" + names[which]);
+                            tvUniversity.setTag(which);
+                        }
+                    });
 
-                builder.show();
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                    builder.show();
+
+                }
                 break;
         }
     }
