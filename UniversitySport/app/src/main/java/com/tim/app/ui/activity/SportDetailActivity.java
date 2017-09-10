@@ -483,10 +483,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     //                    }
                 }
 
-                toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
-                        + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + currentSteps +
-                        "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
-                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                // toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
+                //         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + currentSteps +
+                //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
+                // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                 if (locationType == MyLocationStyle.LOCATION_TYPE_LOCATE) {
                     if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
