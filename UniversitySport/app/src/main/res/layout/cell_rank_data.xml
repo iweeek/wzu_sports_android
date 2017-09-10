@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="72dp"
                 android:background="@color/colorWhite"
                 android:orientation="vertical"
-                android:paddingLeft="15dp">
+                android:paddingEnd="16dp"
+                android:paddingLeft="16dp">
 
 
     <LinearLayout
@@ -16,8 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10dp"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
         >
 
@@ -25,7 +23,7 @@
             android:id="@+id/tvCostNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1200"
+            android:text="0"
             android:textColor="#6a60a9"
             android:textSize="14dp"/>
 
@@ -33,6 +31,7 @@
             android:id="@+id/tvCostUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="@string/kcal"
             android:textColor="#6a60a9"
             android:textSize="12dp"/>
@@ -41,9 +40,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/llRight"
         android:gravity="left|center_vertical"
         android:orientation="horizontal">
 
@@ -51,7 +48,7 @@
             android:id="@+id/tvNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:text="4"
             android:textColor="#9DC8C8"
             android:textSize="20dp"/>
@@ -60,7 +57,6 @@
             android:id="@+id/rivAvatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="10dp"
             android:background="@drawable/ic_default_avatar"
             android:scaleType="centerCrop"
             app:oval="true"/>
@@ -69,12 +65,15 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:textColor="#6a60a9"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            tools:text="张三"/>
     </LinearLayout>
 
     <View
         android:id="@+id/vLine"
+        style="@style/horizontalLine"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
