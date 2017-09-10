@@ -22,9 +22,9 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
-                    android:layout_alignParentEnd="true"
                     android:background="@drawable/ic_right_arrow"/>
 
                 <LinearLayout
@@ -65,7 +65,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:text="60"
+                            android:text="0"
                             android:textColor="#000"
                             android:textSize="40dp"/>
 
@@ -120,8 +120,8 @@
                             style="@style/StyleProgressBarMini"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:max="100"
                             android:layout_marginTop="5dp"
+                            android:max="100"
                             android:paddingEnd="60dp"
                             android:paddingStart="60dp"
                             android:progress="0"
@@ -152,7 +152,9 @@
                                 android:id="@+id/tvAccumulCostEnergy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="0"
                                 android:textColor="#000"
+
                                 android:textSize="20dp"/>
                         </LinearLayout>
 
@@ -178,6 +180,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
+                                android:text="0"
                                 android:textColor="#000"
                                 android:textSize="20dp"/>
                         </LinearLayout>
@@ -203,9 +206,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="10dp"
-                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:drawablePadding="10dp"
                     android:drawableStart="@drawable/ic_charts"
                     android:text="校园排行榜"
                     android:textColor="#868892"
@@ -476,12 +479,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="运动方式"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:textColor="#324252"
-        android:textStyle="bold"
-        android:textSize="16dp"/>
+        android:textSize="16dp"
+        android:textStyle="bold"/>
 
 </com.tim.app.ui.view.HomepageHeadView>
