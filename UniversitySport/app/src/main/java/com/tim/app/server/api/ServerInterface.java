@@ -1,7 +1,6 @@
 package com.tim.app.server.api;
 
-import android.util.Log;
-
+import com.application.library.log.DLOG;
 import com.application.library.net.ResponseCallback;
 import com.lzy.okhttputils.cache.CacheMode;
 import com.tim.app.constant.AppConstant;
@@ -70,7 +69,7 @@ public class ServerInterface {
         params.put("password", password);
         params.put("expiredHour", expiredHour);
         params.put("deviceId", deviceId);
-        Log.d(TAG, "params: " + params);
+        DLOG.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 
@@ -105,7 +104,7 @@ public class ServerInterface {
         params.put("runningSportId", runningSportId);
         params.put("studentId", studentId);
         params.put("startTime", startTime);
-        Log.d(TAG, "params: " + params);
+        DLOG.d(TAG, "params: " + params);
 
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
@@ -213,7 +212,7 @@ public class ServerInterface {
         //        headers.put("content-type", "x-www-form-urlencoded");
         //        Log.d(TAG, "headers: " + headers);
         params.put("query", queryStr);
-        Log.d(TAG, "params: " + params);
+        DLOG.d(TAG, "params: " + params);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, false, callback);
     }
 

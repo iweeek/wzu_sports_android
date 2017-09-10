@@ -30,7 +30,7 @@ public class RT {
 
     public static final String TAG = "RT";
 
-    public static final boolean DEBUG = true;//日志log开关 true开  false 关
+    public static boolean DEBUG = true;//日志log开关 true开  false 关
 
     private static RT self = null;
 
@@ -43,6 +43,7 @@ public class RT {
             HOST = NetworkHost.DEBUG;
         } else {
             HOST = NetworkHost.PUBLISH;
+            DEBUG = false;
         }
     }
 
