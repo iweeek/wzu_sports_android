@@ -2,7 +2,6 @@ package com.tim.app.server.net;
 
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.application.library.log.DLOG;
@@ -87,7 +86,7 @@ public class NetworkInterface {
             HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
             headers.put("Authorization", user.getToken());
             NetworkInterface.instance().setCommonHeaders(headers);
-            Log.d(TAG, "headers:" + headers);
+            DLOG.d(TAG, "headers:" + headers);
 
             if (method == POST) {
                 connectedByPost(url, apiTag, SignRequestParams.generationParams(params, false), cache, callback);

@@ -4,12 +4,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.application.library.base.BaseFragment;
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.loadmore.LoadMoreContainer;
@@ -132,7 +132,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
                                 headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
-                                Log.d(TAG, "headData[i]:" + headData[i].toString());
+                                DLOG.d(TAG, "headData[i]:" + headData[i].toString());
                             }
                             headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
 
@@ -143,7 +143,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
                                 data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
-                                Log.d(TAG, "dataList:" + data);
+                                DLOG.d(TAG, "dataList:" + data);
                             }
                             adapter.notifyDataSetChanged();
                             //see #663_1
@@ -160,7 +160,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         } catch (org.json.JSONException e) {
                             emptyLayout.showEmpty();
                             e.printStackTrace();
-                            Log.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
+                            DLOG.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
@@ -206,7 +206,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         } catch (org.json.JSONException e) {
                             emptyLayout.showEmpty();
                             e.printStackTrace();
-                            Log.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
+                            DLOG.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
@@ -264,8 +264,8 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
-        Log.d(TAG, "pageNoEnergy:" + pageNoEnergy);
-        Log.d(TAG, "pageNoTime:" + pageNoTime);
+        DLOG.d(TAG, "pageNoEnergy:" + pageNoEnergy);
+        DLOG.d(TAG, "pageNoTime:" + pageNoTime);
         if (type == AppConstant.TYPE_COST_ENERGY) {
             ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy, type, new JsonResponseCallback() {
                 @Override
@@ -281,12 +281,12 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 data.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
                                 data.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
                                 dataList.add(data);
-                                Log.d(TAG, "onLoadMore  :    data:" + data);
+                                DLOG.d(TAG, "onLoadMore  :    data:" + data);
                             }
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            DLOG.e(TAG, "queryCurTermData onJsonResponse e: ");
                             return false;
                         }
                     } else {
@@ -321,7 +321,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            Log.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            DLOG.e(TAG, "queryCurTermData onJsonResponse e: ");
                             return false;
                         }
                     } else {

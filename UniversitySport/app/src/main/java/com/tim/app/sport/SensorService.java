@@ -27,9 +27,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.application.library.log.DLOG;
 import com.application.library.runtime.event.EventManager;
 import com.tim.app.constant.EventTag;
 
@@ -79,8 +79,8 @@ public class SensorService extends Service implements SensorEventListener {
             steps = (int) event.values[0];
             updateIfNecessary();
             if(lastTime == 0 || System.currentTimeMillis() - lastTime > MICROSECONDS_IN_ONE_MINUTE ) {
-                Log.d(TAG, "lastSaveTime:" + lastTime);
-                Log.d(TAG, "60秒到了！！！！！！！");
+                DLOG.d(TAG, "lastSaveTime:" + lastTime);
+                DLOG.d(TAG, "60秒到了！！！！！！！");
                 Database.getInstance(this).saveDaySteps(steps);
                 lastTime = System.currentTimeMillis();
             }
@@ -108,7 +108,7 @@ public class SensorService extends Service implements SensorEventListener {
                 }
             }
             //保存自系统启动时到现在的步数
-            Log.d(TAG, "自系统启动时到现在的步数steps:" + steps);
+            DLOG.d(TAG, "自系统启动时到现在的步数steps:" + steps);
             db.saveCurrentSteps(steps);
             db.close();
             lastSaveSteps = steps;
@@ -130,7 +130,7 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand: ");
+        DLOG.d(TAG, "onStartCommand: ");
         if (intent != null && ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
             if (steps == 0) {
                 Database db = Database.getInstance(this);
@@ -139,7 +139,7 @@ public class SensorService extends Service implements SensorEventListener {
             }
             SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_PRIVATE);
             if (prefs.contains("pauseCount")) { // resume counting
-                Log.d(TAG, "prefs.contains(pauseCount):" + prefs.contains("pauseCount"));
+                DLOG.d(TAG, "prefs.contains(pauseCount):" + prefs.contains("pauseCount"));
                 int difference = steps -
                         prefs.getInt("pauseCount", steps); // number of steps taken during the pause
                 Database db = Database.getInstance(this);
@@ -149,7 +149,7 @@ public class SensorService extends Service implements SensorEventListener {
                 updateNotificationState();
             } else { // pause counting
                 // cancel restart
-                Log.d(TAG, "prefs.notcontains(pauseCount):" + prefs.contains("pauseCount"));
+                DLOG.d(TAG, "prefs.notcontains(pauseCount):" + prefs.contains("pauseCount"));
 
                 ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
                         .cancel(PendingIntent.getService(getApplicationContext(), 2,

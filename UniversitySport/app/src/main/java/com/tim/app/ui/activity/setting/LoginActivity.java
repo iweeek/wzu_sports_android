@@ -13,7 +13,6 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
@@ -184,7 +184,7 @@ public class LoginActivity extends BaseActivity {
         //同时获取Android_ID
         deviceId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        Log.d(TAG + ">>>>>>deviceId<<<<<<", deviceId);
+        DLOG.d(TAG + "deviceId", deviceId);
     }
 
     private void queryUniversities() {
@@ -268,8 +268,8 @@ public class LoginActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             // the user clicked on colors[which]
                             tvUniversity.setText(names[which]);
-                            Log.d(TAG, "which:" + which);
-                            Log.d(TAG, "names[which]:" + names[which]);
+                            DLOG.d(TAG, "which:" + which);
+                            DLOG.d(TAG, "names[which]:" + names[which]);
                             tvUniversity.setTag(which);
                         }
                     });
@@ -327,28 +327,6 @@ public class LoginActivity extends BaseActivity {
         return true;
     }
 
-
-    //    private void firstLogin(String sNo, String password) {
-    //        showLoadingDialog();
-    //
-    //        Log.d(TAG, "firstLogin: " + sNo);
-    //        Log.d(TAG, "firstLogin: " + password);
-    //
-    //        SharedPreferences sharedPreferences = getSharedPreferences(USER, MODE_PRIVATE);
-    //        SharedPreferences.Editor edit = sharedPreferences.edit();
-    //        edit.putBoolean(USER_IS_FIRST_LOGIN, false);
-    //        edit.putString(sNo, password);
-    //        edit.apply();
-    //
-    //        Bundle bundle = new Bundle();
-    //        bundle.putInt("flag", AppConstant.VERTIFY_FIRSTPASSWORD);
-    //        bundle.putString("sno", sNo);
-    //        Intent intent = new Intent(LoginActivity.this, RegistPhoneActivity.class);
-    //        intent.putExtras(bundle);
-    //        startActivityForResult(intent, AppConstant.CODE_LOGIN_REGISTER);
-    //    }
-
-
     private void queryStudent(int uid) {
         ServerInterface.instance().queryStudent(uid, new JsonResponseCallback() {
             @Override
@@ -365,7 +343,7 @@ public class LoginActivity extends BaseActivity {
                     student.setMan(jsonObject.optBoolean("isMan"));
                     user.setStudent(student);
 
-                    Log.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
+                    DLOG.d(TAG, "已找到用户ID为：" + user.getUid() + "的学生信息，学号为" + student.getId() + "，姓名为" + student.getName());
                     saveUser(User.USER_SHARED_PREFERENCE, User.USER, user);
                     MainActivity.start(context);
 
@@ -420,11 +398,10 @@ public class LoginActivity extends BaseActivity {
                         HttpHeaders headers = NetworkInterface.instance().getCommonHeaders();
                         headers.put("Authorization", user.getToken());
                         NetworkInterface.instance().setCommonHeaders(headers);
-                        Log.d(TAG, "headers:" + headers);
+                        DLOG.d(TAG, "headers:" + headers);
 
                         user.setUsername(username);
                         user.setPassword(md5Password);
-                        Log.d(TAG, "用户登录成功，正在查找对应的学生信息。。。");
 
                         queryStudent(user.getUid());
 
@@ -494,16 +471,13 @@ public class LoginActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         //如果是从修改初始密码界面返回。
         if (requestCode == AppConstant.CODE_LOGIN_REGISTER && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "onActivityResult: CODE_LOGIN_REGISTER");
             EventManager.ins().sendEvent(EventTag.ACCOUNT_LOGIN, 0, 0, null);
 
             Bundle bundle = data.getExtras();
             mHasEditFirstPassword = bundle.getBoolean("hasEditFirstPassword");
 
-            Log.d(TAG, "onActivityResult: 从修改初始密码界面返回。 mHasEditFirstPassword " + mHasEditFirstPassword);
         } else if (requestCode == AppConstant.CODE_LOGIN_FINDPWD && resultCode == Activity.RESULT_OK) {
             //如果是从忘记密码界面返回。
-            Log.d(TAG, "onActivityResult: 从忘记密码界面返回。");
         }
         //每次结束记得隐藏加载条。
         hideLoadingDialog();

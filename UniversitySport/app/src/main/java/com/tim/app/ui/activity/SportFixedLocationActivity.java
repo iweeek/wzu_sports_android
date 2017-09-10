@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -154,8 +153,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         Intent intent = new Intent(context, SportFixedLocationActivity.class);
         intent.putExtra("sportEntry", sportEntry);
         intent.putExtra("fixLocationOutdoorSportPoint", fixLocationOutdoorSportPoint);
-        Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
-        Log.d(TAG, "sportEntry:" + sportEntry);
+        DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+        DLOG.d(TAG, "sportEntry:" + sportEntry);
         context.startActivity(intent);
     }
 
@@ -191,8 +190,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
         fixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getSerializableExtra("fixLocationOutdoorSportPoint");
-        Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
-        Log.d(TAG, "sportEntry:" + sportEntry);
+        DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+        DLOG.d(TAG, "sportEntry:" + sportEntry);
 
         acquisitionInterval = sportEntry.getAcquisitionInterval() * 1000;
         mapView = (MapView) findViewById(R.id.map);
@@ -259,7 +258,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 fillColor(Color.parseColor("#22A7F64C")).
                 strokeColor(Color.parseColor("#224C5773")).
                 strokeWidth(1));
-        Log.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+        DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
 
         // 设置滑动解锁-解锁的监听
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
@@ -377,7 +376,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     @Override
     public void onMyLocationChange(Location location) {
-        Log.d(TAG, "onMyLocationChange location: " + location);
+        DLOG.d(TAG, "onMyLocationChange location: " + location);
         DLOG.openInternalFile(this);
 
         String toastText = "";
@@ -401,7 +400,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             errorInfo = bundle.getString(MyLocationStyle.ERROR_INFO);
             // 定位类型，可能为GPS WIFI等，具体可以参考官网的定位SDK介绍
             locationType = bundle.getInt(MyLocationStyle.LOCATION_TYPE);
-            Log.d(TAG, "errorCode:" + errorCode + "     errorInfo:" + errorInfo + "     locationType:" + locationType);
+            DLOG.d(TAG, "errorCode:" + errorCode + "     errorInfo:" + errorInfo + "     locationType:" + locationType);
         }
 
         //屏幕到了锁屏的时间，调暗亮度
@@ -411,7 +410,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         if (screenOffTimeout <= screenKeepLightTime && Double.compare(params.screenBrightness, 0.1) == 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
-            Log.d(TAG, "onMyLocationChange turn down light");
+            DLOG.d(TAG, "onMyLocationChange turn down light");
         }
 
         if (location != null) {
@@ -422,7 +421,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 return;
             } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.d(TAG, "newLatLng: " + newLatLng);
+                DLOG.d(TAG, "newLatLng: " + newLatLng);
                 // 判断第一次，第一次会提示
                 if (oldLatLng == null) {
                     String errText = "定位成功";
@@ -445,7 +444,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
                 }
 
-                Log.d(TAG, "oldLatLng: " + oldLatLng);
+                DLOG.d(TAG, "oldLatLng: " + oldLatLng);
                 float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
 
                 toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
@@ -478,7 +477,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             oldLatLng = newLatLng;
         } else {
             String errText = "定位失败：" + errorInfo;
-            Log.e(TAG, errText);
+            DLOG.e(TAG, errText);
             Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
         }
     }
@@ -539,7 +538,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.screenBrightness = (float) 1;
         getWindow().setAttributes(params);
-        Log.d(TAG, "onTouchEvent turn up light");
+        DLOG.d(TAG, "onTouchEvent turn up light");
         return false;
     }
 
@@ -623,7 +622,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
-                        Log.d(TAG, "areaSportsStart 成功");
+                        DLOG.d(TAG, "areaSportsStart 成功");
                         JSONObject jsonObject = json.optJSONObject("obj");
 
                         areaSportRecordId = jsonObject.optInt("id");
@@ -648,7 +647,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                 });
                         return true;
                     } else {
-                        Log.d(TAG, "errMsg:" + errMsg);
+                        DLOG.d(TAG, "errMsg:" + errMsg);
                         return false;
                     }
                 }
@@ -696,7 +695,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
      * @param areaSportRecordId
      */
     private void areaActivitiesEnd(final int areaSportRecordId) {
-        Log.d(TAG, "areaSportRecordId:" + areaSportRecordId);
+        DLOG.d(TAG, "areaSportRecordId:" + areaSportRecordId);
         //必须先初始化。
         SQLite.init(context, RunningSportsCallback.getInstance());
         //提交本次运动数据，更新UI
@@ -704,7 +703,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 TAG, areaSportRecordId, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                        Log.d(TAG, "成功发出 areaActivitiesEnd 请求");
+                        DLOG.d(TAG, "成功发出 areaActivitiesEnd 请求");
                         if (errCode == 0) {
                             //todo 处理返回的数据
                             /**

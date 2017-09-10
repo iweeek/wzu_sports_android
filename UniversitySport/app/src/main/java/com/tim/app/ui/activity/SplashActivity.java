@@ -10,11 +10,11 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
+import com.application.library.log.DLOG;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppStatusConstant;
@@ -72,7 +72,6 @@ public class SplashActivity extends BaseActivity {
         } else {
             UserManager.instance().cleanCache();
         }
-        Log.d(TAG, "initData");
         user = getUserFromCache();
         if (user != null) {
             showLoadingDialog();
@@ -96,7 +95,7 @@ public class SplashActivity extends BaseActivity {
             ObjectInputStream ois = new ObjectInputStream(bais);
             user = (User) ois.readObject();
 
-            Log.d(TAG, "user: " + user);
+            DLOG.d(TAG, "user: " + user);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -149,7 +148,6 @@ public class SplashActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         handleIntent();
-        Log.d(TAG, "onResume");
         hideLoadingDialog();
     }
 

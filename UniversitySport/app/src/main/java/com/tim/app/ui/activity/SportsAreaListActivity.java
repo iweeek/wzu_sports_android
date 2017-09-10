@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.EmptyLayout;
@@ -160,7 +160,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                     }
                     return true;
                 } else {
-                    Log.d(TAG, "onJsonResponse: errcode != 0");
+                    DLOG.d(TAG, "onJsonResponse: errcode = " + errCode);
                     return false;
                 }
             }
