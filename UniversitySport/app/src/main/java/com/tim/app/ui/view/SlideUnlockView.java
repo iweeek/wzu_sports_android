@@ -6,10 +6,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.application.library.log.DLOG;
 import com.tim.app.R;
 
 public class SlideUnlockView extends View {
@@ -74,7 +74,7 @@ public class SlideUnlockView extends View {
                 } else {
                     handler.removeCallbacksAndMessages(null);
                     currentState = STATE_LOCK;
-                    Log.i(TAG, "state---lock.....");
+                    DLOG.i(TAG, "state---lock.....");
                 }
             }
         }
@@ -165,7 +165,7 @@ public class SlideUnlockView extends View {
     }
 
     public void setSlideUnlockBackground(int slideUnlockBackgroundResource) {
-        Log.i(TAG, "setSlideUnlockBackground.....");
+        DLOG.i(TAG, "setSlideUnlockBackground.....");
         slideUnlockBackground = BitmapFactory.decodeResource(getResources(),
                 slideUnlockBackgroundResource);
         // 获取背景图的宽和高
@@ -174,7 +174,7 @@ public class SlideUnlockView extends View {
     }
 
     public void setSlideUnlockBlock(int slideUnlockBlockResource) {
-        Log.i(TAG, "setSlideUnlockBlock.....");
+        DLOG.i(TAG, "setSlideUnlockBlock.....");
         slideUnlockBlock = BitmapFactory.decodeResource(getResources(),
                 slideUnlockBlockResource);
         // 获取滑块的宽和高
@@ -186,7 +186,7 @@ public class SlideUnlockView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        Log.i(TAG, "onMeauser.....");
+        DLOG.i(TAG, "onMeauser.....");
         setMeasuredDimension(slideUnlockBackground.getWidth(),
                 slideUnlockBackground.getHeight());
     }
@@ -207,7 +207,7 @@ public class SlideUnlockView extends View {
                     float blockCenterX = blockWidth * 1.0f / 2;
                     float blockCenterY = blockHeight * 1.0f / 2;
                     downOnBlock = isDownOnBlock(blockCenterX, x, blockCenterY, y);
-                    Log.i(TAG, "down......................");
+                    DLOG.i(TAG, "down......................");
                     // 调用onDraw方法
                     postInvalidate();
 
@@ -220,7 +220,7 @@ public class SlideUnlockView extends View {
                     x = event.getX();
                     y = event.getY();
                     currentState = STATE_MOVING;
-                    Log.i(TAG, "move......................");
+                    DLOG.i(TAG, "move......................");
                     // 调用onDraw方法
                     postInvalidate();
                 }

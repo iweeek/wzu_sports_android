@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
@@ -622,8 +621,8 @@ public class SportResultActivity extends ToolbarActivity {
                     DLOG.d(TAG, "onClick mNormalPoints.size: " + mPoints.size());
                     //                    LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
                     for (LatLng point : mPoints) {
-                        Log.d(TAG, "point.latitude:" + point.latitude);
-                        Log.d(TAG, "point.longitude:" + point.longitude);
+                        DLOG.d(TAG, "point.latitude:" + point.latitude);
+                        DLOG.d(TAG, "point.longitude:" + point.longitude);
                         //                        DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
                     }
                     //方式二：如下
@@ -654,7 +653,6 @@ public class SportResultActivity extends ToolbarActivity {
                                 @Override
                                 public void move(final double distance) {
 
-                                    //                                    Log.i("MY", "distance:  " + distance);
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -894,7 +892,6 @@ public class SportResultActivity extends ToolbarActivity {
         if (mapView != null) {
             mapView.onDestroy();
         }
-        Log.d(TAG, "onDestroy");
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);

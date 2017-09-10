@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -278,9 +277,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-        DLOG.d(TAG, "init");
+
         locationDialog = new LocationDialog(this);
-        //// TODO:   
         locationDialog.setCancelable(false);
         locationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
             @Override
@@ -387,10 +385,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void onMyLocationChange(Location location) {
-        Log.d(TAG, "onMyLocationChange location: " + location);
+        DLOG.d(TAG, "onMyLocationChange location: " + location);
         DLOG.openInternalFile(this);
 
-        Log.d(TAG, "state:" + state);
+        DLOG.d(TAG, "state:" + state);
         String toastText = "";
         int errorCode = -1;
         String errorInfo = "";
@@ -413,11 +411,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
-            Log.d(TAG, "onMyLocationChange turn down light");
+            DLOG.d(TAG, "onMyLocationChange turn down light");
         }
 
         if (location != null) {
-            Log.d(TAG, "locationType:" + locationType);
+            DLOG.d(TAG, "locationType:" + locationType);
             //定位成功
             if (errorCode != 0 || locationType != 1) {
                 String errText = "正在定位中，GPS信号弱";
@@ -425,7 +423,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 return;
             } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                Log.d(TAG, "newLatLng: " + newLatLng);
+                DLOG.d(TAG, "newLatLng: " + newLatLng);
                 // 判断第一次，第一次会提示
                 if (lastLatLng == null) {
                     String errText = "定位成功";
@@ -453,7 +451,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //                DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
-                Log.d(TAG, "lastLatLng: " + lastLatLng);
+                DLOG.d(TAG, "lastLatLng: " + lastLatLng);
                 float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
                 //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
@@ -542,7 +540,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             DLOG.d(TAG, toastText);
         } else {
             String errText = "定位失败：" + errorInfo;
-            Log.e(TAG, errText);
+            DLOG.e(TAG, errText);
             Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
         }
     }
@@ -619,7 +617,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     public void run() {
                         // update your UI component here.
                         elapseTime += timerInterval / 1000;
-                        Log.d(TAG, "elapseTime: " + elapseTime);
+                        DLOG.d(TAG, "elapseTime: " + elapseTime);
                         String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
                         tvElapseTime.setText(time);
                     }
@@ -751,7 +749,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         params.screenBrightness = (float) 1;
         getWindow().setAttributes(params);
         screenKeepLightTime = 0;
-        Log.d(TAG, "onClick turn up light");
+        DLOG.d(TAG, "onClick turn up light");
     }
 
     @Override
@@ -781,7 +779,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //     }
                 // }else {
                 if (state == STATE_NORMAL) {
-                    Log.d(TAG, "sportEntry.getId():" + sportEntry.getId());
+                    DLOG.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     startTime = System.currentTimeMillis();
                     ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
                         @Override
@@ -789,7 +787,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             if (errCode == 0) {
                                 try {
                                     sportRecordId = json.getInt("id");
-                                    Log.d(TAG, "sportRecordId:" + sportRecordId);
+                                    DLOG.d(TAG, "sportRecordId:" + sportRecordId);
 
                                     //第一次向服务器提交数据,默认第一次是正常的数据
                                     ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, currentDistance,
@@ -837,7 +835,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                         progressDialog.dismiss();
                                     }
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
-                                    Log.d(TAG, "errMsg: " + errMsg);
+                                    DLOG.d(TAG, "errMsg: " + errMsg);
                                 }
                                 return true;
                             } else {
@@ -847,7 +845,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     progressDialog.dismiss();
                                 }
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
-                                Log.d(TAG, "errMsg: " + errMsg);
+                                DLOG.d(TAG, "errMsg: " + errMsg);
                                 return false;
                             }
                         }
@@ -931,13 +929,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void runningActivitiesEnd(final long targetFinishedTime) {
         //必须先初始化。
         //        SQLite.init(context, RunningSportsCallback.getInstance());
-        Log.d(TAG, "runningActivitiesEnd");
+        DLOG.d(TAG, "runningActivitiesEnd");
         //提交本次运动数据，更新UI
         ServerInterface.instance().runningActivitiesEnd(
                 TAG, sportRecordId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                        Log.d(TAG, "errCode:" + errCode);
+                        DLOG.d(TAG, "errCode:" + errCode);
                         if (errCode == 0) {
                             try {
                                 historySportEntry = new HistoryRunningSportEntry();
@@ -995,7 +993,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         } else {
                             Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, COMMIT_FALIED_MSG);
+                            DLOG.d(TAG, COMMIT_FALIED_MSG);
                             //TODO 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
                             btStart.setVisibility(View.GONE);
                             return false;
@@ -1074,9 +1072,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             switch (what) {
                 case EventTag.ON_STEP_CHANGE:
                     int steps = (int) dataobj;
-                    Log.d(TAG, "steps: " + steps);
+                    DLOG.d(TAG, "steps: " + steps);
                     if (state == STATE_STARTED) {
-                        Log.d(TAG, "state: " + state);
+                        DLOG.d(TAG, "state: " + state);
                         if (initSteps == 0) {
                             initSteps = steps;
                         } else {
@@ -1122,7 +1120,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
-        Log.d(TAG, "onDestroy");
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);

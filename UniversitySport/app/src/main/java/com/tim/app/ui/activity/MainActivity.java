@@ -169,10 +169,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        //        user = (User) getIntent().getSerializableExtra("user");
-        //        student = (Student) getIntent().getSerializableExtra("student");
-        //        Log.d(TAG, "user:" + user);
-        //        Log.d(TAG, "student:" + student);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.tim.app.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,9 +183,9 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
     @Override
     public void onItemClick(View view, int position, long id) {
         DLOG.d(TAG, "onItemClick");
-        Log.d(TAG, "position:" + position);
-        Log.d(TAG, "id:" + id);
-        Log.d(TAG, "getDataList().get(position).historySportEntryList.get(0):" + getDataList().get(position).historySportEntryList.get(0));
+        DLOG.d(TAG, "position:" + position);
+        DLOG.d(TAG, "id:" + id);
+        DLOG.d(TAG, "getDataList().get(position).historySportEntryList.get(0):" + getDataList().get(position).historySportEntryList.get(0));
         //        SportResultActivity.start(mContext, getDataList().get(position).historySportEntryList.get());
     }
 }

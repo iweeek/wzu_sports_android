@@ -20,7 +20,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
+
+import com.application.library.log.DLOG;
 
 public class PowerReceiver extends BroadcastReceiver {
     private static final String TAG = "PowerReceiver";
@@ -31,7 +32,7 @@ public class PowerReceiver extends BroadcastReceiver {
         if (Intent.ACTION_POWER_CONNECTED.equals(intent.getAction()) &&
                 !prefs.contains("pauseCount")) {
 
-            Log.d(TAG, "onReceive: not contains pauseCount ");
+            DLOG.d(TAG, "onReceive: not contains pauseCount ");
 
             // if power connected & not already paused, then pause now
             context.startService(new Intent(context, SensorService.class)
@@ -39,7 +40,7 @@ public class PowerReceiver extends BroadcastReceiver {
         } else if (Intent.ACTION_POWER_DISCONNECTED.equals(intent.getAction()) &&
                 prefs.contains("pauseCount")) {
             // if power disconnected & currently paused, then resume now
-            Log.d(TAG, "onReceive:  contains pauseCount ");
+            DLOG.d(TAG, "onReceive:  contains pauseCount ");
 
             context.startService(new Intent(context, SensorService.class)
                     .putExtra("action", SensorService.ACTION_PAUSE));

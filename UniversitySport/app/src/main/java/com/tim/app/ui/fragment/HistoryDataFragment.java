@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -271,7 +270,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                     } catch (org.json.JSONException e) {
                         emptyLayout.showEmptyOrError(errCode);
                         e.printStackTrace();
-                        Log.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
+                        DLOG.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
                         return false;
                     }
                 } else {
