@@ -44,14 +44,14 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
         final ViewHolder holder = (ViewHolder) mHolder;
 
-        if (type == AppConstant.TYPE_COST_ENERGY) {
+        if (AppConstant.TYPE_COST_ENERGY == type) {
             holder.tvCostNumber.setText(String.valueOf(data.getCostValue()));
-        } else if (type == AppConstant.TYPE_COST_TIME) {
+        } else if (AppConstant.TYPE_COST_TIME == type) {
             holder.tvCostNumber.setText(String.valueOf(data.getCostValue() / 60));
         }
-        if (type == AppConstant.TYPE_COST_TIME) {
+        if (AppConstant.TYPE_COST_TIME == type) {
             holder.tvCostUnit.setText(" " + context.getString(R.string.minute));
-        } else if (type == AppConstant.TYPE_COST_ENERGY) {
+        } else if (AppConstant.TYPE_COST_ENERGY == type) {
             holder.tvCostUnit.setText(" " + context.getString(R.string.kcal));
         }
         if (!TextUtils.isEmpty(data.getUserName())) {
