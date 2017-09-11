@@ -110,11 +110,11 @@ public class LoginActivity extends BaseActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
-        //        etStudentNo.setText("nijun");
-        //        etStudentNo.setText("15211040107");
-        //        etStudentNo.setText("15211031102");
-        //        etPassword.setText("123456");
-        queryUniversities();
+        // etStudentNo.setText("nijun");
+        // etStudentNo.setText("15211040107");
+        // etStudentNo.setText("15211031102");
+        // etPassword.setText("123456");
+        // queryUniversities();
 
         if (!NetUtils.isConnection(this)) {
             Toast.makeText(context, getString(R.string.httpconnection_not_network), Toast.LENGTH_SHORT).show();
@@ -208,6 +208,7 @@ public class LoginActivity extends BaseActivity {
                         if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
+                        showUniversityDialog();
                         return true;
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -264,29 +265,32 @@ public class LoginActivity extends BaseActivity {
                 if (universityNames.size() == 0) {
                     queryUniversities();
                 } else {
-
-                    final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setTitle("请选择您的学校");
-                    builder.setItems(names, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // the user clicked on colors[which]
-                            tvUniversity.setText(names[which]);
-                            DLOG.d(TAG, "which:" + which);
-                            DLOG.d(TAG, "names[which]:" + names[which]);
-                            tvUniversity.setTag(which);
-                        }
-                    });
-
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    builder.show();
+                    showUniversityDialog();
                 }
                 break;
         }
+    }
+
+    private void showUniversityDialog() {
+        final CharSequence[] names = universityNames.toArray(new CharSequence[universityNames.size()]);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("请选择您的学校");
+        builder.setItems(names, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // the user clicked on colors[which]
+                tvUniversity.setText(names[which]);
+                DLOG.d(TAG, "which:" + which);
+                DLOG.d(TAG, "names[which]:" + names[which]);
+                tvUniversity.setTag(which);
+            }
+        });
+
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        builder.show();
     }
 
 
