@@ -332,7 +332,7 @@ public class SportResultActivity extends ToolbarActivity {
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
-                        // targetTime = jsonObject.getInt("qualifiedCostTime");
+                        targetTime = jsonObject.getInt("qualifiedCostTime");
                         // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
@@ -480,7 +480,7 @@ public class SportResultActivity extends ToolbarActivity {
                         targetDistance = jsonObject.getInt("qualifiedDistance");
                         tvTargetDistance.setText(String.valueOf(targetDistance));
 
-                        // targetTime = jsonObject.getInt("qualifiedCostTime");
+                        targetTime = jsonObject.getInt("qualifiedCostTime");
                         // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
