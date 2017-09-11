@@ -80,7 +80,7 @@ public class SportResultActivity extends ToolbarActivity {
     private TextView tvElapseTime;
     private TextView tvAverSpeed;
     private TextView tvTargetDistance;
-    private TextView tvTargetTime;
+    // private TextView tvTargetTime;
     private TextView tvTargetSpeedLabel;
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
@@ -333,7 +333,7 @@ public class SportResultActivity extends ToolbarActivity {
                         }
 
                         targetTime = jsonObject.getInt("qualifiedCostTime");
-                        tvTargetTime.setText(String.valueOf(targetTime / 60));
+                        // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
                             double t = targetTime;
@@ -481,7 +481,7 @@ public class SportResultActivity extends ToolbarActivity {
                         tvTargetDistance.setText(String.valueOf(targetDistance));
 
                         targetTime = jsonObject.getInt("qualifiedCostTime");
-                        tvTargetTime.setText(String.valueOf(targetTime / 60));
+                        // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
                             double t = targetTime;
@@ -831,7 +831,7 @@ public class SportResultActivity extends ToolbarActivity {
         tvAverSpeed.setText("0.0");
 
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
-        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
+        // tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
