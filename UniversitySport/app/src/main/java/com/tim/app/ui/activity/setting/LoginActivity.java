@@ -192,22 +192,28 @@ public class LoginActivity extends BaseActivity {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    JSONArray jsonArray = json.optJSONObject("data").optJSONArray("universities");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.optJSONObject(i);
-                        University university = new University();
+                    try {
+                        JSONArray jsonArray = json.getJSONObject("data").getJSONArray("universities");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            University university = new University();
 
-                        university.setId(jsonObject.optInt("id"));
-                        String name = jsonObject.optString("name");
-                        university.setName(name);
+                            university.setId(jsonObject.getInt("id"));
+                            String name = jsonObject.getString("name");
+                            university.setName(name);
 
-                        universityNames.add(name);
-                        universities.add(university);
+                            universityNames.add(name);
+                            universities.add(university);
+                        }
+                        if (progressDialog.isShowing()) {
+                            progressDialog.dismiss();
+                        }
+                        return true;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
+                        return false;
                     }
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                    }
-                    return true;
                 } else {
                     if (progressDialog.isShowing()) {
                         progressDialog.dismiss();
