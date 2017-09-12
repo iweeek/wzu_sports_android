@@ -284,9 +284,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    if (locationDialog.isShowing()) {
-                        locationDialog.dismiss();
-                    }
+                    locationDialog.dismissDialog();
                     finish();
                 }
                 return false;
@@ -431,9 +429,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    if (locationDialog.isShowing()) {
-                        locationDialog.dismiss();
-                    }
+                    locationDialog.dismissDialog();
 
                     //TODO 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
@@ -808,9 +804,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
-                                                        if (progressDialog.isShowing()) {
-                                                            progressDialog.dismiss();
-                                                        }
+
+                                                        progressDialog.dismissDialog();
 
                                                         initData();
                                                         startTimer();
@@ -831,9 +826,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     e.printStackTrace();
                                     // TODO
                                     btStart.setVisibility(View.VISIBLE);
-                                    if (progressDialog.isShowing()) {
-                                        progressDialog.dismiss();
-                                    }
+                                    progressDialog.dismissDialog();
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                     DLOG.d(TAG, "errMsg: " + errMsg);
                                 }
@@ -841,9 +834,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             } else {
                                 // TODO
                                 btStart.setVisibility(View.VISIBLE);
-                                if (progressDialog.isShowing()) {
-                                    progressDialog.dismiss();
-                                }
+                                progressDialog.dismissDialog();
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                 DLOG.d(TAG, "errMsg: " + errMsg);
                                 return false;
@@ -957,10 +948,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 historySportEntry.setQualifiedDistance(json.getInt("qualifiedDistance"));
                                 historySportEntry.setQualifiedCostTime(json.getInt("qualifiedCostTime"));
                                 historySportEntry.setMinCostTime(json.getLong("minCostTime"));
-//                                historySportEntry.setCreatedAt(json.getLong("createdAt"));
-//                                historySportEntry.setUpdatedAt(json.getLong("updatedAt"));
+                                //                                historySportEntry.setCreatedAt(json.getLong("createdAt"));
+                                //                                historySportEntry.setUpdatedAt(json.getLong("updatedAt"));
                                 historySportEntry.setEndedAt(json.getLong("endedAt"));
-//                                historySportEntry.setEndedBy(json.getBoolean("endedBy"));
+                                //                                historySportEntry.setEndedBy(json.getBoolean("endedBy"));
                                 historySportEntry.setType(AppConstant.RUNNING_TYPE);
                             } catch (org.json.JSONException e) {
                                 e.printStackTrace();
