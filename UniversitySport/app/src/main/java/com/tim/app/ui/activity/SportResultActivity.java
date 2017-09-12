@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -42,6 +44,7 @@ import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
+import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.MarkerOverlay;
 
@@ -87,6 +90,7 @@ public class SportResultActivity extends ToolbarActivity {
     private ImageView ivLocation;
     private LinearLayout llTargetContainer;
     private Button btTest;
+    private ProgressDialog progressDialog;
 
 
     private RelativeLayout rlBottom;
@@ -258,6 +262,7 @@ public class SportResultActivity extends ToolbarActivity {
     }
 
     private void queryAreaActivity(long id) {
+        progressDialog.show();
         ServerInterface.instance().queryAreaActivity(id, new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -350,13 +355,16 @@ public class SportResultActivity extends ToolbarActivity {
                         llTargetSpeed.setVisibility(View.GONE);
 
                         llFloatingWindow.setVisibility(View.VISIBLE);
+                        progressDialog.dismissDialog();
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
+                        progressDialog.dismissDialog();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
+                    progressDialog.dismissDialog();
                     Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -365,6 +373,7 @@ public class SportResultActivity extends ToolbarActivity {
     }
 
     private void queryRunningActivity(long id) {
+        progressDialog.show();
         ServerInterface.instance().queryRunningActivity(id, new JsonResponseCallback() {
             /*{
                 "errors": [],
@@ -496,13 +505,16 @@ public class SportResultActivity extends ToolbarActivity {
                         tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
+                        progressDialog.dismissDialog();
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
+                        progressDialog.dismissDialog();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
+                    progressDialog.dismissDialog();
                     Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -820,6 +832,19 @@ public class SportResultActivity extends ToolbarActivity {
 
         llFloatingWindow = (LinearLayout) findViewById(R.id.llFloatingWindow);
         llFloatingWindow.setVisibility(View.GONE);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    progressDialog.dismissDialog();
+                    finish();
+                }
+                return false;
+            }
+        });
 
         //        ibBack = (ImageButton) findViewById(R.id.ibBack);
         //        ibBack.setOnClickListener(this);
