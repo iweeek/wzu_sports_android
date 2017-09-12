@@ -21,8 +21,8 @@ public class ProgressDialog extends Dialog {
         setContentView(R.layout.dialog_progress);
     }
 
-    public void dismissDialog(){
-        if(this.isShowing()){
+    public void dismissDialog() {
+        if (this.isShowing()) {
             this.dismiss();
         }
     }
