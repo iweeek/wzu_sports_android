@@ -21,6 +21,11 @@ public class ProgressDialog extends Dialog {
         setContentView(R.layout.dialog_progress);
     }
 
+    public void dismissDialog(){
+        if(this.isShowing()){
+            this.dismiss();
+        }
+    }
     //    @Override
     //    public boolean onTouchEvent(@NonNull MotionEvent event) {
     //        WindowManager.LayoutParams params = getWindow().getAttributes();

@@ -29,6 +29,12 @@ public class LocationDialog extends Dialog implements OnClickListener{
 
     }
 
+    public void dismissDialog(){
+        if(this.isShowing()){
+            this.dismiss();
+        }
+    }
+
     @Override
     public boolean onTouchEvent(@NonNull MotionEvent event) {
         WindowManager.LayoutParams params = getWindow().getAttributes();
