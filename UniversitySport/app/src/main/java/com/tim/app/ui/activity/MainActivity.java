@@ -605,8 +605,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         } else {
             // ignore it
         }
-
-        queryAppVersion();
     }
 
     private void queryHomePagedata() {
