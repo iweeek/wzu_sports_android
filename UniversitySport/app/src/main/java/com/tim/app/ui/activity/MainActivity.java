@@ -497,26 +497,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
     }
 
-    @Override
-    public void initData() {
-        tvUserName.setText(user.getStudent().getName());
 
-        if (!TextUtils.isEmpty(user.getAvatarUrl())) {
-            GlideApp.with(this)
-                    .load(user.getAvatarUrl())
-                    .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
-                    .error(R.drawable.ic_default_avatar) // if a load fails.
-                    .fallback(R.drawable.ic_default_avatar) // If a fallback is not set, null models will cause the error drawable to be displayed. If the error drawable is not set, the placeholder will be displayed.
-                    //                .fitCenter()
-                    //                .centerCrop()
-                    //                .miniThumb(50)
-                    .circleCrop()
-                    .transition(withCrossFade())
-                    .into(ivAvatar);
-        } else {
-            // ignore it
-        }
-
+    public void queryAppVersion() {
         ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
             private JSONObject latestAndroidVersionInfo;
 
@@ -604,9 +586,33 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
     }
 
+    @Override
+    public void initData() {
+        tvUserName.setText(user.getStudent().getName());
+
+        if (!TextUtils.isEmpty(user.getAvatarUrl())) {
+            GlideApp.with(this)
+                    .load(user.getAvatarUrl())
+                    .placeholder(R.drawable.ic_default_avatar)// while a resource is loading.
+                    .error(R.drawable.ic_default_avatar) // if a load fails.
+                    .fallback(R.drawable.ic_default_avatar) // If a fallback is not set, null models will cause the error drawable to be displayed. If the error drawable is not set, the placeholder will be displayed.
+                    //                .fitCenter()
+                    //                .centerCrop()
+                    //                .miniThumb(50)
+                    .circleCrop()
+                    .transition(withCrossFade())
+                    .into(ivAvatar);
+        } else {
+            // ignore it
+        }
+
+        queryAppVersion();
+    }
+
     private void queryHomePagedata() {
-        queryRunningSport();
+        queryAppVersion();
         queryCurTermData();
+        queryRunningSport();
     }
 
     @Override
