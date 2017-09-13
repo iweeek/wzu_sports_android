@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         emptyLayout = new EmptyLayout(this, llContainer);
         emptyLayout.showLoading();
-        emptyLayout.setEmptyButtonShow(false);
+        emptyLayout.setEmptyButtonShow(true);
         emptyLayout.setErrorButtonShow(true);
         emptyLayout.setEmptyDrawable(R.drawable.ic_empty_sport_data);
         emptyLayout.setErrorDrawable(R.drawable.ic_empty_sport_data);
@@ -202,7 +202,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public void onClick(View v) {
                 emptyLayout.showLoading();
-                initData();
+                queryHomePagedata();
             }
         });
 
@@ -321,9 +321,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    JSONArray runningSportArray = json.optJSONObject("data").optJSONArray("runningSports");
                     try {
                         sportEntryDataList.clear();
+
+                        JSONArray runningSportArray = json.getJSONObject("data").getJSONArray("runningSports");
                         for (int i = 0; i < runningSportArray.length(); i++) {
                             JSONObject jsonObject = runningSportArray.getJSONObject(i);
 
@@ -332,20 +333,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             }
 
                             int runningSportId = jsonObject.getInt("id");
-                            int distance = jsonObject.optInt("qualifiedDistance", 1000);
+                            int distance = jsonObject.getInt("qualifiedDistance");
                             int participantNum = jsonObject.getInt("participantNum");
-                            double time = jsonObject.optDouble("qualifiedCostTime");
+                            double time = jsonObject.getDouble("qualifiedCostTime");
                             double d = distance;
                             double s = d / time;
                             BigDecimal bd = new BigDecimal(s);
                             bd = bd.setScale(1, RoundingMode.HALF_UP);
-                            int interval = jsonObject.optInt("acquisitionInterval", 1);
+                            int interval = jsonObject.getInt("acquisitionInterval");
 
                             SportEntry sportEntry = new SportEntry();
                             sportEntry.setId(runningSportId);
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
-                            sportEntry.setName(jsonObject.optString("name", "快走"));
-                            String name = jsonObject.optString("name", "快走");
+                            sportEntry.setName(jsonObject.getString("name"));
 
                             sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                             sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
@@ -367,7 +367,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             emptyLayout.showContent();
                         }
                     } catch (JSONException e) {
-                        emptyLayout.showEmpty();
+                        emptyLayout.showError();
                         e.printStackTrace();
                     }
                     //在查询跑步项目之后调用。
@@ -392,28 +392,28 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
-                    JSONObject jsonObject = json.optJSONObject("data").optJSONObject("student");
                     try {
-                        String curTermTargetTimes = String.valueOf(json.optJSONObject("data").optJSONObject("university")
-                                .optJSONObject("currentTerm").optJSONObject("termSportsTask")
-                                .optInt("targetSportsTimes"));
+                        JSONObject jsonObject = json.getJSONObject("data").getJSONObject("student");
+                        String curTermTargetTimes = String.valueOf(json.getJSONObject("data").getJSONObject("university")
+                                .getJSONObject("currentTerm").getJSONObject("termSportsTask")
+                                .getString("targetSportsTimes"));
 
-                        String curTermAreaCounts = jsonObject.optString("currentTermAreaActivityCount");
-                        String curTermRunningCounts = jsonObject.optString("currentTermRunningActivityCount");
+                        String curTermAreaCounts = jsonObject.getString("currentTermAreaActivityCount");
+                        String curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
 
                         //                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
                         //                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
 
-                        String curTermAreaCostedTime = jsonObject.optString("areaActivityTimeCosted");
-                        String curTermRunningCostedTime = jsonObject.optString("runningActivityTimeCosted");
+                        String curTermAreaCostedTime = jsonObject.getString("areaActivityTimeCosted");
+                        String curTermRunningCostedTime = jsonObject.getString("runningActivityTimeCosted");
 
-                        String curTermAreaKcalConsumption = jsonObject.optString("areaActivityKcalConsumption");
-                        String curTermRunningKcalConsumption = jsonObject.optString("runningActivityKcalConsumption");
+                        String curTermAreaKcalConsumption = jsonObject.getString("areaActivityKcalConsumption");
+                        String curTermRunningKcalConsumption = jsonObject.getString("runningActivityKcalConsumption");
 
 
                         String totalCount = String.valueOf(Integer.valueOf(curTermAreaCounts) + Integer.valueOf(curTermRunningCounts));
                         //                        String totalQualifiedCount = String.valueOf(Integer.valueOf(curTermAreaQualifiedCounts) + Integer.valueOf(curTermRunningQualifiedCounts));
-                        String totalSignInCount = String.valueOf(jsonObject.optInt("signInCount"));
+                        String totalSignInCount = String.valueOf(jsonObject.getInt("signInCount"));
                         String totalKcalComsuption = String.valueOf(Integer.valueOf(curTermAreaKcalConsumption) + Integer.valueOf(curTermRunningKcalConsumption));
                         double totalCostedTime = Double.valueOf(curTermAreaCostedTime) + Double.valueOf(curTermRunningCostedTime);
 
@@ -425,13 +425,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         homepageHeadView.displayNormalLayout();
                         //                        adapter.notifyDataSetChanged();
                         return true;
-                    } catch (Exception e) {
-                        DLOG.e(TAG, "queryCurTermData JSONException e: " + e.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        emptyLayout.showError();
                         return false;
                     }
                 } else {
                     emptyLayout.showEmptyOrError(errCode);
-                    DLOG.d(TAG, "onJsonResponse: errcode != 0");
                     return false;
                 }
             }
@@ -451,21 +451,21 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 SportEntry areaSportEntry = new SportEntry();
                 if (errCode == 0) {
                     try {
-                        JSONArray areaSportArray = json.optJSONObject("data").optJSONArray("areaSports");
+                        JSONArray areaSportArray = json.getJSONObject("data").getJSONArray("areaSports");
                         DLOG.d(TAG, "areaSportArray.length():" + areaSportArray.length());
                         for (int i = 0; i < areaSportArray.length(); i++) {
-                            JSONObject jsonObject = areaSportArray.optJSONObject(i);
+                            JSONObject jsonObject = areaSportArray.getJSONObject(i);
 
-                            if (!jsonObject.optBoolean("isEnabled")) {
+                            if (!jsonObject.getBoolean("isEnabled")) {
                                 continue;
                             }
 
-                            areaSportEntry.setId(jsonObject.optInt("id"));
-                            areaSportEntry.setName(jsonObject.optString("name"));
+                            areaSportEntry.setId(jsonObject.getInt("id"));
+                            areaSportEntry.setName(jsonObject.getString("name"));
                             areaSportEntry.setType(SportEntry.AREA_SPORT);
                             //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
-                            areaSportEntry.setTargetTime(jsonObject.optInt("qualifiedCostTime"));
-                            areaSportEntry.setAcquisitionInterval(jsonObject.optInt("acquisitionInterval"));
+                            areaSportEntry.setTargetTime(jsonObject.getInt("qualifiedCostTime"));
+                            areaSportEntry.setAcquisitionInterval(jsonObject.getInt("acquisitionInterval"));
 
                             areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
                             areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
@@ -480,7 +480,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         }
                         adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
-                        emptyLayout.showEmpty();
+                        emptyLayout.showError();
                         e.printStackTrace();
                     }
                     return true;
@@ -488,6 +488,95 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     //TODO
                     emptyLayout.showEmptyOrError(errCode);
                     DLOG.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
+                    return false;
+                }
+            }
+        });
+    }
+
+
+    public void queryAppVersion() {
+        ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
+            private JSONObject latestAndroidVersionInfo;
+
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                //                String versionName = "";
+                //                int versionCode;
+                //                String changeLog = "";
+                //                String apkUrl = "";
+                //                boolean isForced = false;
+                if (errCode == 0) {
+                    try {
+                        latestAndroidVersionInfo = json.getJSONObject("data").getJSONObject("latestVerison");
+                        final String versionName = latestAndroidVersionInfo.getString("versionName");
+                        final int versionCode = latestAndroidVersionInfo.getInt("versionCode");
+                        final String changeLog = latestAndroidVersionInfo.getString("changeLog");
+                        final String downloadUrl = latestAndroidVersionInfo.getString("downloadUrl");
+                        final boolean isForced = latestAndroidVersionInfo.getBoolean("isForced");
+                        final int platformId = latestAndroidVersionInfo.getInt("platformId");
+
+                        PackageManager manager = context.getPackageManager();
+                        PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
+
+                        DLOG.d(TAG, "服务器版本" + versionCode);
+                        DLOG.d(TAG, "客户端版本" + info.versionCode);
+                        if (versionCode > info.versionCode) {
+
+                            final AlertDialog.Builder builder =
+                                    new AlertDialog.Builder(context);
+                            AlertDialog dialog;
+                            builder.setTitle("版本升级");
+                            builder.setPositiveButton("确认",
+                                    new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
+                                            if (isForced) {
+                                                //无操作
+                                            } else {
+                                                // TODO
+                                                // queryHomePagedata();
+                                            }
+                                        }
+                                    });
+                            builder.setMessage(changeLog.replace("\\n", " \n"));
+
+                            if (isForced) {//强制升级
+                                builder.setCancelable(false);
+                                //对话框不变化
+                            } else {
+                                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //TODO
+                                        dialog.dismiss();
+                                        // queryHomePagedata();
+                                    }
+                                });
+                            }
+
+                            dialog = builder.create();
+                            dialog.show();
+
+                        } else {
+                            // TODO no update
+                            // queryHomePagedata();
+                        }
+
+                        return true;
+                    } catch (JSONException e) {
+                        // TODO if check update gave an error
+                        e.printStackTrace();
+                        return false;
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                } else {
+                    // TODO if network is bad
+                    // queryHomePagedata();
                     return false;
                 }
             }
@@ -513,96 +602,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         } else {
             // ignore it
         }
-
-        ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
-            private JSONObject latestAndroidVersionInfo;
-
-            @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                //                String versionName = "";
-                //                int versionCode;
-                //                String changeLog = "";
-                //                String apkUrl = "";
-                //                boolean isForced = false;
-                if (errCode == 0) {
-                    try {
-                        latestAndroidVersionInfo = json.getJSONObject("data").optJSONObject("latestVerison");
-                        final String versionName = latestAndroidVersionInfo.optString("versionName");
-                        final int versionCode = latestAndroidVersionInfo.optInt("versionCode");
-                        final String changeLog = latestAndroidVersionInfo.optString("changeLog");
-                        final String downloadUrl = latestAndroidVersionInfo.optString("downloadUrl");
-                        final boolean isForced = latestAndroidVersionInfo.optBoolean("isForced");
-                        final int platformId = latestAndroidVersionInfo.optInt("platformId");
-
-                        PackageManager manager = context.getPackageManager();
-                        PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
-
-                        DLOG.d(TAG, "服务器版本" + versionCode);
-                        DLOG.d(TAG, "客户端版本" + info.versionCode);
-                        if (versionCode > info.versionCode) {
-
-                            final AlertDialog.Builder builder =
-                                    new AlertDialog.Builder(context);
-                            AlertDialog dialog;
-                            builder.setTitle("版本升级");
-                            builder.setPositiveButton("确认",
-                                    new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
-                                            if (isForced) {
-                                                //无操作
-                                            } else {
-                                                // queryHomePagedata();
-                                            }
-                                        }
-                                    });
-                            builder.setMessage(changeLog.replace("\\n", " \n"));
-
-                            if (isForced) {//强制升级
-                                builder.setCancelable(false);
-                                //对话框不变化
-                            } else {
-                                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //TODO
-                                        dialog.dismiss();
-                                        // queryHomePagedata();
-                                    }
-                                });
-                            }
-
-                            dialog = builder.create();
-                            dialog.show();
-
-                        } else {
-                            // queryHomePagedata();
-                        }
-
-                        return true;
-                        //发生以下情况的可能性正常时，是不存在的，所以这里不处理
-                    } catch (org.json.JSONException e) {
-                        e.printStackTrace();
-                        return false;
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-
-                } else {
-                    // TODO 网络出现问题？该接口出现问题？
-                    // queryHomePagedata();
-                    return false;
-                }
-            }
-        });
     }
 
     private void queryHomePagedata() {
-        queryRunningSport();
+        queryAppVersion();
         queryCurTermData();
+        queryRunningSport();
     }
 
     @Override
