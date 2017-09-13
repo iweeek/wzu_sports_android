@@ -202,7 +202,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public void onClick(View v) {
                 emptyLayout.showLoading();
-                // initData();
                 queryHomePagedata();
             }
         });
@@ -429,12 +428,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                     } catch (JSONException e) {
                         e.printStackTrace();
                         emptyLayout.showError();
-                        DLOG.e(TAG, "queryCurTermData JSONException e: " + e.toString());
                         return false;
                     }
                 } else {
                     emptyLayout.showEmptyOrError(errCode);
-                    DLOG.d(TAG, "onJsonResponse: errcode != 0");
                     return false;
                 }
             }
