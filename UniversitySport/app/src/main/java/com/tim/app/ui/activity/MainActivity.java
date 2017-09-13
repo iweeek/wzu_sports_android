@@ -202,7 +202,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             @Override
             public void onClick(View v) {
                 emptyLayout.showLoading();
-                initData();
+                // initData();
                 queryHomePagedata();
             }
         });
