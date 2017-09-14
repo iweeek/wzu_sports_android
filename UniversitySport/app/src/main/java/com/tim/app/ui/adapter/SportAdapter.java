@@ -63,6 +63,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
     }
 
     public void initEmptyLayout() {
+        // TODO 定义一个空的布局。
         emptyContainer = new FrameLayout(mContext);
 
         int remainHeight = screenHeight - statusBarHeight - appBarHeight - 802;
@@ -107,7 +108,6 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder = new ViewHolder(mContext, itemView);
             holder.findView(R.id.llBottom).setVisibility(View.GONE);
         } else if (viewType == SportEntry.EMPTY) {
-            // TODO 定义一个空的布局。  哎，待会我又忘了。
             holder = new ViewHolder(mContext, emptyContainer);
         }
         return holder;

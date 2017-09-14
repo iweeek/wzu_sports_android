@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -14,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.application.library.log.DLOG;
 import com.application.library.widget.EmptyLayout;
 import com.tim.app.R;
 import com.tim.app.ui.activity.HistorySportActivity;
@@ -78,21 +78,23 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         // headEmptyLayout = new EmptyLayout(context, flContainer);
         headEmptyLayout = new EmptyLayout(context, flContainer);
 
+        // TODO this is test
         DisplayMetrics dm = new DisplayMetrics();
         ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        Log.d("HomepageHeadView", "dm.density:" + dm.density);
-        Log.d("HomepageHeadView", "dm.densityDpi:" + dm.densityDpi);
-        Log.d("HomepageHeadView", "dm.scaledDensity:" + dm.scaledDensity);
+        DLOG.d("HomepageHeadView", "dm.density:" + dm.density);
+        DLOG.d("HomepageHeadView", "dm.densityDpi:" + dm.densityDpi);
+        DLOG.d("HomepageHeadView", "dm.scaledDensity:" + dm.scaledDensity);
 
         final int[] subTitle = {0};
         llSubTitle.addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Log.d("HomepageHeadView", "v.getHeight():" + v.getHeight());
+                DLOG.d("HomepageHeadView", "v.getHeight():" + v.getHeight());
                 subTitle[0] = v.getHeight();
             }
         });
 
+        // the homePageHeadView's height is uncertainty
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 802 - 117);
         // headEmptyLayout.showContent();
         headEmptyLayout.setLayoutParams(params);

@@ -544,7 +544,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
     }
 
-
     /**
      * 获取区域运动项目
      */
@@ -598,9 +597,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             adapter.notifyDataSetChanged();
                             Log.d(TAG, "adapter.notifyDataSetChanged();");
                         } else if (sportEntryDataList.size() == 0) {
-                            showErrorLayout();
                             // don't set adapter onItemClickListener
                             // emptyLayout.showContent();
+                            showErrorLayout();
                         }
 
                     } catch (JSONException e) {
