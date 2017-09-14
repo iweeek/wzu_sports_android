@@ -40,7 +40,7 @@ public class RT {
 
     static {
         if (BuildConfig.DEBUG) {
-            HOST = NetworkHost.DEBUG;
+            HOST = NetworkHost.PUBLISH;
         } else {
             HOST = NetworkHost.PUBLISH;
             DEBUG = false;

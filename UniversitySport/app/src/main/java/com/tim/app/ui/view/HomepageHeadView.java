@@ -94,8 +94,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
             }
         });
 
+        double ratio = 800.0 / 1920.0;
+        // int screenHeight = (int) (dm.density * 160 * 3);
+        int headViewHeight = (int) (dm.heightPixels * ratio);
+
+        DLOG.d("HomepageHeadView", "headViewHeight:" + headViewHeight);
         // the homePageHeadView's height is uncertainty
-        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 802 - 117);
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  headViewHeight - 117);
         // headEmptyLayout.showContent();
         headEmptyLayout.setLayoutParams(params);
 

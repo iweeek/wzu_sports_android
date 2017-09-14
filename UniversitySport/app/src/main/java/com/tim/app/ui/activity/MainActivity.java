@@ -15,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -380,11 +379,18 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     public void showErrorLayout() {
         sportEntryDataList.clear();
+        // adapter.notifyDataSetChanged();
+        // adapter.setHasStableIds(true);
+        // adapter.notifyItemRangeRemoved(0, sportEntryDataList.size());
 
         SportEntry entry = new SportEntry();
         entry.setType(SportEntry.EMPTY);
         sportEntryDataList.add(entry);
+        // sportEntryDataList.add(entry);
+        DLOG.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
+        // sportEntryDataList.add(entry);
         adapter.notifyDataSetChanged();
+
         // reset emptyLayout
         adapter.showErrorLayout();
     }
@@ -443,13 +449,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         //     j++;
                         // }
 
-                        Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
+                        DLOG.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
                         if (sportEntryDataList.size() > 0) {
                             adapter.setOnItemClickListener(context);
                             adapter.notifyDataSetChanged();
-                            Log.d(TAG, "adapter.notifyDataSetChanged();");
+                            DLOG.d(TAG, "sportEntryDataList.size() > 0");
                         } else if (sportEntryDataList.size() == 0) {
                             adapter.notifyDataSetChanged();
+                            DLOG.d(TAG, "sportEntryDataList.size() == 0");
                             // !!! do nothing here
                             // showErrorLayout();
                             // don't set adapter onItemClickListener
@@ -459,6 +466,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         // emptyLayout.showError();
                         showErrorLayout();
                         e.printStackTrace();
+                        DLOG.d(TAG, "JSONException");
                     }
                     //在查询跑步项目之后调用。
                     queryAreaSport();
@@ -477,6 +485,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
     static int k = 0;
+
     /**
      * 查询首页顶部本学期运动记录
      */
@@ -496,13 +505,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
 
                         // TODO
-                        if (k % 2 == 1) {
-                            k++;
-                            curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
-                        } else {
-                            k++;
-                            curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCounts");
-                        }
+                        // if (k % 2 == 1) {
+                        //     k++;
+                        //     curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
+                        // } else {
+                        //     k++;
+                        //     curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCounts");
+                        // }
 
                         //                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
                         //                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
@@ -586,19 +595,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             // }
                         }
 
-                        if (j % 2 == 1) {
-                            j++;
-                        } else {
-                            sportEntryDataList.clear();
-                            j++;
-                        }
+                        // if (j % 2 == 1) {
+                        //     j++;
+                        // } else {
+                        //     sportEntryDataList.clear();
+                        //     j++;
+                        // }
 
-                        Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
+                        DLOG.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
 
                         if (sportEntryDataList.size() > 0) {
                             adapter.setOnItemClickListener(context);
                             adapter.notifyDataSetChanged();
-                            Log.d(TAG, "adapter.notifyDataSetChanged();");
+                            DLOG.d(TAG, "adapter.notifyDataSetChanged();");
                         } else if (sportEntryDataList.size() == 0) {
                             // don't set adapter onItemClickListener
                             // emptyLayout.showContent();

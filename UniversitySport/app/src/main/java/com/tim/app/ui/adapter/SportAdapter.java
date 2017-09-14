@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -75,6 +76,9 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         errorView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.def_error_layout, null);
         errorView.setLayoutParams(params);
         emptyContainer.addView(errorView);
+        Button btnError = (Button) errorView.findViewById(R.id.btn_error);
+        btnError.setVisibility(View.GONE);
+
 
         loadingView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.def_loading_layout, null);
         loadingView.setLayoutParams(params);
@@ -98,6 +102,11 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder holder = null;
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null);
@@ -108,6 +117,8 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder = new ViewHolder(mContext, itemView);
             holder.findView(R.id.llBottom).setVisibility(View.GONE);
         } else if (viewType == SportEntry.EMPTY) {
+            // TODO
+            initEmptyLayout();
             holder = new ViewHolder(mContext, emptyContainer);
         }
         return holder;
