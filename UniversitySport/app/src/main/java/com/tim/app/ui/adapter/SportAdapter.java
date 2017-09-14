@@ -5,14 +5,17 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.bumptech.glide.request.RequestOptions;
 import com.tim.app.R;
 import com.tim.app.RT;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.adapter.viewholder.ViewHolder;
 import com.tim.app.ui.cell.GlideApp;
 
@@ -20,14 +23,24 @@ import java.util.List;
 
 import static com.tim.app.ui.activity.MainActivity.SPORT_BACKGROUND_HEIGHT;
 import static com.tim.app.ui.activity.MainActivity.SPORT_BACKGROUND_WIDTH;
+import static com.tim.app.ui.activity.MainActivity.appBarHeight;
+import static com.tim.app.ui.activity.MainActivity.screenHeight;
+import static com.tim.app.ui.activity.MainActivity.statusBarHeight;
 
 public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, SportEntry> {
     private Context mContext;
     private boolean isShowSection;
 
-    public SportAdapter(Context mContext, List<SportEntry> mDataList) {
+    private FrameLayout emptyContainer;
+    private ViewGroup loadingView;
+    private ViewGroup errorView;
+
+
+
+    public SportAdapter(Context context, List<SportEntry> mDataList) {
         super(mDataList);
-        this.mContext = mContext;
+        this.mContext = context;
+        initEmptyLayout();
     }
 
     public boolean isShowSection() {
@@ -38,14 +51,64 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         isShowSection = showSection;
     }
 
+    public void showErrorLayout() {
+        errorView.setVisibility(View.VISIBLE);
+        loadingView.setVisibility(View.GONE);
+
+    }
+
+    public void showLoadingLayout() {
+        errorView.setVisibility(View.GONE);
+        loadingView.setVisibility(View.VISIBLE);
+    }
+
+    public void initEmptyLayout() {
+        emptyContainer = new FrameLayout(mContext);
+
+        int remainHeight = screenHeight - statusBarHeight - appBarHeight - 802;
+        // int remainHeight = screenHeight - statusBarHeight - appBarHeight - HomepageHeadView.height;
+        DLOG.d("SportAdapter", "remainHeight: " + remainHeight);
+        RelativeLayout.LayoutParams params = new RelativeLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, remainHeight);
+
+        errorView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.def_error_layout, null);
+        errorView.setLayoutParams(params);
+        emptyContainer.addView(errorView);
+
+        loadingView = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.def_loading_layout, null);
+        loadingView.setLayoutParams(params);
+        loadingView.setVisibility(View.GONE);
+        emptyContainer.addView(loadingView);
+
+        ImageView ivError = (ImageView) errorView.findViewById(R.id.iv_error);
+        ivError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO show the Loading view.
+                // loadingView.setVisibility(View.VISIBLE);
+                // errorView.setVisibility(View.GONE);
+                showLoadingLayout();
+                if (mContext instanceof MainActivity) {
+                    ((MainActivity) mContext).queryRunningSport();
+                }
+            }
+        });
+
+    }
+
     @Override
     public BaseRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         BaseRecyclerViewHolder holder = null;
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null);
+
         if (viewType == SportEntry.RUNNING_SPORT) {
-            holder = new ViewHolder(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null));
+            holder = new ViewHolder(mContext, itemView);
         } else if (viewType == SportEntry.AREA_SPORT) {
-            holder = new ViewHolder(mContext, LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_sport, null));
+            holder = new ViewHolder(mContext, itemView);
             holder.findView(R.id.llBottom).setVisibility(View.GONE);
+        } else if (viewType == SportEntry.EMPTY) {
+            // TODO 定义一个空的布局。  哎，待会我又忘了。
+            holder = new ViewHolder(mContext, emptyContainer);
         }
         return holder;
     }
@@ -56,6 +119,8 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             return SportEntry.RUNNING_SPORT;
         } else if (data.getType() == SportEntry.AREA_SPORT) {
             return SportEntry.AREA_SPORT;
+        } else if (data.getType() == SportEntry.EMPTY) {
+            return SportEntry.EMPTY;
         }
         return position;
     }
@@ -63,6 +128,10 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
     @Override
     public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, SportEntry data) {
         if (data == null) {
+            return;
+        }
+
+        if (data.getType() == SportEntry.EMPTY) {
             return;
         }
 

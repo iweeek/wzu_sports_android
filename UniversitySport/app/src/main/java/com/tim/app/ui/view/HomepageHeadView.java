@@ -4,15 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.application.library.widget.EmptyLayout;
 import com.tim.app.R;
 import com.tim.app.ui.activity.HistorySportActivity;
+import com.tim.app.ui.activity.MainActivity;
 import com.tim.app.ui.activity.SchoolRankingActivity;
 
 /**
@@ -25,18 +30,23 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private TextView tvAccumulCostTime;
     private TextView tvCurSignInCount;
     private TextView tvCurTermTargetTimes;
+    private FrameLayout flContainer;
+    private LinearLayout llSubTitle;
 
     private RelativeLayout rlTop;
     private RelativeLayout rlRank;
     private LinearLayout rlHeadView;
-//    private RelativeLayout rlSecond;
-//    private LinearLayout llBadNetworkFresh;
-    private Context ctx;
+    //    private RelativeLayout rlSecond;
+    //    private LinearLayout llBadNetworkFresh;
+    private Context context;
     private ProgressBar pbReachTargetTimes;
+    private EmptyLayout headEmptyLayout;
+
+    public static int height = 0;
 
     public HomepageHeadView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        ctx = context;
+        this.context = context;
     }
 
     @Override
@@ -48,9 +58,11 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         tvCurSignInCount = (TextView) findViewById(R.id.tvCurSignInCount);
         tvCurTermTargetTimes = (TextView) findViewById(R.id.tvCurTermTargetTimes);
         pbReachTargetTimes = (ProgressBar) findViewById(R.id.pbReachTargetTimes);
+        flContainer = (FrameLayout) findViewById(R.id.flContainer);
+        llSubTitle = (LinearLayout) findViewById(R.id.llSubTitle);
 
-//        rlSecond = (RelativeLayout) findViewById(R.id.rlSecond);
-//        rlSecond.setOnClickListener(this);
+        //        rlSecond = (RelativeLayout) findViewById(R.id.rlSecond);
+        //        rlSecond.setOnClickListener(this);
         rlHeadView = (LinearLayout) findViewById(R.id.llHeadView);
         rlHeadView.setOnClickListener(this);
         rlRank = (RelativeLayout) findViewById(R.id.rlRank);
@@ -58,8 +70,52 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         rlTop = (RelativeLayout) findViewById(R.id.rlTop);
         rlTop.setOnClickListener(this);
 
-//        llBadNetworkFresh = (LinearLayout) findViewById(R.id.llBadNetworkFresh);
+        //        llBadNetworkFresh = (LinearLayout) findViewById(R.id.llBadNetworkFresh);
+        initHeadEmptyLayout();
+    }
 
+    public void initHeadEmptyLayout() {
+        // headEmptyLayout = new EmptyLayout(context, flContainer);
+        headEmptyLayout = new EmptyLayout(context, flContainer);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        ((MainActivity) context).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Log.d("HomepageHeadView", "dm.density:" + dm.density);
+        Log.d("HomepageHeadView", "dm.densityDpi:" + dm.densityDpi);
+        Log.d("HomepageHeadView", "dm.scaledDensity:" + dm.scaledDensity);
+
+        final int[] subTitle = {0};
+        llSubTitle.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                Log.d("HomepageHeadView", "v.getHeight():" + v.getHeight());
+                subTitle[0] = v.getHeight();
+            }
+        });
+
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 802 - 117);
+        // headEmptyLayout.showContent();
+        headEmptyLayout.setLayoutParams(params);
+
+        headEmptyLayout.setEmptyDrawable(R.drawable.icon_default_network);
+        headEmptyLayout.setErrorDrawable(R.drawable.icon_default_network);
+        headEmptyLayout.setEmptyText(context.getString(R.string.httpconnection_not_network));
+        headEmptyLayout.setErrorButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                headEmptyLayout.showLoading();
+                // queryCurTermData();
+                ((MainActivity) context).queryCurTermData();
+            }
+        });
+    }
+
+    public void showErrorLayout() {
+        headEmptyLayout.showError();
+    }
+
+    public void showContentLayout() {
+        headEmptyLayout.showContent();
     }
 
     @Override
@@ -72,9 +128,9 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
             case R.id.rlTop:
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
-//            case R.id.rlSecond:
-//                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
-//                break;
+            //            case R.id.rlSecond:
+            //                getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
+            //                break;
             case R.id.llHeadView:
                 getContext().startActivity(new Intent(getContext(), HistorySportActivity.class));
                 break;
@@ -92,13 +148,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
     public void displayBadNetworkLayout() {
         rlHeadView.setVisibility(View.INVISIBLE);
-//        llBadNetworkFresh.setVisibility(View.VISIBLE);
-//        llBadNetworkFresh.setOnClickListener((MainActivity) ctx);
+        //        llBadNetworkFresh.setVisibility(View.VISIBLE);
+        //        llBadNetworkFresh.setOnClickListener((MainActivity) ctx);
     }
 
     public void displayNormalLayout() {
         rlHeadView.setVisibility(View.VISIBLE);
-//        llBadNetworkFresh.setVisibility(View.INVISIBLE);
+        //        llBadNetworkFresh.setVisibility(View.INVISIBLE);
     }
 
     /**

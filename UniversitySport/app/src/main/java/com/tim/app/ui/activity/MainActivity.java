@@ -7,12 +7,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -82,18 +85,24 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private LinearLayout llContainer;
     private WrapRecyclerView wrvSportType;
+    private AppBarLayout appBarLayout;
 
     private SportAdapter adapter;
     //    private BadNetworkAdapter badNetworkAdapter;
     private List<SportEntry> sportEntryDataList;
     //    private List<BadNetWork> networkDataList;
 
-    private EmptyLayout emptyLayout;
+    // private EmptyLayout emptyLayout;
+    // private EmptyLayout headEmptyLayout;
+    private EmptyLayout sportEmptyLayout;
 
     private NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
-    //    private BadNetworkView badNetworkView;
+
+    public static int statusBarHeight = 0;
+    public static int appBarHeight = 0;
+    public static int screenHeight = 0;
 
     /*
     * 微信
@@ -177,6 +186,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         flMenu = (FrameLayout) findViewById(R.id.flTitleMenu);
         flMenu.setOnClickListener(this);
         flMenu.setVisibility(View.VISIBLE);
+        appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
 
         //        ibNotify = (ImageView) findViewById(ibNotify);
         //        tvLogout = (TextView) findViewById(tvLogout);
@@ -191,20 +201,22 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         llContainer = (LinearLayout) findViewById(R.id.llContainer);
         wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
 
-        emptyLayout = new EmptyLayout(this, llContainer);
-        emptyLayout.showLoading();
-        emptyLayout.setEmptyButtonShow(true);
-        emptyLayout.setErrorButtonShow(true);
-        emptyLayout.setEmptyDrawable(R.drawable.ic_empty_sport_data);
-        emptyLayout.setErrorDrawable(R.drawable.ic_empty_sport_data);
-        emptyLayout.setEmptyText("当前没有数据");
-        emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                emptyLayout.showLoading();
-                queryHomePagedata();
-            }
-        });
+        // emptyLayout = new EmptyLayout(this, llContainer);
+        // emptyLayout.showLoading();
+        // emptyLayout.setEmptyButtonShow(true);
+        // emptyLayout.setErrorButtonShow(true);
+        // emptyLayout.setEmptyDrawable(R.drawable.ic_empty_sport_data);
+        // emptyLayout.setErrorDrawable(R.drawable.ic_empty_sport_data);
+        // emptyLayout.setEmptyText("当前没有数据");
+
+
+        // emptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
+        //     @Override
+        //     public void onClick(View v) {
+        //         emptyLayout.showLoading();
+        //         queryHomePagedata();
+        //     }
+        // });
 
         if (navigationView != null) {
             //动态加载headerView
@@ -267,7 +279,56 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view, null);
         wrvSportType.addHeaderView(homepageHeadView);
-        //        badNetworkView = (BadNetworkView) LayoutInflater.from(this).inflate(R.layout.bad_network_view, null);
+
+        // homepageHeadView's height
+        homepageHeadView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                DLOG.d(TAG, "homepageHeadView: " + v.getHeight());
+                HomepageHeadView.height = v.getHeight();
+            }
+        });
+
+        // statusBar height
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        DLOG.d(TAG, "statusBarHeight: " + statusBarHeight);
+
+        // toolbar height
+        appBarLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                appBarHeight = v.getHeight();
+                DLOG.d(TAG, "appBarHeight： " + appBarHeight);
+            }
+        });
+
+        // screen height
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        screenHeight = dm.heightPixels;
+        DLOG.d(TAG, "dm.heightPixels： " + dm.heightPixels);
+
+
+        // FrameLayout flContainer = (FrameLayout) homepageHeadView.findViewById(R.id.flContainer);
+        // headEmptyLayout = new EmptyLayout(this, flContainer);
+        // headEmptyLayout.showLoading();
+        // headEmptyLayout.setEmptyButtonShow(true);
+        // headEmptyLayout.setErrorButtonShow(true);
+        // headEmptyLayout.setEmptyDrawable(R.drawable.ic_empty_sport_data);
+        // headEmptyLayout.setErrorDrawable(R.drawable.ic_empty_sport_data);
+        // headEmptyLayout.setEmptyText("当前没有数据");
+        // headEmptyLayout.setEmptyButtonClickListener(new View.OnClickListener() {
+        //     @Override
+        //     public void onClick(View v) {
+        //         headEmptyLayout.showLoading();
+        //         queryCurTermData();
+        //     }
+        // });
+
         /**
          * 添加底部留白
          */
@@ -308,9 +369,22 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         DLOG.d(TAG, "sportEntry:" + sportEntry);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
             SportDetailActivity.start(this, sportEntry);
-        } else {
+        } else if (sportEntry.getType() == SportEntry.AREA_SPORT) {
             SportsAreaListActivity.start(this, sportEntry);
+        } else if (sportEntry.getType() == SportEntry.EMPTY) {
+
         }
+    }
+
+    public static int j = 0;
+
+    public void showErrorLayout() {
+        SportEntry entry = new SportEntry();
+        entry.setType(SportEntry.EMPTY);
+        sportEntryDataList.add(entry);
+        adapter.notifyDataSetChanged();
+        // reset emptyLayout
+        adapter.showErrorLayout();
     }
 
     /**
@@ -356,26 +430,41 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setTargetSpeed(bd + "");
                             sportEntry.setAcquisitionInterval(interval);
 
+                            // TODO
                             sportEntryDataList.add(sportEntry);
                         }
-                        // wrvSportType.setAdapter(adapter);
-                        adapter.setOnItemClickListener(context);
-                        adapter.notifyDataSetChanged();
-                        if (sportEntryDataList.size() == 0) {
-                            emptyLayout.showEmpty();
-                        } else {
-                            emptyLayout.showContent();
+
+                        // if (j % 2 == 1) {
+                        //     j++;
+                        // } else {
+                        //     sportEntryDataList.clear();
+                        //     j++;
+                        // }
+
+                        Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
+                        if (sportEntryDataList.size() > 0) {
+                            adapter.setOnItemClickListener(context);
+                            adapter.notifyDataSetChanged();
+                            Log.d(TAG, "adapter.notifyDataSetChanged();");
+                        } else if (sportEntryDataList.size() == 0) {
+                            // !!! do nothing here
+                            // showErrorLayout();
+                            // don't set adapter onItemClickListener
+                            // emptyLayout.showContent();
                         }
                     } catch (JSONException e) {
-                        emptyLayout.showError();
+                        // emptyLayout.showError();
+                        showErrorLayout();
                         e.printStackTrace();
                     }
                     //在查询跑步项目之后调用。
                     queryAreaSport();
+
                     return true;
                 } else {
                     //TODO
-                    emptyLayout.showEmptyOrError(errCode);
+                    showErrorLayout();
+                    // emptyLayout.showEmptyOrError(errCode);
                     DLOG.d(TAG, "获取跑步运动项目失败 错误码：" + errCode);
                     return false;
                 }
@@ -384,6 +473,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         });
     }
 
+    static int k = 0;
     /**
      * 查询首页顶部本学期运动记录
      */
@@ -399,7 +489,17 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 .getString("targetSportsTimes"));
 
                         String curTermAreaCounts = jsonObject.getString("currentTermAreaActivityCount");
+
                         String curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
+
+                        // TODO
+                        // if (k % 2 == 1) {
+                        //     k++;
+                        //     curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
+                        // } else {
+                        //     k++;
+                        //     curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCounts");
+                        // }
 
                         //                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
                         //                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
@@ -424,14 +524,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         homepageHeadView.setData(totalCount, totalKcalComsuption, String.valueOf(bd.intValue()), totalSignInCount, curTermTargetTimes);
                         homepageHeadView.displayNormalLayout();
                         //                        adapter.notifyDataSetChanged();
+
+                        // emptyLayout.showContent();
+                        homepageHeadView.showContentLayout();
                         return true;
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        emptyLayout.showError();
+                        // emptyLayout.showError();
+                        homepageHeadView.showErrorLayout();
                         return false;
                     }
                 } else {
-                    emptyLayout.showEmptyOrError(errCode);
+                    // emptyLayout.showEmptyOrError(errCode);
+                    homepageHeadView.showErrorLayout();
                     return false;
                 }
             }
@@ -472,21 +577,42 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                             sportEntryDataList.add(areaSportEntry);
 
-                            if (sportEntryDataList.size() == 0) {
-                                emptyLayout.showEmpty();
-                            } else {
-                                emptyLayout.showContent();
-                            }
+                            // if (sportEntryDataList.size() == 0) {
+                            //     emptyLayout.showEmpty();
+                            // } else {
+                            //     emptyLayout.showContent();
+                            // }
                         }
-                        adapter.notifyDataSetChanged();
+
+                        // if (j % 2 == 1) {
+                        //     j++;
+                        // } else {
+                        //     sportEntryDataList.clear();
+                        //     j++;
+                        // }
+
+                        Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
+
+                        if (sportEntryDataList.size() > 0) {
+                            adapter.setOnItemClickListener(context);
+                            adapter.notifyDataSetChanged();
+                            Log.d(TAG, "adapter.notifyDataSetChanged();");
+                        } else if (sportEntryDataList.size() == 0) {
+                            showErrorLayout();
+                            // don't set adapter onItemClickListener
+                            // emptyLayout.showContent();
+                        }
+
                     } catch (JSONException e) {
-                        emptyLayout.showError();
                         e.printStackTrace();
+                        // emptyLayout.showError();
+                        showErrorLayout();
                     }
                     return true;
                 } else {
                     //TODO
-                    emptyLayout.showEmptyOrError(errCode);
+                    // emptyLayout.showEmptyOrError(errCode);
+                    showErrorLayout();
                     DLOG.d(TAG, "获取区域运动项目失败 错误码：" + errCode);
                     return false;
                 }

@@ -65,6 +65,17 @@ public class EmptyLayout {
         initDefaultValues();
     }
 
+    public void setLayoutParams(final ViewGroup.LayoutParams params) {
+        changeState();
+        mBackgroundView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                mBackgroundView.setLayoutParams(params);
+            }
+        });
+        // mBackgroundView.setLayoutParams(params);
+    }
+
     public void setBackgroundColor(int color) {
         this.bg_color = color;
     }
@@ -331,7 +342,7 @@ public class EmptyLayout {
             mViewsAdded = true;
 
             if (mContentView != null) {
-                ((ViewGroup) mContentView.getParent()).addView(mBackgroundView);
+                ((ViewGroup) mContentView.getParent()).addView(mBackgroundView, 1);
             }
 
         }
