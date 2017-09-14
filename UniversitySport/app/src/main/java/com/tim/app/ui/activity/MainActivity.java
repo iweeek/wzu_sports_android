@@ -379,6 +379,8 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     public static int j = 0;
 
     public void showErrorLayout() {
+        sportEntryDataList.clear();
+
         SportEntry entry = new SportEntry();
         entry.setType(SportEntry.EMPTY);
         sportEntryDataList.add(entry);
@@ -447,6 +449,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             adapter.notifyDataSetChanged();
                             Log.d(TAG, "adapter.notifyDataSetChanged();");
                         } else if (sportEntryDataList.size() == 0) {
+                            adapter.notifyDataSetChanged();
                             // !!! do nothing here
                             // showErrorLayout();
                             // don't set adapter onItemClickListener
@@ -493,13 +496,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         String curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
 
                         // TODO
-                        // if (k % 2 == 1) {
-                        //     k++;
-                        //     curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
-                        // } else {
-                        //     k++;
-                        //     curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCounts");
-                        // }
+                        if (k % 2 == 1) {
+                            k++;
+                            curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCount");
+                        } else {
+                            k++;
+                            curTermRunningCounts = jsonObject.getString("currentTermRunningActivityCounts");
+                        }
 
                         //                        String curTermAreaQualifiedCounts = jsonObject.optString("currentTermQualifiedAreaActivityCount");
                         //                        String curTermRunningQualifiedCounts = jsonObject.optString("currentTermQualifiedRunningActivityCount");
@@ -583,12 +586,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             // }
                         }
 
-                        // if (j % 2 == 1) {
-                        //     j++;
-                        // } else {
-                        //     sportEntryDataList.clear();
-                        //     j++;
-                        // }
+                        if (j % 2 == 1) {
+                            j++;
+                        } else {
+                            sportEntryDataList.clear();
+                            j++;
+                        }
 
                         Log.d(TAG, "sportEntryDataList.size():" + sportEntryDataList.size());
 
@@ -599,6 +602,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         } else if (sportEntryDataList.size() == 0) {
                             // don't set adapter onItemClickListener
                             // emptyLayout.showContent();
+                            adapter.notifyDataSetChanged();
                             showErrorLayout();
                         }
 
