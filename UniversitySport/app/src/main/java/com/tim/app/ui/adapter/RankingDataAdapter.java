@@ -1,6 +1,5 @@
 package com.tim.app.ui.adapter;
 
-import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +8,12 @@ import android.widget.TextView;
 
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.roundimg.RoundedImageView;
+import com.bumptech.glide.Glide;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
 import com.tim.app.ui.cell.GlideApp;
+import com.tim.app.ui.fragment.RankingDataFragment;
 
 import java.util.List;
 
@@ -20,11 +21,10 @@ import java.util.List;
  * 排行榜
  */
 public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankingData> {
-
-    private Context context;
+    private RankingDataFragment context;
     private int type;
 
-    public RankingDataAdapter(Context mContext, List<RankingData> mDataList, int type) {
+    public RankingDataAdapter(RankingDataFragment mContext, List<RankingData> mDataList, int type) {
         super(mDataList);
         this.context = mContext;
         this.type = type;
@@ -42,6 +42,7 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (data == null) {
             return;
         }
+
         final ViewHolder holder = (ViewHolder) mHolder;
 
         if (AppConstant.TYPE_COST_ENERGY == type) {
@@ -58,11 +59,17 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvName.setText(data.getUserName());
         }
         if (!TextUtils.isEmpty(data.getAvatar())) {
-            GlideApp.with(context)
-                    .load(data.getAvatar())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(holder.rivAvatar);
+            if (data.getAvatar() == "") {
+
+            } else {
+                // Glide.with(context).clear(holder.rivAvatar);
+                GlideApp.with(context)
+                        .load(data.getAvatar())
+                        .skipMemoryCache(true)
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop()
+                        .into(holder.rivAvatar);
+            }
         }
         holder.tvNo.setText(String.valueOf(position + 4));
         if (position != getDataList().size() - 1) {
@@ -72,6 +79,11 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         }
     }
 
+    @Override
+    public void onViewRecycled(BaseRecyclerViewHolder viewHolder) {
+        super.onViewRecycled(viewHolder);
+        Glide.with(viewHolder.itemView.getContext()).clear(viewHolder.itemView);
+    }
 
     /**
      * todo 这个ViewHolder有待改进
