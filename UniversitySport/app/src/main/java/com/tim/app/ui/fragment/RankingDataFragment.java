@@ -51,11 +51,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     int type;
     private int universityId = 1;
     private int pageNoEnergy = 1;
-    private int pageSizeEnergy = 2; // value don't  less than 3
+    private int pageSizeEnergy = 10; // value don't  less than 3
     private int pageCountEnergy = -1;
 
     private int pageNoTime = 1;
-    private int pageSizeTime = 3; // value don't  less than 3
+    private int pageSizeTime = 10; // value don't  less than 3
     private int pageCountTime = -1;
 
     public static RankingDataFragment newInstance(int type) {
@@ -106,7 +106,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             }
 
             dataList = new ArrayList<RankingData>();
-            adapter = new RankingDataAdapter(this, dataList, type);
+            adapter = new RankingDataAdapter(getActivity(), dataList, type);
             wrvHistoryData.setAdapter(adapter);
 
         }

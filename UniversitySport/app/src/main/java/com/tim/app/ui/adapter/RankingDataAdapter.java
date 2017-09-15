@@ -1,6 +1,8 @@
 package com.tim.app.ui.adapter;
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,6 @@ import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
 import com.tim.app.ui.cell.GlideApp;
-import com.tim.app.ui.fragment.RankingDataFragment;
 
 import java.util.List;
 
@@ -21,12 +22,12 @@ import java.util.List;
  * 排行榜
  */
 public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankingData> {
-    private RankingDataFragment context;
+    private Context context;
     private int type;
 
-    public RankingDataAdapter(RankingDataFragment mContext, List<RankingData> mDataList, int type) {
+    public RankingDataAdapter(Context context, List<RankingData> mDataList, int type) {
         super(mDataList);
-        this.context = mContext;
+        this.context = context;
         this.type = type;
     }
 
@@ -36,6 +37,8 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
                 holder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_rank_data, parent, false));
         return holder;
     }
+
+    static int k = 1;
 
     @Override
     public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, RankingData data) {
@@ -58,19 +61,22 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (!TextUtils.isEmpty(data.getUserName())) {
             holder.tvName.setText(data.getUserName());
         }
-        if (!TextUtils.isEmpty(data.getAvatar())) {
-            if (data.getAvatar() == "") {
+        Log.d("RankingDataAdapter", "k++:" + k++ + " position :" + position);
 
-            } else {
-                // Glide.with(context).clear(holder.rivAvatar);
-                GlideApp.with(context)
-                        .load(data.getAvatar())
-                        .skipMemoryCache(true)
-                        .placeholder(R.drawable.ic_default_avatar)
-                        .circleCrop()
-                        .into(holder.rivAvatar);
-            }
+        if (!TextUtils.isEmpty(data.getAvatar())) {
+            GlideApp.with(context)
+                    .load(data.getAvatar())
+                    // .placeholder(R.drawable.ic_default_avatar)
+                    .skipMemoryCache(true)
+                    .circleCrop()
+                    .into(holder.rivAvatar);
+        } else {
+            // make sure Glide doesn't load anything into this view until told otherwise
+            Glide.with(context).clear(holder.rivAvatar);
+            // remove the placeholder (optional); read comments below
+            holder.rivAvatar.setImageDrawable(null);
         }
+
         holder.tvNo.setText(String.valueOf(position + 4));
         if (position != getDataList().size() - 1) {
             holder.vLine.setVisibility(View.VISIBLE);
@@ -92,6 +98,7 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         TextView tvCostNumber;
         TextView tvCostUnit;
         TextView tvNo;
+        // RoundedImageView rivAvatar;
         RoundedImageView rivAvatar;
         TextView tvName;
         View vLine;
