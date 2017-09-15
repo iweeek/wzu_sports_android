@@ -51,11 +51,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     int type;
     private int universityId = 1;
     private int pageNoEnergy = 1;
-    private int pageSizeEnergy = 10;
+    private int pageSizeEnergy = 3;
     private int pageCountEnergy = -1;
 
     private int pageNoTime = 1;
-    private int pageSizeTime = 10;
+    private int pageSizeTime = 3;
     private int pageCountTime = -1;
 
     public static RankingDataFragment newInstance(int type) {
@@ -126,15 +126,16 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountEnergy = Integer.valueOf(jsonObject.optString("pagesCount"));
                             JSONArray rankingDataArray = jsonObject.optJSONArray("data");
-                            RankingData headData[] = new RankingData[3];
-                            for (int i = 0; i < 3; i++) {
-                                headData[i] = new RankingData();
-                                headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
-                                headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
-                                DLOG.d(TAG, "headData[i]:" + headData[i].toString());
+                            List<RankingData> headDataList = new ArrayList<>();
+                            for (int i = 0; i < rankingDataArray.length(); i++) {
+                                RankingData rankingData = new RankingData();
+                                rankingData.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
+                                rankingData.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                rankingData.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
+                                headDataList.add(rankingData);
+                                DLOG.d(TAG, "rankingData:" + rankingData);
                             }
-                            headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
+                            headView.setData(headDataList, AppConstant.TYPE_COST_ENERGY);
 
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -180,14 +181,16 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                         try {
                             pageCountTime = Integer.valueOf(jsonObject.getString("pagesCount"));
                             JSONArray rankingDataArray = jsonObject.getJSONArray("data");
-                            RankingData headData[] = new RankingData[3];
-                            for (int i = 0; i < 3; i++) {
-                                headData[i] = new RankingData();
-                                headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
-                                headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                            List<RankingData> headDataList = new ArrayList<>();
+                            for (int i = 0; i < rankingDataArray.length(); i++) {
+                                RankingData rankingData = new RankingData();
+                                rankingData.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
+                                rankingData.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                rankingData.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                                headDataList.add(rankingData);
+                                DLOG.d(TAG, "rankingData:" + rankingData);
                             }
-                            headView.setData(headData, AppConstant.TYPE_COST_TIME);
+                            headView.setData(headDataList, AppConstant.TYPE_COST_TIME);
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
@@ -286,7 +289,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            DLOG.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            e.printStackTrace();
                             return false;
                         }
                     } else {
@@ -321,7 +324,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            DLOG.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            e.printStackTrace();
                             return false;
                         }
                     } else {
