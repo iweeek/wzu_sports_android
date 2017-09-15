@@ -42,16 +42,6 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
     }
 
     @Override
-    public void onViewRecycled(BaseRecyclerViewHolder holder) {
-        super.onViewRecycled(holder);
-    }
-
-    public static void  loadImage(RequestManager glide, String url, ImageView view) {
-        glide.load(url).into(view);
-    }
-
-
-    @Override
     public void onBindViewHolder(BaseRecyclerViewHolder mHolder, int position, RankingData data) {
         if (data == null) {
             return;
@@ -74,12 +64,16 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvName.setText(data.getUserName());
         }
         if (!TextUtils.isEmpty(data.getAvatar())) {
-            GlideApp.with(context)
-                    .load(data.getAvatar())
-                    .skipMemoryCache(true)
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(holder.rivAvatar);
+            if (data.getAvatar() == "") {
+
+            } else {
+                GlideApp.with(context)
+                        .load(data.getAvatar())
+                        .skipMemoryCache(true)
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop()
+                        .into(holder.rivAvatar);
+            }
         }
         holder.tvNo.setText(String.valueOf(position + 4));
         if (position != getDataList().size() - 1) {
