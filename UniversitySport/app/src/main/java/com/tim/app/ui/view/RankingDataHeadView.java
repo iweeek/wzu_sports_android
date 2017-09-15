@@ -69,7 +69,6 @@ public class RankingDataHeadView extends LinearLayout {
                 String minuteUnit = " " + context.getString(R.string.minute);
                 String kcalUnit = " " + context.getString(R.string.kcal);
 
-
                 if (i == 0) {
                     tvFirstName.setText(dataList.get(i).getUserName());
 
@@ -89,8 +88,6 @@ public class RankingDataHeadView extends LinearLayout {
                         tvFirstUnit.setText(kcalUnit);
                     }
                 }
-
-
 
                 if (i == 1) {
                     tvSecondName.setText(dataList.get(i).getUserName());
