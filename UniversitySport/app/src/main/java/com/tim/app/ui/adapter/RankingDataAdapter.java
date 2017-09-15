@@ -5,13 +5,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.roundimg.RoundedImageView;
-import com.bumptech.glide.RequestManager;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
@@ -23,15 +21,13 @@ import java.util.List;
  * 排行榜
  */
 public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankingData> {
-    private final RequestManager glide;
     private Context context;
     private int type;
 
-    public RankingDataAdapter(Context mContext, List<RankingData> mDataList, int type, RequestManager glide) {
+    public RankingDataAdapter(Context mContext, List<RankingData> mDataList, int type) {
         super(mDataList);
         this.context = mContext;
         this.type = type;
-        this.glide = glide;
     }
 
     @Override
@@ -47,7 +43,6 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             return;
         }
 
-        DLOG.d("RankingDataAdapter", "onBindViewHolder");
         final ViewHolder holder = (ViewHolder) mHolder;
 
         if (AppConstant.TYPE_COST_ENERGY == type) {

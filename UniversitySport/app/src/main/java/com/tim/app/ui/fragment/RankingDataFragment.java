@@ -16,7 +16,6 @@ import com.application.library.widget.loadmore.LoadMoreContainer;
 import com.application.library.widget.loadmore.LoadMoreHandler;
 import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.WrapRecyclerView;
-import com.bumptech.glide.Glide;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
@@ -107,7 +106,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             }
 
             dataList = new ArrayList<RankingData>();
-            adapter = new RankingDataAdapter(getActivity(), dataList, type, Glide.with(this));
+            adapter = new RankingDataAdapter(getActivity(), dataList, type);
             wrvHistoryData.setAdapter(adapter);
 
         }
@@ -288,7 +287,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         try {
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("kcalConsumptionRanking").
+                            JSONArray rankingDataArray = json.getJSONObject("data").getJSONObject("university").getJSONObject("kcalConsumptionRanking").
                                     getJSONArray("data");
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -302,9 +301,12 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
+                            DLOG.d(TAG, "e:" + e);
+                            e.printStackTrace();
                             return false;
                         }
                     } else {
+                        DLOG.d(TAG, "errCode:" + errCode);
                         return false;
                     }
                 }
@@ -323,7 +325,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         try {
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
+                            JSONArray rankingDataArray = json.getJSONObject("data").getJSONObject("university").getJSONObject("timeCostedRanking").
                                     getJSONArray("data");
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -336,9 +338,12 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
+                            DLOG.d(TAG, "e:" + e);
+                            e.printStackTrace();
                             return false;
                         }
                     } else {
+                        DLOG.d(TAG, "errCode:" + errCode);
                         return false;
                     }
                 }
