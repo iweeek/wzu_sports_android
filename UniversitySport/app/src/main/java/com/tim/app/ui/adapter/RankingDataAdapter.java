@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.application.library.widget.roundimg.RoundedImageView;
 import com.tim.app.R;
@@ -20,7 +21,6 @@ import java.util.List;
  * 排行榜
  */
 public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRecyclerViewHolder, RankingData> {
-
     private Context context;
     private int type;
 
@@ -42,6 +42,7 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
         if (data == null) {
             return;
         }
+
         final ViewHolder holder = (ViewHolder) mHolder;
 
         if (AppConstant.TYPE_COST_ENERGY == type) {
@@ -58,11 +59,16 @@ public class RankingDataAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.
             holder.tvName.setText(data.getUserName());
         }
         if (!TextUtils.isEmpty(data.getAvatar())) {
-            GlideApp.with(context)
-                    .load(data.getAvatar())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(holder.rivAvatar);
+            if (data.getAvatar() == "") {
+
+            } else {
+                GlideApp.with(context)
+                        .load(data.getAvatar())
+                        .skipMemoryCache(true)
+                        .placeholder(R.drawable.ic_default_avatar)
+                        .circleCrop()
+                        .into(holder.rivAvatar);
+            }
         }
         holder.tvNo.setText(String.valueOf(position + 4));
         if (position != getDataList().size() - 1) {
