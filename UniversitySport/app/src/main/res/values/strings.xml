@@ -184,4 +184,8 @@
     <string name="abnormalData">数据异常</string>
     <string name="qualified">已达标</string>
     <string name="notQualified">未达标</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

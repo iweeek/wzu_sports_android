@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -240,6 +241,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     startActivity(intentSetting);
                                     break;
                             }
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
                             return true;
                         }
                     });
@@ -258,6 +260,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 isOpen = true;
             }
         });
+
+        // ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+        //         R.string.navigation_drawer_open,
+        //         R.string.navigation_drawer_close);
+        // mDrawerLayout.addDrawerListener(toggle);
+        // toggle.syncState();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
