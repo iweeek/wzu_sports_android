@@ -15,11 +15,14 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.AppOpsManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -722,14 +725,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
                 break;
             case REQUEST_PERMISSION_WRITE_FINE_LOCATION:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //已授权
-                    Toast.makeText(this, "已授权定位服务", Toast.LENGTH_SHORT).show();
-                } else {
-                    //未授权
-                    Toast.makeText(this, "已禁止定位服务", Toast.LENGTH_SHORT).show();
+                String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+                String op = AppOpsManagerCompat.permissionToOp(permission);
+                int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+                if(result == AppOpsManagerCompat.MODE_IGNORED
+                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    DLOG.d("onRequestPermissionsResult", "onRequestPermissionsResult");
+                    Toast.makeText(this,
+                            getString(R.string.manual_open_permission_hint),
+                            Toast.LENGTH_SHORT).show();
                 }
+                // TODO 授权成功。
                 break;
             default:
                 break;
@@ -745,7 +751,32 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         params.screenBrightness = (float) 1;
         getWindow().setAttributes(params);
         screenKeepLightTime = 0;
-        DLOG.d(TAG, "onClick turn up light");
+        // DLOG.d(TAG, "onClick turn up light");
+    }
+
+    public boolean checkLocationPermission() {
+        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+        String op = AppOpsManagerCompat.permissionToOp(permission);
+        int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+        if(result == AppOpsManagerCompat.MODE_IGNORED
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // TODO 没有有权限。
+            DLOG.d(TAG, "没有定位权限");
+            if(!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(this,
+                        getString(R.string.manual_open_permission_hint),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+            }
+            return false;
+        } else {
+            // TODO 有权限或者默认。
+            DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
+            return true;
+        }
     }
 
     @Override
@@ -756,24 +787,30 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //     finish();
             //     break;
             case R.id.btStart:
-                // try {
-                //     fos = openFileOutput("testMode", MODE_PRIVATE);
-                // } catch (FileNotFoundException e) {
-                //     e.printStackTrace();
-                // }
-                //先检查定位权限
+
+                DLOG.d(TAG, "ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION):" + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
+                DLOG.d(TAG, "ActivityCompat.shouldShowRequestPermissionRationale(this," + ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                        Manifest.permission.ACCESS_FINE_LOCATION));
+
+                // 先检查定位权限
                 // if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                //         != PackageManager.PERMISSION_GRANTED){
-                //     if(ActivityCompat.shouldShowRequestPermissionRationale(this,
+                //         != PackageManager.PERMISSION_GRANTED) {
+                //     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 //             Manifest.permission.ACCESS_FINE_LOCATION)) {
-                //         Toast.makeText(this,"shouldShowRequestPermissionRationale",Toast.LENGTH_SHORT).show();
+                //         // Toast.makeText(this, "shouldShowRequestPermissionRationale", Toast.LENGTH_SHORT).show();
                 //
-                //     }else {
+                //     } else {
                 //         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 //                 REQUEST_PERMISSION_WRITE_FINE_LOCATION);
                 //
                 //     }
-                // }else {
+                // }
+
+                // TODO 没有定位权限，不能开始运动。
+                if (!checkLocationPermission()) {
+                    return;
+                }
+
                 if (state == STATE_NORMAL) {
                     DLOG.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     startTime = System.currentTimeMillis();
