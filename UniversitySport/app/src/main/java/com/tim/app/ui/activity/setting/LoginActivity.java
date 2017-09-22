@@ -1,10 +1,14 @@
 package com.tim.app.ui.activity.setting;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +17,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -184,8 +189,34 @@ public class LoginActivity extends BaseActivity {
         //同时获取Android_ID
         deviceId = Settings.Secure.getString(getContentResolver(),
                 Settings.Secure.ANDROID_ID);
-        DLOG.d(TAG + "deviceId", deviceId);
+        DLOG.d(TAG, "：deviceId" + deviceId);
+        DLOG.d(TAG, "isSupportStepCountSensor(this):" + isSupportStepCountSensor(this));
+
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+        for (Sensor sensor : sensors) {
+            DLOG.d(TAG, sensor.getName() + "\n");
+        }
     }
+
+    /**
+     * 判断该设备是否支持计歩
+     *
+     * @param context
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public static boolean isSupportStepCountSensor(Context context) {
+        // 获取传感器管理器的实例
+        SensorManager sensorManager = (SensorManager) context
+                .getSystemService(context.SENSOR_SERVICE);
+        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Sensor detectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        Log.d(TAG, "countSensor:" + countSensor);
+        Log.d(TAG, "detectorSensor:" + detectorSensor);
+        return countSensor != null || detectorSensor != null;
+    }
+
 
     private void queryUniversities() {
         ServerInterface.instance().queryUniversities(new JsonResponseCallback() {
@@ -205,17 +236,17 @@ public class LoginActivity extends BaseActivity {
                             universityNames.add(name);
                             universities.add(university);
                         }
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         showUniversityDialog();
                         return true;
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -284,7 +315,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        progressDialog.dismissDialog();
+        progressDialog.dismissCurrentDialog();
         builder.show();
     }
 
