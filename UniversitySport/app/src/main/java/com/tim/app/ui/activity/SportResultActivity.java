@@ -355,16 +355,16 @@ public class SportResultActivity extends ToolbarActivity {
                         llTargetSpeed.setVisibility(View.GONE);
 
                         llFloatingWindow.setVisibility(View.VISIBLE);
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -505,16 +505,16 @@ public class SportResultActivity extends ToolbarActivity {
                         tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -839,7 +839,7 @@ public class SportResultActivity extends ToolbarActivity {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     finish();
                 }
                 return false;

@@ -805,7 +805,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
 
-                                                        progressDialog.dismissDialog();
+                                                        progressDialog.dismissCurrentDialog();
 
                                                         initData();
                                                         startTimer();
@@ -826,7 +826,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     e.printStackTrace();
                                     // TODO
                                     btStart.setVisibility(View.VISIBLE);
-                                    progressDialog.dismissDialog();
+                                    progressDialog.dismissCurrentDialog();
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                     DLOG.d(TAG, "errMsg: " + errMsg);
                                 }
@@ -834,7 +834,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             } else {
                                 // TODO
                                 btStart.setVisibility(View.VISIBLE);
-                                progressDialog.dismissDialog();
+                                progressDialog.dismissCurrentDialog();
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                 DLOG.d(TAG, "errMsg: " + errMsg);
                                 return false;
