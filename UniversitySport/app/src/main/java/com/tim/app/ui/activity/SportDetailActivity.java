@@ -17,7 +17,11 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -73,6 +77,7 @@ import com.tim.app.ui.view.SlideUnlockView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.concurrent.Executors;
@@ -81,6 +86,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import static com.tim.app.constant.AppConstant.student;
+import static com.tim.app.sport.SensorService.MSG_REPLY_ACTIVITY;
 
 /**
  * 跑步运动详情页
@@ -184,6 +190,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int pauseStateSteps = 0;
 
     private LocationService.MyBinder myBinder = null;
+    Messenger mService = null;
+    Boolean mBound = false;
 
     public static final String NETWORK_ERROR_MSG = "网络请求失败，请检查网络状态或稍后再试";
 
@@ -204,6 +212,56 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             myBinder.startLocationInService(interval);
         }
     };
+
+    private ServiceConnection conn = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mBound = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            DLOG.d(TAG, "onServiceConnected name: " + name + ", service: " + service);
+            mService = new Messenger(service);
+            mBound = true;
+        }
+    };
+
+    public void sendToService() {
+        if (mBound) {
+            Message message = new Message();
+            message.what = SensorService.MSG_SAY_HELLO;
+            message.obj = "HAHA";
+            Messenger messenger = new Messenger(new ActivityHandler(this));
+            message.replyTo = messenger;
+            try {
+                mService.send(message);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * replyTo 对应的 Handler
+     */
+    class ActivityHandler extends Handler {
+        private final WeakReference<SportDetailActivity> sportDetailActivity;
+
+        ActivityHandler(SportDetailActivity activity) {
+            sportDetailActivity = new WeakReference<SportDetailActivity>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_REPLY_ACTIVITY:
+                    DLOG.d(TAG, msg.obj.toString());
+                    break;
+            }
+        }
+    }
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -418,33 +476,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             DLOG.d(TAG, "locationType:" + locationType);
             //定位成功
-            if (errorCode != 0 || locationType != 1) {
-                String errText = "正在定位中，GPS信号弱";
+            // if (errorCode != 0 || locationType != 1) {
+            //     String errText = "正在定位中，GPS信号弱";
+            //     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+            //     return;
+            // } else {
+            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            DLOG.d(TAG, "newLatLng: " + newLatLng);
+            // 判断第一次，第一次会提示
+            if (lastLatLng == null) {
+                String errText = "定位成功";
+                firstLocation = location;
+                firstLocationType = locationType;
+                llLacationHint.setVisibility(View.GONE);
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                DLOG.d(TAG, "newLatLng: " + newLatLng);
-                // 判断第一次，第一次会提示
-                if (lastLatLng == null) {
-                    String errText = "定位成功";
-                    firstLocation = location;
-                    firstLocationType = locationType;
-                    llLacationHint.setVisibility(View.GONE);
-                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    locationDialog.dismissDialog();
+                locationDialog.dismissDialog();
 
-                    //TODO 待删除
-                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
-                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                //TODO 待删除
+                //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                    aMap.moveCamera(cu);
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                aMap.moveCamera(cu);
 
-                    btStart.setVisibility(View.VISIBLE);
-                }
+                btStart.setVisibility(View.VISIBLE);
             }
+            // }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 //                DLOG.writeToInternalFile(msg);
@@ -728,7 +786,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 String permission = Manifest.permission.ACCESS_FINE_LOCATION;
                 String op = AppOpsManagerCompat.permissionToOp(permission);
                 int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-                if(result == AppOpsManagerCompat.MODE_IGNORED
+                if (result == AppOpsManagerCompat.MODE_IGNORED
                         && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     DLOG.d("onRequestPermissionsResult", "onRequestPermissionsResult");
                     Toast.makeText(this,
@@ -758,11 +816,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         String permission = Manifest.permission.ACCESS_FINE_LOCATION;
         String op = AppOpsManagerCompat.permissionToOp(permission);
         int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-        if(result == AppOpsManagerCompat.MODE_IGNORED
+        if (result == AppOpsManagerCompat.MODE_IGNORED
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // TODO 没有有权限。
             DLOG.d(TAG, "没有定位权限");
-            if(!ActivityCompat.shouldShowRequestPermissionRationale(this,
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(this,
                         getString(R.string.manual_open_permission_hint),
@@ -787,12 +845,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             //     finish();
             //     break;
             case R.id.btStart:
-
                 DLOG.d(TAG, "ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION):" + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
                 DLOG.d(TAG, "ActivityCompat.shouldShowRequestPermissionRationale(this," + ActivityCompat.shouldShowRequestPermissionRationale(this,
-                                        Manifest.permission.ACCESS_FINE_LOCATION));
-
+                        Manifest.permission.ACCESS_FINE_LOCATION));
                 // 先检查定位权限
+                sendToService();
+                // try {
+                //     fos = openFileOutput("testMode", MODE_PRIVATE);
+                // } catch (FileNotFoundException e) {
+                //     e.printStackTrace();
+                // }
+                //先检查定位权限
                 // if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 //         != PackageManager.PERMISSION_GRANTED) {
                 //     if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -1100,7 +1163,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             switch (what) {
                 case EventTag.ON_STEP_CHANGE:
                     int steps = (int) dataobj;
-                    DLOG.d(TAG, "steps: " + steps);
+                    // DLOG.d(TAG, "steps: " + steps);
                     if (state == STATE_STARTED) {
                         DLOG.d(TAG, "state: " + state);
                         if (initSteps == 0) {
@@ -1119,12 +1182,40 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
     };
 
+    // ServiceConnection connection = new ServiceConnection() {
+    //
+    //     @Override
+    //     public void onServiceConnected(ComponentName name, IBinder service) {
+    //         SensorService.SensorBinder binder = (SensorService.SensorBinder) service;
+    //         binder.getSteps();
+    //     }
+    //
+    //     @Override
+    //     public void onServiceDisconnected(ComponentName name) {
+    //
+    //     }
+    // };
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
         mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bindService(new Intent(this, SensorService.class), conn, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mBound) {
+            unbindService(conn);
+            mBound = false;
+        }
     }
 
     @Override

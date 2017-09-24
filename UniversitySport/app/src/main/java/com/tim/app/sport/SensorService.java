@@ -25,7 +25,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 
 import com.application.library.log.DLOG;
 import com.application.library.runtime.event.EventManager;
@@ -69,6 +73,7 @@ public class SensorService extends Service implements SensorEventListener {
 
     /**
      * 这里的event中应该有最新的自启动以来的步数。
+     *
      * @param event
      */
     @Override
@@ -130,7 +135,34 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public IBinder onBind(final Intent intent) {
-        return null;
+        return messenger.getBinder();
+    }
+
+    public static final int MSG_SAY_HELLO = 1;
+    public static final int MSG_REPLY_ACTIVITY = 2;
+
+    Messenger messenger = new Messenger(new SensorHandler());
+
+    public class SensorHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_SAY_HELLO:
+                    DLOG.d(TAG, msg.obj.toString());
+                    Messenger sportDetailActivity = msg.replyTo;
+                    Message message = new Message();
+                    message.what = MSG_REPLY_ACTIVITY;
+                    message.obj = "this from SensorService!";
+
+                    try {
+                        sportDetailActivity.send(message);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+            }
+            super.handleMessage(msg);
+        }
     }
 
     @Override
@@ -218,47 +250,47 @@ public class SensorService extends Service implements SensorEventListener {
     }
 
     private void updateNotificationState() {
-//        if (BuildConfig.DEBUG) Logger.log("SensorService updateNotificationState");
-//        SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_PRIVATE);
-//        NotificationManager nm =
-//                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        if (prefs.getBoolean("notification", true)) {
-//            int goal = prefs.getInt("goal", 10000);
-//            Database db = Database.getInstance(this);
-//            int today_offset = db.getSteps(Util.getToday());
-//            if (steps == 0)
-//                steps = db.getCurrentSteps(); // use saved value if we haven't anything better
-//            db.close();
-//            Notification.Builder notificationBuilder = new Notification.Builder(this);
-//            if (steps > 0) {
-//                if (today_offset == Integer.MIN_VALUE) today_offset = -steps;
-//                notificationBuilder.setProgress(goal, today_offset + steps, false).setContentText(
-//                        today_offset + steps >= goal ? getString(R.string.goal_reached_notification,
-//                                NumberFormat.getInstance(Locale.getDefault())
-//                                        .format((today_offset + steps))) :
-//                                getString(R.string.notification_text,
-//                                        NumberFormat.getInstance(Locale.getDefault())
-//                                                .format((goal - today_offset - steps))));
-//            } else { // still no step value?
-//                notificationBuilder
-//                        .setContentText(getString(R.string.your_progress_will_be_shown_here_soon));
-//            }
-//            boolean isPaused = prefs.contains("pauseCount");
-//            notificationBuilder.setPriority(Notification.PRIORITY_MIN).setShowWhen(false)
-//                    .setContentTitle(isPaused ? getString(R.string.ispaused) :
-//                            getString(R.string.notification_title)).setContentIntent(PendingIntent
-//                    .getActivity(this, 0, new Intent(this, Activity_Main.class),
-//                            PendingIntent.FLAG_UPDATE_CURRENT))
-//                    .setSmallIcon(R.drawable.ic_notification)
-//                    .addAction(isPaused ? R.drawable.ic_resume : R.drawable.ic_pause,
-//                            isPaused ? getString(R.string.resume) : getString(R.string.pause),
-//                            PendingIntent.getService(this, 4, new Intent(this, SensorService.class)
-//                                            .putExtra("action", ACTION_PAUSE),
-//                                    PendingIntent.FLAG_UPDATE_CURRENT)).setOngoing(true);
-//            nm.notify(NOTIFICATION_ID, notificationBuilder.build());
-//        } else {
-//            nm.cancel(NOTIFICATION_ID);
-//        }
+        //        if (BuildConfig.DEBUG) Logger.log("SensorService updateNotificationState");
+        //        SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_PRIVATE);
+        //        NotificationManager nm =
+        //                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //        if (prefs.getBoolean("notification", true)) {
+        //            int goal = prefs.getInt("goal", 10000);
+        //            Database db = Database.getInstance(this);
+        //            int today_offset = db.getSteps(Util.getToday());
+        //            if (steps == 0)
+        //                steps = db.getCurrentSteps(); // use saved value if we haven't anything better
+        //            db.close();
+        //            Notification.Builder notificationBuilder = new Notification.Builder(this);
+        //            if (steps > 0) {
+        //                if (today_offset == Integer.MIN_VALUE) today_offset = -steps;
+        //                notificationBuilder.setProgress(goal, today_offset + steps, false).setContentText(
+        //                        today_offset + steps >= goal ? getString(R.string.goal_reached_notification,
+        //                                NumberFormat.getInstance(Locale.getDefault())
+        //                                        .format((today_offset + steps))) :
+        //                                getString(R.string.notification_text,
+        //                                        NumberFormat.getInstance(Locale.getDefault())
+        //                                                .format((goal - today_offset - steps))));
+        //            } else { // still no step value?
+        //                notificationBuilder
+        //                        .setContentText(getString(R.string.your_progress_will_be_shown_here_soon));
+        //            }
+        //            boolean isPaused = prefs.contains("pauseCount");
+        //            notificationBuilder.setPriority(Notification.PRIORITY_MIN).setShowWhen(false)
+        //                    .setContentTitle(isPaused ? getString(R.string.ispaused) :
+        //                            getString(R.string.notification_title)).setContentIntent(PendingIntent
+        //                    .getActivity(this, 0, new Intent(this, Activity_Main.class),
+        //                            PendingIntent.FLAG_UPDATE_CURRENT))
+        //                    .setSmallIcon(R.drawable.ic_notification)
+        //                    .addAction(isPaused ? R.drawable.ic_resume : R.drawable.ic_pause,
+        //                            isPaused ? getString(R.string.resume) : getString(R.string.pause),
+        //                            PendingIntent.getService(this, 4, new Intent(this, SensorService.class)
+        //                                            .putExtra("action", ACTION_PAUSE),
+        //                                    PendingIntent.FLAG_UPDATE_CURRENT)).setOngoing(true);
+        //            nm.notify(NOTIFICATION_ID, notificationBuilder.build());
+        //        } else {
+        //            nm.cancel(NOTIFICATION_ID);
+        //        }
     }
 
     private void registerSensor() {
