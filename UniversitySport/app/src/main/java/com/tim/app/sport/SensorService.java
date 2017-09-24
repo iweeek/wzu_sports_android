@@ -21,13 +21,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import com.application.library.log.DLOG;
 import com.application.library.runtime.event.EventManager;
@@ -53,6 +51,9 @@ public class SensorService extends Service implements SensorEventListener {
 
     public final static String ACTION_PAUSE = "pause";
 
+    /**
+     * 自系统启动时清零
+     */
     private static int steps;
     private static int lastSaveSteps;
     private static long lastSaveTime;
@@ -72,18 +73,21 @@ public class SensorService extends Service implements SensorEventListener {
      */
     @Override
     public void onSensorChanged(final SensorEvent event) {
-        Toast.makeText(this,"onSensorChanged",Toast.LENGTH_SHORT);
         if (event.values[0] > Integer.MAX_VALUE) {
             return;
         } else {
             steps = (int) event.values[0];
+            DLOG.d(TAG, "onSensorChanged: steps = " + steps);
+            EventManager.ins().sendEvent(EventTag.ON_STEP_CHANGE, 0, 0, steps);
+
+            /*
             updateIfNecessary();
             if(lastTime == 0 || System.currentTimeMillis() - lastTime > MICROSECONDS_IN_ONE_MINUTE ) {
-                DLOG.d(TAG, "lastSaveTime:" + lastTime);
-                DLOG.d(TAG, "60秒到了！！！！！！！");
+                // DLOG.d(TAG, "if sensor has changed, each minute insert into database.");
                 Database.getInstance(this).saveDaySteps(steps);
                 lastTime = System.currentTimeMillis();
             }
+            */
         }
     }
 
@@ -116,6 +120,7 @@ public class SensorService extends Service implements SensorEventListener {
             updateNotificationState();
 
             Database db1 = Database.getInstance(this);
+            // 上次启动时更新的步数 + 系统启动后到现在的步数 = 今天的总步数
             int steps = Math.max(db1.getCurrentSteps() + db1.getSteps(Util.getToday()), 0);
             db1.close();
             //内部会调用注册了的eventListener 的 handleMessage()方法
@@ -130,38 +135,43 @@ public class SensorService extends Service implements SensorEventListener {
 
     @Override
     public int onStartCommand(final Intent intent, int flags, int startId) {
-        DLOG.d(TAG, "onStartCommand: ");
+
+        /*
         if (intent != null && ACTION_PAUSE.equals(intent.getStringExtra("action"))) {
+            // 开机
             if (steps == 0) {
                 Database db = Database.getInstance(this);
                 steps = db.getCurrentSteps();
                 db.close();
             }
             SharedPreferences prefs = getSharedPreferences("pedometer", Context.MODE_PRIVATE);
-            if (prefs.contains("pauseCount")) { // resume counting
-                DLOG.d(TAG, "prefs.contains(pauseCount):" + prefs.contains("pauseCount"));
+
+            // TODO 这里对应的应该是拔掉插头，应该是没有
+            if (prefs.contains("pauseCount")) { // resume counting，connect the power.
                 int difference = steps -
                         prefs.getInt("pauseCount", steps); // number of steps taken during the pause
+                // DLOG.d(TAG, "difference:" + difference);
+                // DLOG.d(TAG, "steps：" + steps + "pauseCount:" + prefs.getInt("pauseCount", steps));
                 Database db = Database.getInstance(this);
                 db.addToLastEntry(-difference);
                 db.close();
                 prefs.edit().remove("pauseCount").apply();
                 updateNotificationState();
-            } else { // pause counting
+            } else { // pause counting   // TODO 这里对应的应该是插上插头，这样stopSelf关闭服务是没有问题的
                 // cancel restart
-                DLOG.d(TAG, "prefs.notcontains(pauseCount):" + prefs.contains("pauseCount"));
-
                 ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE))
                         .cancel(PendingIntent.getService(getApplicationContext(), 2,
                                 new Intent(this, SensorService.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
+                // 防止学生在充电的时候摇手机刷步数。
                 prefs.edit().putInt("pauseCount", steps).apply();
                 updateNotificationState();
+                // TODO
                 stopSelf();
                 return START_NOT_STICKY;
             }
         }
-        //更新通知
+        // TODO 更新通知
         if (intent != null && intent.getBooleanExtra(ACTION_UPDATE_NOTIFICATION, false)) {
             updateNotificationState();
         } else {
@@ -175,13 +185,15 @@ public class SensorService extends Service implements SensorEventListener {
                         .getService(getApplicationContext(), 2,
                                 new Intent(this, SensorService.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT));
+         */
+
         return START_STICKY;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        reRegisterSensor();
+        registerSensor();
         updateNotificationState();
     }
 
@@ -249,16 +261,19 @@ public class SensorService extends Service implements SensorEventListener {
 //        }
     }
 
-    private void reRegisterSensor() {
+    private void registerSensor() {
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-        try {
-            sm.unregisterListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     sm.unregisterListener(this);
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
+
+        //单次有效计步
+        Sensor stepCountSensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         // enable batching with delay of max 5 min
-        sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
+        sm.registerListener(this, stepCountSensor,
                 SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
     }
 }
