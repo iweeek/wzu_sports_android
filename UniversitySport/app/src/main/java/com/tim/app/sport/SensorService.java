@@ -193,7 +193,7 @@ public class SensorService extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
-        reRegisterSensor();
+        registerSensor();
         updateNotificationState();
     }
 
@@ -261,7 +261,7 @@ public class SensorService extends Service implements SensorEventListener {
 //        }
     }
 
-    private void reRegisterSensor() {
+    private void registerSensor() {
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
         // try {
         //     sm.unregisterListener(this);
