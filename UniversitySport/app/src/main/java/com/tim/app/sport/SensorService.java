@@ -77,8 +77,6 @@ public class SensorService extends Service implements SensorEventListener {
             return;
         } else {
             steps = (int) event.values[0];
-            // DLOG.d(TAG, "detector++:" + detector++);
-            // DLOG.d(TAG, "event.values[0]:" + event.values[0]);
             DLOG.d(TAG, "onSensorChanged: steps = " + steps);
             EventManager.ins().sendEvent(EventTag.ON_STEP_CHANGE, 0, 0, steps);
 
@@ -273,18 +271,10 @@ public class SensorService extends Service implements SensorEventListener {
         }
 
         //单次有效计步
-        Sensor mStepCount = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        //系统计步累加值
-        // Sensor mStepDetector = sm.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-
-
-        // sm.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
-
-        // sm.registerListener(this, mStepCount, SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
-
+        Sensor stepCount = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         // enable batching with delay of max 5 min
-        sm.registerListener(this, mStepCount,
+        sm.registerListener(this, stepCount,
                 SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
     }
 }
