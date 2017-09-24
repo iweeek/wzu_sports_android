@@ -101,7 +101,6 @@ public class SensorService extends Service implements SensorEventListener {
             Database db = Database.getInstance(this);
             //为true 代表 今天的步数还未存入数据库中。
             if (db.getSteps(Util.getToday()) == Integer.MIN_VALUE) {
-                DLOG.d(TAG, "唯一的可能");
                 int pauseDifference = steps -
                         getSharedPreferences("pedometer", Context.MODE_PRIVATE)
                                 .getInt("pauseCount", steps);
@@ -264,17 +263,17 @@ public class SensorService extends Service implements SensorEventListener {
 
     private void reRegisterSensor() {
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
-        try {
-            sm.unregisterListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     sm.unregisterListener(this);
+        // } catch (Exception e) {
+        //     e.printStackTrace();
+        // }
 
         //单次有效计步
-        Sensor stepCount = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Sensor stepCountSensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         // enable batching with delay of max 5 min
-        sm.registerListener(this, stepCount,
+        sm.registerListener(this, stepCountSensor,
                 SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
     }
 }
