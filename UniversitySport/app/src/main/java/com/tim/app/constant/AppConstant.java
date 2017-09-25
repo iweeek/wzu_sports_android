@@ -60,6 +60,8 @@ public class AppConstant {
      */
     public static User user;
     public static Student student;
+
+    public static final int SPEED_SCALE = 2;
 }
 
 
