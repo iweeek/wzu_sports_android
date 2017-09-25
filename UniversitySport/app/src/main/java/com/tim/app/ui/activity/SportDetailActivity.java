@@ -647,7 +647,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         //做保护
                         if (elapseTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(elapseTime), SPEED_SCALE);
 
                             tvAverSpeed.setText(bd.toString());
                         } else {

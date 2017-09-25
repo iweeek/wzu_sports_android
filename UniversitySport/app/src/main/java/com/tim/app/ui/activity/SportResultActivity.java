@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.tim.app.constant.AppConstant.SPEED_SCALE;
+
 
 /**
  * 运动详情
@@ -333,7 +335,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                             // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(elapseTime), SPEED_SCALE);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -347,7 +349,7 @@ public class SportResultActivity extends ToolbarActivity {
                             // RoundingMode.HALF_UP
                             // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
-                                    Double.toString(targetTime), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(targetTime), SPEED_SCALE);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
@@ -482,7 +484,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                         if (elapseTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(elapseTime), SPEED_SCALE);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -494,7 +496,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                         if (targetTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
-                                    Double.toString(targetTime), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(targetTime), SPEED_SCALE);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 

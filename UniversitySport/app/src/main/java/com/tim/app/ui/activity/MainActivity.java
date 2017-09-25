@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.tim.app.constant.AppConstant.SPEED_SCALE;
 import static com.tim.app.constant.AppConstant.student;
 import static com.tim.app.constant.AppConstant.user;
 
@@ -348,7 +349,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                             double time = jsonObject.getDouble("qualifiedCostTime");
                             BigDecimal targetSpeed = MathUtil.bigDecimalDivide(Double.toString(distance),
-                                    Double.toString(time), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(time), SPEED_SCALE);
                             sportEntry.setTargetSpeed(targetSpeed.toString());
 
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
@@ -357,7 +358,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
 
                             BigDecimal targetTime = MathUtil.bigDecimalDivide(Double.toString(time),
-                                    Double.toString(60), BigDecimal.ROUND_HALF_UP);
+                                    Double.toString(60), SPEED_SCALE);
                             sportEntry.setTargetTime(Integer.valueOf(targetTime.toBigInteger().intValue()));
 
                             sportEntryDataList.add(sportEntry);
