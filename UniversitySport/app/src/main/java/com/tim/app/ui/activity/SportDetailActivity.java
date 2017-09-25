@@ -69,6 +69,7 @@ import com.tim.app.sport.SensorService;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.MathUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -645,10 +646,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         //做保护
                         if (elapseTime != 0) {
-                            BigDecimal d = new BigDecimal(Double.toString(currentDistance));
-                            BigDecimal t = new BigDecimal(Double.toString(elapseTime));
+                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+                                    Double.toString(elapseTime), BigDecimal.ROUND_HALF_UP);
 
-                            BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                             tvAverSpeed.setText(bd.toString());
                         } else {
                             tvAverSpeed.setText("0.00");
