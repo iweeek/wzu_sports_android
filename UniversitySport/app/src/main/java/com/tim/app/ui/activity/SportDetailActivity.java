@@ -69,6 +69,7 @@ import com.tim.app.sport.SensorService;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.MathUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -80,6 +81,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static com.tim.app.constant.AppConstant.SPEED_SCALE;
 import static com.tim.app.constant.AppConstant.student;
 
 /**
@@ -506,7 +508,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         tvCurrentDistance.setText(String.valueOf(currentDistance));
                         bdDividend = new BigDecimal(currentDistance);
                         bdDevisor = new BigDecimal(elapseTime);
-                        BigDecimal bdResult = bdDividend.divide(bdDevisor, 2, BigDecimal.ROUND_HALF_UP);
+                        BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                         // 解决速度过大
                         if (bdResult.compareTo(new BigDecimal(10)) < 0) {
                             tvAverSpeed.setText(String.valueOf(bdResult));
@@ -566,7 +568,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void initData() {
         float batteryLevel = getBatteryLevel();
-        Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
+        BigDecimal bd = new BigDecimal(Float.toString(batteryLevel));
+        Toast.makeText(this, "当前电量： " + bd.toBigInteger() + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
         screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
@@ -589,12 +592,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        }
 
         //        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()));
+        tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()) + " ");
 
         tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)));
         //        tvElapseTime.setText(String.valueOf(elapseTime / 60));
         //        tvCurrentStep.setText("0 步");
-        tvAverSpeed.setText("0.0");
+        tvAverSpeed.setText("0.00");
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
@@ -643,13 +646,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         //做保护
                         if (elapseTime != 0) {
-                            double d = currentDistance;
-                            double t = elapseTime;
-                            BigDecimal bd = new BigDecimal(d / t);
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
-                            tvAverSpeed.setText(String.valueOf(bd));
+                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+                                    Double.toString(elapseTime), SPEED_SCALE);
+
+                            tvAverSpeed.setText(bd.toString());
                         } else {
-                            tvAverSpeed.setText("0.0");
+                            tvAverSpeed.setText("0.00");
                         }
 
                         tvParticipantNum.setVisibility(View.GONE);

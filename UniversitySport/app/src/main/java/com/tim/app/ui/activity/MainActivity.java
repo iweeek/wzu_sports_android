@@ -42,6 +42,7 @@ import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.cell.GlideApp;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
+import com.tim.app.util.MathUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+import static com.tim.app.constant.AppConstant.SPEED_SCALE;
 import static com.tim.app.constant.AppConstant.student;
 import static com.tim.app.constant.AppConstant.user;
 
@@ -327,34 +329,37 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         JSONArray runningSportArray = json.getJSONObject("data").getJSONArray("runningSports");
                         for (int i = 0; i < runningSportArray.length(); i++) {
                             JSONObject jsonObject = runningSportArray.getJSONObject(i);
+                            SportEntry sportEntry = new SportEntry();
 
                             if (!jsonObject.optBoolean("isEnabled")) {
                                 continue;
                             }
 
                             int runningSportId = jsonObject.getInt("id");
-                            int distance = jsonObject.getInt("qualifiedDistance");
-                            int participantNum = jsonObject.getInt("participantNum");
-                            double time = jsonObject.getDouble("qualifiedCostTime");
-                            double d = distance;
-                            double s = d / time;
-                            BigDecimal bd = new BigDecimal(s);
-                            bd = bd.setScale(1, RoundingMode.HALF_UP);
-                            int interval = jsonObject.getInt("acquisitionInterval");
-
-                            SportEntry sportEntry = new SportEntry();
                             sportEntry.setId(runningSportId);
+
+                            int participantNum = jsonObject.getInt("participantNum");
+                            sportEntry.setParticipantNum(participantNum);
+
+                            int interval = jsonObject.getInt("acquisitionInterval");
+                            sportEntry.setAcquisitionInterval(interval);
+
+                            int distance = jsonObject.getInt("qualifiedDistance");
+                            sportEntry.setQualifiedDistance(distance);
+
+                            double time = jsonObject.getDouble("qualifiedCostTime");
+                            BigDecimal targetSpeed = MathUtil.bigDecimalDivide(Double.toString(distance),
+                                    Double.toString(time), SPEED_SCALE);
+                            sportEntry.setTargetSpeed(targetSpeed.toString());
+
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
                             sportEntry.setName(jsonObject.getString("name"));
-
                             sportEntry.setBgDrawableId(R.drawable.ic_bg_run);
                             sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
 
-                            sportEntry.setParticipantNum(participantNum);
-                            sportEntry.setQualifiedDistance(distance);
-                            sportEntry.setTargetTime((int) (time / 60));
-                            sportEntry.setTargetSpeed(bd + "");
-                            sportEntry.setAcquisitionInterval(interval);
+                            BigDecimal targetTime = MathUtil.bigDecimalDivide(Double.toString(time),
+                                    Double.toString(60), SPEED_SCALE);
+                            sportEntry.setTargetTime(Integer.valueOf(targetTime.toBigInteger().intValue()));
 
                             sportEntryDataList.add(sportEntry);
                         }
