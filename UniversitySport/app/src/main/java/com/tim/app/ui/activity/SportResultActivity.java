@@ -333,7 +333,7 @@ public class SportResultActivity extends ToolbarActivity {
                             double d = currentDistance;
                             double t = elapseTime;
                             BigDecimal bd = new BigDecimal(d / t);
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -345,7 +345,7 @@ public class SportResultActivity extends ToolbarActivity {
                             double d = targetDistance;
                             double s = d / t;
                             BigDecimal bd = new BigDecimal(s);
-                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            bd = bd.setScale(2, RoundingMode.HALF_UP);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
@@ -482,7 +482,7 @@ public class SportResultActivity extends ToolbarActivity {
                             double d = currentDistance;
                             double t = elapseTime;
                             BigDecimal bd = new BigDecimal(d / t);
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -497,7 +497,7 @@ public class SportResultActivity extends ToolbarActivity {
                             double d = targetDistance;
                             double s = d / t;
                             BigDecimal bd = new BigDecimal(s);
-                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            bd = bd.setScale(2, RoundingMode.HALF_UP);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
@@ -853,7 +853,7 @@ public class SportResultActivity extends ToolbarActivity {
         tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
         tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
-        tvAverSpeed.setText("0.0");
+        tvAverSpeed.setText("0.00");
 
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         // tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);

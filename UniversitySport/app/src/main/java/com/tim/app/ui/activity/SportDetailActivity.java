@@ -589,12 +589,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        }
 
         //        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()));
+        tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()) + " ");
 
         tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)));
         //        tvElapseTime.setText(String.valueOf(elapseTime / 60));
         //        tvCurrentStep.setText("0 步");
-        tvAverSpeed.setText("0.0");
+        tvAverSpeed.setText("0.00");
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
@@ -646,10 +646,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             double d = currentDistance;
                             double t = elapseTime;
                             BigDecimal bd = new BigDecimal(d / t);
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
                             tvAverSpeed.setText(String.valueOf(bd));
                         } else {
-                            tvAverSpeed.setText("0.0");
+                            tvAverSpeed.setText("0.00");
                         }
 
                         tvParticipantNum.setVisibility(View.GONE);

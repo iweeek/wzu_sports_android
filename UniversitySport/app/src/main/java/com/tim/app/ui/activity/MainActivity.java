@@ -339,7 +339,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             double d = distance;
                             double s = d / time;
                             BigDecimal bd = new BigDecimal(s);
-                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            bd = bd.setScale(2, RoundingMode.HALF_UP);
                             int interval = jsonObject.getInt("acquisitionInterval");
 
                             SportEntry sportEntry = new SportEntry();
