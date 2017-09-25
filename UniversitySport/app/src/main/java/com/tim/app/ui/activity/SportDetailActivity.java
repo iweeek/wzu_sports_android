@@ -69,6 +69,7 @@ import com.tim.app.sport.SensorService;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.MathUtil;
 
 import org.json.JSONException;
@@ -156,6 +157,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private RelativeLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
     private TextView tvPause;
+    private LinearLayout llLacationHint;
 
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
@@ -166,7 +168,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
-    private LinearLayout llLacationHint;
+    private int brightness;
+    private boolean autoBrightness;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Runnable elapseTimeRunnable;
@@ -374,7 +377,28 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void onTouch(MotionEvent event) {
-        turnUpScreen();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                turnUpScreen();
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+    }
+
+    private void turnUpScreen() {
+
+        // DLOG.d(TAG, "BrightnessUtil.getScreenBrightness(getWindow())" + BrightnessUtil.getScreenBrightness(getWindow()));
+        int needToLight = Float.compare(BrightnessUtil.getScreenBrightness(getWindow()), 0.1f);
+
+        if (needToLight == 0) {
+            if (BrightnessUtil.isAutoBrightness(this)) {
+                BrightnessUtil.setScreenBrightness(this, brightness);
+            } else {
+                BrightnessUtil.setScreenBrightness(this, brightness);
+            }
+        }
+        screenKeepLightTime = 0;
     }
 
     private void setupLocationStyle() {
@@ -391,7 +415,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         DLOG.d(TAG, "onMyLocationChange location: " + location);
         DLOG.openInternalFile(this);
 
-        DLOG.d(TAG, "state:" + state);
         String toastText = "";
         int errorCode = -1;
         String errorInfo = "";
@@ -411,6 +434,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
         DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
+        DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
+        DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
         if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
@@ -567,6 +592,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initData() {
+
+        autoBrightness = BrightnessUtil.isAutoBrightness(context);
+        DLOG.d(TAG, "autoBrightness:" + autoBrightness);
+        if (autoBrightness) {
+            brightness = BrightnessUtil.getScreenBrightness(this);
+            BrightnessUtil.stopAutoBrightness(context);
+            DLOG.d(TAG, "brightness:" + brightness);
+        } else {
+            brightness = BrightnessUtil.getScreenBrightness(this);
+            DLOG.d(TAG, "brightness:" + brightness);
+        }
+
         float batteryLevel = getBatteryLevel();
         BigDecimal bd = new BigDecimal(Float.toString(batteryLevel));
         Toast.makeText(this, "当前电量： " + bd.toBigInteger() + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
@@ -743,17 +780,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 break;
         }
 
-    }
-
-    /**
-     * 调整屏幕亮度
-     */
-    private void turnUpScreen() {
-        WindowManager.LayoutParams params = getWindow().getAttributes();
-        params.screenBrightness = (float) 1;
-        getWindow().setAttributes(params);
-        screenKeepLightTime = 0;
-        // DLOG.d(TAG, "onClick turn up light");
     }
 
     public boolean checkLocationPermission() {
@@ -1150,6 +1176,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+
+        if(autoBrightness) {
+            BrightnessUtil.startAutoBrightness(this);
+        }
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
