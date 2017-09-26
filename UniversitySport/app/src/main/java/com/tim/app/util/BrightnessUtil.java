@@ -15,7 +15,7 @@ import android.view.WindowManager;
 
 public class BrightnessUtil {
     // 判断是否开启了自动亮度调节
-    public static boolean isAutoBrightness(Context context) {
+    public static boolean isAutoAdjustBrightness(Context context) {
         boolean automicBrightness = false;
         ContentResolver contentResolver = context.getContentResolver();
         try {
@@ -28,7 +28,7 @@ public class BrightnessUtil {
         return automicBrightness;
     }
 
-    public static boolean isAutoBrightness(Activity activity) {
+    public static boolean isAutoAdjustBrightness(Activity activity) {
         boolean automicBrightness = false;
         ContentResolver contentResolver = activity.getContentResolver();
         try {

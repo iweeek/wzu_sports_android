@@ -169,7 +169,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
     private int brightness;
-    private boolean autoBrightness;
+    private boolean autoAdjustBrightness;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private Runnable elapseTimeRunnable;
@@ -389,15 +389,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void turnUpScreen() {
 
         // DLOG.d(TAG, "BrightnessUtil.getScreenBrightness(getWindow())" + BrightnessUtil.getScreenBrightness(getWindow()));
-        int needToLight = Float.compare(BrightnessUtil.getScreenBrightness(getWindow()), 0.1f);
+        boolean needToAdjustBrightness = Float.compare(BrightnessUtil.getScreenBrightness(getWindow()), 0.1f) == 0;
 
-        if (needToLight == 0) {
-            if (BrightnessUtil.isAutoBrightness(this)) {
+        if (needToAdjustBrightness) {
+            if (BrightnessUtil.isAutoAdjustBrightness(this)) {
                 BrightnessUtil.setScreenBrightness(this, brightness);
             } else {
                 BrightnessUtil.setScreenBrightness(this, brightness);
             }
         }
+
         screenKeepLightTime = 0;
     }
 
@@ -593,9 +594,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void initData() {
 
-        autoBrightness = BrightnessUtil.isAutoBrightness(context);
-        DLOG.d(TAG, "autoBrightness:" + autoBrightness);
-        if (autoBrightness) {
+        autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
+        DLOG.d(TAG, "autoAdjustBrightness:" + autoAdjustBrightness);
+        if (autoAdjustBrightness) {
             brightness = BrightnessUtil.getScreenBrightness(this);
             BrightnessUtil.stopAutoBrightness(context);
             DLOG.d(TAG, "brightness:" + brightness);
@@ -1177,7 +1178,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         super.onDestroy();
         mapView.onDestroy();
 
-        if(autoBrightness) {
+        if(autoAdjustBrightness) {
             BrightnessUtil.startAutoBrightness(this);
         }
 
