@@ -1133,8 +1133,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onResume() {
         super.onResume();
         mapView.onResume();
-        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
-        aMap.moveCamera(cu);
+        if (lastLatLng != null) {
+            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
+            aMap.moveCamera(cu);
+        }
     }
 
     /**
