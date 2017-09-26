@@ -80,23 +80,23 @@ public class BrightnessUtil {
     }
 
 
-    public static void stopAutoBrightness(Activity activity) {
+    public static void stopAutoAdjustBrightness(Activity activity) {
         Settings.System.putInt(activity.getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
     }
 
-    public static void stopAutoBrightness(Context context) {
+    public static void stopAutoAdjustBrightness(Context context) {
         Settings.System.putInt(context.getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
     }
 
-    public static void startAutoBrightness(Activity activity) {
+    public static void startAutoAdjustBrightness(Activity activity) {
         Settings.System.putInt(activity.getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE,
                 Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
     }
 
-    public static void startAutoBrightness(Context context) {
+    public static void startAutoAdjustBrightness(Context context) {
         Settings.System.putInt(context.getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE,
                 Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);

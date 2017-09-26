@@ -595,14 +595,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     public void initData() {
 
         autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
-        DLOG.d(TAG, "autoAdjustBrightness:" + autoAdjustBrightness);
+        // DLOG.d(TAG, "autoAdjustBrightness:" + autoAdjustBrightness);
         if (autoAdjustBrightness) {
             brightness = BrightnessUtil.getScreenBrightness(this);
-            BrightnessUtil.stopAutoBrightness(context);
-            DLOG.d(TAG, "brightness:" + brightness);
+            BrightnessUtil.stopAutoAdjustBrightness(context);
+            // DLOG.d(TAG, "brightness:" + brightness);
         } else {
             brightness = BrightnessUtil.getScreenBrightness(this);
-            DLOG.d(TAG, "brightness:" + brightness);
+            // DLOG.d(TAG, "brightness:" + brightness);
         }
 
         float batteryLevel = getBatteryLevel();
@@ -1179,7 +1179,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         mapView.onDestroy();
 
         if(autoAdjustBrightness) {
-            BrightnessUtil.startAutoBrightness(this);
+            BrightnessUtil.startAutoAdjustBrightness(this);
         }
 
         //页面销毁移除未完成的网络请求
