@@ -575,7 +575,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     public float getBatteryLevel() {
