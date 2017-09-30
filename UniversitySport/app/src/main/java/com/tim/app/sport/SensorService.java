@@ -525,12 +525,39 @@ public class SensorService extends Service implements SensorEventListener {
         SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         boolean isAvailable = false;
 
+
+        Sensor stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (stepCountSensor != null) {
+            isAvailable = sensorManager.registerListener(this, stepCountSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
+            if (isAvailable) {
+                DLOG.v(TAG, "STEP_COUNTER传感器可以使用");
+            } else {
+                DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
+            }
+        } else {
+            // DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
+            Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            if (accelerometerSensor != null) {
+                isAvailable = sensorManager.registerListener(this, accelerometerSensor,
+                        SensorManager.SENSOR_DELAY_UI);
+                if (isAvailable) {
+                    DLOG.v(TAG, "STEP_COUNTER传感器无法使用, 现在开启ACCELEROMETER传感器");
+                } else {
+                    DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
+                }
+            } else {
+                DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
+            }
+        }
+
+        // 现在暂时测试，即使有STEP_COUNTER传感器也打开加速度传感器
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         if (accelerometerSensor != null) {
             isAvailable = sensorManager.registerListener(this, accelerometerSensor,
                     SensorManager.SENSOR_DELAY_UI);
             if (isAvailable) {
-                DLOG.v(TAG, "ACCELEROMETER传感器可以使用");
+                DLOG.v(TAG, "STEP_COUNTER传感器无法使用, 现在开启ACCELEROMETER传感器");
             } else {
                 DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
             }
@@ -550,6 +577,17 @@ public class SensorService extends Service implements SensorEventListener {
             DLOG.v(TAG, "GRAVITY传感器无法使用");
         }
 
+        // 陀螺仪
+        // Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        // isAvailable = sensorManager.registerListener(this, gyroscopeSensor, SensorManager.SENSOR_DELAY_UI);
+        // if (isAvailable) {
+        //     DLOG.v(TAG, "GYROSCOPE传感器可以使用");
+        //     isAvailable = true;
+        // } else {
+        //     DLOG.v(TAG, "GYROSCOPE传感器无法使用");
+        //     isAvailable = false;
+        // }
+
         // detector 可能导致耗电加快
         // Sensor detectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         // if (detectorSensor != null) {
@@ -563,17 +601,6 @@ public class SensorService extends Service implements SensorEventListener {
         //     DLOG.v(TAG, "STEP_DETECTOR传感器无法使用");
         // }
 
-        Sensor stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (stepCountSensor != null) {
-            isAvailable = sensorManager.registerListener(this, stepCountSensor,
-                    SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
-            if (isAvailable) {
-                DLOG.v(TAG, "STEP_COUNTER传感器可以使用");
-            } else {
-                DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
-            }
-        } else {
-            DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
-        }
+
     }
 }
