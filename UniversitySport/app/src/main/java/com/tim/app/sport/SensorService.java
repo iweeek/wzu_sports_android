@@ -103,15 +103,15 @@ public class SensorService extends Service implements SensorEventListener {
     // Step_Detector传感器使用的当前步数
     public static int detectorStep = 0;
 
-
+    
     public Acceleration acceleration = null;
     public Gyroscope gyroscope = null;
     public Gravity gravity = null;
     public static List<Acceleration> accelerationList = new ArrayList<>();
     public static List<Gyroscope> gyroscopeList = new ArrayList<>();
 
-    private double gravitys[] = new double[3];
-    private double linear_acceleration[] = new double[3];
+    private double gravityArray[] = new double[3];
+    private double linearAccelerationArray[] = new double[3];
 
     private static final float NS2S = 1.0f / 1000000000.0f;
     public final float[] deltaRotationVector = new float[4];
@@ -165,32 +165,32 @@ public class SensorService extends Service implements SensorEventListener {
 
                     float alpha = 0.8f;
 
-                    gravitys[0] = alpha * gravitys[0] + (1 - alpha) * event.values[0];
-                    gravitys[1] = alpha * gravitys[1] + (1 - alpha) * event.values[1];
-                    gravitys[2] = alpha * gravitys[2] + (1 - alpha) * event.values[2];
+                    gravityArray[0] = alpha * gravityArray[0] + (1 - alpha) * event.values[0];
+                    gravityArray[1] = alpha * gravityArray[1] + (1 - alpha) * event.values[1];
+                    gravityArray[2] = alpha * gravityArray[2] + (1 - alpha) * event.values[2];
 
-                    linear_acceleration[0] = event.values[0] - gravitys[0];
-                    linear_acceleration[1] = event.values[1] - gravitys[1];
-                    linear_acceleration[2] = event.values[2] - gravitys[2];
+                    linearAccelerationArray[0] = event.values[0] - gravityArray[0];
+                    linearAccelerationArray[1] = event.values[1] - gravityArray[1];
+                    linearAccelerationArray[2] = event.values[2] - gravityArray[2];
 
                     acceleration = new Acceleration();
-                    acceleration.setX((float) linear_acceleration[0]);
-                    acceleration.setY((float) linear_acceleration[1]);
-                    acceleration.setZ((float) linear_acceleration[2]);
+                    acceleration.setX((float) linearAccelerationArray[0]);
+                    acceleration.setY((float) linearAccelerationArray[1]);
+                    acceleration.setZ((float) linearAccelerationArray[2]);
                     acceleration.setAverage(average);
                     acceleration.setTimestamp(event.timestamp);
                     accelerationList.add(acceleration);
 
-                    event.values[0] = (float) linear_acceleration[0];
-                    event.values[1] = (float) linear_acceleration[1];
-                    event.values[2] = (float) linear_acceleration[2];
+                    event.values[0] = (float) linearAccelerationArray[0];
+                    event.values[1] = (float) linearAccelerationArray[1];
+                    event.values[2] = (float) linearAccelerationArray[2];
 
                     // liteOrm.insert(acceleration);
                     break;
                 case Sensor.TYPE_GRAVITY:
-                    gravitys[0] = event.values[0];
-                    gravitys[1] = event.values[1];
-                    gravitys[2] = event.values[2];
+                    gravityArray[0] = event.values[0];
+                    gravityArray[1] = event.values[1];
+                    gravityArray[2] = event.values[2];
 
                     gravity.setX(event.values[0]);
                     gravity.setY(event.values[1]);
