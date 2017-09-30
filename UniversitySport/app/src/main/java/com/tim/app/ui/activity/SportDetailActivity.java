@@ -521,7 +521,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                         isNormal = false;
                         drawLine(lastLatLng, newLatLng, isNormal);
-                        currentDistance += distanceInterval;
+                        // currentDistance += distanceInterval;
                     } else {
                         isNormal = true;
                         drawLine(lastLatLng, newLatLng, isNormal);
