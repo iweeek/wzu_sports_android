@@ -9,6 +9,8 @@ public class EventTag {
     public static final int ACCOUNT_LOGIN = 0x1005;// 登录成功
     public static final int ACCOUNT_LOGOUT = 0x1006;// 注销成功
     public static final int ACCOUNT_UPDATE_INFO = 0x1007;// 用户信息修改
-    public static final int ON_STEP_CHANGE = 0x1008;//步数改变
+    public static final int ON_STEP_CHANGE = 0x1008;// 步数改变
+    public static final int ON_ACCELERATION_CHANGE = 0x1009;// 加速度改变
+    public static final int ON_DETECTOR_CHANGE = 0x100A;// Detector改变
 
 }
