@@ -259,7 +259,7 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -268,29 +268,34 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/tv_current_distance"
                             android:text="@string/distanceText"
                             android:textColor="@color/colorWhite"
                             android:textSize="12dp"/>
 
                         <TextView
-                            android:id="@+id/tvCurrentDistance"
+                            android:id="@+id/tv_current_distance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="30dp"
+                            android:layout_toStartOf="@+id/tv_qualified_distance_unit"
                             android:textColor="#FBDD17"
                             android:textSize="18dp"/>
 
                         <TextView
+                            android:id="@+id/tv_qualified_distance_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="9dp"
+                            android:layout_alignBaseline="@+id/tv_current_distance"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/dimen_16"
                             android:text="@string/meter"
                             android:textColor="@color/colorWhite"
                             android:textSize="12dp"/>
-                    </LinearLayout>
+                    </RelativeLayout>
 
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -299,26 +304,29 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/tv_average_speed"
                             android:text="@string/averageSpeed"
                             android:textColor="@color/colorWhite"
                             android:textSize="12dp"/>
 
                         <TextView
-                            android:id="@+id/tvAverSpeed"
+                            android:id="@+id/tv_average_speed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
+                            android:layout_toStartOf="@+id/tv_average_speed_unit"
                             android:textColor="#FBDD17"
                             android:textSize="18dp"/>
 
                         <TextView
+                            android:id="@+id/tv_average_speed_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="9dp"
+                            android:layout_alignBaseline="@id/tv_average_speed"
+                            android:layout_alignParentEnd="true"
                             android:text="@string/speedNotation"
                             android:textColor="@color/colorWhite"
                             android:textSize="12dp"/>
-                    </LinearLayout>
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -391,9 +399,9 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
+        android:layout_centerInParent="true"
 
-        android:layout_centerInParent="true">
+        android:background="@color/colorWhite">
 
         <com.application.library.widget.ProgressBarCircular
             android:id="@+id/pbcProgressBar"

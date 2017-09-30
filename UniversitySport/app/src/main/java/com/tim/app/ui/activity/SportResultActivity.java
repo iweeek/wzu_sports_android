@@ -849,9 +849,9 @@ public class SportResultActivity extends ToolbarActivity {
         //        ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
 
-        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
+        tvCurrentDistance = (TextView) findViewById(R.id.tv_current_distance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
-        tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
+        tvAverSpeed = (TextView) findViewById(R.id.tv_average_speed);
         tvAverSpeed.setText("0.00");
 
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
