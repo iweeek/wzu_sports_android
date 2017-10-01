@@ -129,12 +129,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvSportName;
     private TextView tvParticipantNum;
     private TextView tvCurrentDistance;
-    private TextView tvAverSpeedLabel;
     private TextView tvElapseTime;
     private TextView tvAverSpeed;
     private TextView tvTargetDistance;
     private TextView tvTargetTime;
-    private TextView tvTargetSpeedLabel;
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
@@ -216,7 +214,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         intent.putExtra("sportEntry", sportEntry);
         context.startActivity(intent);
     }
-
 
     private void startTimer() {
         timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
@@ -1083,13 +1080,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvSportName = (TextView) findViewById(R.id.tvSportName);
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
         tvCurrentDistance = (TextView) findViewById(R.id.tv_current_distance);
-        tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
         tvAverSpeed = (TextView) findViewById(R.id.tv_average_speed);
-        tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
+        tvTargetDistance = (TextView) findViewById(R.id.tv_current_target_distance);
         //        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
-        tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
-        tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
+        tvTargetSpeed = (TextView) findViewById(R.id.tv_current_target_speed);
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);

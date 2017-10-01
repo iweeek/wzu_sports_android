@@ -146,6 +146,7 @@
     <string name="speedNotation">米/秒</string>
 
     <string name="averageSpeed">平均速度</string>
+    <string name="speed">速度</string>
     <string name="targetTitleSpeed">达标速度</string>
     <string name="targetTime">达标时间</string>
 

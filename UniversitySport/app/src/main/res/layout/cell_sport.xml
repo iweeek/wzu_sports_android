@@ -60,7 +60,7 @@
                     android:textSize="14dp"/>
 
                 <TextView
-                    android:id="@+id/tvTargetDistance"
+                    android:id="@+id/tv_current_target_distance"
                     android:text="@string/digitalPlaceholder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
                     android:textSize="14dp"/>
 
                 <TextView
-                    android:id="@+id/tvTargetValue"
+                    android:id="@+id/tv_current_target_speed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"

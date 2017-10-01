@@ -854,11 +854,11 @@ public class SportResultActivity extends ToolbarActivity {
         tvAverSpeed = (TextView) findViewById(R.id.tv_average_speed);
         tvAverSpeed.setText("0.00");
 
-        tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
+        tvTargetDistance = (TextView) findViewById(R.id.tv_current_target_distance);
         // tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
-        tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
+        tvTargetSpeed = (TextView) findViewById(R.id.tv_current_target_speed);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         //        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);

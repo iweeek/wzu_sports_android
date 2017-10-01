@@ -91,14 +91,14 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder.setText(R.id.tvParticipantNum, mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
 
             if (data.getQualifiedDistance() > 0) {
-                holder.setText(R.id.tvTargetDistance, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedDistance())) + "米");
+                holder.setText(R.id.tv_current_target_distance, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedDistance())) + "米");
             }
             //            if (data.getTargetTime() > 0) {
             //                holder.setText(R.id.tvTargetTime, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getTargetTime())) + "分");
             //            }
 
             if (!data.getTargetSpeed().equals("") || data.getTargetSpeed() != null) {
-                holder.setText(R.id.tvTargetValue, mContext.getString(R.string.digitalPlaceholder, data.getTargetSpeed()) + "米/秒");
+                holder.setText(R.id.tv_current_target_speed, mContext.getString(R.string.digitalPlaceholder, data.getTargetSpeed()) + "米/秒");
             }
         } else if (SportEntry.AREA_SPORT == data.getType()) {
             //            holder.setVisible(R.id.llBottom, false);
