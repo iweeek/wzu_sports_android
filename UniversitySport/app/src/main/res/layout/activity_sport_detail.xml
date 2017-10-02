@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tool="http://schemas.android.com/tools"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/rlRoot"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -17,30 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--<RelativeLayout-->
-        <!--android:id="@+id/rlTitle"-->
-        <!--style="@style/TitleBarStyle"-->
-        <!--android:layout_height="@dimen/title_height"-->
-        <!--android:background="@color/blue"-->
-        <!--android:paddingLeft="20dp">-->
-
-
-        <!--<ImageButton-->
-        <!--android:id="@+id/ibBack"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:background="@color/transparent"-->
-        <!--android:src="@drawable/ic_back_white" />-->
-
-        <!--<TextView-->
-        <!--android:id="@+id/tvTitle"-->
-        <!--style="@style/TitleTextStyle"-->
-        <!--android:layout_marginLeft="50dp"-->
-        <!--android:text="运动详情" />-->
-
-        <!--</RelativeLayout>-->
 
         <LinearLayout
             android:id="@+id/llFloatingWindow"
@@ -53,12 +29,12 @@
             <RelativeLayout
                 android:id="@+id/rlContainer"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:paddingBottom="10dp"
                 android:paddingEnd="15dp"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="20dp">
 
                 <TextView
                     android:id="@+id/tvParticipantNum"
@@ -69,7 +45,7 @@
                     android:layout_toLeftOf="@+id/llRightTitle"
                     android:textColor="@color/black_60"
                     android:textSize="12dp"
-                    tool:text="@string/joinPrompt"/>
+                    tools:text="@string/joinPrompt"/>
 
                 <LinearLayout
                     android:id="@+id/llRightTitle"
@@ -89,12 +65,10 @@
 
                     <ImageView
                         android:id="@+id/ivHideSportInfo"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_centerVertical="true"
                         android:background="@drawable/icon_sport_info_closed_toggle"/>
-
-
                 </LinearLayout>
             </RelativeLayout>
 
@@ -103,8 +77,9 @@
                 android:layout_height="0.5dp"
                 android:background="@color/colorLine"/>
 
+            <!--下一级别-->
             <LinearLayout
-                android:id="@+id/llTargetContainer"
+                android:id="@+id/llFasterItemContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
@@ -117,7 +92,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="4dp"
                     android:paddingStart="20dp">
 
                     <TextView
@@ -133,25 +108,23 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvFasterItem"
+                            android:id="@+id/tvFasterItemSportName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="快跑"
-                            android:textSize="22dp"
+                            tools:text="快跑"
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
-
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_weight="1"
-                    android:gravity="start"
+                    android:gravity="end"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:paddingStart="20dp">
+                    android:padding="4dp"
+                    android:paddingEnd="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -166,15 +139,14 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvTargetDistance"
+                            android:id="@+id/tvFasterTargetDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="800 "
-                            android:textSize="22dp"
+                            tools:text="800 "
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
 
                         <TextView
-                            android:id="@+id/tvMeter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/dimen_2"
@@ -183,23 +155,19 @@
                     </LinearLayout>
                 </LinearLayout>
 
-
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_weight="1"
                     android:gravity="end"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="4dp"
                     android:paddingEnd="20dp">
 
                     <TextView
-                        android:id="@+id/tvTargetTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTitleSpeed"
+                        android:text="@string/targetSpeed"
                         android:textSize="12dp"/>
 
                     <LinearLayout
@@ -209,15 +177,14 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvTargetValue"
+                            android:id="@+id/tvFasterTargetSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2.70 "
-                            android:textSize="22dp"
+                            tools:text="2.70 "
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
 
                         <TextView
-                            android:id="@+id/tvSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/dimen_2"
@@ -226,11 +193,11 @@
 
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
+            <!--当前级别-->
             <LinearLayout
-                android:id="@+id/llTargetContainer"
+                android:id="@+id/llCurrentItemContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
@@ -243,7 +210,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="4dp"
                     android:paddingStart="20dp">
 
                     <TextView
@@ -259,25 +226,23 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvCurItem"
+                            android:id="@+id/tvCurrentItemSportName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="快走"
-                            android:textSize="22dp"
+                            tools:text="快跑"
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
-
                     </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_weight="1"
-                    android:gravity="start"
+                    android:gravity="end"
                     android:orientation="vertical"
-                    android:padding="10dp"
-                    android:paddingStart="20dp">
+                    android:padding="4dp"
+                    android:paddingEnd="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -292,15 +257,14 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvTargetDistance"
+                            android:id="@+id/tvCurrentTargetDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3500 "
-                            android:textSize="22dp"
+                            tools:text="800 "
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
 
                         <TextView
-                            android:id="@+id/tvMeter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/dimen_2"
@@ -309,23 +273,19 @@
                     </LinearLayout>
                 </LinearLayout>
 
-
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_weight="1"
                     android:gravity="end"
                     android:orientation="vertical"
-                    android:padding="10dp"
+                    android:padding="4dp"
                     android:paddingEnd="20dp">
 
                     <TextView
-                        android:id="@+id/tvTargetTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTitleSpeed"
+                        android:text="@string/targetSpeed"
                         android:textSize="12dp"/>
 
                     <LinearLayout
@@ -335,104 +295,18 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvTargetValue"
+                            android:id="@+id/tvCurrentTargetSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1.00 "
-                            android:textSize="22dp"
+                            tools:text="2.70 "
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
 
                         <TextView
-                            android:id="@+id/tvSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/dimen_2"
                             android:text="@string/speedNotation"
-                            android:textSize="12dp"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llTargetContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:paddingStart="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="当前状态"
-                        android:textSize="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvCurItem"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="快走"
-                            android:textSize="22dp"
-                            android:textColor="#00DB00"
-                            android:textStyle="bold"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_weight="1"
-                    android:gravity="start"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:paddingStart="20dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="当前距离"
-                        android:textSize="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvTargetDistance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20 "
-                            android:textSize="22dp"
-                            android:textColor="#FF0000"
-                            android:textStyle="bold"/>
-
-                        <TextView
-                            android:id="@+id/tvMeter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingStart="@dimen/dimen_2"
-                            android:text="@string/meter"
                             android:textSize="12dp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -462,17 +336,121 @@
                         android:gravity="center"
                         android:orientation="horizontal">
 
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--当前状态-->
+            <LinearLayout
+                android:id="@+id/llCurrentStatusContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:orientation="vertical"
+                    android:padding="4dp"
+                    android:paddingStart="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="当前状态"
+                        android:textSize="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
                         <TextView
-                            android:id="@+id/tvTargetValue"
+                            android:id="@+id/tvCurrentStatusSportName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1.20 "
-                            android:textSize="22dp"
-                            android:textColor="#00DB00"
+                            tools:text="快跑"
+                            android:textColor="@color/green_primary"
+                            android:textSize="18dp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:orientation="vertical"
+                    android:padding="4dp"
+                    android:paddingEnd="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="当前距离"
+                        android:textSize="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvCurrentStatusDistance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="800 "
+                            android:textColor="@color/red_primary_dark"
+                            android:textSize="18dp"
                             android:textStyle="bold"/>
 
                         <TextView
-                            android:id="@+id/tvSpeed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/dimen_2"
+                            android:text="@string/meter"
+                            android:textSize="12dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:orientation="vertical"
+                    android:padding="4dp"
+                    android:paddingEnd="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/currentSpeed"
+                        android:textSize="12dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvCurrentStatusSpeed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="2.70 "
+                            android:textColor="@color/green_primary"
+                            android:textSize="18dp"
+                            android:textStyle="bold"/>
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:paddingStart="@dimen/dimen_2"
@@ -481,48 +459,50 @@
 
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
+            <!--当前耗时-->
             <LinearLayout
                 android:id="@+id/llCurrentInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#BB0A2657"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/consumeTime"
                         android:textColor="@color/colorWhite"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="14dp"/>
+                        android:textSize="12dp"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/tvElapsedTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="60dp"
+                        android:layout_centerHorizontal="true"
                         android:text="0:00:00"
                         android:textColor="@color/colorWhite"
-                        android:textSize="30dp"/>
-                </LinearLayout>
+                        android:textSize="32dp"/>
+                </RelativeLayout>
             </LinearLayout>
-
 
             <RelativeLayout
                 android:id="@+id/rlCurConsumeEnergy"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
                 android:visibility="gone">
 
@@ -537,11 +517,12 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:text="@string/curConsumeEnergyTemp"
-                    android:textSize="16dp"/>
+                    android:textSize="14dp"/>
 
             </RelativeLayout>
-
 
         </LinearLayout>
 
@@ -560,9 +541,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-
-        android:background="@color/colorWhite">
+        android:layout_centerInParent="true">
 
         <com.application.library.widget.ProgressBarCircular
             android:id="@+id/pbcProgressBar"
@@ -577,7 +556,7 @@
     </LinearLayout>
 
     <!--<LinearLayout-->
-        <!--android:id="@+id/llLacationHint"-->
+        <!--android:id="@+id/llLocationHint"-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--android:layout_alignParentStart="true"-->
@@ -664,7 +643,7 @@
             android:visibility="gone"
             app:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
             app:slideUnlockBlockResource="@drawable/ic_lock"
-            tool:visibility="visible"/>
+            tools:visibility="visible"/>
 
         <TextView
             android:id="@+id/tvPause"

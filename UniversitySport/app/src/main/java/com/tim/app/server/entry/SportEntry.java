@@ -1,15 +1,16 @@
 package com.tim.app.server.entry;
 
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * 首页的运动对象
  */
-public class SportEntry implements Serializable {
+public class SportEntry implements Parcelable {
     private static final long serialVersionUID = 6187447685293862071L;
-    public   static final  int AREA_SPORT = 1;
-    public static  final  int RUNNING_SPORT = 2;
+    public static final int AREA_SPORT = 1;
+    public static final int RUNNING_SPORT = 2;
 
     private int id = 1;//运动id，默认值为1
     private String name;//名称
@@ -17,7 +18,7 @@ public class SportEntry implements Serializable {
     private int acquisitionInterval;
     private int participantNum;//参加人数
     private int qualifiedDistance;//目标距离
-    private String targetSpeed;//目标速度
+    private float targetSpeed;//目标速度
     private String imgUrl;//背景图片地址
     private int bgDrawableId;//背景图片id
     private int type;//运动方式
@@ -45,6 +46,7 @@ public class SportEntry implements Serializable {
     public void setParticipantNum(int participantNum) {
         this.participantNum = participantNum;
     }
+
     public int getQualifiedDistance() {
         return qualifiedDistance;
     }
@@ -53,11 +55,11 @@ public class SportEntry implements Serializable {
         this.qualifiedDistance = qualifiedDistance;
     }
 
-    public String getTargetSpeed() {
+    public float getTargetSpeed() {
         return targetSpeed;
     }
 
-    public void setTargetSpeed(String targetSpeed) {
+    public void setTargetSpeed(float targetSpeed) {
         this.targetSpeed = targetSpeed;
     }
 
@@ -116,4 +118,52 @@ public class SportEntry implements Serializable {
                 ", acquisitionInterval=" + acquisitionInterval +
                 '}';
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.name);
+        dest.writeInt(this.qualifiedCostTime);
+        dest.writeInt(this.acquisitionInterval);
+        dest.writeInt(this.participantNum);
+        dest.writeInt(this.qualifiedDistance);
+        dest.writeFloat(this.targetSpeed);
+        dest.writeString(this.imgUrl);
+        dest.writeInt(this.bgDrawableId);
+        dest.writeInt(this.type);
+    }
+
+    public SportEntry() {
+    }
+
+    protected SportEntry(Parcel in) {
+        this.id = in.readInt();
+        this.name = in.readString();
+        this.qualifiedCostTime = in.readInt();
+        this.acquisitionInterval = in.readInt();
+        this.participantNum = in.readInt();
+        this.qualifiedDistance = in.readInt();
+        this.targetSpeed = in.readFloat();
+        this.imgUrl = in.readString();
+        this.bgDrawableId = in.readInt();
+        this.type = in.readInt();
+    }
+
+    public static final Creator<SportEntry> CREATOR = new Creator<SportEntry>() {
+        @Override
+        public SportEntry createFromParcel(Parcel source) {
+            return new SportEntry(source);
+        }
+
+        @Override
+        public SportEntry[] newArray(int size) {
+            return new SportEntry[size];
+        }
+    };
 }

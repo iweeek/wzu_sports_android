@@ -71,7 +71,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         holder.setLayoutParams(R.id.rlContainer, new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
 
         if (!TextUtils.isEmpty(data.getName())) {
-            holder.setText(R.id.tvSportName, data.getName());
+            holder.setText(R.id.tvCurrentItemSportName, data.getName());
         }
 
         if (SportEntry.RUNNING_SPORT == data.getType()) {
@@ -91,15 +91,14 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
             holder.setText(R.id.tvParticipantNum, mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
 
             if (data.getQualifiedDistance() > 0) {
-                holder.setText(R.id.tvTargetDistance, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedDistance())) + "米");
+                holder.setText(R.id.tvCurrentTargetDistance, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedDistance())) + "米");
             }
-            //            if (data.getTargetTime() > 0) {
-            //                holder.setText(R.id.tvTargetTime, mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getTargetTime())) + "分");
-            //            }
 
-            if (!data.getTargetSpeed().equals("") || data.getTargetSpeed() != null) {
-                holder.setText(R.id.tvTargetValue, mContext.getString(R.string.digitalPlaceholder, data.getTargetSpeed()) + "米/秒");
-            }
+            // if (!data.getTargetSpeed().equals("") || data.getTargetSpeed() != null) {
+                holder.setText(R.id.tvCurrentTargetSpeed,
+                        mContext.getString(R.string.digitalPlaceholder,
+                                String.valueOf(data.getTargetSpeed())) + "米/秒");
+            // }
         } else if (SportEntry.AREA_SPORT == data.getType()) {
             //            holder.setVisible(R.id.llBottom, false);
             if (!TextUtils.isEmpty(data.getImgUrl())) {

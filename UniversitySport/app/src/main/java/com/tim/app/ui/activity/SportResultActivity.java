@@ -826,7 +826,7 @@ public class SportResultActivity extends ToolbarActivity {
     @Override
     public void initView() {
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
-        llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
+        llLacationHint = (LinearLayout) findViewById(R.id.llLocationHint);
         llLacationHint.setVisibility(View.GONE);
 
         llFloatingWindow = (LinearLayout) findViewById(R.id.llFloatingWindow);
@@ -847,24 +847,24 @@ public class SportResultActivity extends ToolbarActivity {
 
         //        ibBack = (ImageButton) findViewById(R.id.ibBack);
         //        ibBack.setOnClickListener(this);
-        tvSportName = (TextView) findViewById(R.id.tvSportName);
+        tvSportName = (TextView) findViewById(R.id.tvCurrentItemSportName);
 
-        tvCurrentDistance = (TextView) findViewById(R.id.tv_current_distance);
+        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentStatusDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
-        tvAverSpeed = (TextView) findViewById(R.id.tv_average_speed);
+        tvAverSpeed = (TextView) findViewById(R.id.tvCurrentStatusSpeed);
         tvAverSpeed.setText("0.00");
 
-        tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
+        tvTargetDistance = (TextView) findViewById(R.id.tvCurrentTargetDistance);
         // tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
-        tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
+        tvTargetSpeed = (TextView) findViewById(R.id.tvCurrentTargetSpeed);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         //        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
         tvResult = (TextView) findViewById(R.id.tvResult);
-        llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
+        llTargetContainer = (LinearLayout) findViewById(R.id.llCurrentItemContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (LinearLayout) findViewById(R.id.rlCurConsumeEnergy);

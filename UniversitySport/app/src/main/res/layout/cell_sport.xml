@@ -22,7 +22,7 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:id="@+id/tvSportName"
+            android:id="@+id/tvCurrentItemSportName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -33,7 +33,7 @@
             android:id="@+id/tvParticipantNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvSportName"
+            android:layout_below="@id/tvCurrentItemSportName"
             android:textColor="#d5dadb"
             android:textSize="14dp" />
 
@@ -60,7 +60,7 @@
                     android:textSize="14dp"/>
 
                 <TextView
-                    android:id="@+id/tvTargetDistance"
+                    android:id="@+id/tvCurrentTargetDistance"
                     android:text="@string/digitalPlaceholder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,13 +103,13 @@
                 <TextView
                     android:id="@+id/tvTargetTitle"
                     android:layout_width="wrap_content"
-                    android:text="@string/targetTitleSpeed"
+                    android:text="@string/targetSpeed"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"
                     android:textSize="14dp"/>
 
                 <TextView
-                    android:id="@+id/tvTargetValue"
+                    android:id="@+id/tvCurrentTargetSpeed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#d5dadb"

@@ -51,7 +51,6 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static com.tim.app.constant.AppConstant.SPEED_SCALE;
@@ -87,7 +86,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     private SportAdapter adapter;
     //    private BadNetworkAdapter badNetworkAdapter;
-    private List<SportEntry> sportEntryDataList;
+    private ArrayList<SportEntry> sportEntryDataList;
     //    private List<BadNetWork> networkDataList;
 
     private EmptyLayout emptyLayout;
@@ -309,7 +308,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         DLOG.d(TAG, "position:" + position);
         DLOG.d(TAG, "sportEntry:" + sportEntry);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
-            SportDetailActivity.start(this, sportEntry);
+            SportDetailActivity.start(this, sportEntryDataList, sportEntry);
         } else {
             SportsAreaListActivity.start(this, sportEntry);
         }
@@ -350,7 +349,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             double time = jsonObject.getDouble("qualifiedCostTime");
                             BigDecimal targetSpeed = MathUtil.bigDecimalDivide(Double.toString(distance),
                                     Double.toString(time), SPEED_SCALE);
-                            sportEntry.setTargetSpeed(targetSpeed.toString());
+                            sportEntry.setTargetSpeed(targetSpeed.floatValue());
 
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
                             sportEntry.setName(jsonObject.getString("name"));

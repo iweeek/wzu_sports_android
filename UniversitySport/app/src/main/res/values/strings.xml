@@ -146,7 +146,9 @@
     <string name="speedNotation">米/秒</string>
 
     <string name="averageSpeed">平均速度</string>
-    <string name="targetTitleSpeed">达标速度</string>
+    <string name="speed">速度</string>
+    <string name="targetSpeed">达标速度</string>
+    <string name="currentSpeed">当前速度</string>
     <string name="targetTime">达标时间</string>
 
     <string name="distanceText">距离</string>
@@ -172,9 +174,6 @@
     <string name="consumeTime">耗时</string>
     <string name="minutePlaceHolder">%s 分钟</string>
 
-
-    <string name="username_password_mismatching">用户名和密码不匹配</string>
-
     <!--运动准备-->
     <string name="gpsLocationing">GPS定位中...</string>
     <string name="readyToSport">请做好热身准备</string>
@@ -184,7 +183,6 @@
     <string name="abnormalData">数据异常</string>
     <string name="qualified">已达标</string>
     <string name="notQualified">未达标</string>
-
 
     <string name="manual_open_permission_hint">定位权限已被禁用，请手动开启定位权限</string>
 </resources>

@@ -42,7 +42,7 @@
                 android:paddingTop="10dp">
 
                 <TextView
-                    android:id="@+id/tvSportName"
+                    android:id="@+id/tvCurrentItemSportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -102,7 +102,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_current_distance"
+                            android:id="@+id/tvCurrentStatusDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 "
@@ -174,7 +174,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tv_average_speed"
+                            android:id="@+id/tvCurrentStatusSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00 "
@@ -248,7 +248,7 @@
 
 
             <LinearLayout
-                android:id="@+id/llTargetContainer"
+                android:id="@+id/llCurrentItemContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
@@ -277,7 +277,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvTargetDistance"
+                            android:id="@+id/tvCurrentTargetDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 "
@@ -350,7 +350,7 @@
                         android:id="@+id/tvTargetTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/targetTitleSpeed"
+                        android:text="@string/targetSpeed"
                         android:textColor="@color/black"
                         android:textSize="14dp"/>
 
@@ -360,7 +360,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvTargetValue"
+                            android:id="@+id/tvCurrentTargetSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00 "
@@ -398,7 +398,7 @@
 
 
         <LinearLayout
-            android:id="@+id/llLacationHint"
+            android:id="@+id/llLocationHint"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
