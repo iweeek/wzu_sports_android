@@ -13,7 +13,7 @@ public class MathUtil {
     public static BigDecimal bigDecimalDivide(String doubleA, String doubleB, int scale) {
         BigDecimal x = new BigDecimal(doubleA);
         BigDecimal y = new BigDecimal(doubleB);
-        BigDecimal bd = x.divide(y, scale, BigDecimal.ROUND_HALF_UP);
+        BigDecimal bd = x.divide(y, scale, BigDecimal.ROUND_DOWN);
         return bd;
     }
 }

@@ -29,12 +29,12 @@
             <RelativeLayout
                 android:id="@+id/rlContainer"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:paddingBottom="10dp"
                 android:paddingEnd="15dp"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp">
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingStart="20dp">
 
                 <TextView
                     android:id="@+id/tvParticipantNum"
@@ -65,8 +65,8 @@
 
                     <ImageView
                         android:id="@+id/ivHideSportInfo"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
                         android:layout_centerVertical="true"
                         android:background="@drawable/icon_sport_info_closed_toggle"/>
                 </LinearLayout>
@@ -382,7 +382,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="800 "
-                            android:textColor="@color/green_primary"
+                            android:textColor="@color/red_primary_dark"
                             android:textSize="18dp"
                             android:textStyle="bold"/>
 

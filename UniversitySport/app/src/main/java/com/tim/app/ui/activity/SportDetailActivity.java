@@ -77,6 +77,8 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -93,8 +95,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
 
-    //重要实体
-    private SportEntry sportEntry;
+    // 重要实体
+    private SportEntry currentSportEntry = null;
+    // 记录当前运动项目级别
+    private int currentLevel = -1;
+
+    private SportEntry fasterSportEntry = null;
+    private int fasterLevel = -1;
+
+    private List<SportEntry> sportEntryDataList;
     private HistoryRunningSportEntry historySportEntry;
 
     //第三方
@@ -106,7 +115,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private Location firstLocation;
     private int firstLocationType;
 
-    //全局变量
+    // 全局变量
     private int interval = 0;
     private int speedLimitation = 10;//米
     private int currentDistance = 0;
@@ -207,9 +216,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
     };
 
-    public static void start(Context context, SportEntry sportEntry) {
+    public static void start(Context context, ArrayList<SportEntry> sportEntryDataList, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
-        intent.putExtra("sportEntry", sportEntry);
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("sportEntryDataList", sportEntryDataList);
+        // bundle.putParcelable("currentSportEntry", currentSportEntry);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
@@ -304,8 +316,19 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         initGPS();
 
-        sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
-        interval = sportEntry.getAcquisitionInterval() * 1000;
+        Bundle bundle = getIntent().getExtras();
+        // currentSportEntry = bundle.getParcelable("currentSportEntry");
+        sportEntryDataList = bundle.getParcelableArrayList("sportEntryDataList");
+        if (sportEntryDataList.size() >= 1) {
+            currentLevel = 0;
+            currentSportEntry = sportEntryDataList.get(currentLevel);
+            if (sportEntryDataList.size() >= 2) {
+                fasterLevel = 1;
+                fasterSportEntry = sportEntryDataList.get(fasterLevel);
+            }
+        }
+
+        interval = currentSportEntry.getAcquisitionInterval() * 1000;
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -491,18 +514,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     distancePerStep = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
 
                     bdDividend = new BigDecimal(stepsInterval);
-                    bdDevisor = new BigDecimal(sportEntry.getAcquisitionInterval());
+                    bdDevisor = new BigDecimal(currentSportEntry.getAcquisitionInterval());
                     stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
-                    //                    try {
-                    //                        //                        fos = openFileOutput("testMode", MODE_PRIVATE);
-                    //                        fos.write(((++counter) + ">>>" + s1 + s + "\n").getBytes());
-                    //                    } catch (FileNotFoundException e) {
-                    //                        e.printStackTrace();
-                    //                    } catch (IOException e) {
-                    //                        e.printStackTrace();
-                    //                    } finally {
-                    //
-                    //                    }
                 }
 
                 // toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
@@ -511,10 +524,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                 if (locationType == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                    if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
+                    if (distanceInterval / currentSportEntry.getAcquisitionInterval() > speedLimitation) {
                         //位置漂移
                         //return;
-                        toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
+                        toastText = "异常移动，每秒位移：" + distanceInterval / currentSportEntry.getAcquisitionInterval();
                         Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                         isNormal = false;
                         drawLine(lastLatLng, newLatLng, isNormal);
@@ -524,17 +537,34 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         drawLine(lastLatLng, newLatLng, isNormal);
                         currentDistance += distanceInterval;
 
-                        if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                        if (currentDistance > currentSportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
                             targetFinishedTime = elapseTime;
                         }
 
                         tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
-                        bdDividend = new BigDecimal(currentDistance);
-                        bdDevisor = new BigDecimal(elapseTime);
-                        BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                        BigDecimal currentSpeed = MathUtil.bigDecimalDivide(String.valueOf(currentDistance),
+                                String.valueOf(elapseTime), SPEED_SCALE);
                         // 解决速度过大
-                        if (bdResult.compareTo(new BigDecimal(10)) < 0) {
-                            tvCurrentStatusSpeed.setText(bdResult.toString() + " ");
+                        if (currentSpeed.compareTo(new BigDecimal(10)) < 0) {
+                            tvCurrentStatusSpeed.setText(currentSpeed.toString() + " ");
+                        }
+
+                        // 目前有更快的项目，并且当前速度大于或等于更快项目的达标速度，更换当前项目为更快的项目
+                        if (fasterLevel != -1 && currentSpeed.floatValue() >= fasterSportEntry.getTargetSpeed()) {
+
+                            // 设置当前项目
+                            setCurrentSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+
+                            if (fasterLevel < sportEntryDataList.size() && fasterLevel == sportEntryDataList.size() - 1) {
+                                // 已经没有最快的项目了
+                                fasterLevel = -1;
+                                setFasterSportItem("无", -1, -1);
+                            } else {
+                                // 还有更快的项目，更新fasterSportEntry
+                                fasterLevel ++;
+                                fasterSportEntry = sportEntryDataList.get(fasterLevel);
+                                setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+                            }
                         }
                     }
 
@@ -591,6 +621,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void initData() {
 
+        initSteps = 0;
+        currentSteps = 0;
+        pauseStateSteps = 0;
+        currentDistance = 0;
+        elapseTime = 0;
+
         autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
         // DLOG.d(TAG, "autoAdjustBrightness:" + autoAdjustBrightness);
         if (autoAdjustBrightness) {
@@ -608,37 +644,26 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
-        if (!TextUtils.isEmpty(sportEntry.getName())) {
-            tvCurrentItemSportName.setText(sportEntry.getName());
-            tvCurrentStatusName.setText(sportEntry.getName());
+        // 当前项目以及状态
+        if (currentSportEntry != null) {
+
+            if (!TextUtils.isEmpty(currentSportEntry.getName()) &&
+                    currentSportEntry.getQualifiedDistance() >= 0 && currentSportEntry.getTargetSpeed() >= 0) {
+
+                setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
+                setCurrentSportStatus(currentSportEntry.getName(), currentDistance, 0.00f);
+            }
+            // 设置更快项目
+            if (fasterSportEntry != null) {
+                if (!TextUtils.isEmpty(fasterSportEntry.getName()) &&
+                        fasterSportEntry.getQualifiedDistance() >= 0 && fasterSportEntry.getTargetSpeed() >= 0) {
+
+                    setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+                }
+            }
         }
 
-        //        if (sportEntry.getParticipantNum() > 0) {
-        tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-        //        }else{
-        //            tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
-        //        }
-
-        if (sportEntry.getQualifiedDistance() > 0) {
-            tvCurrentTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(sportEntry.getQualifiedDistance())));
-        }
-
-        //        if (sportEntry.getTargetTime() > 0) {
-        //            tvTargetTime.setText(String.valueOf(sportEntry.getTargetTime()));
-        //        }
-
-        //        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvCurrentTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()) + " ");
-
-        tvCurrentStatusDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)) + " ");
-        //        tvElapseTime.setText(String.valueOf(elapseTime / 60));
-        //        tvCurrentStep.setText("0 步");
-        tvCurrentStatusSpeed.setText("0.00 ");
-        initSteps = 0;
-        currentSteps = 0;
-        pauseStateSteps = 0;
-        currentDistance = 0;
-        elapseTime = 0;
+        tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(currentSportEntry.getParticipantNum())));
 
         //外部存储设备权限请求
         if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
@@ -646,7 +671,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
-
 
         elapseTimeRunnable = new Runnable() {
             public void run() {
@@ -701,6 +725,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
             }
         });
+    }
+
+    public void setFasterSportItem(String sportItem, int targetDistance, float targetSpeed) {
+        tvFasterItemSportName.setText(sportItem);
+        if (targetDistance != -1) {
+            tvFasterTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetDistance)));
+        } else {
+            tvFasterTargetDistance.setText("- ");
+        }
+
+        if (targetSpeed != -1) {
+            tvFasterTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)) + " ");
+        } else {
+            tvFasterTargetSpeed.setText("- ");
+        }
+    }
+
+    public void setCurrentSportItem(String sportItem, int targetDistance, float targetSpeed) {
+        tvCurrentItemSportName.setText(sportItem);
+        tvCurrentTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetDistance)));
+        tvCurrentTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)) + " ");
+    }
+
+    public void setCurrentSportStatus(String sportItem, int currentdistance, float currentSpeed) {
+        tvCurrentStatusName.setText(sportItem);
+        tvCurrentStatusDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentdistance)));
+        tvCurrentStatusSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentSpeed)) + " ");
     }
 
     /**
@@ -839,9 +890,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
 
                 if (state == STATE_NORMAL) {
-                    DLOG.d(TAG, "sportEntry.getId():" + sportEntry.getId());
+                    DLOG.d(TAG, "currentSportEntry.getId():" + currentSportEntry.getId());
                     startTime = System.currentTimeMillis();
-                    ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
+                    ServerInterface.instance().runningActivitiesStart(TAG, currentSportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                             if (errCode == 0) {
