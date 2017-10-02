@@ -25,6 +25,7 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -163,7 +164,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private RelativeLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
     private TextView tvPause;
-    private LinearLayout llLocationHint;
+    // private LinearLayout llLocationHint;
 
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
@@ -319,12 +320,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Bundle bundle = getIntent().getExtras();
         // currentSportEntry = bundle.getParcelable("currentSportEntry");
         sportEntryDataList = bundle.getParcelableArrayList("sportEntryDataList");
+        DLOG.d(TAG, "sportEntryDataList.toString():" + sportEntryDataList.toString());
         if (sportEntryDataList.size() >= 1) {
             currentLevel = 0;
             currentSportEntry = sportEntryDataList.get(currentLevel);
             if (sportEntryDataList.size() >= 2) {
                 fasterLevel = 1;
                 fasterSportEntry = sportEntryDataList.get(fasterLevel);
+            } else {
+                fasterLevel = -1;
+                fasterSportEntry = null;
             }
         }
 
@@ -466,33 +471,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             DLOG.d(TAG, "locationType:" + locationType);
             //定位成功
-            if (errorCode != 0 || locationType != 1) {
-                String errText = "正在定位中，GPS信号弱";
+            // if (errorCode != 0 || locationType != 1) {
+            //     String errText = "正在定位中，GPS信号弱";
+            //     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+            //     return;
+            // } else {
+            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            DLOG.d(TAG, "newLatLng: " + newLatLng);
+            // 判断第一次，第一次会提示
+            if (lastLatLng == null) {
+                String errText = "定位成功";
+                firstLocation = location;
+                firstLocationType = locationType;
+                // llLocationHint.setVisibility(View.GONE);
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                DLOG.d(TAG, "newLatLng: " + newLatLng);
-                // 判断第一次，第一次会提示
-                if (lastLatLng == null) {
-                    String errText = "定位成功";
-                    firstLocation = location;
-                    firstLocationType = locationType;
-                    llLocationHint.setVisibility(View.GONE);
-                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    locationDialog.dismissDialog();
+                locationDialog.dismissDialog();
 
-                    //TODO 待删除
-                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
-                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                //TODO 待删除
+                //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                    aMap.moveCamera(cu);
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                aMap.moveCamera(cu);
 
-                    btStart.setVisibility(View.VISIBLE);
-                }
+                btStart.setVisibility(View.VISIBLE);
             }
+            // }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 //                DLOG.writeToInternalFile(msg);
@@ -539,6 +544,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         if (currentDistance > currentSportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
                             targetFinishedTime = elapseTime;
+                            tvCurrentTargetDistance.setTextColor(getResources().getColor(R.color.green_primary));
                         }
 
                         tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
@@ -549,21 +555,51 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             tvCurrentStatusSpeed.setText(currentSpeed.toString() + " ");
                         }
 
+                        Log.d(TAG, "currentSpeed.floatValue():" + currentSpeed.floatValue());
+                        Log.d(TAG, "fasterSportEntry.getTargetSpeed():" + fasterSportEntry.getTargetSpeed());
+                        Log.d(TAG, "fasterLevel:" + fasterLevel);
+                        Log.d(TAG, "currentLevel:" + currentLevel);
+                        Log.d(TAG, "currentSportEntry.getTargetSpeed():" + currentSportEntry.getTargetSpeed());
                         // 目前有更快的项目，并且当前速度大于或等于更快项目的达标速度，更换当前项目为更快的项目
-                        if (fasterLevel != -1 && currentSpeed.floatValue() >= fasterSportEntry.getTargetSpeed()) {
+                        if (fasterSportEntry != null && currentSpeed.floatValue() >= fasterSportEntry.getTargetSpeed()) {
 
+                            currentSportEntry = sportEntryDataList.get(fasterLevel);
+                            currentLevel = fasterLevel;
                             // 设置当前项目
-                            setCurrentSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+                            setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
+                            // 设置当前状态名字
+                            tvCurrentStatusName.setText(currentSportEntry.getName());
 
-                            if (fasterLevel < sportEntryDataList.size() && fasterLevel == sportEntryDataList.size() - 1) {
-                                // 已经没有最快的项目了
-                                fasterLevel = -1;
-                                setFasterSportItem("无", -1, -1);
-                            } else {
-                                // 还有更快的项目，更新fasterSportEntry
-                                fasterLevel ++;
-                                fasterSportEntry = sportEntryDataList.get(fasterLevel);
+                            // TODO
+                            if (fasterLevel >= 1 && fasterLevel < sportEntryDataList.size()) {
+                                if (fasterLevel == sportEntryDataList.size() - 1) {
+                                    // 已经没有最快的项目了
+                                    fasterLevel = -1;
+                                    fasterSportEntry = null;
+                                    setFasterSportItem("无", -1, -1);
+                                } else {
+                                    // 还有更快的项目，更新fasterSportEntry
+                                    fasterLevel++;
+                                    fasterSportEntry = sportEntryDataList.get(fasterLevel);
+                                    setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+                                }
+                            }
+                        }
+
+                        // 如果当前速度小于当前项目的达标速度，
+                        if (currentSpeed.floatValue() < currentSportEntry.getTargetSpeed()) {
+                            // 如果当前项目不是最低级别的项目
+                            if (currentLevel > 0 && currentLevel < sportEntryDataList.size() - 1) {
+                                fasterLevel = currentLevel;
+                                fasterSportEntry = currentSportEntry;
+                                currentLevel--;
+                                currentSportEntry = sportEntryDataList.get(currentLevel);
+                                tvCurrentStatusName.setText(currentSportEntry.getName());
+                                setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
                                 setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+
+                            } else {
+                                // 已经是最低级别，或者是大于项目数量，不作处理。
                             }
                         }
                     }
@@ -660,7 +696,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                     setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
                 }
+            } else {
+                setFasterSportItem("无", -1, -1);
             }
+        } else {
+            // 没有项目
         }
 
         tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(currentSportEntry.getParticipantNum())));
@@ -1140,7 +1180,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
         tvResult = (TextView) findViewById(R.id.tvResult);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
-        llLocationHint = (LinearLayout) findViewById(R.id.llLocationHint);
+        // llLocationHint = (LinearLayout) findViewById(R.id.llLocationHint);
 
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);

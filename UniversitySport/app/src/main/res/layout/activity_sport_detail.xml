@@ -60,7 +60,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:textColor="#00CC00"
+                        tools:text="已达标"
                         android:textSize="14dp"
+                        android:layout_marginEnd="8dp"
                         android:visibility="gone"/>
 
                     <ImageView
@@ -308,34 +310,6 @@
                             android:paddingStart="@dimen/dimen_2"
                             android:text="@string/speedNotation"
                             android:textSize="12dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    android:paddingEnd="20dp">
-
-                    <TextView
-                        android:id="@+id/tvTargetTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="当前速度"
-                        android:textSize="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
