@@ -553,6 +553,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         // 解决速度过大
                         if (currentSpeed.compareTo(new BigDecimal(10)) < 0) {
                             tvCurrentStatusSpeed.setText(currentSpeed.toString() + " ");
+                            if (currentSpeed.floatValue() >= sportEntryDataList.get(0).getTargetSpeed()) {
+                                tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.green_primary));
+                            }
                         }
 
                         Log.d(TAG, "currentSpeed.floatValue():" + currentSpeed.floatValue());
@@ -598,9 +601,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
                                 setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
 
+                            } else if (currentLevel == 0) {
+                                // 已经是最低级别，字体颜色变红
+                                tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.red_primary_dark));
                             } else {
-                                // 已经是最低级别，或者是大于项目数量，不作处理。
+                                // 或者是大于项目数量，不作处理，应该是异常情况
                             }
+
                         }
                     }
 
