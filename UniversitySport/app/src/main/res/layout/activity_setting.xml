@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/white"
+            android:background="@color/colorWhite"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -84,7 +84,7 @@
                 android:id="@+id/rlAboutUS"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:orientation="horizontal">
 
                 <TextView

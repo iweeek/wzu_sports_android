@@ -73,7 +73,7 @@
                 android:id="@+id/llCurrentInfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
@@ -203,7 +203,7 @@
                 android:id="@+id/rlCurConsumeEnergy"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -251,7 +251,7 @@
                 android:id="@+id/llCurrentItemContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
@@ -427,7 +427,7 @@
                 android:background="#cc66A6FE"
                 android:gravity="center"
                 android:text="开始运动"
-                android:textColor="@color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18dp"
                 android:visibility="gone"/>
         </RelativeLayout>
@@ -462,7 +462,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="85dp"
             android:text="滑动停止"
-            android:textColor="@color/white"
+            android:textColor="@color/colorWhite"
             android:textSize="18dp"
             android:visibility="gone"/>
 

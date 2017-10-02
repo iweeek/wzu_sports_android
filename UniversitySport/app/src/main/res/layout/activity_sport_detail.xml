@@ -82,7 +82,7 @@
                 android:id="@+id/llFasterContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -202,7 +202,7 @@
                 android:id="@+id/llCurrentItemContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -322,7 +322,7 @@
                 android:id="@+id/llCurrentStatusContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -458,7 +458,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/consumeTime"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorWhite"
                         android:textSize="12dp"/>
                 </RelativeLayout>
 
@@ -472,7 +472,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:text="0:00:00"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorWhite"
                         android:textSize="32dp"/>
                 </RelativeLayout>
             </LinearLayout>
@@ -481,7 +481,7 @@
                 android:id="@+id/rlCurConsumeEnergy"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@color/white"
+                android:background="@color/colorWhite"
                 android:visibility="gone">
 
                 <View
@@ -561,7 +561,7 @@
             android:background="#cc66A6FE"
             android:gravity="center"
             android:text="开始运动"
-            android:textColor="@color/white"
+            android:textColor="@color/colorWhite"
             android:textSize="18dp"
             android:visibility="gone"/>
 
@@ -579,7 +579,7 @@
                 android:background="#cc66A6FE"
                 android:gravity="center"
                 android:text="继续"
-                android:textColor="@color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18dp"/>
 
             <Button
@@ -590,7 +590,7 @@
                 android:background="#CCFF0000"
                 android:gravity="center"
                 android:text="结束"
-                android:textColor="@color/white"
+                android:textColor="@color/colorWhite"
                 android:textSize="18dp"/>
         </LinearLayout>
     </RelativeLayout>
@@ -628,7 +628,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
             android:text="滑动停止"
-            android:textColor="@color/white"
+            android:textColor="@color/colorWhite"
             android:textSize="18dp"
             android:translationZ="20px"
             android:visibility="gone"/>

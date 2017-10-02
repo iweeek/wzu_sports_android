@@ -66,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right"
-        android:background="@color/white">
+        android:background="@color/colorWhite">
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nv_sports_score_navigation"
