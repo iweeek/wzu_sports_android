@@ -301,7 +301,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     @Override
     public void initView() {
-        llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
+        llLacationHint = (LinearLayout) findViewById(R.id.llLocationHint);
         tvPause = (TextView) findViewById(R.id.tvPause);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);

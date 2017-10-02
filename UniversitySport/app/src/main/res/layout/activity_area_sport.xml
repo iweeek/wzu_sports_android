@@ -209,7 +209,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/llLacationHint"
+        android:id="@+id/llLocationHint"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center">
@@ -236,7 +236,7 @@
             android:background="#cc66A6FE"
             android:gravity="center"
             android:text="开始运动"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="18dp"
             android:visibility="gone"/>
 
@@ -254,7 +254,7 @@
                 android:background="#cc66A6FE"
                 android:gravity="center"
                 android:text="继续"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/white"
                 android:textSize="18dp"/>
 
             <Button
@@ -265,7 +265,7 @@
                 android:background="#CCFF0000"
                 android:gravity="center"
                 android:text="结束"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/white"
                 android:textSize="18dp"/>
         </LinearLayout>
     </RelativeLayout>
@@ -299,7 +299,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="85dp"
         android:text="滑动停止"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/white"
         android:textSize="18dp"
         android:visibility="gone"/>
 

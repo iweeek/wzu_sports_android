@@ -3,7 +3,7 @@
                                          xmlns:app="http://schemas.android.com/apk/res-auto"
                                          android:layout_width="match_parent"
                                          android:layout_height="match_parent"
-                                         android:background="@color/colorWhite"
+                                         android:background="@color/white"
                                          android:orientation="vertical">
 
     <LinearLayout
@@ -29,7 +29,7 @@
                     android:background="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"
                     app:oval="true"
-                    app:riv_border_color="@color/colorWhite"
+                    app:riv_border_color="@color/white"
                     app:riv_border_width="3dp"/>
 
                 <ImageView
@@ -59,7 +59,7 @@
                     android:background="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"
                     app:oval="true"
-                    app:riv_border_color="@color/colorWhite"
+                    app:riv_border_color="@color/white"
                     app:riv_border_width="3dp"/>
 
                 <ImageView
@@ -90,7 +90,7 @@
                     android:background="@drawable/ic_default_avatar"
                     android:scaleType="centerCrop"
                     app:oval="true"
-                    app:riv_border_color="@color/colorWhite"
+                    app:riv_border_color="@color/white"
                     app:riv_border_width="3dp"/>
 
                 <ImageView

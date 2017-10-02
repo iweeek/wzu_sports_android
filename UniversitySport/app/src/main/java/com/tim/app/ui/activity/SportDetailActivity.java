@@ -156,7 +156,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private RelativeLayout rlCurConsumeEnergy;
     private TextView tvCurConsumeEnergy;
     private TextView tvPause;
-    private LinearLayout llLacationHint;
+    private LinearLayout llLocationHint;
 
     static final int STATE_NORMAL = 0;//初始状态
     static final int STATE_STARTED = 1;//已开始
@@ -457,7 +457,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     String errText = "定位成功";
                     firstLocation = location;
                     firstLocationType = locationType;
-                    llLacationHint.setVisibility(View.GONE);
+                    llLocationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                     locationDialog.dismissDialog();
 
@@ -1074,17 +1074,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initView() {
-        llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
+        llLocationHint = (LinearLayout) findViewById(R.id.llLocationHint);
         //        ibBack = (ImageButton) findViewById(R.id.ibBack);
         //        ibBack.setOnClickListener(this);
-        tvSportName = (TextView) findViewById(R.id.tvSportName);
+        tvSportName = (TextView) findViewById(R.id.tvCurrentSportName);
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
-        tvCurrentDistance = (TextView) findViewById(R.id.tv_current_distance);
-        tvAverSpeed = (TextView) findViewById(R.id.tv_average_speed);
-        tvTargetDistance = (TextView) findViewById(R.id.tv_current_target_distance);
+        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
+        tvAverSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
+        tvTargetDistance = (TextView) findViewById(R.id.tvCurrentTargetDistance);
         //        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
-        tvTargetSpeed = (TextView) findViewById(R.id.tv_current_target_speed);
+        tvTargetSpeed = (TextView) findViewById(R.id.tvCurrentTargetSpeed);
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
@@ -1102,7 +1102,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvResult = (TextView) findViewById(R.id.tvResult);
         //        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
         //        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
-        llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
+        llTargetContainer = (LinearLayout) findViewById(R.id.llCurrentItemContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
