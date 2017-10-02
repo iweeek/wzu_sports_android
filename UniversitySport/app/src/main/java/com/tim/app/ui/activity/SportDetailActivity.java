@@ -97,10 +97,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SportEntry sportEntry;
     private HistoryRunningSportEntry historySportEntry;
 
-    //TODO
-    //    private FileOutputStream fos;
-    //    private int counter = 0;
-
     //第三方
     private MapView mapView;
     private AMap aMap;
@@ -126,31 +122,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private double stepPerSecond = 0; //步幅
     private LocationManager locationManager;
 
-    private TextView tvSportName;
+    private LinearLayout llFasterItemContainer;
+    private LinearLayout llCurrentItemContainer;
+    private LinearLayout llCurrentStatusContainer;
+
+    private TextView tvFasterItemSportName;
+    private TextView tvCurrentItemSportName;
+    private TextView tvCurrentStatusName;
+
+    private TextView tvFasterTargetDistance;
+    private TextView tvCurrentTargetDistance;
+    private TextView tvCurrentStatusDistance;
+
+    private TextView tvFasterTargetSpeed;
+    private TextView tvCurrentTargetSpeed;
+    private TextView tvCurrentStatusSpeed;
+
     private TextView tvParticipantNum;
-    private TextView tvCurrentDistance;
+    private TextView tvResult;
     private TextView tvElapseTime;
-    private TextView tvAverSpeed;
-    private TextView tvTargetDistance;
-    private TextView tvTargetTime;
-    private TextView tvTargetSpeed;
-    private TextView tvResult;//运动结果
     private ImageView ivLocation;
-    private TextView tvStepTitle;
-    //    private TextView tvCurrentStep;//暂时注释，记得全部放开注释
-    private LinearLayout llTargetContainer;
-
-    private TextView tvRemainPower;
-
-    private RelativeLayout rlRoot;
     private RelativeLayout rlBottom;
     private Button btStart;
-    private LinearLayout llBottom;
-    private Button btContinue;
-    private Button btStop;
+
     private SlideUnlockView slideUnlockView;
     private LocationDialog locationDialog;
     private ProgressDialog progressDialog;
+    private TextView tvRemainPower;
 
     private LinearLayout llCurrentInfo;
     private RelativeLayout rlCurConsumeEnergy;
@@ -530,13 +528,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             targetFinishedTime = elapseTime;
                         }
 
-                        tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
+                        tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
                         bdDividend = new BigDecimal(currentDistance);
                         bdDevisor = new BigDecimal(elapseTime);
                         BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                         // 解决速度过大
                         if (bdResult.compareTo(new BigDecimal(10)) < 0) {
-                            tvAverSpeed.setText(bdResult.toString() + " ");
+                            tvCurrentStatusSpeed.setText(bdResult.toString() + " ");
                         }
                     }
 
@@ -611,7 +609,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
         if (!TextUtils.isEmpty(sportEntry.getName())) {
-            tvSportName.setText(sportEntry.getName());
+            tvCurrentItemSportName.setText(sportEntry.getName());
+            tvCurrentStatusName.setText(sportEntry.getName());
         }
 
         //        if (sportEntry.getParticipantNum() > 0) {
@@ -621,7 +620,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        }
 
         if (sportEntry.getQualifiedDistance() > 0) {
-            tvTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(sportEntry.getQualifiedDistance())));
+            tvCurrentTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(sportEntry.getQualifiedDistance())));
         }
 
         //        if (sportEntry.getTargetTime() > 0) {
@@ -629,12 +628,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        }
 
         //        tvTargetSpeedLabel.setText(getString(R.string.targetTitleSpeed));
-        tvTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()) + " ");
+        tvCurrentTargetSpeed.setText(getString(R.string.digitalPlaceholder, sportEntry.getTargetSpeed()) + " ");
 
-        tvCurrentDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)) + " ");
+        tvCurrentStatusDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentDistance)) + " ");
         //        tvElapseTime.setText(String.valueOf(elapseTime / 60));
         //        tvCurrentStep.setText("0 步");
-        tvAverSpeed.setText("0.00 ");
+        tvCurrentStatusSpeed.setText("0.00 ");
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
@@ -686,9 +685,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
                                     Double.toString(elapseTime), SPEED_SCALE);
 
-                            tvAverSpeed.setText(bd.toString() + " ");
+                            tvCurrentStatusSpeed.setText(bd.toString() + " ");
                         } else {
-                            tvAverSpeed.setText("0.00 ");
+                            tvCurrentStatusSpeed.setText("0.00 ");
                         }
 
                         tvParticipantNum.setVisibility(View.GONE);
@@ -863,7 +862,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         // ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                        // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
+                                                        // llCurrentItemContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
 
                                                         // btStart.setVisibility(View.GONE);
                                                         // rlBottom.setVisibility(View.GONE);
@@ -1025,7 +1024,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             }
 
                             rlBottom.setVisibility(View.VISIBLE);
-                            llBottom.setVisibility(View.GONE);
+                            // llBottom.setVisibility(View.GONE);
                             btStart.setVisibility(View.VISIBLE);
                             btStart.setText("查看锻炼结果");
 
@@ -1074,35 +1073,45 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     @Override
     public void initView() {
-        llLocationHint = (LinearLayout) findViewById(R.id.llLocationHint);
-        //        ibBack = (ImageButton) findViewById(R.id.ibBack);
-        //        ibBack.setOnClickListener(this);
-        tvSportName = (TextView) findViewById(R.id.tvCurrentSportName);
+        tvFasterItemSportName = (TextView) findViewById(R.id.tvFasterItemSportName);
+        tvCurrentItemSportName = (TextView) findViewById(R.id.tvCurrentItemSportName);
+        tvCurrentStatusName = (TextView) findViewById(R.id.tvCurrentStatusSportName);
+
+
+        tvFasterTargetDistance = (TextView) findViewById(R.id.tvFasterTargetDistance);
+        tvCurrentTargetDistance = (TextView) findViewById(R.id.tvCurrentTargetDistance);
+        tvCurrentStatusDistance = (TextView) findViewById(R.id.tvCurrentStatusDistance);
+
+        tvFasterTargetSpeed = (TextView) findViewById(R.id.tvFasterTargetSpeed);
+        tvCurrentTargetSpeed = (TextView) findViewById(R.id.tvCurrentTargetSpeed);
+        tvCurrentStatusSpeed = (TextView) findViewById(R.id.tvCurrentStatusSpeed);
+
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
-        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
-        tvAverSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
-        tvTargetDistance = (TextView) findViewById(R.id.tvCurrentTargetDistance);
-        //        tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
+        tvResult = (TextView) findViewById(R.id.tvResult);
         tvElapseTime = (TextView) findViewById(R.id.tvElapsedTime);
-        tvTargetSpeed = (TextView) findViewById(R.id.tvCurrentTargetSpeed);
+        llLocationHint = (LinearLayout) findViewById(R.id.llLocationHint);
+
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
-        rlRoot = (RelativeLayout) findViewById(R.id.rlRoot);
 
         btStart = (Button) findViewById(R.id.btStart);
         btStart.setOnClickListener(this);
         //TODO
         //        btStart.setVisibility(View.VISIBLE);
 
-        llBottom = (LinearLayout) findViewById(R.id.llBottom);
-        btContinue = (Button) findViewById(R.id.btContinue);
-        btStop = (Button) findViewById(R.id.btStop);
-        tvResult = (TextView) findViewById(R.id.tvResult);
-        //        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
-        //        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
-        llTargetContainer = (LinearLayout) findViewById(R.id.llCurrentItemContainer);
+        // 暂停与继续
+        // llBottom = (LinearLayout) findViewById(R.id.llBottom);
+        // btContinue = (Button) findViewById(R.id.btContinue);
+        // btContinue.setOnClickListener(this);
+        // btStop = (Button) findViewById(R.id.btStop);
+        // btStop.setOnClickListener(this);
+        // tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
+        // tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
+        llFasterItemContainer = (LinearLayout) findViewById(R.id.llFasterItemContainer);
+        llCurrentItemContainer = (LinearLayout) findViewById(R.id.llCurrentItemContainer);
+        llCurrentStatusContainer = (LinearLayout) findViewById(R.id.llCurrentStatusContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
@@ -1112,9 +1121,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
         ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
 
-
-        btContinue.setOnClickListener(this);
-        btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
         ivShowSportInfo.setOnClickListener(this);
         ivHideSportInfo.setOnClickListener(this);

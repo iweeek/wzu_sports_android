@@ -22,7 +22,7 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:id="@+id/tvCurrentSportName"
+            android:id="@+id/tvCurrentItemSportName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -33,7 +33,7 @@
             android:id="@+id/tvParticipantNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tvCurrentSportName"
+            android:layout_below="@id/tvCurrentItemSportName"
             android:textColor="#d5dadb"
             android:textSize="14dp" />
 

@@ -71,7 +71,7 @@ public class SportAdapter extends BaseRecyclerAdapter<BaseRecyclerAdapter.BaseRe
         holder.setLayoutParams(R.id.rlContainer, new RelativeLayout.LayoutParams(RT.getScreenWidth(), (int) (RT.getScreenWidth() * 0.43)));
 
         if (!TextUtils.isEmpty(data.getName())) {
-            holder.setText(R.id.tvCurrentSportName, data.getName());
+            holder.setText(R.id.tvCurrentItemSportName, data.getName());
         }
 
         if (SportEntry.RUNNING_SPORT == data.getType()) {

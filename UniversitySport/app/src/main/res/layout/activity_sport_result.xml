@@ -42,7 +42,7 @@
                 android:paddingTop="10dp">
 
                 <TextView
-                    android:id="@+id/tvCurrentSportName"
+                    android:id="@+id/tvCurrentItemSportName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -102,7 +102,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvCurrentDistance"
+                            android:id="@+id/tvCurrentStatusDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0 "
@@ -174,7 +174,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvAverageSpeed"
+                            android:id="@+id/tvCurrentStatusSpeed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0.00 "

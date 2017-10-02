@@ -847,11 +847,11 @@ public class SportResultActivity extends ToolbarActivity {
 
         //        ibBack = (ImageButton) findViewById(R.id.ibBack);
         //        ibBack.setOnClickListener(this);
-        tvSportName = (TextView) findViewById(R.id.tvCurrentSportName);
+        tvSportName = (TextView) findViewById(R.id.tvCurrentItemSportName);
 
-        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
+        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentStatusDistance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
-        tvAverSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
+        tvAverSpeed = (TextView) findViewById(R.id.tvCurrentStatusSpeed);
         tvAverSpeed.setText("0.00");
 
         tvTargetDistance = (TextView) findViewById(R.id.tvCurrentTargetDistance);
