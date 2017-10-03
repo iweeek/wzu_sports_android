@@ -119,11 +119,12 @@ public class ServerInterface {
      * @param targetFinishedTime 目标时间
      * @param callback
      */
-    public void runningActivitiesEnd(String tag, int id, int distance, int stepCount, long costTime, long targetFinishedTime,
+    public void runningActivitiesEnd(String tag, int id, int runningSportId, int distance, int stepCount, long costTime, long targetFinishedTime,
                                      ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITIES + "/end";
         HashMap params = new HashMap();
         params.put("id", id);
+        params.put("runningSportId", runningSportId);
         params.put("distance", distance);
         params.put("stepCount", stepCount);
         params.put("costTime", costTime);

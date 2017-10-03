@@ -1085,7 +1085,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         DLOG.d(TAG, "runningActivitiesEnd");
         //提交本次运动数据，更新UI
         ServerInterface.instance().runningActivitiesEnd(
-                TAG, sportRecordId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
+                TAG, sportRecordId, currentSportEntry.getId(), currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
                     @Override
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         DLOG.d(TAG, "errCode:" + errCode);
