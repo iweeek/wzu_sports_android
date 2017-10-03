@@ -26,6 +26,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.application.library.log.DLOG;
 import com.application.library.runtime.event.EventManager;
@@ -99,7 +100,7 @@ public class SensorService extends Service implements SensorEventListener {
     public static float average = 0;
 
     // 本算法使用的当前步数
-    public static int stepCountCal = 0;
+    public int stepCountCal = 0;
     // Step_Detector传感器使用的当前步数
     public static int detectorStep = 0;
 
@@ -197,11 +198,10 @@ public class SensorService extends Service implements SensorEventListener {
                     gravity.setZ(event.values[2]);
                     break;
                 case Sensor.TYPE_STEP_DETECTOR:
-                    detectorStep++;
-                    // saveAcceleration(event.timestamp, detectorStep);
-                    DLOG.e("StepInAcceleration", "传感器计步： " + detectorStep++);
-                    EventManager.ins().sendEvent(EventTag.ON_DETECTOR_CHANGE, 0, 0, stepCountCal);
-
+                    // 暂时不使用
+                    // detectorStep++;
+                    // DLOG.e("StepInAcceleration", "传感器计步： " + detectorStep);
+                    // EventManager.ins().sendEvent(EventTag.ON_DETECTOR_CHANGE, 0, 0, detectorStep);
                     break;
                 case Sensor.TYPE_GYROSCOPE:
                     // This time step's delta rotation to be multiplied by the current rotation
@@ -275,16 +275,16 @@ public class SensorService extends Service implements SensorEventListener {
                 boolean a = timeOfNow - timeOfLastPeak >= 250;
                 boolean b = (timeOfNow - timeOfLastPeak) <= 2000;
                 boolean c = peakOfWave - valleyOfWave >= thresholdValue;
-                DLOG.d(TAG, "timeOfNow: " + timeOfNow);
-                DLOG.d(TAG, "timeOfLastPeak: " + timeOfLastPeak);
-                DLOG.d(TAG, "timeOfNow - timeOfLastPeak: " + (timeOfNow - timeOfLastPeak));
-                DLOG.d(TAG, "peakOfWave: " + peakOfWave);
-                DLOG.d(TAG, "valleyOfWave: " + valleyOfWave);
-                DLOG.d(TAG, "thresholdValue: " + thresholdValue);
-                DLOG.e(TAG, "peakOfWave - valleyOfWave: " + (peakOfWave - valleyOfWave));
-                DLOG.d(TAG, "a:" + a);
-                DLOG.d(TAG, "b:" + b);
-                DLOG.d(TAG, "c:" + c);
+                // DLOG.d(TAG, "timeOfNow: " + timeOfNow);
+                // DLOG.d(TAG, "timeOfLastPeak: " + timeOfLastPeak);
+                // DLOG.d(TAG, "timeOfNow - timeOfLastPeak: " + (timeOfNow - timeOfLastPeak));
+                // DLOG.d(TAG, "peakOfWave: " + peakOfWave);
+                // DLOG.d(TAG, "valleyOfWave: " + valleyOfWave);
+                // DLOG.d(TAG, "thresholdValue: " + thresholdValue);
+                // DLOG.e(TAG, "peakOfWave - valleyOfWave: " + (peakOfWave - valleyOfWave));
+                // DLOG.d(TAG, "a:" + a);
+                // DLOG.d(TAG, "b:" + b);
+                // DLOG.d(TAG, "c:" + c);
 
                 if (a && b && c) {
                     timeOfThisPeak = timeOfNow;
@@ -335,12 +335,12 @@ public class SensorService extends Service implements SensorEventListener {
 
         if (!isDirectionUp && lastStatus) {
             peakOfWave = oldValue;
-            DLOG.d(TAG, "peakOfWave:" + peakOfWave);
+            // DLOG.d(TAG, "peakOfWave:" + peakOfWave);
             return true;
             //上一次是向下，本次是向上
         } else if (!lastStatus && isDirectionUp) {
             valleyOfWave = oldValue;
-            DLOG.d(TAG, "valleyOfWave:" + valleyOfWave);
+            // DLOG.d(TAG, "valleyOfWave:" + valleyOfWave);
             return false;
         } else {
             return false;
