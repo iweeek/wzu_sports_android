@@ -233,6 +233,7 @@ public class ServerInterface {
                 "    isEnabled\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
+                "    qualifiedVelocity\n" +
                 "    imgUrl\n" +
                 "  }\n" +
                 "}\n";

@@ -549,7 +549,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
                         BigDecimal currentSpeed = MathUtil.bigDecimalDivide(String.valueOf(currentDistance),
-                                String.valueOf(elapseTime), SPEED_SCALE);
+                                String.valueOf(elapseTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
                         // 解决速度过大
                         if (currentSpeed.compareTo(new BigDecimal(10)) < 0) {
                             tvCurrentStatusSpeed.setText(currentSpeed.toString() + " ");
@@ -754,7 +754,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         //做保护
                         if (elapseTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), SPEED_SCALE);
+                                    Double.toString(elapseTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
 
                             tvCurrentStatusSpeed.setText(bd.toString() + " ");
                         } else {

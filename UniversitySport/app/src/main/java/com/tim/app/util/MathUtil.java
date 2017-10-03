@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 
 public class MathUtil {
 
-    public static BigDecimal bigDecimalDivide(String doubleA, String doubleB, int scale) {
+    public static BigDecimal bigDecimalDivide(String doubleA, String doubleB, int scale, int roundMode) {
         BigDecimal x = new BigDecimal(doubleA);
         BigDecimal y = new BigDecimal(doubleB);
-        BigDecimal bd = x.divide(y, scale, BigDecimal.ROUND_DOWN);
+        BigDecimal bd = x.divide(y, scale, roundMode);
         return bd;
     }
 }

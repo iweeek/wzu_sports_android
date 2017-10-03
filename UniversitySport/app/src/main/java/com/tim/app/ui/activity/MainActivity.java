@@ -347,9 +347,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setQualifiedDistance(distance);
 
                             double time = jsonObject.getDouble("qualifiedCostTime");
-                            BigDecimal targetSpeed = MathUtil.bigDecimalDivide(Double.toString(distance),
-                                    Double.toString(time), SPEED_SCALE);
-                            sportEntry.setTargetSpeed(targetSpeed.floatValue());
+                            float qualifiedVelocity = Float.parseFloat(jsonObject.getString("qualifiedVelocity"));
+                            // BigDecimal targetSpeed = MathUtil.bigDecimalDivide(Double.toString(distance),
+                            //         Double.toString(time), SPEED_SCALE);
+                            sportEntry.setTargetSpeed(qualifiedVelocity);
+
 
                             sportEntry.setType(SportEntry.RUNNING_SPORT);
                             sportEntry.setName(jsonObject.getString("name"));
@@ -357,7 +359,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setImgUrl(jsonObject.getString("imgUrl"));
 
                             BigDecimal targetTime = MathUtil.bigDecimalDivide(Double.toString(time),
-                                    Double.toString(60), SPEED_SCALE);
+                                    Double.toString(60), SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                             sportEntry.setTargetTime(Integer.valueOf(targetTime.toBigInteger().intValue()));
 
                             sportEntryDataList.add(sportEntry);

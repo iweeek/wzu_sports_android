@@ -335,7 +335,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                             // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), SPEED_SCALE);
+                                    Double.toString(elapseTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -349,7 +349,7 @@ public class SportResultActivity extends ToolbarActivity {
                             // RoundingMode.HALF_UP
                             // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
-                                    Double.toString(targetTime), SPEED_SCALE);
+                                    Double.toString(targetTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
@@ -484,7 +484,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                         if (elapseTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), SPEED_SCALE);
+                                    Double.toString(elapseTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -496,7 +496,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                         if (targetTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
-                                    Double.toString(targetTime), SPEED_SCALE);
+                                    Double.toString(targetTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
