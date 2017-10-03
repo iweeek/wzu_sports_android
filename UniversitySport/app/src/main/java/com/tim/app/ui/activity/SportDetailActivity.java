@@ -471,33 +471,33 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (location != null) {
             DLOG.d(TAG, "locationType:" + locationType);
             //定位成功
-            // if (errorCode != 0 || locationType != 1) {
-            //     String errText = "正在定位中，GPS信号弱";
-            //     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-            //     return;
-            // } else {
-            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            DLOG.d(TAG, "newLatLng: " + newLatLng);
-            // 判断第一次，第一次会提示
-            if (lastLatLng == null) {
-                String errText = "定位成功";
-                firstLocation = location;
-                firstLocationType = locationType;
-                // llLocationHint.setVisibility(View.GONE);
+            if (errorCode != 0) {
+                String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                locationDialog.dismissDialog();
+                return;
+            } else {
+                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                DLOG.d(TAG, "newLatLng: " + newLatLng);
+                // 判断第一次，第一次会提示
+                if (lastLatLng == null) {
+                    String errText = "定位成功";
+                    firstLocation = location;
+                    firstLocationType = locationType;
+                    // llLocationHint.setVisibility(View.GONE);
+                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                    locationDialog.dismissDialog();
 
-                //TODO 待删除
-                //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                //toastText = "调整屏幕缩放比例：" + zoomLevel;
-                //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    //TODO 待删除
+                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                aMap.moveCamera(cu);
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                    aMap.moveCamera(cu);
 
-                btStart.setVisibility(View.VISIBLE);
+                    btStart.setVisibility(View.VISIBLE);
+                }
             }
-            // }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 //                DLOG.writeToInternalFile(msg);
