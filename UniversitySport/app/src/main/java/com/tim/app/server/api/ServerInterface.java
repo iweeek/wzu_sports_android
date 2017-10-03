@@ -142,6 +142,7 @@ public class ServerInterface {
         HashMap params = new HashMap();
         params.put("activityId", activityId);
         params.put("stepCount", stepCount);
+        params.put("stepCountCal", stepCountCal);
         params.put("distance", distance);
         params.put("longitude", longitude);
         params.put("latitude", latitude);
