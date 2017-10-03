@@ -1179,7 +1179,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onResume() {
         super.onResume();
-        if (mapView == null) {
+        if (mapView != null) {
             mapView.onResume();
         }
         if (lastLatLng != null) {
