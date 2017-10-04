@@ -25,7 +25,6 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -98,12 +97,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     // 重要实体
     private SportEntry currentSportEntry = null;
+    private SportEntry fasterSportEntry = null;
+    private SportEntry slowerSportEntry = null;
     // 记录当前运动项目级别
     private int currentLevel = -1;
-
-    private SportEntry fasterSportEntry = null;
     private int fasterLevel = -1;
-
+    private int slowerLevel = -1;
     private List<SportEntry> sportEntryDataList;
     private HistoryRunningSportEntry historySportEntry;
 
@@ -134,18 +133,22 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     private LinearLayout llFasterItemContainer;
     private LinearLayout llCurrentItemContainer;
-    private LinearLayout llCurrentStatusContainer;
+    private LinearLayout llSlowerItemContainer;
+    // private LinearLayout llCurrentStatusContainer;
 
     private TextView tvFasterItemSportName;
     private TextView tvCurrentItemSportName;
-    private TextView tvCurrentStatusName;
+    private TextView tvSlowerItemSportName;
+    // private TextView tvCurrentStatusName;
 
     private TextView tvFasterTargetDistance;
     private TextView tvCurrentTargetDistance;
+    private TextView tvSlowerTargetDistance;
     private TextView tvCurrentStatusDistance;
 
     private TextView tvFasterTargetSpeed;
     private TextView tvCurrentTargetSpeed;
+    private TextView tvSlowerTargetSpeed;
     private TextView tvCurrentStatusSpeed;
 
     private TextView tvParticipantNum;
@@ -320,7 +323,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         Bundle bundle = getIntent().getExtras();
         // currentSportEntry = bundle.getParcelable("currentSportEntry");
         sportEntryDataList = bundle.getParcelableArrayList("sportEntryDataList");
-        DLOG.d(TAG, "sportEntryDataList.toString():" + sportEntryDataList.toString());
+        // DLOG.d(TAG, "sportEntryDataList.toString():" + sportEntryDataList.toString());
         if (sportEntryDataList.size() >= 1) {
             currentLevel = 0;
             currentSportEntry = sportEntryDataList.get(currentLevel);
@@ -459,16 +462,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //屏幕到了锁屏的时间，调暗亮度
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
-        DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
-        DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
-        DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
+        // DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
+        // DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
+        // DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
         if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
             DLOG.d(TAG, "onMyLocationChange turn down light");
         }
 
-        // if (location != null) { this is always true
         DLOG.d(TAG, "locationType:" + locationType);
         //定位成功
         if (errorCode != 0) {
@@ -558,22 +560,26 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
                 }
 
-                Log.d(TAG, "currentSpeed.floatValue():" + currentSpeed.floatValue());
-                Log.d(TAG, "fasterSportEntry.getTargetSpeed():" + fasterSportEntry.getTargetSpeed());
-                Log.d(TAG, "fasterLevel:" + fasterLevel);
-                Log.d(TAG, "currentLevel:" + currentLevel);
-                Log.d(TAG, "currentSportEntry.getTargetSpeed():" + currentSportEntry.getTargetSpeed());
-                // 目前有更快的项目，并且当前速度大于或等于更快项目的达标速度，更换当前项目为更快的项目
+                // Log.d(TAG, "currentSpeed.floatValue():" + currentSpeed.floatValue());
+                // Log.d(TAG, "fasterSportEntry.getTargetSpeed():" + fasterSportEntry.getTargetSpeed());
+                // Log.d(TAG, "fasterLevel:" + fasterLevel);
+                // Log.d(TAG, "currentLevel:" + currentLevel);
+                // Log.d(TAG, "currentSportEntry.getTargetSpeed():" + currentSportEntry.getTargetSpeed());
+
+                // 加档：目前有更快的项目，并且当前速度大于或等于更快项目的达标速度，更换当前项目为更快的项目
                 if (fasterSportEntry != null && currentSpeed.floatValue() >= fasterSportEntry.getTargetSpeed()) {
 
+                    // 设置上一档
+                    slowerLevel = currentLevel;
+                    slowerSportEntry = currentSportEntry;
+                    setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
+
+                    // 设置当前档
                     currentSportEntry = sportEntryDataList.get(fasterLevel);
                     currentLevel = fasterLevel;
-                    // 设置当前项目
                     setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
-                    // 设置当前状态名字
-                    tvCurrentStatusName.setText(currentSportEntry.getName());
 
-                    // TODO
+                    // 设置下一档
                     if (fasterLevel >= 1 && fasterLevel < sportEntryDataList.size()) {
                         if (fasterLevel == sportEntryDataList.size() - 1) {
                             // 已经没有最快的项目了
@@ -587,27 +593,30 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
                         }
                     }
+                } else {
+                    // 没有更快的项目，或者平均速度没有超过达标速度
                 }
 
-                // 如果当前速度小于当前项目的达标速度，
+                // 减档：如果当前速度小于当前项目的达标速度，
                 if (currentSpeed.floatValue() < currentSportEntry.getTargetSpeed()) {
-                    // 如果当前项目不是最低级别的项目
-                    if (currentLevel > 0 && currentLevel < sportEntryDataList.size() - 1) {
+                    // TODO 结合上下文，currentLevel不可能超过运动项目数量
+                    if (currentLevel >= 1/* && currentLevel < sportEntryDataList.size()*/) {
+                        // 如果当前项目不是最低级别的项目
                         fasterLevel = currentLevel;
                         fasterSportEntry = currentSportEntry;
-                        currentLevel--;
-                        currentSportEntry = sportEntryDataList.get(currentLevel);
-                        tvCurrentStatusName.setText(currentSportEntry.getName());
-                        setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
                         setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
 
+                        currentLevel = slowerLevel;
+                        currentSportEntry = slowerSportEntry;
+                        setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
+
+                        slowerLevel--;
+                        slowerSportEntry = sportEntryDataList.get(slowerLevel);
+                        setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
                     } else if (currentLevel == 0) {
                         // 已经是最低级别，字体颜色变红
                         tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.red_primary_dark));
-                    } else {
-                        // 或者是大于项目数量，不作处理，应该是异常情况
                     }
-
                 }
             }
 
@@ -634,12 +643,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         lastSteps = currentSteps;
         lastLatLng = newLatLng;
-        // DLOG.d(TAG, toastText);
-        // } else {
-        //     String errText = "定位失败：" + errorInfo;
-        //     DLOG.e(TAG, errText);
-        //     Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
-        // }
     }
 
     @Override
@@ -689,7 +692,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         // 当前项目以及状态
         if (currentSportEntry != null) {
-
+            setSlowerSportItem("无", -1, -1);
             if (!TextUtils.isEmpty(currentSportEntry.getName()) &&
                     currentSportEntry.getQualifiedDistance() >= 0 && currentSportEntry.getTargetSpeed() >= 0) {
 
@@ -774,31 +777,46 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         });
     }
 
+    public void setSlowerSportItem(String sportItem, int targetDistance, float targetSpeed) {
+        tvSlowerItemSportName.setText(sportItem);
+        if (targetDistance != -1) {
+            tvSlowerTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetDistance)));
+        } else {
+            tvSlowerTargetDistance.setText("-");
+        }
+
+        if (targetSpeed != -1) {
+            tvSlowerTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)));
+        } else {
+            tvSlowerTargetSpeed.setText("-");
+        }
+    }
+
     public void setFasterSportItem(String sportItem, int targetDistance, float targetSpeed) {
         tvFasterItemSportName.setText(sportItem);
         if (targetDistance != -1) {
             tvFasterTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetDistance)));
         } else {
-            tvFasterTargetDistance.setText("- ");
+            tvFasterTargetDistance.setText("-");
         }
 
         if (targetSpeed != -1) {
-            tvFasterTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)) + " ");
+            tvFasterTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)));
         } else {
-            tvFasterTargetSpeed.setText("- ");
+            tvFasterTargetSpeed.setText("-");
         }
     }
 
     public void setCurrentSportItem(String sportItem, int targetDistance, float targetSpeed) {
         tvCurrentItemSportName.setText(sportItem);
         tvCurrentTargetDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetDistance)));
-        tvCurrentTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)) + " ");
+        tvCurrentTargetSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(targetSpeed)));
     }
 
     public void setCurrentSportStatus(String sportItem, int currentdistance, float currentSpeed) {
-        tvCurrentStatusName.setText(sportItem);
+        // TODO tvCurrentStatusName.setText(sportItem);
         tvCurrentStatusDistance.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentdistance)));
-        tvCurrentStatusSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentSpeed)) + " ");
+        tvCurrentStatusSpeed.setText(getString(R.string.digitalPlaceholder, String.valueOf(currentSpeed)));
     }
 
     /**
@@ -1173,15 +1191,18 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     public void initView() {
         tvFasterItemSportName = (TextView) findViewById(R.id.tvFasterItemSportName);
         tvCurrentItemSportName = (TextView) findViewById(R.id.tvCurrentItemSportName);
-        tvCurrentStatusName = (TextView) findViewById(R.id.tvCurrentStatusSportName);
+        tvSlowerItemSportName = (TextView) findViewById(R.id.tvSlowerItemSportName);
+        // tvCurrentStatusName = (TextView) findViewById(R.id.tvCurrentStatusSportName);
 
 
         tvFasterTargetDistance = (TextView) findViewById(R.id.tvFasterTargetDistance);
         tvCurrentTargetDistance = (TextView) findViewById(R.id.tvCurrentTargetDistance);
+        tvSlowerTargetDistance = (TextView) findViewById(R.id.tvSlowerTargetDistance);
         tvCurrentStatusDistance = (TextView) findViewById(R.id.tvCurrentStatusDistance);
 
         tvFasterTargetSpeed = (TextView) findViewById(R.id.tvFasterTargetSpeed);
         tvCurrentTargetSpeed = (TextView) findViewById(R.id.tvCurrentTargetSpeed);
+        tvSlowerTargetSpeed = (TextView) findViewById(R.id.tvSlowerTargetSpeed);
         tvCurrentStatusSpeed = (TextView) findViewById(R.id.tvCurrentStatusSpeed);
 
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
@@ -1209,7 +1230,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         // tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llFasterItemContainer = (LinearLayout) findViewById(R.id.llFasterItemContainer);
         llCurrentItemContainer = (LinearLayout) findViewById(R.id.llCurrentItemContainer);
-        llCurrentStatusContainer = (LinearLayout) findViewById(R.id.llCurrentStatusContainer);
+        llSlowerItemContainer = (LinearLayout) findViewById(R.id.llSlowerItemContainer);
+        // llCurrentStatusContainer = (LinearLayout) findViewById(R.id.llCurrentStatusContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);

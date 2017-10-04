@@ -143,7 +143,9 @@
     <!-- 首页 -->
     <string name="joinPrompt">当前%s人正在参加</string>
     <string name="meter">米</string>
+    <string name="meterWithBracket">(米)</string>
     <string name="speedNotation">米/秒</string>
+    <string name="speedNotationWithBracket">(米/秒)</string>
 
     <string name="averageSpeed">平均速度</string>
     <string name="speed">速度</string>
