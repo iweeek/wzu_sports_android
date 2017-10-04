@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private SportAdapter adapter;
     //    private BadNetworkAdapter badNetworkAdapter;
     private ArrayList<SportEntry> sportEntryDataList;
+    private ArrayList<SportEntry> runningSportEntryList;
     //    private List<BadNetWork> networkDataList;
 
     private EmptyLayout emptyLayout;
@@ -278,6 +279,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         wrvSportType.addFootView(footerView);
 
         sportEntryDataList = new ArrayList<>();
+        runningSportEntryList = new ArrayList<>();
         adapter = new SportAdapter(this, sportEntryDataList);
         wrvSportType.setAdapter(adapter);
 
@@ -308,7 +310,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         DLOG.d(TAG, "position:" + position);
         DLOG.d(TAG, "sportEntry:" + sportEntry);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
-            SportDetailActivity.start(this, sportEntryDataList, sportEntry);
+            SportDetailActivity.start(this, runningSportEntryList, sportEntry);
         } else {
             SportsAreaListActivity.start(this, sportEntry);
         }
@@ -363,6 +365,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setTargetTime(Integer.valueOf(targetTime.toBigInteger().intValue()));
 
                             sportEntryDataList.add(sportEntry);
+                            runningSportEntryList.add(sportEntry);
                         }
                         // wrvSportType.setAdapter(adapter);
                         adapter.setOnItemClickListener(context);

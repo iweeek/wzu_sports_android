@@ -544,9 +544,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 drawLine(lastLatLng, newLatLng, isNormal);
                 currentDistance += distanceInterval;
 
-                if (currentDistance > currentSportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                if (currentDistance >= currentSportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
                     targetFinishedTime = elapseTime;
                     tvCurrentStatusDistance.setTextColor(getResources().getColor(R.color.green_primary));
+                } else if (currentDistance < currentSportEntry.getQualifiedDistance()) {
+                    tvCurrentStatusDistance.setTextColor(getResources().getColor(R.color.red_primary_dark));
                 }
 
                 tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
