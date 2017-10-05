@@ -629,15 +629,16 @@ public class SportResultActivity extends ToolbarActivity {
                 if (mPoints.size() > 1) {
                     //方式一：
                     LatLngBounds bounds = getLatLngBounds(mPoints.get(0), mPoints);//以中心点缩放
+                    //方式二：
+                    // LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
+
                     DLOG.d(TAG, "onClick mNormalPoints.size: " + mPoints.size());
-                    //                    LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
-                    for (LatLng point : mPoints) {
-                        DLOG.d(TAG, "point.latitude:" + point.latitude);
-                        DLOG.d(TAG, "point.longitude:" + point.longitude);
-                        //                        DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
-                    }
-                    //方式二：如下
-                    //                    LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
+                    // LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
+                    // for (LatLng point : mPoints) {
+                    // DLOG.d(TAG, "point.latitude:" + point.latitude);
+                    // DLOG.d(TAG, "point.longitude:" + point.longitude);
+                    // DLOG.writeToInternalFile("point.latitude:" + point.latitude +"point.longitude:" + point.longitude +"\n");
+                    // }
 
                     aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); //平滑移动
 
@@ -704,7 +705,6 @@ public class SportResultActivity extends ToolbarActivity {
                 markerOverlay = new MarkerOverlay(aMap, this.mPoints, this.mPoints.get(0));
                 markerOverlay.addToMap();
                 markerOverlay.zoomToSpanWithCenter();
-                zoomToSpanWithCenter();
                 break;
             //            case ivShowSportInfo:
             //                if (null == showAnimation) {
@@ -924,11 +924,6 @@ public class SportResultActivity extends ToolbarActivity {
     @Override
     protected int getLayoutId() {
         return R.layout.activity_sport_result;
-    }
-
-
-    private void zoomToSpanWithCenter() {
-        markerOverlay.zoomToSpanWithCenter();
     }
 
 }
