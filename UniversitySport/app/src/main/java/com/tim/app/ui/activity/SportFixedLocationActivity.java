@@ -529,8 +529,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             //         "， 当前电量: " + batteryLevel + "%";
             // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-            // TODO drawLine(lastLatLng, newLatLng, isNormal);
-
             //// 向服务器提交数据
             ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
                     location.getLatitude(), locationType, new ResponseCallback() {
@@ -611,7 +609,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         mapView.onSaveInstanceState(outState);
     }
 
-    // TODO 为什么这个没有反应
+    // 为什么这个没有反应
     // @Override
     // public boolean onTouchEvent(MotionEvent event) {
     //     WindowManager.LayoutParams params = getWindow().getAttributes();
@@ -636,7 +634,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     return;
                 }
 
-                // TODO 判断是否在运动范围内
+                // 判断是否在运动范围内
                 boolean isContains = circle.contains(lastLatLng);
 
                 if (state == STATE_NORMAL) {
@@ -650,7 +648,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         finish();
                     }
                 }
-                allowStart();
                 break;
 
             case R.id.ivLocation:
@@ -755,7 +752,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             getString(R.string.manual_open_permission_hint),
                             Toast.LENGTH_SHORT).show();
                 }
-                // TODO 授权成功。
                 break;
         }
     }
@@ -790,7 +786,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                         DLOG.d(TAG, "成功发出 areaActivitiesEnd 请求");
                         if (errCode == 0) {
-                            //todo 处理返回的数据
                             /**
                              * {
                              07-31 22:18:26.017 9640-9640/com.tim.moli D/http: ║     "statusMsg": "记录提交成功",
@@ -838,7 +833,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         } else {
                             Toast.makeText(SportFixedLocationActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                             DLOG.d(TAG, COMMIT_FALIED_MSG);
-                            //TODO 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
+                            // 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
                             btStart.setVisibility(View.GONE);
                             return false;
                         }
