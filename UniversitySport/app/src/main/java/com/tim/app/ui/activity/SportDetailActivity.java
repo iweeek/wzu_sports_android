@@ -434,9 +434,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //屏幕到了锁屏的时间，调暗亮度
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
-        DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
-        DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
-        DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
+        // DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
+        // DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
+        // DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
         if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);

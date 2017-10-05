@@ -480,7 +480,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             DLOG.d(TAG, "errorCode:" + errorCode + "     errorInfo:" + errorInfo + "     locationType:" + locationType);
         }
 
-        //屏幕到了锁屏的时间，调暗亮度
+        //屏幕到了锁屏的时间，调暗亮度，采样时间太长了导致不容易测试
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
         if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
