@@ -446,7 +446,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
 
         DLOG.d(TAG, "locationType:" + locationType);
-        //定位成功
+        if (location != null) {
+            //定位成功
         if (errorCode != 0) {
             String errText = "正在定位中，GPS信号弱";
             Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
@@ -564,7 +565,11 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         lastSteps = currentSteps;
         lastLatLng = newLatLng;
         DLOG.d(TAG, toastText);
-
+        } else {
+            String errText = "定位失败：" + errorInfo;
+            DLOG.e(TAG, errText);
+            Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
