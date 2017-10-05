@@ -720,7 +720,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                 targetLatLngs.add(lastLatLng);
                 LatLngBounds bounds = getLatLngBounds(targetLatLngs);//以中心点缩放
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300)); //平滑移动
+                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
 
                 break;
             case R.id.tvSelectLocation:
