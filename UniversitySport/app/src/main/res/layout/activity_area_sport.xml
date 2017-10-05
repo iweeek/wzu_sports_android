@@ -201,11 +201,8 @@
                         android:textSize="12dp"/>
                 </RelativeLayout>
 
-
             </RelativeLayout>
-
         </LinearLayout>
-
     </RelativeLayout>
 
     <!--<LinearLayout-->

@@ -67,6 +67,7 @@ import com.tim.app.sport.SQLite;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.util.AMapUtil;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.PermissionUtil;
 
@@ -98,7 +99,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private LatLng firstLatLng = null;
     private Circle circle;//当前运动区域
     private List<LatLng> targetLatLngs = new ArrayList<LatLng>();
-    private List<LatLng> currentLatlngs = new ArrayList<LatLng>();
     private LatLng centerPoint;
     private Marker centerMarker;
 
@@ -266,8 +266,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
         fixLocationOutdoorSportPoint = (FixLocationOutdoorSportPoint) getIntent().getSerializableExtra("fixLocationOutdoorSportPoint");
         targetLatLngs.add(new LatLng(fixLocationOutdoorSportPoint.getLatitude(), fixLocationOutdoorSportPoint.getLongitude()));
-        DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+        // DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
         DLOG.d(TAG, "sportEntry:" + sportEntry);
+        DLOG.d(TAG, "sportEntry.getAcquisitionInterval():" + sportEntry.getAcquisitionInterval());
 
         acquisitionInterval = sportEntry.getAcquisitionInterval() * 1000;
         mapView = (MapView) findViewById(R.id.map);
@@ -343,6 +344,15 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 fillColor(Color.parseColor("#77B0F566")).
                 strokeColor(Color.parseColor("#224C5773")).
                 strokeWidth(1));
+
+        //初始化中心点Marker
+        centerMarker = aMap.addMarker(new MarkerOptions()
+                .anchor(0.5f, 0.5f)
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.ic_location_stick))
+                .position(targetLatLngs.get(0))
+                .title("目标区域"));
+        centerMarker.showInfoWindow();
         DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
 
         // 设置滑动解锁-解锁的监听
@@ -509,8 +519,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     firstLocation = location;
                     firstLocationType = locationType;
                     locationDialog.dismissDialog();
-                    DLOG.d(TAG, "targetLatLngs.get(0):" + targetLatLngs.get(0));
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
+
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
+                    // aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300)); //平滑移动
+
                     aMap.moveCamera(cu);
                     btStart.setVisibility(View.VISIBLE);
 
@@ -518,42 +531,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     // Log.d(TAG, "newLatLng:" + newLatLng);
                 }
             }
-
-            currentLatlngs.add(newLatLng);
-            // MarkerOverlay markerOverlay = new MarkerOverlay(aMap, currentLatlngs, targetLatLngs.get(0));
-            // markerOverlay.zoomToSpanWithCenter();
-
-            //初始化中心点Marker
-            centerMarker = aMap.addMarker(new MarkerOptions()
-                    .anchor(0.5f, 0.5f)
-                    .icon(BitmapDescriptorFactory
-                            .fromResource(R.drawable.ic_location_stick))
-                    .position(targetLatLngs.get(0))
-                    .title("目标区域"));
-            centerMarker.showInfoWindow();
-
-            aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
-                @Override
-                public void onInfoWindowClick(Marker marker) {
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
-                    aMap.animateCamera(cu, 1500, new AMap.CancelableCallback() {
-                        @Override
-                        public void onFinish() {
-
-                        }
-
-                        @Override
-                        public void onCancel() {
-
-                        }
-                    });
-                }
-            });
-
-            DLOG.d(TAG, "targetLatLngs.get(0):" + targetLatLngs.get(0));
-            DLOG.d(TAG, "currentLatlngs:" + currentLatlngs);
-            LatLngBounds bounds = getLatLngBounds(targetLatLngs.get(0), currentLatlngs);//以中心点缩放
-            aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50)); //平滑移动
 
             if (state == STATE_STARTED) {
                 String msg = location.toString();
@@ -604,7 +581,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         }
     }
 
-
     //根据中心点和自定义内容获取缩放bounds
     private LatLngBounds getLatLngBounds(LatLng centerpoint, List<LatLng> pointList) {
         // 经纬度坐标矩形区域的生成器
@@ -616,6 +592,18 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 b.include(p);
                 b.include(p1);
             }
+        }
+        return b.build();
+    }
+
+    /**
+     * 根据自定义内容获取缩放bounds
+     */
+    public LatLngBounds getLatLngBounds( List<LatLng> pointList) {
+        LatLngBounds.Builder b = LatLngBounds.builder();
+        for (int i = 0; i < pointList.size(); i++) {
+            LatLng p = pointList.get(i);
+            b.include(p);
         }
         return b.build();
     }
@@ -721,18 +709,19 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
-                aMap.animateCamera(cu, 600, new AMap.CancelableCallback() {
+                AMapUtil.moveToTarget(aMap, zoomLevel, lastLatLng, 600);
+
+                aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
                     @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-
+                    public void onInfoWindowClick(Marker marker) {
+                        AMapUtil.moveToTarget(aMap, zoomLevel, targetLatLngs.get(0), 1500);
                     }
                 });
+
+                targetLatLngs.add(lastLatLng);
+                LatLngBounds bounds = getLatLngBounds(targetLatLngs);//以中心点缩放
+                aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300)); //平滑移动
+
                 break;
             case R.id.tvSelectLocation:
                 finish();
