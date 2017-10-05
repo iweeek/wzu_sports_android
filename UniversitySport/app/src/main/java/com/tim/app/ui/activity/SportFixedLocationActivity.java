@@ -413,73 +413,67 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             DLOG.d(TAG, "onMyLocationChange turn down light");
         }
 
-        if (location != null) {
-            //定位成功
-            if (errorCode != 0 || locationType != 1 || state != STATE_STARTED) {
-                String errText = "正在定位中，GPS信号弱";
-                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                DLOG.d(TAG, "newLatLng: " + newLatLng);
-                // 判断第一次，第一次会提示
-                if (oldLatLng == null) {
-                    String errText = "定位成功";
-                    firstLocation = location;
-                    firstLocationType = locationType;
-                    llLacationHint.setVisibility(View.GONE);
-                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                    aMap.moveCamera(cu);
-                    btStart.setVisibility(View.VISIBLE);
-                }
-            }
-
-            if (state == STATE_STARTED) {
-                String msg = location.toString();
-                // DLOG.writeToInternalFile(msg);
-
-                float batteryLevel = getBatteryLevel();
-                if (batteryLevel <= 20) {
-                    Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
-                }
-
-                DLOG.d(TAG, "oldLatLng: " + oldLatLng);
-                float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
-
-                toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
-                        + "， 本次移动距离： " + moveDistance +
-                        "， 当前电量: " + batteryLevel + "%";
-                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-
-                isNormal = true;
-                drawLine(oldLatLng, newLatLng, isNormal);
-
-                //// 向服务器提交数据
-                ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
-                        location.getLatitude(), locationType, new ResponseCallback() {
-                            @Override
-                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                                if (status == 0) {
-                                    DLOG.d(TAG, "上传 areaActivityData 成功!");
-                                    return true;
-                                } else {
-                                    String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
-                                    msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
-                                    msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
-                                    DLOG.writeToInternalFile(msg);
-                                    return false;
-                                }
-                            }
-                        });
-
-            }
-            oldLatLng = newLatLng;
+        //定位成功
+        if (errorCode != 0) {
+            String errText = "正在定位中，GPS信号弱";
+            Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+            return;
         } else {
-            String errText = "定位失败：" + errorInfo;
-            DLOG.e(TAG, errText);
-            Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
+            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            DLOG.d(TAG, "newLatLng: " + newLatLng);
+            // 判断第一次，第一次会提示
+            if (oldLatLng == null) {
+                String errText = "定位成功";
+                firstLocation = location;
+                firstLocationType = locationType;
+                llLacationHint.setVisibility(View.GONE);
+                Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                aMap.moveCamera(cu);
+                btStart.setVisibility(View.VISIBLE);
+            }
         }
+
+        if (state == STATE_STARTED) {
+            String msg = location.toString();
+            // DLOG.writeToInternalFile(msg);
+
+            float batteryLevel = getBatteryLevel();
+            if (batteryLevel <= 20) {
+                Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
+            }
+
+            DLOG.d(TAG, "oldLatLng: " + oldLatLng);
+            float moveDistance = AMapUtils.calculateLineDistance(newLatLng, oldLatLng);
+
+            toastText = "绘制曲线，上一次坐标： " + oldLatLng + "， 新坐标：" + newLatLng
+                    + "， 本次移动距离： " + moveDistance +
+                    "， 当前电量: " + batteryLevel + "%";
+            Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+            isNormal = true;
+            drawLine(oldLatLng, newLatLng, isNormal);
+
+            //// 向服务器提交数据
+            ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
+                    location.getLatitude(), locationType, new ResponseCallback() {
+                        @Override
+                        public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                            if (status == 0) {
+                                DLOG.d(TAG, "上传 areaActivityData 成功!");
+                                return true;
+                            } else {
+                                String msg = "areaActivityData failed, errmsg: " + errmsg + "\r\n";
+                                msg += "net type: " + NetUtils.getNetWorkType(SportFixedLocationActivity.this) + "\r\n";
+                                msg += "net connectivity is: " + NetUtils.isConnection(SportFixedLocationActivity.this) + "\r\n";
+                                DLOG.writeToInternalFile(msg);
+                                return false;
+                            }
+                        }
+                    });
+
+        }
+        oldLatLng = newLatLng;
     }
 
     /****************  <Activity基本设置开始> *****************/
@@ -543,7 +537,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     }
 
 
-
     @Override
     public void onClick(View v) {
         turnUpScreen();
@@ -551,11 +544,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         switch (v.getId()) {
             case R.id.btStart:
                 //先检查定位权限
-                if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             REQUEST_PERMISSION_WRITE_FINE_LOCATION);
-                }else {
+                } else {
                     //判断是否在运动范围内
                     boolean isContains = circle.contains(oldLatLng);
                     if (!isContains && state == STATE_NORMAL) {
