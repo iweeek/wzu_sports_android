@@ -94,7 +94,7 @@ public class SensorService extends Service implements SensorEventListener {
     //动态阈值需要动态的数据，这个值用于这些动态数据的阈值
     final float initialValue = (float) 1.0;
     //初始阈值
-    float thresholdValue = (float) 8.0;
+    float thresholdValue = (float) 6.0;
     //用x、y、z轴三个维度算出的平均值
     public static float average = 0;
 

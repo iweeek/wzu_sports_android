@@ -166,7 +166,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_END = 3;//结束
     private int state = STATE_NORMAL;
 
-
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
     private int brightness;
@@ -300,12 +299,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         });
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-
         Float level = getBatteryLevel();
         tvRemainPower = (TextView) locationDialog.findViewById(R.id.tvRemainPower);
         tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level.intValue())));
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
 
         initGPS();
 
@@ -779,10 +778,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
                 // TODO 授权成功。
                 break;
-            default:
-                break;
         }
-
     }
 
     public boolean checkLocationPermission() {
@@ -863,11 +859,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
                                                         state = STATE_STARTED;
 
-                                                        // ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                        // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
-
                                                         // btStart.setVisibility(View.GONE);
                                                         // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
