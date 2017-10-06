@@ -292,11 +292,27 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                //                String text = "当前地图的缩放级别为: " + aMap.getCameraPosition().zoom;
-                //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
-                aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                //                text = "调整屏幕缩放比例：" + zoomLevel;
-                //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+                List<LatLng> latLngs = new ArrayList<>();
+                float degree = (float) targetLatLngs.get(0).latitude;
+                float minute = (float) ((targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude) * 60);
+                // Log.d(TAG, "(targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude):" + (targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude));
+                // Log.d(TAG, "minute:" + minute);
+                float second = (minute - (int)minute) * 60;
+                // Log.d(TAG, "second:" + second);
+                float topSecond = (float) (second + fixLocationOutdoorSportPoint.getRadius() / 30.9f);
+                float bottomSecond = (float) (second - fixLocationOutdoorSportPoint.getRadius() / 30.9f);
+                // Log.d(TAG, "second:" + second);
+                float topLatitude = ((int)degree + (topSecond / 60 + (int)minute) / 60);
+                float bottomLatitude = ((int)degree + (bottomSecond / 60 + (int)minute) / 60);
+                // DLOG.d(TAG, "topLatitude:" + topLatitude);
+                // DLOG.d(TAG, "bottomLatitude:" + bottomLatitude);
+                LatLng topLatlng = new LatLng(topLatitude, targetLatLngs.get(0).longitude);
+                LatLng bottomLatlng = new LatLng(bottomLatitude, targetLatLngs.get(0).longitude);
+                latLngs.add(topLatlng);
+                latLngs.add(bottomLatlng);
+
+                LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
+                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
             }
         });
 
@@ -354,6 +370,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 .title("目标区域"));
         centerMarker.showInfoWindow();
         DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+
+        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
+                new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
+        aMap.moveCamera(cu);
 
         // 设置滑动解锁-解锁的监听
         slideUnlockView.setOnUnLockListener(new SlideUnlockView.OnUnLockListener() {
@@ -520,11 +540,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     firstLocationType = locationType;
                     locationDialog.dismissDialog();
 
-                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
-                            new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
-                    // aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 300)); //平滑移动
+                    // CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
+                    //         new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
+                    // aMap.moveCamera(cu);
 
-                    aMap.moveCamera(cu);
                     btStart.setVisibility(View.VISIBLE);
 
                     // Log.d(TAG, "targetLatLng:" + targetLatLngs.toString());
@@ -599,7 +618,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /**
      * 根据自定义内容获取缩放bounds
      */
-    public LatLngBounds getLatLngBounds( List<LatLng> pointList) {
+    public LatLngBounds getLatLngBounds(List<LatLng> pointList) {
         LatLngBounds.Builder b = LatLngBounds.builder();
         for (int i = 0; i < pointList.size(); i++) {
             LatLng p = pointList.get(i);
@@ -714,7 +733,29 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
-                        AMapUtil.moveToTarget(aMap, zoomLevel, targetLatLngs.get(0), 1500);
+                        // AMapUtil.moveToTarget(aMap, zoomLevel, targetLatLngs.get(0), 1500);
+                        List<LatLng> latLngs = new ArrayList<>();
+
+                        float degree = (float) targetLatLngs.get(0).latitude;
+                        float minute = (float) ((targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude) * 60);
+                        // Log.d(TAG, "(targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude):" + (targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude));
+                        // Log.d(TAG, "minute:" + minute);
+                        float second = (minute - (int)minute) * 60;
+                        // Log.d(TAG, "second:" + second);
+                        float topSecond = (float) (second + fixLocationOutdoorSportPoint.getRadius() / 30.9f);
+                        float bottomSecond = (float) (second - fixLocationOutdoorSportPoint.getRadius() / 30.9f);
+                        // Log.d(TAG, "second:" + second);
+                        float topLatitude = ((int)degree + (topSecond / 60 + (int)minute) / 60);
+                        float bottomLatitude = ((int)degree + (bottomSecond / 60 + (int)minute) / 60);
+                        // DLOG.d(TAG, "topLatitude:" + topLatitude);
+                        // DLOG.d(TAG, "bottomLatitude:" + bottomLatitude);
+                        LatLng topLatlng = new LatLng(topLatitude, targetLatLngs.get(0).longitude);
+                        LatLng bottomLatlng = new LatLng(bottomLatitude, targetLatLngs.get(0).longitude);
+                        latLngs.add(topLatlng);
+                        latLngs.add(bottomLatlng);
+
+                        LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
+                        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
                     }
                 });
 
@@ -771,7 +812,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                             rlAreaDesc.setVisibility(View.GONE);
                                             tvSelectLocation.setVisibility(View.INVISIBLE);
 
-                                            progressDialog.dismissDialog();
+                                            progressDialog.dismissCurrentDialog();
 
                                             return true;
                                         } else {
