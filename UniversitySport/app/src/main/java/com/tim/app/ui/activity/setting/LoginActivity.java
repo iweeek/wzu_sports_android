@@ -205,17 +205,17 @@ public class LoginActivity extends BaseActivity {
                             universityNames.add(name);
                             universities.add(university);
                         }
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         showUniversityDialog();
                         return true;
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     Toast.makeText(LoginActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -284,7 +284,7 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        progressDialog.dismissDialog();
+        progressDialog.dismissCurrentDialog();
         builder.show();
     }
 

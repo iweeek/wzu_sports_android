@@ -443,10 +443,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             DLOG.d(TAG, "onMyLocationChange turn down light");
         }
 
+        DLOG.d(TAG, "locationType:" + locationType);
         if (location != null) {
-            DLOG.d(TAG, "locationType:" + locationType);
             //定位成功
-            if (errorCode != 0 || locationType != 1) {
+            if (errorCode != 0) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;
@@ -513,53 +513,51 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                if (locationType == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                    if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
-                        //位置漂移
-                        //return;
-                        toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
-                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                        isNormal = false;
-                        drawLine(lastLatLng, newLatLng, isNormal);
-                        // currentDistance += distanceInterval;
-                    } else {
-                        isNormal = true;
-                        drawLine(lastLatLng, newLatLng, isNormal);
-                        currentDistance += distanceInterval;
+                if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
+                    //位置漂移
+                    //return;
+                    toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
+                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    isNormal = false;
+                    drawLine(lastLatLng, newLatLng, isNormal);
+                    // currentDistance += distanceInterval;
+                } else {
+                    isNormal = true;
+                    drawLine(lastLatLng, newLatLng, isNormal);
+                    currentDistance += distanceInterval;
 
-                        if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
-                            targetFinishedTime = elapseTime;
-                        }
-
-                        tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
-                        bdDividend = new BigDecimal(currentDistance);
-                        bdDevisor = new BigDecimal(elapseTime);
-                        BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
-                        // 解决速度过大
-                        if (bdResult.compareTo(new BigDecimal(10)) < 0) {
-                            tvAverSpeed.setText(bdResult.toString() + " ");
-                        }
+                    if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                        targetFinishedTime = elapseTime;
                     }
 
-                    // 提交到服务器
-                    ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
-                            location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
-                            locationType, isNormal, new ResponseCallback() {
-                                @Override
-                                public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                                    if (status == 0) {
-                                        DLOG.d(TAG, "runningActivityData succeed");
-                                        return true;
-                                    } else {
-                                        String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-                                        msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-                                        msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                        DLOG.writeToInternalFile(msg);
-                                        return false;
-                                    }
-                                }
-                            });
+                    tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
+                    bdDividend = new BigDecimal(currentDistance);
+                    bdDevisor = new BigDecimal(elapseTime);
+                    BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                    // 解决速度过大
+                    if (bdResult.compareTo(new BigDecimal(10)) < 0) {
+                        tvAverSpeed.setText(bdResult.toString() + " ");
+                    }
                 }
+
+                // 提交到服务器
+                ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
+                        location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
+                        locationType, isNormal, new ResponseCallback() {
+                            @Override
+                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                if (status == 0) {
+                                    DLOG.d(TAG, "runningActivityData succeed");
+                                    return true;
+                                } else {
+                                    String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                    msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                    msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                    DLOG.writeToInternalFile(msg);
+                                    return false;
+                                }
+                            }
+                        });
             }
 
             lastSteps = currentSteps;
@@ -863,7 +861,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
 
-                                                        progressDialog.dismissDialog();
+                                                        progressDialog.dismissCurrentDialog();
 
                                                         initData();
                                                         startTimer();
@@ -883,14 +881,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     btStart.setVisibility(View.VISIBLE);
-                                    progressDialog.dismissDialog();
+                                    progressDialog.dismissCurrentDialog();
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                     DLOG.d(TAG, "errMsg: " + errMsg);
                                 }
                                 return true;
                             } else {
                                 btStart.setVisibility(View.VISIBLE);
-                                progressDialog.dismissDialog();
+                                progressDialog.dismissCurrentDialog();
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                 DLOG.d(TAG, "errMsg: " + errMsg);
                                 return false;
