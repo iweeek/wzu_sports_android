@@ -188,13 +188,14 @@ public class ServerInterface {
      * @param callback
      */
     public void areaActivityData(String tag, int areaSportRecordId, double longitude,
-                                 double latitude, int locationType, ResponseCallback callback) {
+                                 double latitude, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", areaSportRecordId);
         params.put("longitude", longitude);
         params.put("latitude", latitude);
         params.put("locationType", locationType);
+        params.put("isNormal", isNormal);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 

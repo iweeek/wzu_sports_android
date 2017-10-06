@@ -68,7 +68,6 @@ import com.tim.app.sport.SQLite;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
-import com.tim.app.util.AMapUtil;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.PermissionUtil;
 
@@ -333,9 +332,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
 
         DisplayMetrics metrics = getResources().getDisplayMetrics();
-        float calcDp = (float) (metrics.densityDpi * 0.3125);
-        float calcPx = metrics.heightPixels / metrics.densityDpi * calcDp;
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, (int) (calcPx / 2), (int) (calcPx / 2), (int)calcPx, (int)calcPx)); //平滑移动
+        float calcWidthDp = (float) (metrics.densityDpi * 0.2778);
+        float calcWidthPx = metrics.widthPixels / metrics.densityDpi * calcWidthDp;
+
+        float calcHeightDp = (float) (metrics.densityDpi * 0.3125);
+        float calcHeightPx = metrics.heightPixels / metrics.densityDpi * calcHeightDp;
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, (int) calcWidthPx, (int) calcWidthPx, (int) calcHeightPx, (int) calcHeightPx)); //平滑移动
     }
 
     @Override
@@ -370,7 +372,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         }
 
         setupArea();
-        
+
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
         aMap.moveCamera(cu);
@@ -591,12 +593,13 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                 boolean isContains = circle.contains(lastLatLng);
                 if (!isContains) {
+                    isNormal = false;
                     Toast.makeText(context, "你已离开运动区域，请回到运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                 }
 
                 //// 向服务器提交数据
                 ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, location.getLongitude(),
-                        location.getLatitude(), locationType, new ResponseCallback() {
+                        location.getLatitude(), locationType, isNormal, new ResponseCallback() {
                             @Override
                             public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                 if (status == 0) {
@@ -749,11 +752,18 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置
-                AMapUtil.moveToTarget(aMap, zoomLevel, lastLatLng, 600);
+                // AMapUtil.moveToTarget(aMap, zoomLevel, lastLatLng, 600);
+
+                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                float calcWidthDp = (float) (metrics.densityDpi * 0.2778);
+                float calcWidthPx = metrics.widthPixels / metrics.densityDpi * calcWidthDp;
+
+                float calcHeightDp = (float) (metrics.densityDpi * 0.3125);
+                float calcHeightPx = metrics.heightPixels / metrics.densityDpi * calcHeightDp;
 
                 targetLatLngs.add(lastLatLng);
                 LatLngBounds bounds = getLatLngBounds(targetLatLngs);//以中心点缩放
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
+                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, (int) calcWidthPx, (int) calcWidthPx, (int) calcHeightPx, (int) calcHeightPx)); //平滑移动
 
                 break;
             case R.id.tvSelectLocation:
@@ -790,7 +800,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                         //第一次向服务器提交数据
                         ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, firstLocation.getLongitude(),
-                                firstLocation.getLatitude(), firstLocationType, new ResponseCallback() {
+                                firstLocation.getLatitude(), firstLocationType, true, new ResponseCallback() {
                                     @Override
                                     public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                         if (status == 0) {
