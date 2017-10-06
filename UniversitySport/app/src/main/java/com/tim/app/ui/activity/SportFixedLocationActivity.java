@@ -23,6 +23,7 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -330,7 +331,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         latLngs.add(bottomLatlng);
 
         LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
-        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float calcDp = (float) (metrics.densityDpi * 0.3125);
+        float calcPx = metrics.heightPixels / metrics.densityDpi * calcDp;
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, (int) (calcPx / 2), (int) (calcPx / 2), (int)calcPx, (int)calcPx)); //平滑移动
     }
 
     @Override
