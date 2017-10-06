@@ -289,30 +289,18 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             }
         });
 
+        aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                // AMapUtil.moveToTarget(aMap, zoomLevel, targetLatLngs.get(0), 1500);
+                setZoomScale();
+            }
+        });
+
         aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
             @Override
             public void onMapLoaded() {
-                List<LatLng> latLngs = new ArrayList<>();
-                float degree = (float) targetLatLngs.get(0).latitude;
-                float minute = (float) ((targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude) * 60);
-                // Log.d(TAG, "(targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude):" + (targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude));
-                // Log.d(TAG, "minute:" + minute);
-                float second = (minute - (int)minute) * 60;
-                // Log.d(TAG, "second:" + second);
-                float topSecond = (float) (second + fixLocationOutdoorSportPoint.getRadius() / 30.9f);
-                float bottomSecond = (float) (second - fixLocationOutdoorSportPoint.getRadius() / 30.9f);
-                // Log.d(TAG, "second:" + second);
-                float topLatitude = ((int)degree + (topSecond / 60 + (int)minute) / 60);
-                float bottomLatitude = ((int)degree + (bottomSecond / 60 + (int)minute) / 60);
-                // DLOG.d(TAG, "topLatitude:" + topLatitude);
-                // DLOG.d(TAG, "bottomLatitude:" + bottomLatitude);
-                LatLng topLatlng = new LatLng(topLatitude, targetLatLngs.get(0).longitude);
-                LatLng bottomLatlng = new LatLng(bottomLatitude, targetLatLngs.get(0).longitude);
-                latLngs.add(topLatlng);
-                latLngs.add(bottomLatlng);
-
-                LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
-                aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
+                setZoomScale();
             }
         });
 
@@ -321,6 +309,29 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         registerReceiver(lowBatteryReceiver, filter);
     }
 
+    public void setZoomScale() {
+        List<LatLng> latLngs = new ArrayList<>();
+        float degree = (float) targetLatLngs.get(0).latitude;
+        float minute = (float) ((targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude) * 60);
+        // Log.d(TAG, "(targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude):" + (targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude));
+        // Log.d(TAG, "minute:" + minute);
+        float second = (minute - (int) minute) * 60;
+        // Log.d(TAG, "second:" + second);
+        float topSecond = (float) (second + fixLocationOutdoorSportPoint.getRadius() / 30.9f);
+        float bottomSecond = (float) (second - fixLocationOutdoorSportPoint.getRadius() / 30.9f);
+        // Log.d(TAG, "second:" + second);
+        float topLatitude = ((int) degree + (topSecond / 60 + (int) minute) / 60);
+        float bottomLatitude = ((int) degree + (bottomSecond / 60 + (int) minute) / 60);
+        // DLOG.d(TAG, "topLatitude:" + topLatitude);
+        // DLOG.d(TAG, "bottomLatitude:" + bottomLatitude);
+        LatLng topLatlng = new LatLng(topLatitude, targetLatLngs.get(0).longitude);
+        LatLng bottomLatlng = new LatLng(bottomLatitude, targetLatLngs.get(0).longitude);
+        latLngs.add(topLatlng);
+        latLngs.add(bottomLatlng);
+
+        LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
+    }
 
     @Override
     public void initData() {
@@ -352,25 +363,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
-        //设置地图区域范围（画圈儿）
-        LatLng latLng = new LatLng(fixLocationOutdoorSportPoint.getLatitude(), fixLocationOutdoorSportPoint.getLongitude());
-        circle = aMap.addCircle(new CircleOptions().
-                center(latLng).
-                radius(fixLocationOutdoorSportPoint.getRadius()).
-                fillColor(Color.parseColor("#77B0F566")).
-                strokeColor(Color.parseColor("#224C5773")).
-                strokeWidth(1));
 
-        //初始化中心点Marker
-        centerMarker = aMap.addMarker(new MarkerOptions()
-                .anchor(0.5f, 0.5f)
-                .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.ic_location_stick))
-                .position(targetLatLngs.get(0))
-                .title("目标区域"));
-        centerMarker.showInfoWindow();
-        DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
-
+        setupArea();
+        
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
         aMap.moveCamera(cu);
@@ -406,6 +401,27 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 }
             }
         });
+    }
+
+    private void setupArea() {
+        //设置地图区域范围（画圈儿）
+        LatLng latLng = new LatLng(fixLocationOutdoorSportPoint.getLatitude(), fixLocationOutdoorSportPoint.getLongitude());
+        circle = aMap.addCircle(new CircleOptions().
+                center(latLng).
+                radius(fixLocationOutdoorSportPoint.getRadius()).
+                fillColor(Color.parseColor("#77B0F566")).
+                strokeColor(Color.parseColor("#224C5773")).
+                strokeWidth(1));
+
+        //初始化中心点Marker
+        centerMarker = aMap.addMarker(new MarkerOptions()
+                .anchor(0.5f, 0.5f)
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.ic_location_stick))
+                .position(targetLatLngs.get(0))
+                .title("目标区域"));
+        centerMarker.showInfoWindow();
+        DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
     }
 
     @Override
@@ -729,35 +745,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             case R.id.ivLocation:
                 //点击定位图标 实现定位到当前位置
                 AMapUtil.moveToTarget(aMap, zoomLevel, lastLatLng, 600);
-
-                aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        // AMapUtil.moveToTarget(aMap, zoomLevel, targetLatLngs.get(0), 1500);
-                        List<LatLng> latLngs = new ArrayList<>();
-
-                        float degree = (float) targetLatLngs.get(0).latitude;
-                        float minute = (float) ((targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude) * 60);
-                        // Log.d(TAG, "(targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude):" + (targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude));
-                        // Log.d(TAG, "minute:" + minute);
-                        float second = (minute - (int)minute) * 60;
-                        // Log.d(TAG, "second:" + second);
-                        float topSecond = (float) (second + fixLocationOutdoorSportPoint.getRadius() / 30.9f);
-                        float bottomSecond = (float) (second - fixLocationOutdoorSportPoint.getRadius() / 30.9f);
-                        // Log.d(TAG, "second:" + second);
-                        float topLatitude = ((int)degree + (topSecond / 60 + (int)minute) / 60);
-                        float bottomLatitude = ((int)degree + (bottomSecond / 60 + (int)minute) / 60);
-                        // DLOG.d(TAG, "topLatitude:" + topLatitude);
-                        // DLOG.d(TAG, "bottomLatitude:" + bottomLatitude);
-                        LatLng topLatlng = new LatLng(topLatitude, targetLatLngs.get(0).longitude);
-                        LatLng bottomLatlng = new LatLng(bottomLatitude, targetLatLngs.get(0).longitude);
-                        latLngs.add(topLatlng);
-                        latLngs.add(bottomLatlng);
-
-                        LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
-                        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, 300, 300, 600, 600)); //平滑移动
-                    }
-                });
 
                 targetLatLngs.add(lastLatLng);
                 LatLngBounds bounds = getLatLngBounds(targetLatLngs);//以中心点缩放
