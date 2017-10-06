@@ -42,7 +42,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
     private SportsAreaListActivity context;
     private ImageButton ibBack;
 
-    private LoadMoreRecycleViewContainer load_more;
+    private LoadMoreRecycleViewContainer lrvLoadMore;
     private WrapRecyclerView wrvArea;
     private EmptyLayout emptyLayout;
 
@@ -78,15 +78,15 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         ibBack.setOnClickListener(this);
 
-        load_more = (LoadMoreRecycleViewContainer) findViewById(R.id.lrvLoadMore);
+        lrvLoadMore = (LoadMoreRecycleViewContainer) findViewById(R.id.lrvLoadMore);
         wrvArea = (WrapRecyclerView) findViewById(R.id.wrvArea);
         wrvArea.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        load_more.useDefaultFooter(View.GONE);
-        load_more.setAutoLoadMore(true);
-        load_more.setLoadMoreHandler(this);
+        lrvLoadMore.useDefaultFooter(View.GONE);
+        lrvLoadMore.setAutoLoadMore(true);
+        lrvLoadMore.setLoadMoreHandler(this);
 
-        emptyLayout = new EmptyLayout(this, load_more);
+        emptyLayout = new EmptyLayout(this, lrvLoadMore);
         emptyLayout.showLoading();
         emptyLayout.setEmptyButtonShow(false);
         emptyLayout.setErrorButtonShow(true);
@@ -151,6 +151,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                                     emptyLayout.showEmpty();
                                 } else {
                                     emptyLayout.showContent();
+                                    lrvLoadMore.loadMoreFinish(false, false);
                                 }
                             }
                         }
