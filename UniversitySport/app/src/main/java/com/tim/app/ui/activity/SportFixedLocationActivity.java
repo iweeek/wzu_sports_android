@@ -751,6 +751,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         SportResultActivity.start(this, historySportEntry);
                         finish();
                     }
+                    myLocationStyle.interval(acquisitionInterval);
+                    aMap.setMyLocationStyle(myLocationStyle);
+                    allowStart();
                 }
                 break;
 
@@ -791,7 +794,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
             //开始本次运动
-            ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), new JsonResponseCallback() {
+            ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), fixLocationOutdoorSportPoint.getId(), new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {

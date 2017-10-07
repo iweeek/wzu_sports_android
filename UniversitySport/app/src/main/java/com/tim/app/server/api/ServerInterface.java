@@ -159,11 +159,12 @@ public class ServerInterface {
      * @param studentId
      * @param callback
      */
-    public void areaActivities(String tag, int areaSportId, int studentId, ResponseCallback callback) {
+    public void areaActivities(String tag, int areaSportId, int studentId, int locationId, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITIES;
         HashMap params = new HashMap();
         params.put("areaSportId", areaSportId);
         params.put("studentId", studentId);
+        params.put("locationId", locationId);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
