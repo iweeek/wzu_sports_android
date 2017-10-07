@@ -109,6 +109,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     //第三方
     private MapView mapView;
     private AMap aMap;
+    private MyLocationStyle myLocationStyle;
     private LatLng lastLatLng = null;
     private UiSettings uiSettings;
     private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
@@ -403,6 +404,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         aMap.setOnMapTouchListener(this);
     }
 
+    private void setupLocationStyle() {
+        myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
+        myLocationStyle.interval(interval);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
+                fromResource(R.drawable.navi_map_gps_locked));
+        aMap.setMyLocationStyle(myLocationStyle);
+    }
+
     @Override
     public void onTouch(MotionEvent event) {
         switch (event.getAction()) {
@@ -428,15 +438,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
 
         screenKeepLightTime = 0;
-    }
-
-    private void setupLocationStyle() {
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-        myLocationStyle.interval(interval);
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                fromResource(R.drawable.navi_map_gps_locked));
-        aMap.setMyLocationStyle(myLocationStyle);
     }
 
     @Override
@@ -596,6 +597,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
                             }
                         }
+
+                        // 设置高德回调间隔
+                        myLocationStyle.interval(currentSportEntry.getAcquisitionInterval());
+                        aMap.setMyLocationStyle(myLocationStyle);
                     } else {
                         // 没有更快的项目，或者平均速度没有超过达标速度
                     }
@@ -616,6 +621,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             slowerLevel--;
                             slowerSportEntry = sportEntryDataList.get(slowerLevel);
                             setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
+
+                            // 设置高德回调间隔
+                            myLocationStyle.interval(currentSportEntry.getAcquisitionInterval());
+                            aMap.setMyLocationStyle(myLocationStyle);
                         } else if (currentLevel == 0) {
                             // 已经是最低级别，字体颜色变红
                             tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.red_primary_dark));
@@ -1199,7 +1208,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvFasterItemSportName = (TextView) findViewById(R.id.tvFasterItemSportName);
         tvCurrentItemSportName = (TextView) findViewById(R.id.tvCurrentItemSportName);
         tvSlowerItemSportName = (TextView) findViewById(R.id.tvSlowerItemSportName);
-        // tvCurrentStatusName = (TextView) findViewById(R.id.tvCurrentStatusSportName);
 
 
         tvFasterTargetDistance = (TextView) findViewById(R.id.tvFasterTargetDistance);
@@ -1238,7 +1246,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         llFasterItemContainer = (LinearLayout) findViewById(R.id.llFasterItemContainer);
         llCurrentItemContainer = (LinearLayout) findViewById(R.id.llCurrentItemContainer);
         llSlowerItemContainer = (LinearLayout) findViewById(R.id.llSlowerItemContainer);
-        // llCurrentStatusContainer = (LinearLayout) findViewById(R.id.llCurrentStatusContainer);
 
         llCurrentInfo = (LinearLayout) findViewById(R.id.llCurrentInfo);
         rlCurConsumeEnergy = (RelativeLayout) findViewById(R.id.rlCurConsumeEnergy);
