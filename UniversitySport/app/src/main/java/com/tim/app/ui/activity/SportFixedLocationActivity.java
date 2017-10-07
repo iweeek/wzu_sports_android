@@ -20,7 +20,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.AppOpsManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -726,9 +725,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         switch (v.getId()) {
             case R.id.btStart:
-                DLOG.d(TAG, "ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION):" + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
-                DLOG.d(TAG, "ActivityCompat.shouldShowRequestPermissionRationale(this," + ActivityCompat.shouldShowRequestPermissionRationale(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION));
+                // DLOG.d(TAG, "ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION):" + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
+                // DLOG.d(TAG, "ActivityCompat.shouldShowRequestPermissionRationale(this," + ActivityCompat.shouldShowRequestPermissionRationale(this,
+                //         Manifest.permission.ACCESS_FINE_LOCATION));
 
                 //先检查定位权限
                 if (!PermissionUtil.checkLocationPermission(this)) {
@@ -747,10 +746,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                     }
-                    if (state == STATE_END) {
-                        SportResultActivity.start(this, historySportEntry);
-                        finish();
-                    }
+                    myLocationStyle.interval(acquisitionInterval);
+                    aMap.setMyLocationStyle(myLocationStyle);
+                    allowStart();
+                } else if (state == STATE_END) {
+                    finish();
+                    SportResultActivity.start(this, historySportEntry);
                 }
                 break;
 

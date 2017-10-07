@@ -64,7 +64,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_sports_area;
+        return R.layout.activity_sports_area_list;
     }
 
     @Override
