@@ -91,6 +91,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     /*三方控件*/
     private MapView mapView;
+    private MyLocationStyle myLocationStyle;
     private AMap aMap;
     private UiSettings uiSettings;
     private Location firstLocation;
@@ -101,7 +102,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private List<LatLng> targetLatLngs = new ArrayList<LatLng>();
     private LatLng centerPoint;
     private Marker centerMarker;
-
 
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
@@ -146,6 +146,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private int state = STATE_NORMAL;
     private int interval = 1000;  //计时
     private int acquisitionInterval = 0;//采样时间间隔
+    private int navigationInterval = 3000;//开始之前导航间隔
     private long elapseTime = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
@@ -482,9 +483,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     }
 
     private void setupLocationStyle() {
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
-        myLocationStyle.interval(acquisitionInterval);
+        myLocationStyle.interval(navigationInterval);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                 fromResource(R.drawable.navi_map_gps_locked));
         aMap.setMyLocationStyle(myLocationStyle);
@@ -739,6 +740,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                 if (state == STATE_NORMAL) {
                     if (isContains) {
+                        // 改变回调间隔
+                        myLocationStyle.interval(acquisitionInterval);
+                        aMap.setMyLocationStyle(myLocationStyle);
                         allowStart();
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
