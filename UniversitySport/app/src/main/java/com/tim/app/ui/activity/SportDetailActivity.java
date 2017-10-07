@@ -97,7 +97,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private SportEntry sportEntry;
     private HistoryRunningSportEntry historySportEntry;
 
-    //TODO
     //    private FileOutputStream fos;
     //    private int counter = 0;
 
@@ -165,7 +164,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_PAUSE = 2;//暂停
     static final int STATE_END = 3;//结束
     private int state = STATE_NORMAL;
-
 
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
@@ -300,12 +298,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         });
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-
         Float level = getBatteryLevel();
         tvRemainPower = (TextView) locationDialog.findViewById(R.id.tvRemainPower);
         tvRemainPower.setText(getResources().getString(R.string.remainPower, String.valueOf(level.intValue())));
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
 
         initGPS();
 
@@ -436,9 +434,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //屏幕到了锁屏的时间，调暗亮度
         WindowManager.LayoutParams params = getWindow().getAttributes();
         screenKeepLightTime += interval / 1000;
-        DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
-        DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
-        DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
+        // DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
+        // DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
+        // DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
         if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
             params.screenBrightness = (float) 0.1;
             getWindow().setAttributes(params);
@@ -464,7 +462,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                     locationDialog.dismissDialog();
 
-                    //TODO 待删除
+                    // 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                     //toastText = "调整屏幕缩放比例：" + zoomLevel;
                     //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
@@ -483,7 +481,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 DLOG.d(TAG, "lastLatLng: " + lastLatLng);
                 float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
-                //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
+                // 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
                 int stepsInterval = currentSteps - lastSteps;
                 BigDecimal bdDividend;
                 BigDecimal bdDevisor;
@@ -775,12 +773,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             getString(R.string.manual_open_permission_hint),
                             Toast.LENGTH_SHORT).show();
                 }
-                // TODO 授权成功。
-                break;
-            default:
                 break;
         }
-
     }
 
     public boolean checkLocationPermission() {
@@ -789,7 +783,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
         if (result == AppOpsManagerCompat.MODE_IGNORED
                 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // TODO 没有有权限。
             DLOG.d(TAG, "没有定位权限");
             if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -802,7 +795,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
             return false;
         } else {
-            // TODO 有权限或者默认。
+            // 有权限或者默认。
             DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
             return true;
         }
@@ -835,7 +828,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //     }
                 // }
 
-                // TODO 没有定位权限，不能开始运动。
+                // 没有定位权限，不能开始运动。
                 if (!checkLocationPermission()) {
                     return;
                 }
@@ -861,11 +854,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         DLOG.d(TAG, "第一次上传 runningActivityData 成功!");
                                                         state = STATE_STARTED;
 
-                                                        // ibBack.setVisibility(View.GONE);
                                                         llCurrentInfo.setVisibility(View.VISIBLE);
                                                         rlCurConsumeEnergy.setVisibility(View.GONE);
-                                                        // llTargetContainer.setBackgroundColor(ContextCompat.getColor(SportDetailActivity.this, R.color.black_30));
-
                                                         // btStart.setVisibility(View.GONE);
                                                         // rlBottom.setVisibility(View.GONE);
                                                         slideUnlockView.setVisibility(View.VISIBLE);
@@ -890,7 +880,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                             });
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    // TODO
                                     btStart.setVisibility(View.VISIBLE);
                                     progressDialog.dismissCurrentDialog();
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
@@ -898,7 +887,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 }
                                 return true;
                             } else {
-                                // TODO
                                 btStart.setVisibility(View.VISIBLE);
                                 progressDialog.dismissCurrentDialog();
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
@@ -929,7 +917,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 aMap.moveCamera(cu);
                 break;
             case R.id.ivShowSportInfo:
-                // TODO 指南针的位置要变化，UiSettings 中寻找方法
+                // 指南针的位置要变化，UiSettings 中寻找方法
                 if (null == showAnimation) {
                     showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
                 }
@@ -1051,7 +1039,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         } else {
                             Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                             DLOG.d(TAG, COMMIT_FALIED_MSG);
-                            //TODO 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
+                            // 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
                             btStart.setVisibility(View.GONE);
                             return false;
                         }
@@ -1096,7 +1084,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         btStart = (Button) findViewById(R.id.btStart);
         btStart.setOnClickListener(this);
-        //TODO
         //        btStart.setVisibility(View.VISIBLE);
 
         llBottom = (LinearLayout) findViewById(R.id.llBottom);
@@ -1240,7 +1227,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
                 }
 
-                //TODO
                 float batteryLevel = getBatteryLevel();
                 Toast.makeText(SportDetailActivity.this, "当前电量： " + batteryLevel + "%", Toast.LENGTH_LONG).show();
             }

@@ -14,7 +14,7 @@ import java.util.List;
 
 
 /**
- *
+ *  高德地图相关工具方法
  */
 public class MarkerOverlay {
     private List<LatLng> pointList = new ArrayList<LatLng>();
@@ -44,9 +44,9 @@ public class MarkerOverlay {
         this.centerMarker = aMap.addMarker(new MarkerOptions()
                 .anchor(0.5f, 0.5f)
                 .icon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.navi_map_gps_locked))
+                        .fromResource(R.drawable.ic_location_stick))
                 .position(centerPoint)
-                .title("中心点"));
+                .title("目标区域"));
         centerMarker.showInfoWindow();
     }
 
@@ -71,7 +71,7 @@ public class MarkerOverlay {
                 Marker marker = aMap.addMarker(new MarkerOptions()
                         .position(pointList.get(i))
                         .icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                                .defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                 marker.setObject(i);
                 mMarkers.add(marker);
             }
@@ -100,12 +100,12 @@ public class MarkerOverlay {
             centerMarker.setVisible(true);
             centerMarker.showInfoWindow();
             LatLngBounds bounds = getLatLngBounds(centerPoint, pointList);
-            aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 150));
         }
     }
 
     //根据中心点和自定义内容获取缩放bounds
-    private LatLngBounds getLatLngBounds(LatLng centerpoint, List<LatLng> pointList) {
+    public LatLngBounds getLatLngBounds(LatLng centerpoint, List<LatLng> pointList) {
         LatLngBounds.Builder b = LatLngBounds.builder();
         if (centerpoint != null){
             for (int i = 0; i < pointList.size(); i++) {
@@ -127,13 +127,13 @@ public class MarkerOverlay {
                 return;
             centerMarker.setVisible(false);
             LatLngBounds bounds = getLatLngBounds(pointList);
-            aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+            aMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
         }
     }
     /**
      * 根据自定义内容获取缩放bounds
      */
-    private LatLngBounds getLatLngBounds( List<LatLng> pointList) {
+    public LatLngBounds getLatLngBounds( List<LatLng> pointList) {
         LatLngBounds.Builder b = LatLngBounds.builder();
         for (int i = 0; i < pointList.size(); i++) {
              LatLng p = pointList.get(i);

@@ -201,27 +201,24 @@
                         android:textSize="12dp"/>
                 </RelativeLayout>
 
-
             </RelativeLayout>
-
         </LinearLayout>
-
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/llLacationHint"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/llLocationHint"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/black_4"
-            android:gravity="center_horizontal"
-            android:text="正在定位中..."
-            android:textSize="16dp"/>
-    </LinearLayout>
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/black_4"-->
+            <!--android:gravity="center_horizontal"-->
+            <!--android:text="正在定位中..."-->
+            <!--android:textSize="16dp"/>-->
+    <!--</LinearLayout>-->
 
     <RelativeLayout
         android:id="@+id/rlBottom"
@@ -285,7 +282,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="70dp"
         android:visibility="gone"
         test:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
         test:slideUnlockBlockResource="@drawable/ic_lock"
