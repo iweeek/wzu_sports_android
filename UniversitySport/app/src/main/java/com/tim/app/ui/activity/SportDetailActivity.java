@@ -645,6 +645,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
             lastSteps = currentSteps;
             lastLatLng = newLatLng;
+        } else {
+            String errText = "定位失败：" + errorInfo;
+            DLOG.e(TAG, errText);
+            Toast.makeText(this, errText, Toast.LENGTH_LONG).show();
         }
     }
 
