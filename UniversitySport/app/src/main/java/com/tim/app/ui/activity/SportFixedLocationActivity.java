@@ -230,7 +230,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         if (requestCode == 0) {
             if (locationManager
                     .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-                locationDialog.show();
+                // locationDialog.show();
             } else {
                 Toast.makeText(this, OPEN_GPS_MSG, Toast.LENGTH_SHORT).show();
             }
