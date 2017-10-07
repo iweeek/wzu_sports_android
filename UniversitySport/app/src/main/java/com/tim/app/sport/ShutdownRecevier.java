@@ -20,7 +20,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.application.library.log.DLOG;
 
+
+/**
+ * 关机
+ */
 public class ShutdownRecevier extends BroadcastReceiver {
 
     @Override
@@ -33,7 +38,7 @@ public class ShutdownRecevier extends BroadcastReceiver {
         // setting on the next boot and displays an error message if it's not
         // set to true
         context.getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
-                .putBoolean("correctShutdown", true).commit();
+                .putBoolean("correctShutdown", true).apply();
 
         Database db = Database.getInstance(context);
         // if it's already a new day, add the temp. steps to the last one
@@ -42,13 +47,17 @@ public class ShutdownRecevier extends BroadcastReceiver {
             int pauseDifference = steps -
                     context.getSharedPreferences("pedometer", Context.MODE_PRIVATE)
                             .getInt("pauseCount", steps);
+
+            DLOG.d("ShutdownRecevier", "pauseDifference:" + pauseDifference);
+
             db.insertNewDay(Util.getToday(), steps - pauseDifference);
             if (pauseDifference > 0) {
                 // update pauseCount for the new day
                 context.getSharedPreferences("pedometer", Context.MODE_PRIVATE).edit()
-                        .putInt("pauseCount", steps).commit();
+                        .putInt("pauseCount", steps).apply();
             }
         } else {
+            // 关机的时候如果之前已经插入过今天的记录，直接更新这个记录即可。
             db.addToLastEntry(db.getCurrentSteps());
         }
         // current steps will be reset on boot @see BootReceiver

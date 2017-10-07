@@ -47,15 +47,17 @@ import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.MarkerOverlay;
+import com.tim.app.util.MathUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.tim.app.constant.AppConstant.SPEED_SCALE;
 
 
 /**
@@ -92,7 +94,6 @@ public class SportResultActivity extends ToolbarActivity {
     private Button btTest;
     private ProgressDialog progressDialog;
 
-
     private RelativeLayout rlBottom;
     private Button btDrawLine;
     private LinearLayout llBottom;
@@ -110,7 +111,6 @@ public class SportResultActivity extends ToolbarActivity {
     private int currentSteps = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
-
 
     //高德地图相关
     private MarkerOverlay markerOverlay;
@@ -330,10 +330,12 @@ public class SportResultActivity extends ToolbarActivity {
                         tvElapseTime.setText(elapseTime / 60 + " 分钟");
 
                         if (elapseTime != 0) {
-                            double d = currentDistance;
-                            double t = elapseTime;
-                            BigDecimal bd = new BigDecimal(d / t);
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            // BigDecimal d = new BigDecimal(Double.toString(currentDistance));
+                            // BigDecimal t = new BigDecimal(Double.toString(elapseTime));
+
+                            // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+                                    Double.toString(elapseTime), SPEED_SCALE);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -341,11 +343,13 @@ public class SportResultActivity extends ToolbarActivity {
                         // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
-                            double t = targetTime;
-                            double d = targetDistance;
-                            double s = d / t;
-                            BigDecimal bd = new BigDecimal(s);
-                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            // BigDecimal d = new BigDecimal(Double.toString(targetDistance));
+                            // BigDecimal t = new BigDecimal(Double.toString(targetTime));
+
+                            // RoundingMode.HALF_UP
+                            // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
+                                    Double.toString(targetTime), SPEED_SCALE);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
@@ -355,16 +359,16 @@ public class SportResultActivity extends ToolbarActivity {
                         llTargetSpeed.setVisibility(View.GONE);
 
                         llFloatingWindow.setVisibility(View.VISIBLE);
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -479,10 +483,8 @@ public class SportResultActivity extends ToolbarActivity {
                         tvElapseTime.setText(time);
 
                         if (elapseTime != 0) {
-                            double d = currentDistance;
-                            double t = elapseTime;
-                            BigDecimal bd = new BigDecimal(d / t);
-                            bd = bd.setScale(1, BigDecimal.ROUND_HALF_UP);
+                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+                                    Double.toString(elapseTime), SPEED_SCALE);
                             tvAverSpeed.setText(String.valueOf(bd));
                         }
 
@@ -493,11 +495,8 @@ public class SportResultActivity extends ToolbarActivity {
                         // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
                         if (targetTime != 0) {
-                            double t = targetTime;
-                            double d = targetDistance;
-                            double s = d / t;
-                            BigDecimal bd = new BigDecimal(s);
-                            bd = bd.setScale(1, RoundingMode.HALF_UP);
+                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
+                                    Double.toString(targetTime), SPEED_SCALE);
                             tvTargetSpeed.setText(String.valueOf(bd));
                         }
 
@@ -505,16 +504,16 @@ public class SportResultActivity extends ToolbarActivity {
                         tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                         llFloatingWindow.setVisibility(View.VISIBLE);
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
-                        progressDialog.dismissDialog();
+                        progressDialog.dismissCurrentDialog();
                         Toast.makeText(SportResultActivity.this, parseErrMsg, Toast.LENGTH_SHORT).show();
                         return false;
                     }
                 } else {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     Toast.makeText(SportResultActivity.this, netErrMsg, Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -839,7 +838,7 @@ public class SportResultActivity extends ToolbarActivity {
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    progressDialog.dismissDialog();
+                    progressDialog.dismissCurrentDialog();
                     finish();
                 }
                 return false;
@@ -850,10 +849,10 @@ public class SportResultActivity extends ToolbarActivity {
         //        ibBack.setOnClickListener(this);
         tvSportName = (TextView) findViewById(R.id.tvSportName);
 
-        tvCurrentDistance = (TextView) findViewById(R.id.tvCurrentDistance);
+        tvCurrentDistance = (TextView) findViewById(R.id.tv_current_distance);
         tvAverSpeedLabel = (TextView) findViewById(R.id.tvAverSpeedLabel);
-        tvAverSpeed = (TextView) findViewById(R.id.tvAverSpeed);
-        tvAverSpeed.setText("0.0");
+        tvAverSpeed = (TextView) findViewById(R.id.tv_average_speed);
+        tvAverSpeed.setText("0.00");
 
         tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
         // tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);

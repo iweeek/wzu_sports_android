@@ -135,7 +135,7 @@ public class ServerInterface {
      * 向服务器提交数据
      * {@link com.tim.app.ui.activity.SportDetailActivity}  调用
      */
-    public void runningActivityData(String tag, int activityId, int stepCount, int distance, double longitude,
+    public void runningActivityData(String tag, int activityId, int stepCount, int stepCountCal, int distance, double longitude,
                                     double latitude, String distancePerStep, String stepPerSecond, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + RUNNING_ACTIVITY_DATA;
         HashMap params = new HashMap();

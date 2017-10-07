@@ -21,8 +21,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -42,26 +40,26 @@ public class Database extends SQLiteOpenHelper {
     private static final AtomicInteger openCounter = new AtomicInteger();
     private static final String TAG = "Database";
     private static Database instance;
-    private static TableInterface mCallBack = null;
+    // private static TableInterface mCallBack = null;
 
     private Database(final Context context) {
         super(context, TABLE_RUNNING_SPORTS, null, DB_VERSION);
     }
 
-    private Database(@NonNull Context context, @NonNull TableInterface callBack) {
-        super(context, callBack.getName(), null, callBack.getDBVersion());
-        mCallBack = callBack;
-    }
+    // private Database(@NonNull Context context, @NonNull TableInterface callBack) {
+    //     super(context, callBack.getName(), null, callBack.getDBVersion());
+    //     mCallBack = callBack;
+    // }
 
     public Database(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    public static void init(Context context, TableInterface callBack) {
-        if (instance == null) {
-            instance = new Database(context, callBack);
-        }
-    }
+    // public static void init(Context context, TableInterface callBack) {
+    //     if (instance == null) {
+    //         instance = new Database(context, callBack);
+    //     }
+    // }
 
     public static synchronized Database getInstance(final Context c) {
         if (instance == null) {
@@ -71,38 +69,38 @@ public class Database extends SQLiteOpenHelper {
         return instance;
     }
 
-    public static <T> List<T> query(String tableName,
-                                    @Nullable String queryStr, @Nullable String[] whereArgs) {
-        if (instance == null) {
-            throw new IllegalStateException(ILLEGAL_OPREATION);
-        }
+    // public static <T> List<T> query(String tableName,
+    //                                 @Nullable String queryStr, @Nullable String[] whereArgs) {
+    //     if (instance == null) {
+    //         throw new IllegalStateException(ILLEGAL_OPREATION);
+    //     }
+    //
+    //     List<T> list = new ArrayList<>();
+    //     SQLiteDatabase db = instance.getReadableDatabase();
+    //     db.beginTransaction();
+    //     try {
+    //         db.setTransactionSuccessful();
+    //         Cursor c = db.rawQuery(queryStr, whereArgs);
+    //         if (c.moveToFirst()) {
+    //             do {
+    //                 T record = (T) instance.mCallBack
+    //                         .getEntityByCursor(TABLE_RUNNING_SPORTS, c);
+    //                 if (record != null) {
+    //                     list.add(record);
+    //                 }
+    //             } while (c.moveToNext());
+    //             c.close();
+    //         }
+    //     } finally {
+    //         db.endTransaction();
+    //         db.close();
+    //     }
+    //     return list;
+    // }
 
-        List<T> list = new ArrayList<>();
-        SQLiteDatabase db = instance.getReadableDatabase();
-        db.beginTransaction();
-        try {
-            db.setTransactionSuccessful();
-            Cursor c = db.rawQuery(queryStr, whereArgs);
-            if (c.moveToFirst()) {
-                do {
-                    T record = (T) instance.mCallBack
-                            .getEntityByCursor(TABLE_RUNNING_SPORTS, c);
-                    if (record != null) {
-                        list.add(record);
-                    }
-                } while (c.moveToNext());
-                c.close();
-            }
-        } finally {
-            db.endTransaction();
-            db.close();
-        }
-        return list;
-    }
-
-    public static String getTableName(){
-        return mCallBack.getName();
-    }
+    // public static String getTableName(){
+    //     return mCallBack.getName();
+    // }
 
     @Override
     public void close() {
@@ -115,9 +113,9 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(final SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TABLE_RUNNING_SPORTS + " (date INTEGER," + " steps INTEGER)");
         db.execSQL("CREATE TABLE " + TABLE_DAY_STEPS + " (time INTEGER," + " steps INTEGER)");
-
     }
 
+    // TODO
     @Override
     public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 1) {
@@ -233,7 +231,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
-     * Writes the current steps database to the log
+     * TODO Writes the current steps database to the log
      */
     public void logState() {
         Cursor c = getReadableDatabase()
@@ -405,6 +403,8 @@ public class Database extends SQLiteOpenHelper {
     public void saveCurrentSteps(int steps) {
         ContentValues values = new ContentValues();
         values.put("steps", steps);
+        // if 语句中执行了更新操作，如果返回 0 ，说明更新失败，重新插入新的记录。
+        // date 是 -1 说明是自系统启动至现在的步数。
         if (getWritableDatabase().update(TABLE_RUNNING_SPORTS, values, "date = -1", null) == 0) {
             values.put("date", -1);
             getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
@@ -414,7 +414,11 @@ public class Database extends SQLiteOpenHelper {
     public void saveDaySteps(int steps) {
         ContentValues values = new ContentValues();
         values.put("steps", steps);
-        values.put("time",System.currentTimeMillis());
+
+        // SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日HH点mm分");
+        // String time = sdf.format(System.currentTimeMillis());
+        // DLOG.d(TAG, time);
+        values.put("time", System.currentTimeMillis());
         getWritableDatabase().insert(TABLE_DAY_STEPS, null, values);
     }
 
@@ -431,60 +435,6 @@ public class Database extends SQLiteOpenHelper {
     public int getCurrentSteps() {
         int re = getSteps(-1);
         return re == Integer.MIN_VALUE ? 0 : re;
-    }
-
-    /**
-     * @return
-     * @SmartNi 2017-06-17
-     * save Running Sports Record to Database.
-     */
-    public int saveRunningSportsRecord(int runningSportId, int studentId, int currentDistance,
-                                       long elapaseTime, long startTime, int steps, long date) {
-        ContentValues values = new ContentValues();
-        values.put("runningSportId", runningSportId);
-        values.put("studentId", studentId);
-        values.put("currentDistance", currentDistance);
-        values.put("elapseTime", elapaseTime);
-        values.put("startTime", startTime);
-        values.put("steps", steps);
-        values.put("date", date);
-        long result = getWritableDatabase().insert(TABLE_RUNNING_SPORTS, null, values);
-        return (int) result;
-    }
-
-    public int count() {
-        Cursor cursor = getWritableDatabase().rawQuery("select count(*) from  " +
-                mCallBack.getName(), null);
-        return cursor.getCount();
-    }
-
-//    public SportsRecord getEntityByCursor(String tableName, Cursor c) {
-//        switch (tableName) {
-//            case TABLE_RUNNING_SPORTS:
-//                return new RunningSportsRecordOld(c.getInt(0),
-//                        c.getInt(1), c.getInt(2),
-//                        c.getInt(3), c.getInt(4),
-//                        c.getInt(5),
-//                        c.getLong(6), c.getInt(7),
-//                        c.getLong(8));
-//        }
-//        return null;
-//    }
-
-    public interface TableInterface {
-        //DB NAME
-        String getName();
-
-        int getDBVersion();
-
-        void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
-
-        List<String> createTableSql();
-
-        <T> void assignValuesByEntity(String tableName, T t, ContentValues values);
-
-        <T> T getEntityByCursor(String tableName, Cursor c);
-
     }
 
 }

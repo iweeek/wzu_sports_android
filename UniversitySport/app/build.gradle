@@ -8,7 +8,7 @@ android {
         applicationId "com.guangyangyundong.sport"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 14
+        versionCode 17
         versionName "1.0.0"
         manifestPlaceholders = [YOUR_APP_KEY: "57c68fab67e58ecacf002627"]
         multiDexEnabled true

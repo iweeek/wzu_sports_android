@@ -13,6 +13,8 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.server.entry.RankingData;
 import com.tim.app.ui.cell.GlideApp;
 
+import java.util.List;
+
 /**
  * 排行数据的headerview
  */
@@ -60,51 +62,75 @@ public class RankingDataHeadView extends LinearLayout {
         tvThirdUnit = (TextView) findViewById(R.id.tvThirdUnit);
     }
 
-    public void setData(RankingData data[], int type) {
-        tvFirstName.setText(data[0].getUserName());
-        tvSecondName.setText(data[1].getUserName());
-        tvThirdName.setText(data[2].getUserName());
+    public void setData(List<RankingData> dataList, int type) {
+        for(int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i) != null) {
 
-        if (!TextUtils.isEmpty(data[0].getAvatar())) {
-            GlideApp.with(context)
-                    .load(data[0].getAvatar())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(rivFirstAvatar);
-        }
-        if (!TextUtils.isEmpty(data[1].getAvatar())) {
-            GlideApp.with(context)
-                    .load(data[1].getAvatar())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(rivSecondAvatar);
-        }
-        if (!TextUtils.isEmpty(data[2].getAvatar())) {
-            GlideApp.with(context)
-                    .load(data[2].getAvatar())
-                    .placeholder(R.drawable.ic_default_avatar)
-                    .circleCrop()
-                    .into(rivThirdAvatar);
-        }
-        if (AppConstant.TYPE_COST_TIME == type) {
-            tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[0].getCostValue() / 60)));
-            tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[1].getCostValue() / 60)));
-            tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[2].getCostValue() / 60)));
+                String minuteUnit = " " + context.getString(R.string.minute);
+                String kcalUnit = " " + context.getString(R.string.kcal);
 
-            String unit = " " + context.getString(R.string.minute);
-            tvFirstUnit.setText(unit);
-            tvSecondUnit.setText(unit);
-            tvThirdUnit.setText(unit);
-        } else {
-            tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[0].getCostValue())));
-            tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[1].getCostValue())));
-            tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(data[2].getCostValue())));
+                if (i == 0) {
+                    tvFirstName.setText(dataList.get(i).getUserName());
 
-            String unit = " " + context.getString(R.string.kcal);
-            tvFirstUnit.setText(unit);
-            tvSecondUnit.setText(unit);
-            tvThirdUnit.setText(unit);
+                    if (!TextUtils.isEmpty(dataList.get(i).getAvatar())) {
+                        GlideApp.with(context)
+                                .load(dataList.get(i).getAvatar())
+                                .placeholder(R.drawable.ic_default_avatar)
+                                .circleCrop()
+                                .into(rivFirstAvatar);
+                    }
+
+                    if (AppConstant.TYPE_COST_TIME == type) {
+                        tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(dataList.get(i).getCostValue() / 60)));
+                        tvFirstUnit.setText(minuteUnit);
+                    } else {
+                        tvFirst.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(dataList.get(i).getCostValue())));
+                        tvFirstUnit.setText(kcalUnit);
+                    }
+                }
+
+                if (i == 1) {
+                    tvSecondName.setText(dataList.get(i).getUserName());
+
+                    if (!TextUtils.isEmpty(dataList.get(i).getAvatar())) {
+                        GlideApp.with(context)
+                                .load(dataList.get(i).getAvatar())
+                                .placeholder(R.drawable.ic_default_avatar)
+                                .circleCrop()
+                                .into(rivSecondAvatar);
+                    }
+
+                    if (AppConstant.TYPE_COST_TIME == type) {
+                        tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(dataList.get(i).getCostValue() / 60)));
+                        tvSecondUnit.setText(minuteUnit);
+                    } else {
+                        tvSecond.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(dataList.get(i).getCostValue())));
+                        tvSecondUnit.setText(kcalUnit);
+                    }
+                }
+
+                if (i == 2) {
+                    tvThirdName.setText(dataList.get(i).getUserName());
+
+                    if (!TextUtils.isEmpty(dataList.get(i).getAvatar())) {
+                        GlideApp.with(context)
+                                .load(dataList.get(i).getAvatar())
+                                .placeholder(R.drawable.ic_default_avatar)
+                                .circleCrop()
+                                .into(rivThirdAvatar);
+                    }
+
+                    if (AppConstant.TYPE_COST_TIME == type) {
+                        tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(dataList.get(i).getCostValue() / 60)));
+                        tvThirdUnit.setText(minuteUnit);
+                    } else {
+                        tvThird.setText(context.getString(R.string.digitalPlaceholder,String.valueOf(dataList.get(i).getCostValue())));
+                        tvThirdUnit.setText(kcalUnit);
+                    }
+                }
+
+
+            }
         }
     }
-
 }

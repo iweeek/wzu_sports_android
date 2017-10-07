@@ -51,11 +51,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     int type;
     private int universityId = 1;
     private int pageNoEnergy = 1;
-    private int pageSizeEnergy = 10;
+    private int pageSizeEnergy = 10; // value don't  less than 3
     private int pageCountEnergy = -1;
 
     private int pageNoTime = 1;
-    private int pageSizeTime = 10;
+    private int pageSizeTime = 10; // value don't  less than 3
     private int pageCountTime = -1;
 
     public static RankingDataFragment newInstance(int type) {
@@ -116,26 +116,36 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
     private void initData() {
         if (type == AppConstant.TYPE_COST_ENERGY) {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
-
-                        JSONObject jsonObject = json.optJSONObject("data").optJSONObject("university")
-                                .optJSONObject("kcalConsumptionRanking");
                         try {
+                            JSONObject jsonObject = json.getJSONObject("data").getJSONObject("university")
+                                    .getJSONObject("kcalConsumptionRanking");
+
                             pageCountEnergy = Integer.valueOf(jsonObject.optString("pagesCount"));
                             JSONArray rankingDataArray = jsonObject.optJSONArray("data");
-                            RankingData headData[] = new RankingData[3];
-                            for (int i = 0; i < 3; i++) {
-                                headData[i] = new RankingData();
-                                headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
-                                headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
-                                DLOG.d(TAG, "headData[i]:" + headData[i].toString());
+                            List<RankingData> headDataList = new ArrayList<>();
+                            // if rankingDataArray#size greater than 3
+                            for (int i = 0; i < rankingDataArray.length() && i != 3; i++) {
+                                RankingData rankingData = new RankingData();
+                                rankingData.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
+                                rankingData.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                rankingData.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("kcalConsumption")));
+                                headDataList.add(rankingData);
+                                DLOG.d(TAG, "rankingData:" + rankingData);
                             }
-                            headView.setData(headData, AppConstant.TYPE_COST_ENERGY);
+                            headView.setData(headDataList, AppConstant.TYPE_COST_ENERGY);
 
+                            if (headDataList.size() > 0) {
+                                emptyLayout.showContent();
+                            } else {
+                                emptyLayout.showEmpty();
+                            }
+
+                            // TODO
+                            // headDataList.size()
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
@@ -146,21 +156,18 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 DLOG.d(TAG, "dataList:" + data);
                             }
                             adapter.notifyDataSetChanged();
-                            //see #663_1
-                            if (dataList.size() > 0) {
-                                emptyLayout.showContent();
-                                //} else if (dataList.size() > 0) {
-                                // emptyLayout.showContent();
-                                // }else{
-                            }else{
-                                emptyLayout.showEmpty();
+
+                            if (pageNoEnergy != pageCountEnergy) {
+                                lrvLoadMore.loadMoreFinish(false, true);
+                            } else {
+                                lrvLoadMore.loadMoreFinish(false, false);
                             }
+                            pageNoEnergy++;
 
                             return true;
                         } catch (org.json.JSONException e) {
                             emptyLayout.showEmpty();
                             e.printStackTrace();
-                            DLOG.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
@@ -171,23 +178,34 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
 
             });
         } else {
-            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime++, type, new JsonResponseCallback() {
+            ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeTime, pageNoTime, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
-                        JSONObject jsonObject = json.optJSONObject("data").optJSONObject("university")
-                                .optJSONObject("timeCostedRanking");
                         try {
+                            JSONObject jsonObject = json.getJSONObject("data").getJSONObject("university")
+                                    .getJSONObject("timeCostedRanking");
+
                             pageCountTime = Integer.valueOf(jsonObject.getString("pagesCount"));
                             JSONArray rankingDataArray = jsonObject.getJSONArray("data");
-                            RankingData headData[] = new RankingData[3];
-                            for (int i = 0; i < 3; i++) {
-                                headData[i] = new RankingData();
-                                headData[i].setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
-                                headData[i].setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
-                                headData[i].setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                            List<RankingData> headDataList = new ArrayList<>();
+                            // if rankingDataArray#size greater than 3
+                            for (int i = 0; i < rankingDataArray.length() && i != 3; i++) {
+                                RankingData rankingData = new RankingData();
+                                rankingData.setAvatar(rankingDataArray.getJSONObject(i).getString("avatarUrl"));
+                                rankingData.setUserName(rankingDataArray.getJSONObject(i).getString("studentName"));
+                                rankingData.setCostValue(Integer.valueOf(rankingDataArray.getJSONObject(i).getString("timeCosted")));
+                                headDataList.add(rankingData);
+                                DLOG.d(TAG, "rankingData:" + rankingData);
                             }
-                            headView.setData(headData, AppConstant.TYPE_COST_TIME);
+                            headView.setData(headDataList, AppConstant.TYPE_COST_TIME);
+
+                            if (headDataList.size() > 0) {
+                                emptyLayout.showContent();
+                            } else {
+                                emptyLayout.showEmpty();
+                            }
+
                             for (int i = 3; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
                                 data.setAvatar("");
@@ -197,16 +215,18 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(data);
                             }
                             adapter.notifyDataSetChanged();
-                            if (dataList.size() == 0) {
-                                emptyLayout.showEmpty();
+
+                            if (pageNoTime != pageCountTime) {
+                                lrvLoadMore.loadMoreFinish(false, true);
                             } else {
-                                emptyLayout.showContent();
+                                lrvLoadMore.loadMoreFinish(false, false);
                             }
+                            pageNoTime++;
+
                             return true;
                         } catch (org.json.JSONException e) {
                             emptyLayout.showEmpty();
                             e.printStackTrace();
-                            DLOG.e(TAG, "queryCollegeSportsRankingData onJsonResponse e: " + e);
                             return false;
                         }
                     } else {
@@ -266,13 +286,14 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
     public void onLoadMore(LoadMoreContainer loadMoreContainer) {
         DLOG.d(TAG, "pageNoEnergy:" + pageNoEnergy);
         DLOG.d(TAG, "pageNoTime:" + pageNoTime);
+        DLOG.d(TAG, "pageCountEnergy:" + pageCountEnergy);
         if (type == AppConstant.TYPE_COST_ENERGY) {
             ServerInterface.instance().queryCollegeSportsRankingData(universityId, pageSizeEnergy, pageNoEnergy, type, new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         try {
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("kcalConsumptionRanking").
+                            JSONArray rankingDataArray = json.getJSONObject("data").getJSONObject("university").getJSONObject("kcalConsumptionRanking").
                                     getJSONArray("data");
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -286,10 +307,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            DLOG.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            e.printStackTrace();
                             return false;
                         }
                     } else {
+                        DLOG.d(TAG, "errCode:" + errCode);
                         return false;
                     }
                 }
@@ -308,7 +330,7 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         try {
-                            JSONArray rankingDataArray = json.optJSONObject("data").optJSONObject("university").optJSONObject("timeCostedRanking").
+                            JSONArray rankingDataArray = json.getJSONObject("data").getJSONObject("university").getJSONObject("timeCostedRanking").
                                     getJSONArray("data");
                             for (int i = 0; i < rankingDataArray.length(); i++) {
                                 RankingData data = new RankingData();
@@ -321,10 +343,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
                             adapter.notifyDataSetChanged();
                             return true;
                         } catch (org.json.JSONException e) {
-                            DLOG.e(TAG, "queryCurTermData onJsonResponse e: ");
+                            e.printStackTrace();
                             return false;
                         }
                     } else {
+                        DLOG.d(TAG, "errCode:" + errCode);
                         return false;
                     }
                 }
@@ -337,15 +360,11 @@ public class RankingDataFragment extends BaseFragment implements View.OnClickLis
             }
             pageNoTime++;
         }
-        adapter.notifyDataSetChanged();
-
-
+        // adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
-
-
 }
