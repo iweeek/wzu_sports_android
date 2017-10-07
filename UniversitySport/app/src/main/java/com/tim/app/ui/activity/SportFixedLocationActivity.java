@@ -90,7 +90,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     /*三方控件*/
     private MapView mapView;
-    private MyLocationStyle myLocationStyle;
     private AMap aMap;
     private UiSettings uiSettings;
     private Location firstLocation;
@@ -271,6 +270,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         DLOG.d(TAG, "sportEntry.getAcquisitionInterval():" + sportEntry.getAcquisitionInterval());
 
         acquisitionInterval = sportEntry.getAcquisitionInterval() * 1000;
+        elapseTime = 0 - sportEntry.getAcquisitionInterval(); // 解决动态改变高德回调的之后立即回调一次的问题。
+
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
         initMap();
@@ -482,7 +483,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     }
 
     private void setupLocationStyle() {
-        myLocationStyle = new MyLocationStyle();
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_MAP_ROTATE_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，地图依照设备方向旋转，并且蓝点会跟随设备移动。
         myLocationStyle.interval(navigationInterval);
         myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
@@ -518,12 +519,15 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         LatLng newLatLng;
         Boolean isNormal = true;
 
+
         //运动耗时
         if (state == STATE_STARTED) {
-            elapseTime += acquisitionInterval / 1000;
-            //            String time = TimeUtil.formatMillisTime(elapseTime * 1000);
-            //            tvElapsedTime.setText(time);
-            tvElapsedTime.setText(elapseTime / 60 + " 分钟");
+            MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
+            DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
+            // if (myLocationStyle.getInterval() != navigationInterval) {
+                elapseTime += acquisitionInterval / 1000;
+                tvElapsedTime.setText(elapseTime / 60 + " 分钟");
+            // }
         }
 
         Bundle bundle = location.getExtras();
@@ -576,7 +580,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                DLOG.writeToInternalFile(msg);
+                // DLOG.writeToInternalFile(msg);
                 DLOG.d(TAG, "lastLatLng: " + lastLatLng);
 
                 float batteryLevel = getBatteryLevel();
@@ -740,12 +744,13 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 if (state == STATE_NORMAL) {
                     if (isContains) {
                         // 改变回调间隔
+                        MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
                         myLocationStyle.interval(acquisitionInterval);
                         aMap.setMyLocationStyle(myLocationStyle);
-                        allowStart();
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                     }
+                    MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
                     myLocationStyle.interval(acquisitionInterval);
                     aMap.setMyLocationStyle(myLocationStyle);
                     allowStart();
@@ -792,7 +797,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
             //开始本次运动
-            ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), new JsonResponseCallback() {
+            ServerInterface.instance().areaActivities(TAG, sportEntry.getId(), student.getId(), fixLocationOutdoorSportPoint.getId(), new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
@@ -810,7 +815,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                     public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                         if (status == 0) {
                                             DLOG.d(TAG, "第一次上传 areaActivityData 成功!");
-                                            state = STATE_STARTED;
                                             startTime = System.currentTimeMillis();
 
                                             slideUnlockView.setVisibility(View.VISIBLE);
@@ -821,6 +825,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                                             progressDialog.dismissCurrentDialog();
 
+                                            state = STATE_STARTED;
                                             return true;
                                         } else {
                                             Toast.makeText(SportFixedLocationActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
