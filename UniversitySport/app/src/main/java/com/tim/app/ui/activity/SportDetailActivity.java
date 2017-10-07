@@ -472,179 +472,180 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
 
         DLOG.d(TAG, "locationType:" + locationType);
-        //定位成功
-        if (errorCode != 0) {
-            String errText = "正在定位中，GPS信号弱";
-            Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            DLOG.d(TAG, "newLatLng: " + newLatLng);
-            // 判断第一次，第一次会提示
-            if (lastLatLng == null) {
-                String errText = "定位成功";
-                firstLocation = location;
-                firstLocationType = locationType;
-                // llLocationHint.setVisibility(View.GONE);
+        if (location != null) {
+            //定位成功
+            if (errorCode != 0) {
+                String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                locationDialog.dismissDialog();
-
-                //TODO 待删除
-                //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-                //toastText = "调整屏幕缩放比例：" + zoomLevel;
-                //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-
-                CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
-                aMap.moveCamera(cu);
-
-                btStart.setVisibility(View.VISIBLE);
-            }
-        }
-
-        if (state == STATE_STARTED) {
-            String msg = location.toString();
-            //                DLOG.writeToInternalFile(msg);
-
-            float batteryLevel = getBatteryLevel();
-            DLOG.d(TAG, "lastLatLng: " + lastLatLng);
-            float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
-
-            //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
-            int stepsInterval = currentSteps - lastSteps;
-            BigDecimal bdDividend;
-            BigDecimal bdDevisor;
-            if (stepsInterval == 0) {
-                distancePerStep = 0;
-                stepPerSecond = 0;
+                return;
             } else {
-                bdDividend = new BigDecimal(distanceInterval);
-                bdDevisor = new BigDecimal(stepsInterval);
-                distancePerStep = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
+                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                DLOG.d(TAG, "newLatLng: " + newLatLng);
+                // 判断第一次，第一次会提示
+                if (lastLatLng == null) {
+                    String errText = "定位成功";
+                    firstLocation = location;
+                    firstLocationType = locationType;
+                    // llLocationHint.setVisibility(View.GONE);
+                    Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
+                    locationDialog.dismissDialog();
 
-                bdDividend = new BigDecimal(stepsInterval);
-                bdDevisor = new BigDecimal(currentSportEntry.getAcquisitionInterval());
-                stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
+                    //TODO 待删除
+                    //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
+                    //toastText = "调整屏幕缩放比例：" + zoomLevel;
+                    //Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+                    CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(newLatLng, zoomLevel, 0, 0));
+                    aMap.moveCamera(cu);
+
+                    btStart.setVisibility(View.VISIBLE);
+                }
             }
 
-            // toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
-            //         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + currentSteps +
-            //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
-            // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+            if (state == STATE_STARTED) {
+                String msg = location.toString();
+                //                DLOG.writeToInternalFile(msg);
 
-            // if (locationType == 1) {
-            if (distanceInterval / currentSportEntry.getAcquisitionInterval() > speedLimitation) {
-                toastText = "异常移动，每秒位移：" + distanceInterval / currentSportEntry.getAcquisitionInterval();
-                Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                isNormal = false;
-                drawLine(lastLatLng, newLatLng, isNormal);
-                // currentDistance += distanceInterval;
-            } else {
-                // 速度在正常幅度内
-                isNormal = true;
-                drawLine(lastLatLng, newLatLng, isNormal);
-                currentDistance += distanceInterval;
+                float batteryLevel = getBatteryLevel();
+                DLOG.d(TAG, "lastLatLng: " + lastLatLng);
+                float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
-                if (currentDistance >= currentSportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
-                    targetFinishedTime = elapseTime;
-                    tvCurrentStatusDistance.setTextColor(getResources().getColor(R.color.green_primary));
-                } else if (currentDistance < currentSportEntry.getQualifiedDistance()) {
-                    tvCurrentStatusDistance.setTextColor(getResources().getColor(R.color.red_primary_dark));
+                //TODO 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
+                int stepsInterval = currentSteps - lastSteps;
+                BigDecimal bdDividend;
+                BigDecimal bdDevisor;
+                if (stepsInterval == 0) {
+                    distancePerStep = 0;
+                    stepPerSecond = 0;
+                } else {
+                    bdDividend = new BigDecimal(distanceInterval);
+                    bdDevisor = new BigDecimal(stepsInterval);
+                    distancePerStep = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
+
+                    bdDividend = new BigDecimal(stepsInterval);
+                    bdDevisor = new BigDecimal(currentSportEntry.getAcquisitionInterval());
+                    stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
                 }
 
-                tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
-                BigDecimal currentSpeed = MathUtil.bigDecimalDivide(String.valueOf(currentDistance),
-                        String.valueOf(elapseTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
-                // 解决速度过大
-                if (currentSpeed.compareTo(new BigDecimal(10)) < 0) {
-                    tvCurrentStatusSpeed.setText(currentSpeed.toString() + " ");
-                    if (currentSpeed.floatValue() >= sportEntryDataList.get(0).getTargetSpeed()) {
-                        tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.green_primary));
+                // toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
+                //         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + currentSteps +
+                //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
+                // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+
+                // if (locationType == 1) {
+                if (distanceInterval / currentSportEntry.getAcquisitionInterval() > speedLimitation) {
+                    toastText = "异常移动，每秒位移：" + distanceInterval / currentSportEntry.getAcquisitionInterval();
+                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    isNormal = false;
+                    drawLine(lastLatLng, newLatLng, isNormal);
+                    // currentDistance += distanceInterval;
+                } else {
+                    // 速度在正常幅度内
+                    isNormal = true;
+                    drawLine(lastLatLng, newLatLng, isNormal);
+                    currentDistance += distanceInterval;
+
+                    if (currentDistance >= currentSportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                        targetFinishedTime = elapseTime;
+                        tvCurrentStatusDistance.setTextColor(getResources().getColor(R.color.green_primary));
+                    } else if (currentDistance < currentSportEntry.getQualifiedDistance()) {
+                        tvCurrentStatusDistance.setTextColor(getResources().getColor(R.color.red_primary_dark));
                     }
-                }
 
-                // Log.d(TAG, "currentSpeed.floatValue():" + currentSpeed.floatValue());
-                // Log.d(TAG, "fasterSportEntry.getTargetSpeed():" + fasterSportEntry.getTargetSpeed());
-                // Log.d(TAG, "fasterLevel:" + fasterLevel);
-                // Log.d(TAG, "currentLevel:" + currentLevel);
-                // Log.d(TAG, "currentSportEntry.getTargetSpeed():" + currentSportEntry.getTargetSpeed());
-
-                // 加档：目前有更快的项目，并且当前速度大于或等于更快项目的达标速度，更换当前项目为更快的项目
-                if (fasterSportEntry != null && currentSpeed.floatValue() >= fasterSportEntry.getTargetSpeed()) {
-
-                    // 设置上一档
-                    slowerLevel = currentLevel;
-                    slowerSportEntry = currentSportEntry;
-                    setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
-
-                    // 设置当前档
-                    currentSportEntry = sportEntryDataList.get(fasterLevel);
-                    currentLevel = fasterLevel;
-                    setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
-
-                    // 设置下一档
-                    if (fasterLevel >= 1 && fasterLevel < sportEntryDataList.size()) {
-                        if (fasterLevel == sportEntryDataList.size() - 1) {
-                            // 已经没有最快的项目了
-                            fasterLevel = -1;
-                            fasterSportEntry = null;
-                            setFasterSportItem("无", -1, -1);
-                        } else {
-                            // 还有更快的项目，更新fasterSportEntry
-                            fasterLevel++;
-                            fasterSportEntry = sportEntryDataList.get(fasterLevel);
-                            setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+                    tvCurrentStatusDistance.setText(String.valueOf(currentDistance) + " ");
+                    BigDecimal currentSpeed = MathUtil.bigDecimalDivide(String.valueOf(currentDistance),
+                            String.valueOf(elapseTime), SPEED_SCALE, BigDecimal.ROUND_DOWN);
+                    // 解决速度过大
+                    if (currentSpeed.compareTo(new BigDecimal(10)) < 0) {
+                        tvCurrentStatusSpeed.setText(currentSpeed.toString() + " ");
+                        if (currentSpeed.floatValue() >= sportEntryDataList.get(0).getTargetSpeed()) {
+                            tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.green_primary));
                         }
                     }
-                } else {
-                    // 没有更快的项目，或者平均速度没有超过达标速度
-                }
 
-                // 减档：如果当前速度小于当前项目的达标速度，
-                if (currentSpeed.floatValue() < currentSportEntry.getTargetSpeed()) {
-                    // TODO 结合上下文，currentLevel不可能超过运动项目数量
-                    if (currentLevel >= 1/* && currentLevel < sportEntryDataList.size()*/) {
-                        // 如果当前项目不是最低级别的项目
-                        fasterLevel = currentLevel;
-                        fasterSportEntry = currentSportEntry;
-                        setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+                    // Log.d(TAG, "currentSpeed.floatValue():" + currentSpeed.floatValue());
+                    // Log.d(TAG, "fasterSportEntry.getTargetSpeed():" + fasterSportEntry.getTargetSpeed());
+                    // Log.d(TAG, "fasterLevel:" + fasterLevel);
+                    // Log.d(TAG, "currentLevel:" + currentLevel);
+                    // Log.d(TAG, "currentSportEntry.getTargetSpeed():" + currentSportEntry.getTargetSpeed());
 
-                        currentLevel = slowerLevel;
-                        currentSportEntry = slowerSportEntry;
+                    // 加档：目前有更快的项目，并且当前速度大于或等于更快项目的达标速度，更换当前项目为更快的项目
+                    if (fasterSportEntry != null && currentSpeed.floatValue() >= fasterSportEntry.getTargetSpeed()) {
+
+                        // 设置上一档
+                        slowerLevel = currentLevel;
+                        slowerSportEntry = currentSportEntry;
+                        setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
+
+                        // 设置当前档
+                        currentSportEntry = sportEntryDataList.get(fasterLevel);
+                        currentLevel = fasterLevel;
                         setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
 
-                        slowerLevel--;
-                        slowerSportEntry = sportEntryDataList.get(slowerLevel);
-                        setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
-                    } else if (currentLevel == 0) {
-                        // 已经是最低级别，字体颜色变红
-                        tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.red_primary_dark));
-                    }
-                }
-            }
-
-            // 提交到服务器
-            ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
-                    location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
-                    locationType, isNormal, new ResponseCallback() {
-                        @Override
-                        public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
-                            if (status == 0) {
-                                DLOG.d(TAG, "runningActivityData succeed");
-                                return true;
+                        // 设置下一档
+                        if (fasterLevel >= 1 && fasterLevel < sportEntryDataList.size()) {
+                            if (fasterLevel == sportEntryDataList.size() - 1) {
+                                // 已经没有最快的项目了
+                                fasterLevel = -1;
+                                fasterSportEntry = null;
+                                setFasterSportItem("无", -1, -1);
                             } else {
-                                String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
-                                msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
-                                msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
-                                DLOG.writeToInternalFile(msg);
-                                return false;
+                                // 还有更快的项目，更新fasterSportEntry
+                                fasterLevel++;
+                                fasterSportEntry = sportEntryDataList.get(fasterLevel);
+                                setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
                             }
                         }
-                    });
-            // }
-        }
+                    } else {
+                        // 没有更快的项目，或者平均速度没有超过达标速度
+                    }
 
-        lastSteps = currentSteps;
-        lastLatLng = newLatLng;
+                    // 减档：如果当前速度小于当前项目的达标速度，
+                    if (currentSpeed.floatValue() < currentSportEntry.getTargetSpeed()) {
+                        // TODO 结合上下文，currentLevel不可能超过运动项目数量
+                        if (currentLevel >= 1/* && currentLevel < sportEntryDataList.size()*/) {
+                            // 如果当前项目不是最低级别的项目
+                            fasterLevel = currentLevel;
+                            fasterSportEntry = currentSportEntry;
+                            setFasterSportItem(fasterSportEntry.getName(), fasterSportEntry.getQualifiedDistance(), fasterSportEntry.getTargetSpeed());
+
+                            currentLevel = slowerLevel;
+                            currentSportEntry = slowerSportEntry;
+                            setCurrentSportItem(currentSportEntry.getName(), currentSportEntry.getQualifiedDistance(), currentSportEntry.getTargetSpeed());
+
+                            slowerLevel--;
+                            slowerSportEntry = sportEntryDataList.get(slowerLevel);
+                            setSlowerSportItem(slowerSportEntry.getName(), slowerSportEntry.getQualifiedDistance(), slowerSportEntry.getTargetSpeed());
+                        } else if (currentLevel == 0) {
+                            // 已经是最低级别，字体颜色变红
+                            tvCurrentStatusSpeed.setTextColor(getResources().getColor(R.color.red_primary_dark));
+                        }
+                    }
+                }
+
+                // 提交到服务器
+                ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
+                        location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
+                        locationType, isNormal, new ResponseCallback() {
+                            @Override
+                            public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
+                                if (status == 0) {
+                                    DLOG.d(TAG, "runningActivityData succeed");
+                                    return true;
+                                } else {
+                                    String msg = "runningActivityData failed, errmsg: " + errmsg + "\r\n";
+                                    msg += "net type: " + NetUtils.getNetWorkType(SportDetailActivity.this) + "\r\n";
+                                    msg += "net connectivity is: " + NetUtils.isConnection(SportDetailActivity.this) + "\r\n";
+                                    DLOG.writeToInternalFile(msg);
+                                    return false;
+                                }
+                            }
+                        });
+            }
+
+            lastSteps = currentSteps;
+            lastLatLng = newLatLng;
+        }
     }
 
     @Override
@@ -987,7 +988,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                                         slideUnlockView.setVisibility(View.VISIBLE);
                                                         tvPause.setVisibility(View.VISIBLE);
 
-                                                        progressDialog.dismissDialog();
+                                                        progressDialog.dismissCurrentDialog();
 
                                                         initData();
                                                         startTimer();
@@ -1008,7 +1009,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     e.printStackTrace();
                                     // TODO
                                     btStart.setVisibility(View.VISIBLE);
-                                    progressDialog.dismissDialog();
+                                    progressDialog.dismissCurrentDialog();
                                     Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                     DLOG.d(TAG, "errMsg: " + errMsg);
                                 }
@@ -1016,7 +1017,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             } else {
                                 // TODO
                                 btStart.setVisibility(View.VISIBLE);
-                                progressDialog.dismissDialog();
+                                progressDialog.dismissCurrentDialog();
                                 Toast.makeText(SportDetailActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
                                 DLOG.d(TAG, "errMsg: " + errMsg);
                                 return false;
@@ -1302,7 +1303,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+        if (mapView != null) {
+            mapView.onResume();
+        }
         if (lastLatLng != null) {
             CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(lastLatLng, zoomLevel, 0, 0));
             aMap.moveCamera(cu);

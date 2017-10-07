@@ -415,7 +415,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         if (location != null) {
             //定位成功
-            if (errorCode != 0 || locationType != 1 || state != STATE_STARTED) {
+            if (errorCode != 0) {
                 String errText = "正在定位中，GPS信号弱";
                 Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                 return;
