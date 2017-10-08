@@ -291,7 +291,7 @@ public class SportResultActivity extends ToolbarActivity {
             queryRunningActivity(historyRunningSportEntry.getId());
         } else if (historyAreaSportEntry != null){
             llTargetContainer.setVisibility(View.GONE);
-            // btDrawLine.setVisibility(View.GONE);
+            btDrawLine.setVisibility(View.GONE);
             setupArea();
 
             CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
@@ -668,8 +668,8 @@ public class SportResultActivity extends ToolbarActivity {
                     if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
                         drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
                         ll = mDrawPoints.get(i).getLL();
-                        DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
-                                ", i: " + i);
+                        // DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
+                        //         ", i: " + i);
                     }
                 }
                 // }
@@ -936,7 +936,7 @@ public class SportResultActivity extends ToolbarActivity {
 
         btDrawLine.setOnClickListener(this);
         btDrawLine.setText("绘制运动轨迹");
-        btDrawLine.setVisibility(View.VISIBLE);
+        // btDrawLine.setVisibility(View.VISIBLE);
 
         ivLocation.setOnClickListener(this);
 
