@@ -125,27 +125,31 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 }
 
-                final HistoryAreaSportEntry areaData = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
+                final HistoryAreaSportEntry areaSportEntry = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
 
                 ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
                 iv.setBackgroundResource(R.drawable.ic_fix_location_sport);
 
                 //区域名字
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
-                tvSportDesc.setText(areaData.getAreaSport());
+                tvSportDesc.setText(areaSportEntry.getAreaSport());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-                if (data.historySportEntryList.get(i).isQualified()) {
-                    tvSportQualified.setText("达标");
-                    tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                if (areaSportEntry.getEndedAt() == 0) {
+                    tvSportQualified.setText("非正常结束");
+                    tvSportQualified.setTextColor(Color.parseColor("#FFAA2B"));
                 } else {
-                    tvSportQualified.setText("不达标");
-                    tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                    if (data.historySportEntryList.get(i).isQualified()) {
+                        tvSportQualified.setText("达标");
+                        tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
+                    } else {
+                        tvSportQualified.setText("不达标");
+                        tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
+                    }
                 }
-
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
                 SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
-                tvSportTime.setText(sdf.format(areaData.getStartTime()));
+                tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
                 //距离区域要隐藏
@@ -155,19 +159,19 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
                 //                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaData.getCostTime() * 1000);
-                tvMiddle.setText(String.valueOf(areaData.getCostTime() / 60) + " 分钟");
+                tvMiddle.setText(String.valueOf(areaSportEntry.getCostTime() / 60) + " 分钟");
 
                 //耗能
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
-                tvRight.setText(areaData.getKcalConsumed() + "");
+                tvRight.setText(areaSportEntry.getKcalConsumed() + "");
 
                 //累加总共消耗热量
-                totalEnergyCost += areaData.getKcalConsumed();
+                totalEnergyCost += areaSportEntry.getKcalConsumed();
 
                 ll.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        SportResultActivity.start(mContext, areaData);
+                        SportResultActivity.start(mContext, areaSportEntry);
                     }
                 });
 

@@ -137,6 +137,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                                 fixLocationOutdoorSportPoint.setEnabled(jsonObject.optBoolean("isEnabled"));
                                 fixLocationOutdoorSportPoint.setId(jsonObject.optInt("id"));
                                 fixLocationOutdoorSportPoint.setAreaName(jsonObject.optString("name"));
+                                fixLocationOutdoorSportPoint.setDescription(jsonObject.optString("description"));
                                 fixLocationOutdoorSportPoint.setAddress(jsonObject.optString("addr"));
                                 fixLocationOutdoorSportPoint.setLatitude(jsonObject.optDouble("latitude"));
                                 fixLocationOutdoorSportPoint.setLongitude(jsonObject.optDouble("longitude"));

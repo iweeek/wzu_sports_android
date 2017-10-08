@@ -119,7 +119,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private TextView tvElapsedTime; //耗时
     private RelativeLayout rlBottomFloatingWindow; //浮动窗底部达标时间块
     private TextView tvTargetTime; //达标时间
-    private TextView tvSportJoinNumber; //参与的人数
+    private TextView tvParticipantNum; //参与的人数
     private RelativeLayout rlBottom;
     private Button btStart;
     private LinearLayout llBottom;
@@ -360,6 +360,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getAreaName())) {
             tvAreaName.setText(fixLocationOutdoorSportPoint.getAreaName());
         }
+        if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getDescription())) {
+            tvAreaDesc.setText(fixLocationOutdoorSportPoint.getDescription());
+        }
+        tvParticipantNum.setText(getString(R.string.joinPrompt, String.valueOf(sportEntry.getParticipantNum())));
+
         if (fixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
             tvTargetTime.setText(String.format(getResources().getString(R.string.minutePlaceHolder), String.valueOf(fixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
         } else {
@@ -397,7 +402,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         //结束本次运动
                         areaActivitiesEnd(areaSportRecordId);
 
-                        //tvSportJoinNumber.setVisibility(View.GONE);
+                        //tvParticipantNum.setVisibility(View.GONE);
                         rlBottom.setVisibility(View.VISIBLE);
                         llBottom.setVisibility(View.GONE);
                         btStart.setVisibility(View.VISIBLE);
@@ -444,7 +449,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlTopFloatingWindow = (RelativeLayout) findViewById(R.id.rlTopFloatingWindow);
         tvElapsedTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvResult = (TextView) findViewById(R.id.tvResult);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvParticipantNum);
+        tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
         tvAreaName = (TextView) findViewById(R.id.tvAreaName);
         tvSelectLocation = (TextView) findViewById(R.id.tvSelectLocation);
@@ -453,7 +458,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlElapsedTime = (RelativeLayout) findViewById(R.id.rlElapsedTime);
         rlBottomFloatingWindow = (RelativeLayout) findViewById(R.id.rlBottomFloatingWindow);
         tvTargetTime = (TextView) findViewById(R.id.tvTargetTime);
-        tvSportJoinNumber = (TextView) findViewById(R.id.tvParticipantNum);
 
         rlAnimView = findViewById(R.id.rlAnimView);
 

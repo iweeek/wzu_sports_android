@@ -468,6 +468,7 @@ public class ServerInterface {
                 "  fixLocationOutdoorSportPoints(universityId: " + universityId + ") {\n" +
                 "    id\n" +
                 "    name\n" +
+                "    description\n" +
                 "    isEnabled\n" +
                 "    latitude\n" +
                 "    longitude\n" +
