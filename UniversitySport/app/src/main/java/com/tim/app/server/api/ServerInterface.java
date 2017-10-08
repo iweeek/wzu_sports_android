@@ -251,24 +251,24 @@ public class ServerInterface {
     public void queryRunningActivity(long activityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  runningActivity(id: " + activityId + ") {\n" +
-//                "    runningSportId\n" +
-//                "    studentId\n" +
+                //                "    runningSportId\n" +
+                //                "    studentId\n" +
                 "    distance\n" +
-//                "    stepCount\n" +
+                //                "    stepCount\n" +
                 "    costTime\n" +
-//                "    targetFinishedTime\n" +
-//                "    sportDate\n" +
-//                "    startTime\n" +
-//                "    endedAt\n" +
+                //                "    targetFinishedTime\n" +
+                //                "    sportDate\n" +
+                //                "    startTime\n" +
+                //                "    endedAt\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
-//                "    minCostTime\n" +
+                //                "    minCostTime\n" +
                 "    kcalConsumed\n" +
                 "    qualified\n" +
                 "    isValid\n" +
-//                "    speed\n" +
-//                "    stepPerSecond\n" +
-//                "    distancePerStep\n" +
+                //                "    speed\n" +
+                //                "    stepPerSecond\n" +
+                //                "    distancePerStep\n" +
                 "    runningSport {\n" +
                 "      name\n" +
                 "    }\n" +
@@ -432,6 +432,9 @@ public class ServerInterface {
                 "          longitude\n" +
                 "          radius\n" +
                 "          addr\n" +
+                "        }\n" +
+                "        areaSport {\n" +
+                "          name\n" +
                 "        }\n" +
                 "        costTime\n" +
                 "        kcalConsumed\n" +

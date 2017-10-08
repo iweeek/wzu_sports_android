@@ -751,10 +751,10 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                     }
-                    MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
-                    myLocationStyle.interval(acquisitionInterval);
-                    aMap.setMyLocationStyle(myLocationStyle);
-                    allowStart();
+                    // MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
+                    // myLocationStyle.interval(acquisitionInterval);
+                    // aMap.setMyLocationStyle(myLocationStyle);
+                    // allowStart();
                 } else if (state == STATE_END) {
                     finish();
                     SportResultActivity.start(this, historySportEntry);

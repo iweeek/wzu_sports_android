@@ -241,6 +241,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                     locationPoint.setLatitude(Double.parseDouble(point.getString("latitude")));
                                     locationPoint.setLongitude(Double.parseDouble(point.getString("longitude")));
                                     locationPoint.setRadius(point.getInt("radius"));
+                                    entry.setAreaSport(areaSportArray.optJSONObject(i).getJSONObject("areaSport").getString("name"));
                                     entry.setLocationPoint(locationPoint);
                                     entry.setType(AppConstant.AREA_TYPE);
 
