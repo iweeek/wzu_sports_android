@@ -121,6 +121,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
     private int initSteps = 0;//初始化的步数
+    private int initCalcSteps = 0;//初始化的步数
     private double distancePerStep = 0; //步幅
     private double stepPerSecond = 0; //步幅
     private LocationManager locationManager;
@@ -186,6 +187,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int sportRecordId;
 
     private int pauseStateSteps = 0;
+    private int pauseStateCalcSteps = 0;
 
     private LocationService.MyBinder myBinder = null;
 
@@ -637,6 +639,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         initSteps = 0;
         currentSteps = 0;
         pauseStateSteps = 0;
+        pauseStateCalcSteps = 0;
         currentDistance = 0;
         elapseTime = 0;
 
@@ -836,6 +839,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (state == STATE_NORMAL) {
                     DLOG.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     startTime = System.currentTimeMillis();
+                    stepCountCal = 0;
                     ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -1132,9 +1136,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
                     break;
                 case EventTag.ON_ACCELERATION_CHANGE:
-                    stepCountCal = (int) dataobj;
-                    DLOG.d(TAG, "stepCountCal: " + stepCountCal);
-
+                    int calcSteps = (int) dataobj;
+                    DLOG.d(TAG, "calcSteps: " + calcSteps);
+                    if (state == STATE_STARTED) {
+                        // DLOG.d(TAG, "state: " + state);
+                        if (initCalcSteps == 0) {
+                            initCalcSteps = calcSteps;
+                        } else {
+                            stepCountCal = calcSteps - initCalcSteps - pauseStateCalcSteps;
+                            // tvCurrentStep.setText(String.valueOf(currentSteps) + "步");
+                        }
+                    } else {
+                        if (initCalcSteps != 0) {
+                            pauseStateCalcSteps = calcSteps - initCalcSteps - stepCountCal;
+                        }
+                    }
                     // if (state == STATE_STARTED) {
                     //     if (initSteps == 0) {
                     //         initSteps = stepCountCal;
