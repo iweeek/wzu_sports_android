@@ -9,14 +9,23 @@ package com.tim.app.server.entry;
 public class HistoryAreaSportEntry extends HistorySportEntry {
 
     private static final long serialVersionUID = 6187447685293862071L;
-    private String areaName;
+    private String areaSport;
+    private FixLocationOutdoorSportPoint locationPoint;
 
-    public String getAreaName() {
-        return areaName;
+    public FixLocationOutdoorSportPoint getLocationPoint() {
+        return locationPoint;
     }
 
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
+    public void setLocationPoint(FixLocationOutdoorSportPoint locationPoint) {
+        this.locationPoint = locationPoint;
+    }
+
+    public String getAreaSport() {
+        return areaSport;
+    }
+
+    public void setAreaSport(String areaSport) {
+        this.areaSport = areaSport;
     }
 
 

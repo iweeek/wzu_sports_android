@@ -176,12 +176,12 @@ public class HistorySportEntry implements Serializable {
         this.sportName = sportName;
     }
 
-    public String getAreaName() {
+    public String getAreaSport() {
         return areaName;
     }
 
-    public void setAreaName(String areaName) {
-        this.areaName = areaName;
+    public void setAreaSport(String areaSport) {
+        this.areaName = areaSport;
     }
 
     @Override

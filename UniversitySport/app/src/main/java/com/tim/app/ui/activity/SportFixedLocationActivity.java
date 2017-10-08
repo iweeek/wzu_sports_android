@@ -98,8 +98,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private LatLng firstLatLng = null;
     private Circle circle;//当前运动区域
     private List<LatLng> targetLatLngs = new ArrayList<LatLng>();
-    private LatLng centerPoint;
     private Marker centerMarker;
+    private LatLng centerPoint;
 
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
@@ -357,8 +357,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         }
 
 
-        if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getName())) {
-            tvAreaName.setText(fixLocationOutdoorSportPoint.getName());
+        if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getAreaName())) {
+            tvAreaName.setText(fixLocationOutdoorSportPoint.getAreaName());
         }
         if (fixLocationOutdoorSportPoint.getQualifiedCostTime() > 0) {
             tvTargetTime.setText(String.format(getResources().getString(R.string.minutePlaceHolder), String.valueOf(fixLocationOutdoorSportPoint.getQualifiedCostTime() / 60)));
@@ -747,6 +747,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
                         myLocationStyle.interval(acquisitionInterval);
                         aMap.setMyLocationStyle(myLocationStyle);
+                        allowStart();
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                     }
@@ -809,6 +810,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         //                        acquisitionInterval = jsonObject.optInt("acquisitionInterval");
 
                         //第一次向服务器提交数据
+                        // DLOG.d(TAG, "firstLocation:" + firstLocation);
                         ServerInterface.instance().areaActivityData(TAG, areaSportRecordId, firstLocation.getLongitude(),
                                 firstLocation.getLatitude(), firstLocationType, true, new ResponseCallback() {
                                     @Override
@@ -929,6 +931,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             JSONObject jsonObject = json.optJSONObject("obj");
                             historySportEntry = new HistoryAreaSportEntry();
 
+                            DLOG.d(TAG, "fixLocationOutdoorSportPoint:" + fixLocationOutdoorSportPoint);
+                            historySportEntry.setLocationPoint(fixLocationOutdoorSportPoint);
                             historySportEntry.setId(jsonObject.optInt("id"));
                             historySportEntry.setSportId(jsonObject.optInt("areaSportId"));
                             historySportEntry.setStudentId(jsonObject.optInt("studentId"));

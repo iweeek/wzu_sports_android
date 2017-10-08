@@ -132,7 +132,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //区域名字
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
-                tvSportDesc.setText(areaData.getAreaName());
+                tvSportDesc.setText(areaData.getAreaSport());
 
                 TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
                 if (data.historySportEntryList.get(i).isQualified()) {

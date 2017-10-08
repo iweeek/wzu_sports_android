@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,6 +27,8 @@ import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
+import com.amap.api.maps.model.Circle;
+import com.amap.api.maps.model.CircleOptions;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
@@ -38,11 +41,10 @@ import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
-import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
-import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
@@ -68,7 +70,8 @@ public class SportResultActivity extends ToolbarActivity {
     private static final String TAG = "SportDetailActivity";
     private Context context = this;
 
-    private HistorySportEntry historySportEntry;
+    private HistoryRunningSportEntry historyRunningSportEntry;
+    private HistoryAreaSportEntry historyAreaSportEntry;
 
     private LatLng oldLatLng = null;
     private int interval = 0;
@@ -97,7 +100,7 @@ public class SportResultActivity extends ToolbarActivity {
     private RelativeLayout rlBottom;
     private Button btDrawLine;
     private LinearLayout llBottom;
-    private LinearLayout llLacationHint;
+    // private LinearLayout llLacationHint;
     private Button btContinue;
     private Button btStop;
     private SlideUnlockView slideUnlockView;
@@ -116,9 +119,10 @@ public class SportResultActivity extends ToolbarActivity {
     private MarkerOverlay markerOverlay;
     private AMap aMap;
     private MapView mapView;
-    private LatLng center = new LatLng(39.993167, 116.473274);// 中心点
-    private Button btncenter;
-    private Button btnzoom;
+    private Circle circle;//当前运动区域
+    private Marker centerMarker;
+    private FixLocationOutdoorSportPoint targetLocation;
+    private LatLng targetLatLng;
 
     private float zoomLevel = 15;//地图缩放级别，范围3-19,越大越精细
 
@@ -167,17 +171,21 @@ public class SportResultActivity extends ToolbarActivity {
     private final static String noSportDataMsg = "没有找到任务运动轨迹";
     private final static String noSportTrackMsg = "本次运动没有运动轨迹";
 
-    public static void start(Context context, HistorySportEntry entry) {
+    public static void start(Context context, HistoryRunningSportEntry entry) {
         Intent intent = new Intent(context, SportResultActivity.class);
-        intent.putExtra("historySportEntry", entry);
+        intent.putExtra("historyRunningSportEntry", entry);
+        context.startActivity(intent);
+    }
+
+    public static void start(Context context, HistoryAreaSportEntry entry) {
+        Intent intent = new Intent(context, SportResultActivity.class);
+        intent.putExtra("historyAreaSportEntry", entry);
         context.startActivity(intent);
     }
 
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
-
-        historySportEntry = (HistorySportEntry) getIntent().getSerializableExtra("historySportEntry");
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -195,11 +203,58 @@ public class SportResultActivity extends ToolbarActivity {
             }
         });
 
-        aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
-            @Override
-            public void onMapLoaded() {
-            }
-        });
+        historyRunningSportEntry = (HistoryRunningSportEntry) getIntent().getSerializableExtra("historyRunningSportEntry");
+        historyAreaSportEntry = (HistoryAreaSportEntry) getIntent().getSerializableExtra("historyAreaSportEntry");
+        if (historyAreaSportEntry != null) {
+            targetLocation = historyAreaSportEntry.getLocationPoint();
+            targetLatLng = new LatLng(targetLocation.getLatitude(), targetLocation.getLongitude());
+
+            aMap.setOnInfoWindowClickListener(new AMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker marker) {
+                    // AMapUtil.moveToTarget(aMap, zoomLevel, targetLatLngs.get(0), 1500);
+                    setZoomScale();
+                }
+            });
+
+            aMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+                @Override
+                public void onMapLoaded() {
+                    setZoomScale();
+                }
+            });
+        }
+    }
+
+    public void setZoomScale() {
+        List<LatLng> latLngs = new ArrayList<>();
+        float degree = (float) targetLatLng.latitude;
+        float minute = (float) ((targetLatLng.latitude - (int) targetLatLng.latitude) * 60);
+        // Log.d(TAG, "(targetLatLngs.get(0).latitude - (int)targetLatLngs.get(0).latitude):" + (targetLatLngs.get(0).latitude - (int) targetLatLngs.get(0).latitude));
+        // Log.d(TAG, "minute:" + minute);
+        float second = (minute - (int) minute) * 60;
+        // Log.d(TAG, "second:" + second);
+        float topSecond = (float) (second + targetLocation.getRadius() / 30.9f);
+        float bottomSecond = (float) (second - targetLocation.getRadius() / 30.9f);
+        // Log.d(TAG, "second:" + second);
+        float topLatitude = ((int) degree + (topSecond / 60 + (int) minute) / 60);
+        float bottomLatitude = ((int) degree + (bottomSecond / 60 + (int) minute) / 60);
+        // DLOG.d(TAG, "topLatitude:" + topLatitude);
+        // DLOG.d(TAG, "bottomLatitude:" + bottomLatitude);
+        LatLng topLatlng = new LatLng(topLatitude, targetLatLng.longitude);
+        LatLng bottomLatlng = new LatLng(bottomLatitude, targetLatLng.longitude);
+        latLngs.add(topLatlng);
+        latLngs.add(bottomLatlng);
+
+        LatLngBounds bounds = getLatLngBounds(latLngs);//以中心点缩放
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        float calcWidthDp = (float) (metrics.densityDpi * 0.2778);
+        float calcWidthPx = metrics.widthPixels / metrics.densityDpi * calcWidthDp;
+
+        float calcHeightDp = (float) (metrics.densityDpi * 0.3125);
+        float calcHeightPx = metrics.heightPixels / metrics.densityDpi * calcHeightDp;
+        aMap.animateCamera(CameraUpdateFactory.newLatLngBoundsRect(bounds, (int) calcWidthPx, (int) calcWidthPx, (int) calcHeightPx, (int) calcHeightPx)); //平滑移动
     }
 
     private void initMap() {
@@ -232,33 +287,42 @@ public class SportResultActivity extends ToolbarActivity {
     public void initData() {
         setTitle(getString(R.string.app_result));
 
-        if (historySportEntry.getType() == AppConstant.RUNNING_TYPE) {
-            queryRunningActivity(historySportEntry.getId());
-        } else if (historySportEntry.getType() == AppConstant.AREA_TYPE) {
-            queryAreaActivity(historySportEntry.getId());
+        if (historyRunningSportEntry != null) {
+            queryRunningActivity(historyRunningSportEntry.getId());
+        } else if (historyAreaSportEntry != null){
+            llTargetContainer.setVisibility(View.GONE);
+            // btDrawLine.setVisibility(View.GONE);
+            setupArea();
+
+            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
+                    new CameraPosition(targetLatLng, zoomLevel, 0, 0));
+            aMap.moveCamera(cu);
+
+            queryAreaActivity(historyAreaSportEntry.getId());
         }
 
         aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
-        //        String text = "调整屏幕缩放比例：" + zoomLevel;
-        //        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    }
 
+    private void setupArea() {
+        //设置地图区域范围（画圈儿）
+        DLOG.d(TAG, "historyAreaSportEntry:" + historyAreaSportEntry);
+        circle = aMap.addCircle(new CircleOptions().
+                center(targetLatLng).
+                radius(historyAreaSportEntry.getLocationPoint().getRadius()).
+                fillColor(Color.parseColor("#77B0F566")).
+                strokeColor(Color.parseColor("#224C5773")).
+                strokeWidth(1));
 
-        //        LatLng secLL = new LatLng(40.004356, 116.406305);//测试坐标
-        //        drawLine(oldLatLng, secLL, true);
-        //        int moveDistance = (int)AMapUtils.calculateLineDistance(oldLatLng, secLL);
-        //        marker = aMap.addMarker(new MarkerOptions().position(secLL).title("运动距离（米）： " + moveDistance));
-        //
-        //        LatLng thirdLL = new LatLng(40.004556, 116.406505);//测试坐标
-        //        drawLine(secLL, thirdLL, false);
-        ////                marker = aMap.addMarker(new MarkerOptions().position(thirdLL).snippet(thirdLL.toString()));
-        //        moveDistance = (int)AMapUtils.calculateLineDistance(secLL, thirdLL);
-        //        marker = aMap.addMarker(new MarkerOptions().position(thirdLL).title("运动距离（米）： " + moveDistance));
-        //
-        //        LatLng fourthLL = new LatLng(40.004756, 116.406305);//测试坐标
-        //        drawLine(thirdLL, fourthLL, true);
-        ////                marker = aMap.addMarker(new MarkerOptions().position(fourthLL).snippet(fourthLL.toString()));
-        //        moveDistance = (int)AMapUtils.calculateLineDistance(thirdLL, fourthLL);
-        //        marker = aMap.addMarker(new MarkerOptions().position(fourthLL).title("运动距离（米）： " + moveDistance));
+        //初始化中心点Marker
+        centerMarker = aMap.addMarker(new MarkerOptions()
+                .anchor(0.5f, 0.5f)
+                .icon(BitmapDescriptorFactory
+                        .fromResource(R.drawable.ic_location_stick))
+                .position(targetLatLng)
+                .title("目标区域"));
+        centerMarker.showInfoWindow();
+        DLOG.d(TAG, "sportEntry.getLocationPoint():" + historyAreaSportEntry.getLocationPoint());
     }
 
     private void queryAreaActivity(long id) {
@@ -289,26 +353,27 @@ public class SportResultActivity extends ToolbarActivity {
                         mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
-                        if (mDrawPoints.size() > 0) {
-                            oldLatLng = mDrawPoints.get(0).getLL();
-                            MarkerOptions markerOption = new MarkerOptions();
-                            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                                    .decodeResource(getResources(), R.drawable.icon_starting_point)));
-                            markerOption.position(oldLatLng).title("出发点");
-                            Marker marker = aMap.addMarker(markerOption);//添加标记
-                            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
-                            aMap.moveCamera(cu);
-                        } else {
-                            Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
-                            //说明坐标位置点都不符合要求，需要把显示信息置为零
-                        }
+                        // if (mDrawPoints.size() > 0) {
+                        //     oldLatLng = mDrawPoints.get(0).getLL();
+                        //     DLOG.d("SportResultActivity", "oldLatLng:" + oldLatLng);
+                        //     MarkerOptions markerOption = new MarkerOptions();
+                        //     markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                        //             .decodeResource(getResources(), R.drawable.icon_starting_point)));
+                        //     markerOption.position(oldLatLng).title("出发点");
+                        //     Marker marker = aMap.addMarker(markerOption);//添加标记
+                        //     CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+                        //     aMap.moveCamera(cu);
+                        // } else {
+                        //     Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
+                        //     //说明坐标位置点都不符合要求，需要把显示信息置为零
+                        // }
 
                         JSONObject jsonObject = json.getJSONObject("data").getJSONObject("areaActivity");
 
                         boolean qualified = jsonObject.getBoolean("qualified");
 
                         //判断最终达标情况
-                        if (historySportEntry.getEndedAt() == 0) {
+                        if (historyAreaSportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {
@@ -322,36 +387,27 @@ public class SportResultActivity extends ToolbarActivity {
                         }
                         tvResult.setVisibility(View.VISIBLE);
 
-                        tvSportName.setText(jsonObject.getJSONObject("areaSport")
-                                .getString("name"));
+                        // tvSportName.setText(jsonObject.getJSONObject("areaSport")
+                        //         .getString("name"));
+                        tvSportName.setText(historyAreaSportEntry.getLocationPoint().getAreaName());
 
                         elapseTime = jsonObject.getLong("costTime");
-                        //                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-                        tvElapseTime.setText(elapseTime / 60 + " 分钟");
+                        tvElapseTime.setText((int)elapseTime / 60 + " 分钟");
 
-                        if (elapseTime != 0) {
-                            // BigDecimal d = new BigDecimal(Double.toString(currentDistance));
-                            // BigDecimal t = new BigDecimal(Double.toString(elapseTime));
+                        // if (elapseTime != 0) {
+                        //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+                        //             Double.toString(elapseTime), SPEED_SCALE);
+                        //     tvAverSpeed.setText(String.valueOf(bd));
+                        // }
 
-                            // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
-                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
-                                    Double.toString(elapseTime), SPEED_SCALE);
-                            tvAverSpeed.setText(String.valueOf(bd));
-                        }
-
-                        targetTime = jsonObject.getInt("qualifiedCostTime");
+                        // targetTime = jsonObject.getInt("qualifiedCostTime");
                         // tvTargetTime.setText(String.valueOf(targetTime / 60));
 
-                        if (targetTime != 0) {
-                            // BigDecimal d = new BigDecimal(Double.toString(targetDistance));
-                            // BigDecimal t = new BigDecimal(Double.toString(targetTime));
-
-                            // RoundingMode.HALF_UP
-                            // BigDecimal bd = d.divide(t, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
-                            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
-                                    Double.toString(targetTime), SPEED_SCALE);
-                            tvTargetSpeed.setText(String.valueOf(bd));
-                        }
+                        // if (targetTime != 0) {
+                        //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
+                        //             Double.toString(targetTime), SPEED_SCALE);
+                        //     tvTargetSpeed.setText(String.valueOf(bd));
+                        // }
 
                         llCurrentDistance.setVisibility(View.GONE);
                         llAverageSpeed.setVisibility(View.GONE);
@@ -454,7 +510,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                         boolean qualified = jsonObject.getBoolean("qualified");
                         boolean isValid = jsonObject.getBoolean("isValid");
-                        if (historySportEntry.getEndedAt() == 0) {
+                        if (historyRunningSportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
                         } else {
@@ -598,25 +654,26 @@ public class SportResultActivity extends ToolbarActivity {
 
                 DLOG.d(TAG, "onClick mNormalDrawPoints.size: " + mNormalDrawPoints.size());
                 DLOG.d(TAG, "onClick mDrawPoints.size: " + mDrawPoints.size());
-                if (historySportEntry instanceof HistoryAreaSportEntry) {
-                    for (int i = 0; i < mDrawPoints.size(); i++) {
-                        if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                            drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
-                            ll = mDrawPoints.get(i).getLL();
-                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
-                                    ", i: " + i);
-                        }
-                    }
-                } else if (historySportEntry instanceof HistoryRunningSportEntry) {
-                    for (int i = 0; i < mDrawPoints.size(); i++) {
-                        if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                            drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
-                            ll = mDrawPoints.get(i).getLL();
-                            DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
-                                    ", i: " + i);
-                        }
+                // if (historySportEntry instanceof HistoryAreaSportEntry) {
+                //     for (int i = 0; i < mDrawPoints.size(); i++) {
+                //         if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                //             drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                //             ll = mDrawPoints.get(i).getLL();
+                //             DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
+                //                     ", i: " + i);
+                //         }
+                //     }
+                // } else if (historySportEntry instanceof HistoryRunningSportEntry) {
+                for (int i = 0; i < mDrawPoints.size(); i++) {
+                    if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                        drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                        ll = mDrawPoints.get(i).getLL();
+                        DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
+                                ", i: " + i);
                     }
                 }
+                // }
+
                 //测试不达标的路径
                 //                for (int i = 1; i < mPoints.size(); i++) {
                 //                    drawLine(ll, mPoints.get(i));
@@ -826,8 +883,8 @@ public class SportResultActivity extends ToolbarActivity {
     @Override
     public void initView() {
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
-        llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
-        llLacationHint.setVisibility(View.GONE);
+        // llLacationHint = (LinearLayout) findViewById(R.id.llLacationHint);
+        // llLacationHint.setVisibility(View.GONE);
 
         llFloatingWindow = (LinearLayout) findViewById(R.id.llFloatingWindow);
         llFloatingWindow.setVisibility(View.GONE);

@@ -293,9 +293,9 @@ public class ServerInterface {
                 "    qualified\n" +
                 "    qualifiedCostTime\n" +
                 "    kcalConsumed\n" +
-                "    areaSport {\n" +
-                "      name\n" +
-                "    }\n" +
+                // "    areaSport {\n" +
+                // "      name\n" +
+                // "    }\n" +
                 "    data {\n" +
                 "      longitude\n" +
                 "      latitude\n" +
@@ -419,23 +419,29 @@ public class ServerInterface {
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
+                "    areaActivities(startDate: \"2017-06-19\", endDate: \"2017-10-08\") {\n" +
                 "      data {\n" +
                 "        id\n" +
                 "        areaSportId\n" +
+                "        location {\n" +
+                "          name\n" +
+                "          latitude\n" +
+                "          isEnabled\n" +
+                "          latitude\n" +
+                "          longitude\n" +
+                "          radius\n" +
+                "          addr\n" +
+                "        }\n" +
                 "        costTime\n" +
                 "        kcalConsumed\n" +
                 "        qualified\n" +
                 "        startTime\n" +
                 "        sportDate\n" +
                 "        endedAt\n" +
-                "        areaSport {\n" +
-                "          name\n" +
-                "        }\n" +
                 "      }\n" +
                 "    }\n" +
                 "  }\n" +
-                "}";
+                "}\n";
         query(queryStr, callback);
     }
 
