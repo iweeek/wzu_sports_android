@@ -295,7 +295,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    locationDialog.dismissDialog();
+                    locationDialog.dismissCurrentDialog();
                     finish();
                 }
                 return false;
@@ -464,7 +464,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    locationDialog.dismissDialog();
+                    locationDialog.dismissCurrentDialog();
 
                     //TODO 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
