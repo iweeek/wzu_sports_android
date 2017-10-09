@@ -148,7 +148,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private long elapseTime = 0;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
-    private float zoomLevel = 19;//地图缩放级别，范围3-19,越大越精细
+    private float zoomLevel = 16;//地图缩放级别，范围3-19,越大越精细
     private int areaSportRecordId; //注意，这里的id指的是服务端数据库中这条记录的ID。
 
     public static final String NETWORK_ERROR_MSG = "网络请求失败，请检查网络状态或稍后再试";
@@ -528,7 +528,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         if (state == STATE_STARTED) {
             MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
             DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
-            // if (myLocationStyle.getInterval() != navigationInterval) {
+            // if (myLocationStyle.getInterval() == acquisitionInterval) {
                 elapseTime += acquisitionInterval / 1000;
                 tvElapsedTime.setText(elapseTime / 60 + " 分钟");
             // }
@@ -751,6 +751,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                         MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
                         myLocationStyle.interval(acquisitionInterval);
                         aMap.setMyLocationStyle(myLocationStyle);
+                        CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
+                                new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
+                        aMap.moveCamera(cu);
                         allowStart();
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
