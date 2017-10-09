@@ -10,8 +10,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.application.library.log.DLOG;
 
 import java.io.File;
 
@@ -47,7 +48,7 @@ public class DownloadAppUtils {
     public static void downloadForAutoInstall(Context context, String url, String title) {
 
         String fileName = url.substring(url.lastIndexOf("/") + 1, url.length());
-        Log.d(TAG, "downloadForAutoInstall fileName: " + fileName);
+        DLOG.d(TAG, "downloadForAutoInstall fileName: " + fileName);
 
         if (TextUtils.isEmpty(url)) {
             return;
