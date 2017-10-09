@@ -171,6 +171,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
     @Override
     protected void init(Bundle savedInstanceState) {
+        queryAppVersion();
     }
 
     @Override
@@ -610,7 +611,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     }
 
     private void queryHomePagedata() {
-        queryAppVersion();
         queryCurTermData();
         queryRunningSport();
     }
