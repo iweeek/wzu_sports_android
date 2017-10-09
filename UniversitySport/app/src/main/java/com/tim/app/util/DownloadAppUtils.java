@@ -50,8 +50,8 @@ public class DownloadAppUtils {
         int begin = url.lastIndexOf("/") + 1;
         int end = url.lastIndexOf("?");
         String fileName = url.substring(begin, end);
-        DLOG.d(TAG, "begin:" + begin);
-        DLOG.d(TAG, "end:" + end);
+        // DLOG.d(TAG, "begin:" + begin);
+        // DLOG.d(TAG, "end:" + end);
         DLOG.d(TAG, "downloadForAutoInstall fileName: " + fileName);
 
         if (TextUtils.isEmpty(url)) {
