@@ -246,7 +246,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             @Override
             public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    locationDialog.dismissDialog();
+                    locationDialog.dismissCurrentDialog();
                     finish();
                 }
                 return false;
@@ -270,7 +270,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         DLOG.d(TAG, "sportEntry.getAcquisitionInterval():" + sportEntry.getAcquisitionInterval());
 
         acquisitionInterval = sportEntry.getAcquisitionInterval() * 1000;
-        elapseTime = 0 - sportEntry.getAcquisitionInterval(); // 解决动态改变高德回调的之后立即回调一次的问题。
+        // elapseTime = 0 - sportEntry.getAcquisitionInterval(); // 解决动态改变高德回调的之后立即回调一次的问题。
 
         mapView = (MapView) findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);// 此方法必须重写，创建地图
@@ -572,7 +572,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     firstLatLng = newLatLng;
                     firstLocation = location;
                     firstLocationType = locationType;
-                    locationDialog.dismissDialog();
+                    locationDialog.dismissCurrentDialog();
 
                     // CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
                     //         new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
