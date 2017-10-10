@@ -40,8 +40,8 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, FixLoc
             return;
         }
 
-        if (!TextUtils.isEmpty(data.getName())) {
-            holder.setText(R.id.tvAreaName, data.getName());
+        if (!TextUtils.isEmpty(data.getAreaName())) {
+            holder.setText(R.id.tvAreaName, data.getAreaName());
         }
 
         if (!TextUtils.isEmpty(data.getAddress())) {
@@ -50,9 +50,8 @@ public class SportAreaListAdapter extends BaseRecyclerAdapter<ViewHolder, FixLoc
         }
 
         if (data.getQualifiedCostTime() > 0) {
-            String time = mContext.getString(R.string.minutePlaceHolder, String.valueOf(data.getQualifiedCostTime() / 60));
-            String resultTime = mContext.getString(R.string.targetTime) + " : " + time;
-            holder.setText(R.id.tvTargetTime, resultTime);
+            String time = mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedCostTime() / 60));
+            holder.setText(R.id.tvTargetTime, time);
         }
     }
 

@@ -64,7 +64,7 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_sports_area;
+        return R.layout.activity_sports_area_list;
     }
 
     @Override
@@ -136,7 +136,8 @@ public class SportsAreaListActivity extends BaseActivity implements LoadMoreHand
                                 FixLocationOutdoorSportPoint fixLocationOutdoorSportPoint = new FixLocationOutdoorSportPoint();
                                 fixLocationOutdoorSportPoint.setEnabled(jsonObject.optBoolean("isEnabled"));
                                 fixLocationOutdoorSportPoint.setId(jsonObject.optInt("id"));
-                                fixLocationOutdoorSportPoint.setName(jsonObject.optString("name"));
+                                fixLocationOutdoorSportPoint.setAreaName(jsonObject.optString("name"));
+                                fixLocationOutdoorSportPoint.setDescription(jsonObject.optString("description"));
                                 fixLocationOutdoorSportPoint.setAddress(jsonObject.optString("addr"));
                                 fixLocationOutdoorSportPoint.setLatitude(jsonObject.optDouble("latitude"));
                                 fixLocationOutdoorSportPoint.setLongitude(jsonObject.optDouble("longitude"));

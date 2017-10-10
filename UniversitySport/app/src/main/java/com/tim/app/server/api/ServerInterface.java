@@ -160,11 +160,12 @@ public class ServerInterface {
      * @param studentId
      * @param callback
      */
-    public void areaActivities(String tag, int areaSportId, int studentId, ResponseCallback callback) {
+    public void areaActivities(String tag, int areaSportId, int studentId, int locationId, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITIES;
         HashMap params = new HashMap();
         params.put("areaSportId", areaSportId);
         params.put("studentId", studentId);
+        params.put("locationId", locationId);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
@@ -189,13 +190,14 @@ public class ServerInterface {
      * @param callback
      */
     public void areaActivityData(String tag, int areaSportRecordId, double longitude,
-                                 double latitude, int locationType, ResponseCallback callback) {
+                                 double latitude, int locationType, boolean isNormal, ResponseCallback callback) {
         String url = API_SCHEME + AREA_ACTIVITY_DATA;
         HashMap params = new HashMap();
         params.put("activityId", areaSportRecordId);
         params.put("longitude", longitude);
         params.put("latitude", latitude);
         params.put("locationType", locationType);
+        params.put("isNormal", isNormal);
         NetworkInterface.instance().connected(HttpMethod.POST, url, tag, params, CacheMode.DEFAULT, true, callback);
     }
 
@@ -249,24 +251,24 @@ public class ServerInterface {
     public void queryRunningActivity(long activityId, ResponseCallback callback) {
         queryStr = "{\n" +
                 "  runningActivity(id: " + activityId + ") {\n" +
-//                "    runningSportId\n" +
-//                "    studentId\n" +
+                //                "    runningSportId\n" +
+                //                "    studentId\n" +
                 "    distance\n" +
-//                "    stepCount\n" +
+                //                "    stepCount\n" +
                 "    costTime\n" +
-//                "    targetFinishedTime\n" +
-//                "    sportDate\n" +
-//                "    startTime\n" +
-//                "    endedAt\n" +
+                //                "    targetFinishedTime\n" +
+                //                "    sportDate\n" +
+                //                "    startTime\n" +
+                //                "    endedAt\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
-//                "    minCostTime\n" +
+                //                "    minCostTime\n" +
                 "    kcalConsumed\n" +
                 "    qualified\n" +
                 "    isValid\n" +
-//                "    speed\n" +
-//                "    stepPerSecond\n" +
-//                "    distancePerStep\n" +
+                //                "    speed\n" +
+                //                "    stepPerSecond\n" +
+                //                "    distancePerStep\n" +
                 "    runningSport {\n" +
                 "      name\n" +
                 "    }\n" +
@@ -292,9 +294,9 @@ public class ServerInterface {
                 "    qualified\n" +
                 "    qualifiedCostTime\n" +
                 "    kcalConsumed\n" +
-                "    areaSport {\n" +
-                "      name\n" +
-                "    }\n" +
+                // "    areaSport {\n" +
+                // "      name\n" +
+                // "    }\n" +
                 "    data {\n" +
                 "      longitude\n" +
                 "      latitude\n" +
@@ -418,23 +420,32 @@ public class ServerInterface {
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
+                "    areaActivities(startDate: \"2017-06-19\", endDate: \"2017-10-08\") {\n" +
                 "      data {\n" +
                 "        id\n" +
                 "        areaSportId\n" +
+                "        location {\n" +
+                "          name\n" +
+                "          latitude\n" +
+                "          isEnabled\n" +
+                "          latitude\n" +
+                "          longitude\n" +
+                "          radius\n" +
+                "          addr\n" +
+                "        }\n" +
+                "        areaSport {\n" +
+                "          name\n" +
+                "        }\n" +
                 "        costTime\n" +
                 "        kcalConsumed\n" +
                 "        qualified\n" +
                 "        startTime\n" +
                 "        sportDate\n" +
                 "        endedAt\n" +
-                "        areaSport {\n" +
-                "          name\n" +
-                "        }\n" +
                 "      }\n" +
                 "    }\n" +
                 "  }\n" +
-                "}";
+                "}\n";
         query(queryStr, callback);
     }
 
@@ -457,6 +468,7 @@ public class ServerInterface {
                 "  fixLocationOutdoorSportPoints(universityId: " + universityId + ") {\n" +
                 "    id\n" +
                 "    name\n" +
+                "    description\n" +
                 "    isEnabled\n" +
                 "    latitude\n" +
                 "    longitude\n" +

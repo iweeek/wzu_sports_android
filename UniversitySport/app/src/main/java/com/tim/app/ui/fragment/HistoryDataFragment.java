@@ -21,6 +21,7 @@ import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
@@ -231,13 +232,17 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                     entry.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
                                     entry.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                     entry.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
-                                    //过滤不完整数据
-                                    //                                    if (Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")) > 0) {
                                     entry.setEndedAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
-                                    //                                    } else {
-                                    //                                        continue;
-                                    //                                    }
-                                    entry.setAreaName(areaSportArray.optJSONObject(i).optJSONObject("areaSport").optString("name"));
+                                    JSONObject point = areaSportArray.getJSONObject(i).getJSONObject("location");
+                                    FixLocationOutdoorSportPoint locationPoint = new FixLocationOutdoorSportPoint();
+                                    locationPoint.setAreaName(point.getString("name"));
+                                    locationPoint.setAddress(point.getString("addr"));
+                                    locationPoint.setEnabled(point.getBoolean("isEnabled"));
+                                    locationPoint.setLatitude(Double.parseDouble(point.getString("latitude")));
+                                    locationPoint.setLongitude(Double.parseDouble(point.getString("longitude")));
+                                    locationPoint.setRadius(point.getInt("radius"));
+                                    entry.setAreaSport(areaSportArray.optJSONObject(i).getJSONObject("areaSport").getString("name"));
+                                    entry.setLocationPoint(locationPoint);
                                     entry.setType(AppConstant.AREA_TYPE);
 
                                     if (item.historySportEntryList == null) {

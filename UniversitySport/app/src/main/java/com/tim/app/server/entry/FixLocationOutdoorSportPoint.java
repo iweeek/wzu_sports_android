@@ -10,7 +10,8 @@ public class FixLocationOutdoorSportPoint implements Serializable {
 
     private static final long serialVersionUID = 6187447685293862071L;
     private  Integer id;
-    private String name;//地点描述
+    private String areaName;//地点描述
+    private String description;//地点描述
     private boolean isEnabled;
     private String address;//地址
     private double latitude; //纬度
@@ -19,6 +20,13 @@ public class FixLocationOutdoorSportPoint implements Serializable {
     private double radius;//半径
     private int universityId;
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getAddress() {
         return address;
@@ -28,12 +36,12 @@ public class FixLocationOutdoorSportPoint implements Serializable {
         this.address = address;
     }
 
-    public String getName() {
-        return name;
+    public String getAreaName() {
+        return areaName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
     public int getQualifiedCostTime() {
@@ -97,7 +105,8 @@ public class FixLocationOutdoorSportPoint implements Serializable {
     public String toString() {
         return "FixLocationOutdoorSportPoint{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", areaName='" + areaName + '\'' +
+                ", description='" + description + '\'' +
                 ", isEnabled=" + isEnabled +
                 ", address='" + address + '\'' +
                 ", latitude=" + latitude +
