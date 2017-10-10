@@ -69,11 +69,11 @@ public class SettingActivity extends ToolbarActivity {
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         try {
-                            final String versionName = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("versionName");
-                            final int versionCode = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getInt("versionCode");
-                            final String changeLog = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("changeLog");
-                            final String apkUrl = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getString("apkUrl");
-                            final boolean isForced = json.getJSONObject("data").getJSONObject("latestAndroidVerisonInfo").getBoolean("isForced");
+                            final String versionName = json.getJSONObject("data").getJSONObject("latestVerison").getString("versionName");
+                            final int versionCode = json.getJSONObject("data").getJSONObject("latestVerison").getInt("versionCode");
+                            final String changeLog = json.getJSONObject("data").getJSONObject("latestVerison").getString("changeLog");
+                            final String apkUrl = json.getJSONObject("data").getJSONObject("latestVerison").getString("apkUrl");
+                            final boolean isForced = json.getJSONObject("data").getJSONObject("latestVerison").getBoolean("isForced");
 
                             PackageManager manager = (SettingActivity.this).getPackageManager();
                             PackageInfo info = manager.getPackageInfo(SettingActivity.this.getPackageName(), 0);

@@ -37,7 +37,7 @@ public class LocationDialog extends Dialog implements OnClickListener{
 
     }
 
-    public void dismissDialog() {
+    public void dismissCurrentDialog() {
         if (this.isShowing()) {
             this.dismiss();
         }
