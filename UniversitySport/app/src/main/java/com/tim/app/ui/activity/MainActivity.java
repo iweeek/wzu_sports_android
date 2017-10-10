@@ -531,17 +531,17 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
                             final AlertDialog.Builder builder =
                                     new AlertDialog.Builder(context);
-                            AlertDialog dialog;
+
                             builder.setTitle("版本升级");
+                            builder.setMessage(changeLog.replace("\\n", " \n"));
                             builder.setPositiveButton("确认",
                                     new DialogInterface.OnClickListener() {
 
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
+                                            // DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
                                         }
                                     });
-                            builder.setMessage(changeLog.replace("\\n", " \n"));
 
                             if (isForced) {//强制升级
                                 builder.setCancelable(false);
@@ -555,8 +555,19 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 });
                             }
 
-                            dialog = builder.create();
+                            AlertDialog dialog = builder.create();
                             dialog.show();
+
+                            // 重写“确定”（AlertDialog.BUTTON_POSITIVE），截取监听
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
+                                    Toast.makeText(context, "开始下载新版本", Toast.LENGTH_SHORT).show();
+                                    // 这里可以控制是否让对话框消失
+                                    // dialog.dismiss();
+                                }
+                            });
 
                         } else {
                             // TODO no update

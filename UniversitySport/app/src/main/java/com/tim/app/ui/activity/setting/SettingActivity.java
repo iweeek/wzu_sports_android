@@ -18,6 +18,7 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.ToolbarActivity;
 import com.tim.app.util.DownloadAppUtils;
+import com.tim.app.util.NetUtil;
 
 import org.json.JSONObject;
 
@@ -64,6 +65,10 @@ public class SettingActivity extends ToolbarActivity {
         if (v.getId() == R.id.rlAboutUS) {
             AboutActivity.start(this);
         } else if (v.getId() == R.id.rlCheckUpdate) {
+            if (!NetUtil.isConnected(SettingActivity.this)) {
+                Toast.makeText(this, "请检查网络~", Toast.LENGTH_SHORT).show();
+                return;
+            }
             ServerInterface.instance().queryAppVersion(new JsonResponseCallback() {
                 @Override
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
@@ -73,7 +78,7 @@ public class SettingActivity extends ToolbarActivity {
                             final String versionName = latestVersion.getString("versionName");
                             final int versionCode = latestVersion.getInt("versionCode");
                             final String changeLog = latestVersion.getString("changeLog");
-                            final String apkUrl = latestVersion.getString("downloadUrl");
+                            final String downloadUrl = latestVersion.getString("downloadUrl");
                             final boolean isForced = latestVersion.getBoolean("isForced");
 
                             PackageManager manager = (SettingActivity.this).getPackageManager();
@@ -83,24 +88,19 @@ public class SettingActivity extends ToolbarActivity {
 
                                 final AlertDialog.Builder builder =
                                         new AlertDialog.Builder(SettingActivity.this);
-                                AlertDialog dialog;
+
                                 builder.setTitle("版本升级");
+                                builder.setMessage(changeLog.replace("\\n", " \n"));
                                 builder.setPositiveButton("确认",
                                         new DialogInterface.OnClickListener() {
+
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, apkUrl, "下载新版本");
-                                                //
-                                                // if (NetUtil.isWifi(SettingActivity.this)) {
-                                                //     DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, apkUrl, "下载新版本");
-                                                // } else if (NetUtil.isMobile(SettingActivity.this)) {
-                                                //
-                                                // }
+                                                // DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
                                             }
                                         });
-                                builder.setMessage(changeLog.replace("\\n", " \n"));
 
-                                if (isForced) {
+                                if (isForced) {//强制升级
                                     builder.setCancelable(false);
                                     //对话框不变化
                                 } else {
@@ -112,8 +112,19 @@ public class SettingActivity extends ToolbarActivity {
                                     });
                                 }
 
-                                dialog = builder.create();
+                                AlertDialog dialog = builder.create();
                                 dialog.show();
+                                
+                                // 重写“确定”（AlertDialog.BUTTON_POSITIVE），截取监听
+                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, downloadUrl, "下载新版本");
+                                        Toast.makeText(SettingActivity.this, "开始下载新版本", Toast.LENGTH_SHORT).show();
+                                        // 这里可以控制是否让对话框消失
+                                        // dialog.dismiss();
+                                    }
+                                });
                             } else {
                                 Toast.makeText(SettingActivity.this, getString(R.string.prompt_no_update), Toast.LENGTH_SHORT).show();
                             }
