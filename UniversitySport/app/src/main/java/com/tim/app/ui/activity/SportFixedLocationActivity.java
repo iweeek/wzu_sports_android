@@ -758,7 +758,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
                         aMap.moveCamera(cu);
                         allowStart();
-                        DLOG.d(TAG, "onClick：elapseTime:" + elapseTime);
+                        // DLOG.d(TAG, "onClick：elapseTime:" + elapseTime);
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                     }
