@@ -99,7 +99,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private Circle circle;//当前运动区域
     private List<LatLng> targetLatLngs = new ArrayList<LatLng>();
     private Marker centerMarker;
-    private LatLng centerPoint;
 
     /*重要实体*/
     private SportEntry sportEntry;//创建areaActivity的时候要用到
@@ -146,6 +145,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private int acquisitionInterval = 0;//采样时间间隔
     private int navigationInterval = 3000;//开始之前导航间隔
     private long elapseTime = 0;
+    private boolean isFirst = true;
     private long startTime;//开始时间
     private long stopTime;//运动结束时间
     private float zoomLevel = 16;//地图缩放级别，范围3-19,越大越精细
@@ -523,15 +523,18 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         LatLng newLatLng;
         Boolean isNormal = true;
 
-
+        DLOG.d(TAG, "zbc");
         //运动耗时
         if (state == STATE_STARTED) {
-            MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
-            DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
-            // if (myLocationStyle.getInterval() == acquisitionInterval) {
+            // DLOG.d(TAG, "elapseTime:" + elapseTime);
+            // MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
+            // DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
+
+            if (!isFirst) {
                 elapseTime += acquisitionInterval / 1000;
                 tvElapsedTime.setText(elapseTime / 60 + " 分钟");
-            // }
+            }
+            // DLOG.d(TAG, "elapseTime:" + elapseTime);
         }
 
         Bundle bundle = location.getExtras();
@@ -755,6 +758,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
                         aMap.moveCamera(cu);
                         allowStart();
+                        DLOG.d(TAG, "onClick：elapseTime:" + elapseTime);
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
                     }
@@ -810,6 +814,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                     if (errCode == 0) {
                         DLOG.d(TAG, "areaSportsStart 成功");
+                        state = STATE_STARTED;
                         JSONObject jsonObject = json.optJSONObject("obj");
 
                         areaSportRecordId = jsonObject.optInt("id");
@@ -826,6 +831,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                             DLOG.d(TAG, "第一次上传 areaActivityData 成功!");
                                             startTime = System.currentTimeMillis();
 
+                                            if (isFirst) {
+                                                elapseTime = 0;
+                                                isFirst = false;
+                                            }
+
                                             slideUnlockView.setVisibility(View.VISIBLE);
                                             tvPause.setVisibility(View.VISIBLE);
                                             rlElapsedTime.setVisibility(View.VISIBLE);
@@ -834,7 +844,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
                                             progressDialog.dismissCurrentDialog();
 
-                                            state = STATE_STARTED;
                                             return true;
                                         } else {
                                             Toast.makeText(SportFixedLocationActivity.this, NETWORK_ERROR_MSG, Toast.LENGTH_SHORT).show();
