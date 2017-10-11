@@ -91,12 +91,12 @@ public class SettingActivity extends ToolbarActivity {
 
                                 builder.setTitle("版本升级");
                                 builder.setMessage(changeLog.replace("\\n", " \n"));
-                                builder.setPositiveButton("确认",
+                                builder.setPositiveButton("升级",
                                         new DialogInterface.OnClickListener() {
 
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                // DownloadAppUtils.downloadForAutoInstall(context, downloadUrl, "下载新版本");
+                                                DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, downloadUrl, "下载新版本");
                                             }
                                         });
 
@@ -104,7 +104,7 @@ public class SettingActivity extends ToolbarActivity {
                                     builder.setCancelable(false);
                                     //对话框不变化
                                 } else {
-                                    builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    builder.setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
@@ -114,17 +114,19 @@ public class SettingActivity extends ToolbarActivity {
 
                                 AlertDialog dialog = builder.create();
                                 dialog.show();
-                                
-                                // 重写“确定”（AlertDialog.BUTTON_POSITIVE），截取监听
-                                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, downloadUrl, "下载新版本");
-                                        Toast.makeText(SettingActivity.this, "开始下载新版本", Toast.LENGTH_SHORT).show();
-                                        // 这里可以控制是否让对话框消失
-                                        // dialog.dismiss();
-                                    }
-                                });
+
+                                if (isForced) {
+                                    // 重写“确定”（AlertDialog.BUTTON_POSITIVE），截取监听
+                                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            DownloadAppUtils.downloadForAutoInstall(SettingActivity.this, downloadUrl, "下载新版本");
+                                            Toast.makeText(SettingActivity.this, "开始下载新版本", Toast.LENGTH_SHORT).show();
+                                            // 这里可以控制是否让对话框消失
+                                            // dialog.dismiss();
+                                        }
+                                    });
+                                }
                             } else {
                                 Toast.makeText(SettingActivity.this, getString(R.string.prompt_no_update), Toast.LENGTH_SHORT).show();
                             }
