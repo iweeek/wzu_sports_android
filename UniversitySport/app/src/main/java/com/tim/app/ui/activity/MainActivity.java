@@ -348,6 +348,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             int distance = jsonObject.getInt("qualifiedDistance");
                             sportEntry.setQualifiedDistance(distance);
 
+                            int stepThreshold = jsonObject.getInt("stepThreshold");
+                            sportEntry.setStepThreshold(stepThreshold);
+
                             double time = jsonObject.getDouble("qualifiedCostTime");
                             BigDecimal targetSpeed = MathUtil.bigDecimalDivide(Double.toString(distance),
                                     Double.toString(time), SPEED_SCALE);

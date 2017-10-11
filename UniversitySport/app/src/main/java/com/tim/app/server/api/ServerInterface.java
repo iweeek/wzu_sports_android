@@ -237,6 +237,7 @@ public class ServerInterface {
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
                 "    imgUrl\n" +
+                "    stepThreshold\n" +
                 "  }\n" +
                 "}\n";
         query(queryStr, callback);

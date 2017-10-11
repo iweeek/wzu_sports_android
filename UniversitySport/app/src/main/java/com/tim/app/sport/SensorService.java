@@ -94,7 +94,7 @@ public class SensorService extends Service implements SensorEventListener {
     //动态阈值需要动态的数据，这个值用于这些动态数据的阈值
     final float initialValue = (float) 1.0;
     //初始阈值
-    float thresholdValue = (float) 6.0;
+    static float thresholdValue = (float) 4.0;
     //用x、y、z轴三个维度算出的平均值
     public static float average = 0;
 
@@ -119,6 +119,14 @@ public class SensorService extends Service implements SensorEventListener {
 
 
     public final static String ACTION_UPDATE_NOTIFICATION = "updateNotificationState";
+
+    public static float getThresholdValue() {
+        return thresholdValue;
+    }
+
+    public static void setThresholdValue(float thresholdValue) {
+        SensorService.thresholdValue = thresholdValue;
+    }
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
@@ -275,16 +283,16 @@ public class SensorService extends Service implements SensorEventListener {
                 boolean a = timeOfNow - timeOfLastPeak >= 250;
                 boolean b = (timeOfNow - timeOfLastPeak) <= 2000;
                 boolean c = peakOfWave - valleyOfWave >= thresholdValue;
-                DLOG.d(TAG, "timeOfNow: " + timeOfNow);
-                DLOG.d(TAG, "timeOfLastPeak: " + timeOfLastPeak);
-                DLOG.d(TAG, "timeOfNow - timeOfLastPeak: " + (timeOfNow - timeOfLastPeak));
-                DLOG.d(TAG, "peakOfWave: " + peakOfWave);
-                DLOG.d(TAG, "valleyOfWave: " + valleyOfWave);
-                DLOG.d(TAG, "thresholdValue: " + thresholdValue);
-                DLOG.e(TAG, "peakOfWave - valleyOfWave: " + (peakOfWave - valleyOfWave));
-                DLOG.d(TAG, "a:" + a);
-                DLOG.d(TAG, "b:" + b);
-                DLOG.d(TAG, "c:" + c);
+                // DLOG.d(TAG, "timeOfNow: " + timeOfNow);
+                // DLOG.d(TAG, "timeOfLastPeak: " + timeOfLastPeak);
+                // DLOG.d(TAG, "timeOfNow - timeOfLastPeak: " + (timeOfNow - timeOfLastPeak));
+                // DLOG.d(TAG, "peakOfWave: " + peakOfWave);
+                // DLOG.d(TAG, "valleyOfWave: " + valleyOfWave);
+                // DLOG.d(TAG, "thresholdValue: " + thresholdValue);
+                // DLOG.e(TAG, "peakOfWave - valleyOfWave: " + (peakOfWave - valleyOfWave));
+                // DLOG.d(TAG, "a:" + a);
+                // DLOG.d(TAG, "b:" + b);
+                // DLOG.d(TAG, "c:" + c);
 
                 if (a && b && c) {
                     timeOfThisPeak = timeOfNow;
@@ -335,12 +343,12 @@ public class SensorService extends Service implements SensorEventListener {
 
         if (!isDirectionUp && lastStatus) {
             peakOfWave = oldValue;
-            DLOG.d(TAG, "peakOfWave:" + peakOfWave);
+            // DLOG.d(TAG, "peakOfWave:" + peakOfWave);
             return true;
             //上一次是向下，本次是向上
         } else if (!lastStatus && isDirectionUp) {
             valleyOfWave = oldValue;
-            DLOG.d(TAG, "valleyOfWave:" + valleyOfWave);
+            // DLOG.d(TAG, "valleyOfWave:" + valleyOfWave);
             return false;
         } else {
             return false;
@@ -536,13 +544,13 @@ public class SensorService extends Service implements SensorEventListener {
                 DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
             }
         } else {
-            // DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
+            DLOG.v(TAG, "手机不支持STEP_COUNTER传感器");
             Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             if (accelerometerSensor != null) {
                 isAvailable = sensorManager.registerListener(this, accelerometerSensor,
                         SensorManager.SENSOR_DELAY_UI);
                 if (isAvailable) {
-                    DLOG.v(TAG, "STEP_COUNTER传感器无法使用, 现在开启ACCELEROMETER传感器");
+                    DLOG.v(TAG, "ACCELEROMETER传感器可以使用");
                 } else {
                     DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
                 }
