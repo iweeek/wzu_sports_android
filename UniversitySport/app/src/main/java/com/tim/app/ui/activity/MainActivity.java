@@ -3,6 +3,7 @@ package com.tim.app.ui.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -37,6 +38,7 @@ import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.cell.GlideApp;
@@ -525,6 +527,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
 
+                        SharedPreferences sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE);
+                        int ignoreVersion = sp.getInt(User.IGNORE_VERSION, 0);
+                        DLOG.d(TAG, "ignoreVersion:" + ignoreVersion);
+                        if (ignoreVersion == versionCode) {
+                            return false;
+                        }
+
                         DLOG.d(TAG, "服务器版本" + versionCode);
                         DLOG.d(TAG, "客户端版本" + info.versionCode);
                         if (versionCode > info.versionCode) {
@@ -551,6 +560,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
+                                    }
+                                });
+                                builder.setNeutralButton("忽略本次更新", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        SharedPreferences.Editor sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE).edit();
+                                        sp.putInt(User.IGNORE_VERSION, versionCode);
+                                        sp.apply();
                                     }
                                 });
                             }
