@@ -982,8 +982,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        SQLite.init(context, RunningSportsCallback.getInstance());
         DLOG.d(TAG, "runningActivitiesEnd");
         //提交本次运动数据，更新UI
-        DLOG.d(TAG, "currentSteps:" + currentSteps);
         currentSteps = counterSteps >= stepCountCal ? counterSteps : stepCountCal;
+        DLOG.d(TAG, "currentSteps:" + currentSteps);
         ServerInterface.instance().runningActivitiesEnd(
                 TAG, sportRecordId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
                     @Override
