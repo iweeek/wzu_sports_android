@@ -49,6 +49,8 @@ public class SensorService extends Service implements SensorEventListener {
 
     private static final String TAG = "SensorService";
 
+    public static boolean stepCounterEnabled = false;
+
     private final static int NOTIFICATION_ID = 1;
     private final static long MICROSECONDS_IN_ONE_MINUTE = 60000;
     //时间间隔
@@ -103,7 +105,7 @@ public class SensorService extends Service implements SensorEventListener {
     // Step_Detector传感器使用的当前步数
     public static int detectorStep = 0;
 
-    
+
     public Acceleration acceleration = null;
     public Gyroscope gyroscope = null;
     public Gravity gravity = null;
@@ -540,23 +542,25 @@ public class SensorService extends Service implements SensorEventListener {
                     SensorManager.SENSOR_DELAY_NORMAL, (int) (5 * MICROSECONDS_IN_ONE_MINUTE));
             if (isAvailable) {
                 DLOG.v(TAG, "STEP_COUNTER传感器可以使用");
+                stepCounterEnabled = true;
             } else {
                 DLOG.v(TAG, "STEP_COUNTER传感器无法使用");
+                stepCounterEnabled = false;
             }
-        } else {
-            DLOG.v(TAG, "手机不支持STEP_COUNTER传感器");
-            Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            if (accelerometerSensor != null) {
-                isAvailable = sensorManager.registerListener(this, accelerometerSensor,
-                        SensorManager.SENSOR_DELAY_UI);
-                if (isAvailable) {
-                    DLOG.v(TAG, "ACCELEROMETER传感器可以使用");
-                } else {
-                    DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
-                }
-            } else {
-                DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
-            }
+            // } else {
+            //     DLOG.v(TAG, "手机不支持STEP_COUNTER传感器");
+            //     Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            //     if (accelerometerSensor != null) {
+            //         isAvailable = sensorManager.registerListener(this, accelerometerSensor,
+            //                 SensorManager.SENSOR_DELAY_UI);
+            //         if (isAvailable) {
+            //             DLOG.v(TAG, "ACCELEROMETER传感器可以使用");
+            //         } else {
+            //             DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
+            //         }
+            //     } else {
+            //         DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
+            //     }
         }
 
         // 现在暂时测试，即使有STEP_COUNTER传感器也打开加速度传感器
@@ -565,12 +569,12 @@ public class SensorService extends Service implements SensorEventListener {
             isAvailable = sensorManager.registerListener(this, accelerometerSensor,
                     SensorManager.SENSOR_DELAY_UI);
             if (isAvailable) {
-                DLOG.v(TAG, "STEP_COUNTER传感器无法使用, 现在开启ACCELEROMETER传感器");
+                DLOG.v(TAG, "ACCELEROMETER传感器已开启");
             } else {
-                DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
+                DLOG.v(TAG, "ACCELEROMETER传感器无法开启");
             }
         } else {
-            DLOG.v(TAG, "ACCELEROMETER传感器无法使用");
+            DLOG.v(TAG, "没有ACCELEROMETER传感器");
         }
 
         Sensor gravitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
@@ -608,7 +612,6 @@ public class SensorService extends Service implements SensorEventListener {
         // } else {
         //     DLOG.v(TAG, "STEP_DETECTOR传感器无法使用");
         // }
-
 
     }
 }

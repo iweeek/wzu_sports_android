@@ -116,7 +116,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private long elapseTime = 0;
     //    private long previousTime = 0;
     private int currentSteps = 0;  // 最终的步数
-    private int counterSteps = 0;
+    private int stepCounter = 0;
     private int stepCountCal = 0;
     private int lastSteps = 0;
     private long startTime;//开始时间
@@ -486,7 +486,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
                 // 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
-                int stepsInterval = counterSteps - lastSteps;
+                int stepsInterval = stepCounter - lastSteps;
                 BigDecimal bdDividend;
                 BigDecimal bdDevisor;
                 if (stepsInterval == 0) {
@@ -513,7 +513,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
 
                 // toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
-                //         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + counterSteps +
+                //         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + stepCounter +
                 //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
@@ -544,8 +544,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
                 }
 
+                if (SensorService.stepCounterEnabled) {
+                    currentSteps = stepCounter;
+                } else {
+                    currentSteps = stepCountCal;
+                }
+
                 // 提交到服务器
-                ServerInterface.instance().runningActivityData(TAG, sportRecordId, counterSteps, stepCountCal, currentDistance,
+                ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
                         location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
                         locationType, isNormal, new ResponseCallback() {
                             @Override
@@ -564,7 +570,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         });
             }
 
-            lastSteps = counterSteps;
+            lastSteps = stepCounter;
             lastLatLng = newLatLng;
             DLOG.d(TAG, toastText);
         } else {
@@ -639,7 +645,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //        tvCurrentStep.setText("0 步");
         tvAverSpeed.setText("0.00 ");
         initSteps = 0;
-        counterSteps = 0;
+        stepCounter = 0;
         pauseStateSteps = 0;
         pauseStateCalcSteps = 0;
         currentDistance = 0;
@@ -850,8 +856,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     sportRecordId = json.getInt("id");
                                     DLOG.d(TAG, "sportRecordId:" + sportRecordId);
 
+                                    if (SensorService.stepCounterEnabled) {
+                                        currentSteps = stepCounter;
+                                    } else {
+                                        currentSteps = stepCountCal;
+                                    }
+
                                     //第一次向服务器提交数据,默认第一次是正常的数据
-                                    ServerInterface.instance().runningActivityData(TAG, sportRecordId, counterSteps, stepCountCal, currentDistance,
+                                    ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
                                             firstLocation.getLongitude(), firstLocation.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
                                             firstLocationType, true, new ResponseCallback() {
                                                 @Override
@@ -981,9 +993,14 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         //必须先初始化。
         //        SQLite.init(context, RunningSportsCallback.getInstance());
         DLOG.d(TAG, "runningActivitiesEnd");
+
+        if (SensorService.stepCounterEnabled) {
+            currentSteps = stepCounter;
+        } else {
+            currentSteps = stepCountCal;
+        }
+
         //提交本次运动数据，更新UI
-        currentSteps = counterSteps >= stepCountCal ? counterSteps : stepCountCal;
-        DLOG.d(TAG, "currentSteps:" + currentSteps);
         ServerInterface.instance().runningActivitiesEnd(
                 TAG, sportRecordId, currentDistance, currentSteps, elapseTime, targetFinishedTime, new JsonResponseCallback() {
                     @Override
@@ -1130,12 +1147,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         if (initSteps == 0) {
                             initSteps = steps;
                         } else {
-                            counterSteps = steps - initSteps - pauseStateSteps;
-                            // tvCurrentStep.setText(String.valueOf(counterSteps) + "步");
+                            stepCounter = steps - initSteps - pauseStateSteps;
+                            // tvCurrentStep.setText(String.valueOf(stepCounter) + "步");
                         }
                     } else {
                         if (initSteps != 0) {
-                            pauseStateSteps = steps - initSteps - counterSteps;
+                            pauseStateSteps = steps - initSteps - stepCounter;
                         }
                     }
                     break;
@@ -1148,7 +1165,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             initCalcSteps = calcSteps;
                         } else {
                             stepCountCal = calcSteps - initCalcSteps - pauseStateCalcSteps;
-                            // tvCurrentStep.setText(String.valueOf(counterSteps) + "步");
+                            // tvCurrentStep.setText(String.valueOf(stepCounter) + "步");
                         }
                     } else {
                         if (initCalcSteps != 0) {
@@ -1159,12 +1176,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     //     if (initSteps == 0) {
                     //         initSteps = stepCountCal;
                     //     } else {
-                    //         counterSteps = stepCountCal - initSteps - pauseStateSteps;
-                    //         // tvCurrentStep.setText(String.valueOf(counterSteps) + "步");
+                    //         stepCounter = stepCountCal - initSteps - pauseStateSteps;
+                    //         // tvCurrentStep.setText(String.valueOf(stepCounter) + "步");
                     //     }
                     // } else {
                     //     if (initSteps != 0) {
-                    //         pauseStateSteps = stepCountCal - initSteps - counterSteps;
+                    //         pauseStateSteps = stepCountCal - initSteps - stepCounter;
                     //     }
                     // }
                     break;
