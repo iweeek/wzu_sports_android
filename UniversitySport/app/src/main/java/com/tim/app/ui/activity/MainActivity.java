@@ -562,7 +562,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                         dialog.dismiss();
                                     }
                                 });
-                                builder.setNeutralButton("忽略本次更新", new DialogInterface.OnClickListener() {
+                                builder.setNeutralButton("忽略本次", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         SharedPreferences.Editor sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE).edit();
