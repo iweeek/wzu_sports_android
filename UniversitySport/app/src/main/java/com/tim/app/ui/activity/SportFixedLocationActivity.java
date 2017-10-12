@@ -23,6 +23,7 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -526,15 +527,14 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         DLOG.d(TAG, "zbc");
         //运动耗时
         if (state == STATE_STARTED) {
-            // DLOG.d(TAG, "elapseTime:" + elapseTime);
-            // MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
-            // DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
+            DLOG.d(TAG, "elapseTime:" + elapseTime);
+            MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
+            DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
 
-            if (!isFirst) {
-                elapseTime += acquisitionInterval / 1000;
-                tvElapsedTime.setText(elapseTime / 60 + " 分钟");
-            }
-            // DLOG.d(TAG, "elapseTime:" + elapseTime);
+            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
+            Log.d(TAG, "elapseTime:" + elapseTime);
+            tvElapsedTime.setText(elapseTime / 60 + " 分钟");
+            DLOG.d(TAG, "elapseTime:" + elapseTime);
         }
 
         Bundle bundle = location.getExtras();
@@ -815,6 +815,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     if (errCode == 0) {
                         DLOG.d(TAG, "areaSportsStart 成功");
                         state = STATE_STARTED;
+                        startTime = System.currentTimeMillis();
                         JSONObject jsonObject = json.optJSONObject("obj");
 
                         areaSportRecordId = jsonObject.optInt("id");
@@ -829,18 +830,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                     public boolean onResponse(Object result, int status, String errmsg, int id, boolean fromcache) {
                                         if (status == 0) {
                                             DLOG.d(TAG, "第一次上传 areaActivityData 成功!");
-                                            startTime = System.currentTimeMillis();
-
-                                            if (isFirst) {
-                                                elapseTime = 0;
-                                                isFirst = false;
-                                            }
 
                                             slideUnlockView.setVisibility(View.VISIBLE);
                                             tvPause.setVisibility(View.VISIBLE);
                                             rlElapsedTime.setVisibility(View.VISIBLE);
                                             rlAreaDesc.setVisibility(View.GONE);
-                                            tvSelectLocation.setVisibility(View.INVISIBLE);
+                                            tvSelectLocation.setVisibility(View.GONE);
 
                                             progressDialog.dismissCurrentDialog();
 
