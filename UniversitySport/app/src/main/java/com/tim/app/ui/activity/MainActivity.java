@@ -349,6 +349,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntry.setQualifiedDistance(distance);
 
                             int stepThreshold = jsonObject.getInt("stepThreshold");
+                            DLOG.d(TAG, "stepThreshold:" + stepThreshold);
                             sportEntry.setStepThreshold(stepThreshold);
 
                             double time = jsonObject.getDouble("qualifiedCostTime");
