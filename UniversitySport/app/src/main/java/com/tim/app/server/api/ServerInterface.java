@@ -421,7 +421,7 @@ public class ServerInterface {
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "    areaActivities(startDate: \"2017-06-19\", endDate: \"2017-10-08\") {\n" +
+                "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                 "      data {\n" +
                 "        id\n" +
                 "        areaSportId\n" +
