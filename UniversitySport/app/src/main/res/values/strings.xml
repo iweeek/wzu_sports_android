@@ -186,5 +186,5 @@
     <string name="notQualified">未达标</string>
 
 
-    <string name="manual_open_permission_hint">定位权限已被禁用，请手动开启定位权限</string>
+    <string name="manual_open_permission_hint">定位权限已被禁用，请手动授予定位权限 :）</string>
 </resources>

@@ -71,6 +71,7 @@ import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.MathUtil;
+import com.tim.app.util.SystemUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -211,6 +212,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             myBinder.startLocationInService(interval);
         }
     };
+    private AlertDialog openLocationDialog;
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -238,30 +240,43 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         // 判断GPS模块是否开启，如果没有则开启
         if (!locationManager
                 .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-            //            Toast.makeText(this, "定位服务未打开，请打开定位服务",
-            //                    Toast.LENGTH_SHORT).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("定位服务未打开，请打开定位服务");
-            builder.setPositiveButton("确定",
+            builder.setMessage("请打开定位服务，并授予定位权限。");
+            builder.setPositiveButton("去设置",
                     new android.content.DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface arg0, int arg1) {
-                            // 转到手机设置界面，用户设置GPS
                             Intent intent = new Intent(
                                     Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
+                            startActivityForResult(intent, 0);
                         }
                     });
-            //            locationDialog.setNeutralButton("取消", new android.content.DialogInterface.OnClickListener() {
-            //                @Override
-            //                public void onClick(DialogInterface arg0, int arg1) {
-            //                    arg0.dismiss();
-            //                }
-            //            });
 
-            AlertDialog dialog = builder.show();
-            TextView message = (TextView) dialog.findViewById(android.R.id.message);
-            Button positiveButton = (Button) dialog.findViewById(android.R.id.button1);
+            openLocationDialog = builder.create();
+            openLocationDialog.setCancelable(false);
+            openLocationDialog.show();
+            openLocationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                        openLocationDialog.dismiss();
+                        finish();
+                    }
+                    return false;
+                }
+            });
+            openLocationDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(
+                            Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(intent, 0);
+                    // dialog.dismiss();
+                }
+            });
+
+            TextView message = (TextView) openLocationDialog.findViewById(android.R.id.message);
+            Button positiveButton = (Button) openLocationDialog.findViewById(android.R.id.button1);
             positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
         } else {
@@ -277,9 +292,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (requestCode == 0) {
             if (locationManager
                     .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                openLocationDialog.dismiss();
                 locationDialog.show();
             } else {
-                Toast.makeText(this, OPEN_GPS_MSG, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, OPEN_GPS_MSG, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -457,6 +473,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 DLOG.d(TAG, "newLatLng: " + newLatLng);
+                DLOG.d(TAG, "定位成功");
+                locationDialog.dismissCurrentDialog();
+
                 // 判断第一次，第一次会提示
                 if (lastLatLng == null) {
                     String errText = "定位成功";
@@ -464,8 +483,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    locationDialog.dismissCurrentDialog();
-
                     // 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
                     //toastText = "调整屏幕缩放比例：" + zoomLevel;
@@ -767,6 +784,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        DLOG.d(TAG, "requestCode:" + requestCode);
         switch (requestCode) {
             case REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -789,25 +807,75 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     }
 
     public boolean checkLocationPermission() {
-        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        String op = AppOpsManagerCompat.permissionToOp(permission);
-        int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-        if (result == AppOpsManagerCompat.MODE_IGNORED
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            DLOG.d(TAG, "没有定位权限");
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(this,
-                        getString(R.string.manual_open_permission_hint),
-                        Toast.LENGTH_SHORT).show();
+
+        DLOG.d(TAG, SystemUtil.getRomType());
+        if (SystemUtil.getRomType().equals(SystemUtil.SYS_MIUI)) {
+            String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+            String op = AppOpsManagerCompat.permissionToOp(permission);
+            int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+            if (result == AppOpsManagerCompat.MODE_IGNORED
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                DLOG.d(TAG, "没有定位权限");
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Toast.makeText(this,
+                            getString(R.string.manual_open_permission_hint),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                }
+                return false;
             } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                // 有权限或者默认。
+                DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
+                return true;
             }
+        }
+
+        if (!locationManager
+                .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("请打开定位服务，并授予定位权限。");
+            builder.setPositiveButton("去设置",
+                    new android.content.DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            Intent intent = new Intent(
+                                    Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, 0);
+                        }
+                    });
+
+            openLocationDialog = builder.create();
+            openLocationDialog.setCancelable(false);
+            openLocationDialog.show();
+            openLocationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                        openLocationDialog.dismiss();
+                        finish();
+                    }
+                    return false;
+                }
+            });
+            openLocationDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(
+                            Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(intent, 0);
+                    // dialog.dismiss();
+                }
+            });
+
+            TextView message = (TextView) openLocationDialog.findViewById(android.R.id.message);
+            Button positiveButton = (Button) openLocationDialog.findViewById(android.R.id.button1);
+            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+            message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
             return false;
         } else {
-            // 有权限或者默认。
-            DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
             return true;
         }
     }
