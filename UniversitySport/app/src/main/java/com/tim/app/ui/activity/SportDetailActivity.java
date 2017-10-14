@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -25,8 +26,10 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,8 +168,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_STARTED = 1;//已开始
     static final int STATE_PAUSE = 2;//暂停
     static final int STATE_END = 3;//结束
-    static final int STATE_NOT_COMMIT = 4;//结束
-    static final int STATE_NETWORK_ERROR = 5;//网络原因结束
+    static final int STATE_NETWORK_ERROR = 4;//网络原因结束
     private int state = STATE_NORMAL;
 
     private int screenOffTimeout; //屏幕超时时间
@@ -198,7 +200,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     public static final String COMMIT_FALIED_MSG = "网络错误，数据提交失败，请随后查看历史记录";
 
-    public static final String COMMIT_AGAIN_MSG = "请检查网络设置，并到开旷地点重试 ^ ^";
+    public static final String COMMIT_AGAIN_MSG = "请检查网络设置，并到开旷地点重试";
 
     public int COMMIT_AGAIN_TIMES = 0;
 
@@ -932,9 +934,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
                     SportResultActivity.start(this, historySportEntry);
-                } else if (state == STATE_NOT_COMMIT) {
-                    runningActivitiesEnd(targetFinishedTime);
-                    progressDialog.show();
                 } else if (state == STATE_NETWORK_ERROR) {
                     finish();
                     onBackPressed();
@@ -1082,27 +1081,52 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         } else {
                             // 判断网络提交异常次数 <= 3次，提示用户再次提交
                             if (COMMIT_AGAIN_TIMES++ < 3) {
-                                state = STATE_NOT_COMMIT;
-                                // DLOG.d(TAG, COMMIT_AGAIN_MSG);
-                                // btStart.setVisibility(View.GONE);
-                                btStart.setVisibility(View.VISIBLE);
-                                btStart.setText("重试");
+
+                                showRetryDialog(context, COMMIT_AGAIN_MSG);
                                 progressDialog.dismissCurrentDialog();
-                                Toast.makeText(SportDetailActivity.this, COMMIT_AGAIN_MSG, Toast.LENGTH_SHORT).show();
                                 return false;
                             } else {
-                                // COMMIT_AGAIN_TIMES = 0;
                                 state = STATE_NETWORK_ERROR;
-                                Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
-                                // DLOG.d(TAG, COMMIT_FALIED_MSG);
                                 btStart.setVisibility(View.VISIBLE);
                                 btStart.setText("返回首页");
                                 progressDialog.dismissCurrentDialog();
+                                Toast.makeText(context, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         }
                     }
                 });
+    }
+
+    public void showRetryDialog(Context context , String message) {
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_message, null);
+        TextView confirm;    //确定按钮
+        final TextView content;    //内容
+        confirm = (TextView) view.findViewById(R.id.dialog_btn_confirm);
+        confirm.setText("重试");
+        content = (TextView) view.findViewById(R.id.dialog_txt_content);
+        content.setText(message);
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(view);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runningActivitiesEnd(targetFinishedTime);
+                progressDialog.show();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        int displayWidth = dm.widthPixels;
+        int displayHeight = dm.heightPixels;
+        android.view.WindowManager.LayoutParams p = dialog.getWindow().getAttributes();  //获取对话框当前的参数值
+        p.width = (int) (displayWidth * 0.55);    //宽度设置为屏幕的0.5
+        p.height = (int) (displayHeight * 0.28);    //宽度设置为屏幕的0.5
+        dialog.setCanceledOnTouchOutside(false);// 设置点击屏幕Dialog不消失
+        dialog.getWindow().setAttributes(p);     //设置生效
     }
 
     @Override
@@ -1302,4 +1326,5 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         }
     };
+
 }
