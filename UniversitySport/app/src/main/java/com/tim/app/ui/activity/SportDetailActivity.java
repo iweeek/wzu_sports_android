@@ -165,7 +165,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_STARTED = 1;//已开始
     static final int STATE_PAUSE = 2;//暂停
     static final int STATE_END = 3;//结束
-    static final int ERROR_END = 4;//网络原因结束
+    static final int STATE_NOT_COMMIT = 4;//结束
+    static final int STATE_NETWORK_ERROR = 5;//网络原因结束
     private int state = STATE_NORMAL;
 
     private int screenOffTimeout; //屏幕超时时间
@@ -197,7 +198,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     public static final String COMMIT_FALIED_MSG = "网络错误，数据提交失败，请随后查看历史记录";
 
-    public static final String COMMIT_AGAIN_MSG = "网络错误，请换开旷地点重试 ^ ^";
+    public static final String COMMIT_AGAIN_MSG = "请检查网络设置，并到开旷地点重试 ^ ^";
 
     public int COMMIT_AGAIN_TIMES = 0;
 
@@ -931,11 +932,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else if (state == STATE_END) {//运动结束时，查看锻炼结果
                     finish();
                     SportResultActivity.start(this, historySportEntry);
-                }else if(state == ERROR_END){
-
+                } else if (state == STATE_NOT_COMMIT) {
+                    runningActivitiesEnd(targetFinishedTime);
+                    progressDialog.show();
+                } else if (state == STATE_NETWORK_ERROR) {
                     finish();
                     onBackPressed();
-
                 }
                 break;
             case R.id.ivLocation:
@@ -1078,26 +1080,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             return true;
 
                         } else {
-                            // 判断网络提交异常次数 <=3次，提示用户再次提交
-                            if (COMMIT_AGAIN_TIMES++<3) {
-                                Toast.makeText(SportDetailActivity.this, COMMIT_AGAIN_MSG, Toast.LENGTH_SHORT).show();
-                                DLOG.d(TAG, COMMIT_AGAIN_MSG);
-                                // 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
-                                btStart.setVisibility(View.GONE);
+                            // 判断网络提交异常次数 <= 3次，提示用户再次提交
+                            if (COMMIT_AGAIN_TIMES++ < 3) {
+                                state = STATE_NOT_COMMIT;
+                                // DLOG.d(TAG, COMMIT_AGAIN_MSG);
+                                // btStart.setVisibility(View.GONE);
+                                btStart.setVisibility(View.VISIBLE);
+                                btStart.setText("重试");
                                 progressDialog.dismissCurrentDialog();
-                                /**
-                                 * marvin 2017 10 14
-                                 */
-                                slideUnlockView.setVisibility(View.VISIBLE);
-                                state = STATE_STARTED;
-
+                                Toast.makeText(SportDetailActivity.this, COMMIT_AGAIN_MSG, Toast.LENGTH_SHORT).show();
                                 return false;
-                            }else{
-                                COMMIT_AGAIN_TIMES=0;
-                                state = ERROR_END;
+                            } else {
+                                // COMMIT_AGAIN_TIMES = 0;
+                                state = STATE_NETWORK_ERROR;
                                 Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
-                                DLOG.d(TAG, COMMIT_FALIED_MSG);
-                                // 由于网络原因而使得数据没有正确提交，historySportEntry 是为空的！不应该显示"查看锻炼结果"按钮
+                                // DLOG.d(TAG, COMMIT_FALIED_MSG);
                                 btStart.setVisibility(View.VISIBLE);
                                 btStart.setText("返回首页");
                                 progressDialog.dismissCurrentDialog();
