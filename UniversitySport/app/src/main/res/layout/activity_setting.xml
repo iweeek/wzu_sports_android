@@ -79,6 +79,15 @@
             <View
                 style="@style/horizontalLine"
                 android:layout_marginLeft="10dp" />
+            <TextView
+                android:id="@+id/tvTest"
+                style="@style/menuItem"
+                android:clickable="true"
+                android:text="测试" />
+
+            <View
+                style="@style/horizontalLine"
+                android:layout_marginLeft="10dp" />
 
             <RelativeLayout
                 android:id="@+id/rlAboutUS"

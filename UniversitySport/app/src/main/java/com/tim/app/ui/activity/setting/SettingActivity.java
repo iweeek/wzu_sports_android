@@ -26,6 +26,7 @@ public class SettingActivity extends ToolbarActivity {
 
     private static final String TAG = "SettingActivity";
     private TextView tvVersionName;
+    private TextView tvTest;
     private RelativeLayout rlAboutUS;
     private RelativeLayout rlCheckUpdate;
 
@@ -49,9 +50,11 @@ public class SettingActivity extends ToolbarActivity {
         rlAboutUS = (RelativeLayout) findViewById(R.id.rlAboutUS);
         rlCheckUpdate = (RelativeLayout) findViewById(R.id.rlCheckUpdate);
         tvVersionName = (TextView) findViewById(R.id.tvVersionName);
+        tvTest = (TextView) findViewById(R.id.tvTest);
 
         rlAboutUS.setOnClickListener(this);
         rlCheckUpdate.setOnClickListener(this);
+        tvTest.setOnClickListener(this);
     }
 
     @Override
@@ -144,6 +147,9 @@ public class SettingActivity extends ToolbarActivity {
                     }
                 }
             });
+        } else if (v.getId() == R.id.tvTest) {
+            Intent intent = new Intent(SettingActivity.this, SplashActivityy.class);
+            startActivity(intent);
         }
     }
 
