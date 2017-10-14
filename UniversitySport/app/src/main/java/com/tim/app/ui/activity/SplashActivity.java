@@ -11,8 +11,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Base64;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.application.library.log.DLOG;
 import com.lzy.okhttputils.OkHttpUtils;
@@ -38,7 +44,12 @@ public class SplashActivity extends BaseActivity {
 
     private static int DELAY_TIME = 500;
 
+    private RelativeLayout mLayout;
+    private WebView mWebView;
+
     private Button btLogin;
+    private TextView tvJump;
+    private boolean isIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +72,35 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void initView() {
         btLogin = (Button) findViewById(R.id.btLogin);
+        tvJump = (TextView) findViewById(R.id.tvJump);
+
         btLogin.setOnClickListener(this);
+        tvJump.setOnClickListener(this);
+
+        mLayout = (RelativeLayout) findViewById(R.id.llRoot);
+        mWebView = new WebView(getApplicationContext());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mWebView.setLayoutParams(params);
+        mLayout.addView(mWebView);
+
+        mWebView.setWebViewClient(new MyWebViewClient());
+        mWebView.loadUrl("file:///android_asset/splash.html");
+    }
+
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // if (Uri.parse(url).getHost().contains("baidu")) {
+            //     // This is my web site, so do not override; let my WebView load the page
+            //     return false;
+            // }
+            // // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
+            // Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            // startActivity(intent);
+            // return true;
+            view.loadUrl(url);
+            return true;
+        }
     }
 
     @Override
@@ -74,12 +113,25 @@ public class SplashActivity extends BaseActivity {
         }
         user = getUserFromCache();
         if (user != null) {
-            showLoadingDialog();
 
-            student = user.getStudent();
-            MainActivity.start(this);
-            finish();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    DLOG.d(TAG, "toMainActivity");
+                    toMainActivity();
+                }
+            }, 3000);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    tvJump.setVisibility(View.VISIBLE);
+                }
+            }, 1500);
+        } else {
+            btLogin.setVisibility(View.VISIBLE);
         }
+
     }
 
 
@@ -121,10 +173,36 @@ public class SplashActivity extends BaseActivity {
             case R.id.btLogin:
                 ViewGT.gotoLoginActivity(this);
                 break;
+            case R.id.tvJump:
+                toMainActivity();
+                break;
         }
-
     }
 
+
+    public void toMainActivity() {
+        if (isIn) {
+            return;
+        }
+        if (user != null) {
+            if (!(this).isFinishing()) {
+                showLoadingDialog();
+            }
+
+            student = user.getStudent();
+            MainActivity.start(this);
+            overridePendingTransition(R.anim.screen_zoom_in, android.R.anim.fade_out);
+            isIn = true;
+            finish();
+        }
+        // Intent intent = new Intent(this, MainActivity.class);
+        // startActivity(intent);
+        // overridePendingTransition(R.anim.screen_zoom_in, R.anim.screen_zoom_out);
+        // isIn = true;
+    }
+
+
+    // TODO
     Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -147,7 +225,8 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        handleIntent();
+        mWebView.onResume();
+        // handleIntent();
         hideLoadingDialog();
     }
 
@@ -159,12 +238,28 @@ public class SplashActivity extends BaseActivity {
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
+        if (mWebView != null) {
+            mWebView.clearHistory();
+            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+            mWebView.loadUrl("about:blank");
+            mWebView.stopLoading();
+            mWebView.setWebChromeClient(null);
+            mWebView.setWebViewClient(null);
+            mWebView.destroy();
+            mWebView = null;
+        }
         hideLoadingDialog();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+        // finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWebView.onPause();
     }
 }

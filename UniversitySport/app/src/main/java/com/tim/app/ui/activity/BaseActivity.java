@@ -82,7 +82,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         if (mLoadingDialog == null) {
             mLoadingDialog = new LoadingDialog(this);
         }
-        mLoadingDialog.show();
+        // DLOG.d(TAG, "mLoadingDialog.isShowing():" + mLoadingDialog.isShowing());
+        if (!mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
+        }
     }
 
     protected void showLoadingDialog(DialogInterface.OnDismissListener dismissListener) {
