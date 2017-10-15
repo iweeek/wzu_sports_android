@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_all"
+        android:title="全部记录"></item>
+    <item
+        android:id="@+id/action_success"
+        android:title="达标记录" />
+    <item
+        android:id="@+id/action_failed"
+        android:title="未达标记录" />
+    <item
+        android:id="@+id/action_error"
+        android:title="数据异常" />
+</menu>

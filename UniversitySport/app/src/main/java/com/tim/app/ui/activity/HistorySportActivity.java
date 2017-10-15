@@ -40,6 +40,22 @@ public class HistorySportActivity extends ToolbarActivity {
         vpHistoryData.setOffscreenPageLimit(2);//除去当前显示页面外，还需要预先加载的页面个数
         vpHistoryData.setAdapter(pagerAdapter);
         vpHistoryData.setCurrentItem(0);
+        vpHistoryData.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.setupWithViewPager(vpHistoryData);
     }
 
@@ -77,4 +93,5 @@ public class HistorySportActivity extends ToolbarActivity {
     protected int getLayoutId() {
         return R.layout.activity_history;
     }
+
 }

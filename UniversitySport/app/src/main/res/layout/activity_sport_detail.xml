@@ -503,7 +503,7 @@
             android:visibility="gone"
             app:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
             app:slideUnlockBlockResource="@drawable/ic_lock"
-            tool:visibility="visible"/>
+            tool:visibility="visible" />
 
         <TextView
             android:id="@+id/tvPause"

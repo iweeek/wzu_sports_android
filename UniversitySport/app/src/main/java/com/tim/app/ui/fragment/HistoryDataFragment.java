@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -57,6 +60,12 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private EmptyLayout emptyLayout;
     private HistorySportListAdapter adapter;
     private List<HistoryItem> dataList = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListAll = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListAbnormalData = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListQualified = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListNotQualified = new ArrayList<HistoryItem>();
+
+
     private HistoryDataHeadView headView;
     private int universityId;
     //    private int studentId = 2;
@@ -105,6 +114,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         if (null == rootView) {
             rootView = inflater.inflate(R.layout.fragment_history, container, false);
 
+
             lrvLoadMore = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.lrvLoadMore);
             wrvHistoryData = (WrapRecyclerView) rootView.findViewById(R.id.wrvHistoryData);
             //去除滑动到顶部或者是底部时会出现阴影的问题
@@ -147,6 +157,9 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         }
         headView.setData("0", "0", "0", "0", "0");
         initData();
+
+        setHasOptionsMenu(true);
+
         return rootView;
     }
 
@@ -264,6 +277,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                                 dataList.add(item);
                             }
                         }
+
+                        sortSportData();
 
                         adapter.notifyDataSetChanged();
                         if (dataList.size() == 0) {
@@ -524,5 +539,116 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.actionbar_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (dataList.size() != 0)
+            dataList.clear();
+        switch (item.getItemId()) {
+            case R.id.action_all:
+                for (HistoryItem historyItem:dataListAll) {
+                    dataList.add(historyItem);
+                }
+                break;
+            case R.id.action_error:
+                for (HistoryItem historyItem:dataListAbnormalData) {
+                    dataList.add(historyItem);
+                }
+                break;
+            case R.id.action_success:
+                for (HistoryItem historyItem: dataListQualified) {
+                    dataList.add(historyItem);
+                }
+                break;
+            case R.id.action_failed:
+                for (HistoryItem historyItem: dataListNotQualified) {
+                    dataList.add(historyItem);
+                }
+                break;
+            default:
+                super.onOptionsItemSelected(item);
+                break;
+        }
+        adapter.notifyDataSetChanged();
+        return true;
+
+    }
+
+    private void sortSportData(){
+
+        if (dataListAll.size() != 0) {
+            dataListAll.clear();
+        }
+        if (dataListAbnormalData.size() != 0) {
+            dataListAbnormalData.clear();
+        }
+        if (dataListNotQualified.size() !=0 ) {
+            dataListNotQualified.clear();
+        }
+        if (dataListQualified.size() != 0) {
+            dataListQualified.clear();
+        }
+
+        for (HistoryItem item:dataList) {
+            dataListAll.add(item);
+        }
+
+        for (int i = 0; i <dataList.size(); i++) {
+            HistoryItem item = dataList.get(i);
+            List<HistorySportEntry> historySportEntry = new ArrayList<>();
+            HistoryItem historyItem = new HistoryItem();
+            for (int j = 0; j < item.historySportEntryList.size(); j++) {
+                HistorySportEntry entry = item.historySportEntryList.get(j);
+                if (entry.getEndedAt() == 0) {
+                    historySportEntry.add(entry);
+                }
+            }
+
+            historyItem.historySportEntryList = historySportEntry;
+            if (historyItem.historySportEntryList.size() != 0) {
+                historyItem.date = item.date;
+                dataListAbnormalData.add(historyItem);
+            }
+        }
+
+        for (HistoryItem item:dataList) {
+            List<HistorySportEntry> historySportEntry = new ArrayList<>();
+            for (HistorySportEntry entry: item.historySportEntryList) {
+                if (entry.isQualified()){
+                    historySportEntry.add(entry);
+                }
+
+            }
+
+            if (historySportEntry.size() != 0){
+                HistoryItem historyItem = new HistoryItem();
+                historyItem.date = item.date;
+                historyItem.historySportEntryList=historySportEntry;
+                dataListQualified.add(historyItem);
+            }
+        }
+
+        for (HistoryItem item:dataList) {
+            List<HistorySportEntry> historySportEntry = new ArrayList<>();
+            for (HistorySportEntry entry: item.historySportEntryList) {
+                if (!entry.isQualified() && entry.getEndedAt()!=0){
+                    historySportEntry.add(entry);
+                }
+
+            }
+
+            if (historySportEntry.size() != 0){
+                HistoryItem historyItem = new HistoryItem();
+                historyItem.date = item.date;
+                historyItem.historySportEntryList=historySportEntry;
+                dataListNotQualified.add(historyItem);
+            }
+        }
+    }
 }
