@@ -69,7 +69,8 @@ public class AppConstant {
     public final static int STATUS_ALL = 0;
     public final static int STATUS_QUALIFIED = 1;
     public final static int STATUS_DISQUALIFIED = 2;
-    public final static int STATUS_ABNORMAL = 3;
+    public final static int STATUS_ABNORMAL_DATA = 3;
+    public final static int STATUS_ABNORMAL_END = 4;
 }
 
 

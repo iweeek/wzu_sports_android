@@ -58,9 +58,10 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
     private HistorySportListAdapter adapter;
     private List<HistoryItem> dataList = new ArrayList<HistoryItem>();
     private List<HistoryItem> dataListAll = new ArrayList<HistoryItem>();
-    private List<HistoryItem> dataListAbnormal = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListAbnormalData = new ArrayList<HistoryItem>();
     private List<HistoryItem> dataListQualified = new ArrayList<HistoryItem>();
     private List<HistoryItem> dataListDisqualified = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListAbnormalEnd = new ArrayList<HistoryItem>();
 
     public int currentFragmentState = -1;
 
@@ -577,7 +578,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
     //             }
     //             break;
     //         case R.id.action_error:
-    //             for (HistoryItem historyItem:dataListAbnormal) {
+    //             for (HistoryItem historyItem:dataListAbnormalData) {
     //                 dataList.add(historyItem);
     //             }
     //             break;
@@ -616,12 +617,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                     }
                     currentFragmentState = AppConstant.STATUS_ALL;
                     break;
-                case R.id.action_abnormal:
-                    for (HistoryItem historyItem : dataListAbnormal) {
-                        dataList.add(historyItem);
-                    }
-                    currentFragmentState = AppConstant.STATUS_ABNORMAL;
-                    break;
                 case R.id.action_qualified:
                     for (HistoryItem historyItem : dataListQualified) {
                         dataList.add(historyItem);
@@ -633,6 +628,18 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                         dataList.add(historyItem);
                     }
                     currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
+                    break;
+                case R.id.action_abnormal_data:
+                    for (HistoryItem historyItem : dataListAbnormalData) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ABNORMAL_DATA;
+                    break;
+                case R.id.action_abnormal_end:
+                    for (HistoryItem historyItem : dataListAbnormalEnd) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
                     break;
                 default:
                     super.onOptionsItemSelected(item);
@@ -648,12 +655,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                     }
                     currentFragmentState = AppConstant.STATUS_ALL;
                     break;
-                case AppConstant.STATUS_ABNORMAL:
-                    for (HistoryItem historyItem : dataListAbnormal) {
-                        dataList.add(historyItem);
-                    }
-                    currentFragmentState = AppConstant.STATUS_ABNORMAL;
-                    break;
                 case AppConstant.STATUS_QUALIFIED:
                     for (HistoryItem historyItem : dataListQualified) {
                         dataList.add(historyItem);
@@ -665,6 +666,18 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                         dataList.add(historyItem);
                     }
                     currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
+                    break;
+                case AppConstant.STATUS_ABNORMAL_DATA:
+                    for (HistoryItem historyItem : dataListAbnormalData) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ABNORMAL_DATA;
+                    break;
+                case AppConstant.STATUS_ABNORMAL_END:
+                    for (HistoryItem historyItem : dataListAbnormalEnd) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
                     break;
                 default:
                     super.onOptionsItemSelected(item);
@@ -684,35 +697,21 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         if (dataListAll.size() != 0) {
             dataListAll.clear();
         }
-        if (dataListAbnormal.size() != 0) {
-            dataListAbnormal.clear();
-        }
         if (dataListDisqualified.size() != 0) {
             dataListDisqualified.clear();
         }
         if (dataListQualified.size() != 0) {
             dataListQualified.clear();
         }
-
-        for (HistoryItem item : dataList) {
-            dataListAll.add(item);
+        if (dataListAbnormalData.size() != 0) {
+            dataListAbnormalData.clear();
+        }
+        if (dataListAbnormalEnd.size() != 0) {
+            dataListAbnormalEnd.clear();
         }
 
         for (HistoryItem item : dataList) {
-            List<HistorySportEntry> historySportEntry = new ArrayList<>();
-            for (HistorySportEntry entry : item.historySportEntryList) {
-                if (entry.getEndedAt() == 0) {
-                    historySportEntry.add(entry);
-                }
-            }
-
-            if (historySportEntry.size() != 0) {
-                HistoryItem historyItem = new HistoryItem();
-                historyItem.date = item.date;
-                historyItem.historySportEntryList = historySportEntry;
-                dataListAbnormal.add(historyItem);
-                DLOG.d(TAG, "dataListAbnormal.size():" + dataListAbnormal.size());
-            }
+            dataListAll.add(item);
         }
 
         for (HistoryItem item : dataList) {
@@ -746,6 +745,42 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 historyItem.date = item.date;
                 historyItem.historySportEntryList = historySportEntry;
                 dataListDisqualified.add(historyItem);
+            }
+        }
+
+        for (HistoryItem item : dataList) {
+            List<HistorySportEntry> historySportEntry = new ArrayList<>();
+            for (HistorySportEntry entry : item.historySportEntryList) {
+                if (entry.getType() == AppConstant.RUNNING_TYPE) {
+                    if (!entry.isValid()) {
+                        historySportEntry.add(entry);
+                    }
+                }
+            }
+
+            if (historySportEntry.size() != 0) {
+                HistoryItem historyItem = new HistoryItem();
+                historyItem.date = item.date;
+                historyItem.historySportEntryList = historySportEntry;
+                dataListAbnormalData.add(historyItem);
+            }
+        }
+        DLOG.d(TAG, "dataListAbnormalData.size():" + dataListAbnormalData.size());
+
+        for (HistoryItem item : dataList) {
+            List<HistorySportEntry> historySportEntry = new ArrayList<>();
+            for (HistorySportEntry entry : item.historySportEntryList) {
+                if (entry.getEndedAt() == 0) {
+                    historySportEntry.add(entry);
+                }
+
+            }
+
+            if (historySportEntry.size() != 0) {
+                HistoryItem historyItem = new HistoryItem();
+                historyItem.date = item.date;
+                historyItem.historySportEntryList = historySportEntry;
+                dataListAbnormalEnd.add(historyItem);
             }
         }
     }

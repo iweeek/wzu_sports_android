@@ -11,6 +11,9 @@
         android:id="@+id/action_disqualified"
         android:title="只看未达标" />
     <item
-        android:id="@+id/action_abnormal"
+        android:id="@+id/action_abnormal_data"
         android:title="只看数据异常" />
+    <item
+        android:id="@+id/action_abnormal_end"
+        android:title="只看非正常结束"/>
 </menu>
