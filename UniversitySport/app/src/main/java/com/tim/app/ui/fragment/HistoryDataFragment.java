@@ -5,13 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.application.library.base.BaseFragment;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.widget.EmptyLayout;
@@ -29,6 +25,7 @@ import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
 import com.tim.app.ui.activity.HistoryItem;
+import com.tim.app.ui.activity.HistorySportActivity;
 import com.tim.app.ui.adapter.HistorySportListAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
 import com.tim.app.util.MyDateUtil;
@@ -49,7 +46,7 @@ import static com.tim.app.constant.AppConstant.student;
 /**
  * 历史数据
  */
-public class HistoryDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
+public class HistoryDataFragment extends LazyFragment implements View.OnClickListener, LoadMoreHandler, HistorySportActivity.PageSelectListener {
 
     public static final String TAG = "HistoryDataFragment";
     private static final int PAGE_SIZE = 20;
@@ -61,10 +58,13 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     private HistorySportListAdapter adapter;
     private List<HistoryItem> dataList = new ArrayList<HistoryItem>();
     private List<HistoryItem> dataListAll = new ArrayList<HistoryItem>();
-    private List<HistoryItem> dataListAbnormalData = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListAbnormal = new ArrayList<HistoryItem>();
     private List<HistoryItem> dataListQualified = new ArrayList<HistoryItem>();
-    private List<HistoryItem> dataListNotQualified = new ArrayList<HistoryItem>();
+    private List<HistoryItem> dataListDisqualified = new ArrayList<HistoryItem>();
 
+    public int currentFragmentState = -1;
+
+    public boolean isLoaded;
 
     private HistoryDataHeadView headView;
     private int universityId;
@@ -100,20 +100,22 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
     private String termStartDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
 
-    public static HistoryDataFragment newInstance(int type) {
+    public static HistoryDataFragment newInstance(int type, int state) {
         HistoryDataFragment fragment = new HistoryDataFragment();
         Bundle args = new Bundle();
         args.putInt("type", type);
+        args.putInt("state", state);
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void onCreateViewLazy(Bundle savedInstanceState) {
+        super.onCreateViewLazy(savedInstanceState);
+        isLoaded = true;
+        setContentView(R.layout.fragment_history);
         if (null == rootView) {
-            rootView = inflater.inflate(R.layout.fragment_history, container, false);
-
+            rootView = getContentView();
 
             lrvLoadMore = (LoadMoreRecycleViewContainer) rootView.findViewById(R.id.lrvLoadMore);
             wrvHistoryData = (WrapRecyclerView) rootView.findViewById(R.id.wrvHistoryData);
@@ -152,6 +154,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
             if (getArguments() != null) {
                 type = getArguments().getInt("type");
+                currentFragmentState = getArguments().getInt("state");
             }
 
         }
@@ -160,8 +163,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
 
         setHasOptionsMenu(true);
 
-        return rootView;
     }
+
 
     private void getHistoryRecord() {
         ServerInterface.instance().queryHistorySportsRecord(student.getId(), tabStartDate, tabEndDate, type, new JsonResponseCallback() {
@@ -169,6 +172,10 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 Date startDate = null;
                 Date endDate = null;
+                // 点击刷新，清空原来的内容（解决点击刷新之后出现重复信息）
+                if (dataList != null) {
+                    dataList.clear();
+                }
                 if (errCode == 0) {
 
                     JSONObject student = json.optJSONObject("data").optJSONObject("student");
@@ -176,8 +183,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         int accuRunningActivityCount = student.optInt("accuRunningActivityCount");
                         int accuAreaActivityCount = student.optInt("accuAreaActivityCount");
 
-//                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
-//                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
+                        //                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
+                        //                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
 
                         String totalSignInCount = String.valueOf(student.optInt("signInCount"));
 
@@ -188,7 +195,7 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         int areaActivityKcalConsumption = student.optInt("areaActivityKcalConsumption");
 
                         String totalActivityCount = String.valueOf(accuAreaActivityCount + accuRunningActivityCount);
-//                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
+                        //                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
                         String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
                         String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
 
@@ -266,12 +273,12 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                             }
 
                             if (item.historySportEntryList != null) {
-//                                for (int i = 0; i < item.historySportEntryList.size(); i++) {
-//                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
-//                                }
+                                //                                for (int i = 0; i < item.historySportEntryList.size(); i++) {
+                                //                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
+                                //                                }
                                 // 对item.historySportEntryList进行排序
-//                                TimeComparator timeComparator = new TimeComparator();
-//                                Collections.sort(item.historySportEntryList, timeComparator);
+                                //                                TimeComparator timeComparator = new TimeComparator();
+                                //                                Collections.sort(item.historySportEntryList, timeComparator);
 
                                 item.date = date.toString();
                                 dataList.add(item);
@@ -279,6 +286,17 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
                         }
 
                         sortSportData();
+
+                        // 显示当前需要筛选的内容
+                        if (currentFragmentState != -1) {
+                            if (((HistorySportActivity) getActivity()).currentState != -1) {
+                                currentFragmentState = ((HistorySportActivity) getActivity()).currentState;  // 如果有前一次筛选记录
+                            } else {
+                                // TODO 第一次初始化，默认是显示 "达标" 记录。
+                            }
+
+                            changeHistoryDataList(null, currentFragmentState);
+                        }
 
                         adapter.notifyDataSetChanged();
                         if (dataList.size() == 0) {
@@ -340,34 +358,35 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (null != rootView) {
-            ((ViewGroup) rootView.getParent()).removeView(rootView);
-        }
-    }
+    //
+    // @Override
+    // public void onStop() {
+    //     super.onStop();
+    // }
+    //
+    // @Override
+    // public void onResume() {
+    //     super.onResume();
+    // }
+    //
+    // @Override
+    // public void onPause() {
+    //     super.onPause();
+    // }
+    //
+    // @Override
+    // public void onDestroyView() {
+    //     super.onDestroyView();
+    //     if (null != rootView) {
+    //         ((ViewGroup) rootView.getParent()).removeView(rootView);
+    //     }
+    // }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(TAG);
+        isLoaded = false;
     }
 
     @Override
@@ -528,6 +547,11 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onPageSelected(int status) {
+
+    }
+
     class TimeComparator implements Comparator<HistorySportEntry> {
         @Override
         public int compare(HistorySportEntry lhs, HistorySportEntry rhs) {
@@ -539,115 +563,193 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.actionbar_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+    // @Override
+    // public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    //     inflater.inflate(R.menu.actionbar_menu, menu);
+    //     super.onCreateOptionsMenu(menu, inflater);
+    // }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    // @Override
+    // public boolean onOptionsItemSelected(MenuItem item) {
+    //
+    //     if (dataList.size() != 0)
+    //         dataList.clear();
+    //     switch (item.getItemId()) {
+    //         case R.id.action_all:
+    //             for (HistoryItem historyItem:dataListAll) {
+    //                 dataList.add(historyItem);
+    //             }
+    //             break;
+    //         case R.id.action_error:
+    //             for (HistoryItem historyItem:dataListAbnormal) {
+    //                 dataList.add(historyItem);
+    //             }
+    //             break;
+    //         case R.id.action_success:
+    //             for (HistoryItem historyItem: dataListQualified) {
+    //                 dataList.add(historyItem);
+    //             }
+    //             break;
+    //         case R.id.action_failed:
+    //             for (HistoryItem historyItem: dataListDisqualified) {
+    //                 dataList.add(historyItem);
+    //             }
+    //             break;
+    //         default:
+    //             super.onOptionsItemSelected(item);
+    //             break;
+    //     }
+    //     adapter.notifyDataSetChanged();
+    //     return true;
+    //
+    // }
 
+    /**
+     * 根据选中的菜单设置当前显示的记录
+     *
+     * @param item 选中的菜单项
+     */
+    public void changeHistoryDataList(MenuItem item, int type) {
         if (dataList.size() != 0)
             dataList.clear();
-        switch (item.getItemId()) {
-            case R.id.action_all:
-                for (HistoryItem historyItem:dataListAll) {
-                    dataList.add(historyItem);
-                }
-                break;
-            case R.id.action_error:
-                for (HistoryItem historyItem:dataListAbnormalData) {
-                    dataList.add(historyItem);
-                }
-                break;
-            case R.id.action_success:
-                for (HistoryItem historyItem: dataListQualified) {
-                    dataList.add(historyItem);
-                }
-                break;
-            case R.id.action_failed:
-                for (HistoryItem historyItem: dataListNotQualified) {
-                    dataList.add(historyItem);
-                }
-                break;
-            default:
-                super.onOptionsItemSelected(item);
-                break;
+        if (item != null) {
+            switch (item.getItemId()) {
+                case R.id.action_all:
+                    for (HistoryItem historyItem : dataListAll) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ALL;
+                    break;
+                case R.id.action_abnormal:
+                    for (HistoryItem historyItem : dataListAbnormal) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ABNORMAL;
+                    break;
+                case R.id.action_qualified:
+                    for (HistoryItem historyItem : dataListQualified) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_QUALIFIED;
+                    break;
+                case R.id.action_disqualified:
+                    for (HistoryItem historyItem : dataListDisqualified) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
+                    break;
+                default:
+                    super.onOptionsItemSelected(item);
+                    break;
+            }
         }
-        adapter.notifyDataSetChanged();
-        return true;
 
+        if (type != -1) {
+            switch (type) {
+                case AppConstant.STATUS_ALL:
+                    for (HistoryItem historyItem : dataListAll) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ALL;
+                    break;
+                case AppConstant.STATUS_ABNORMAL:
+                    for (HistoryItem historyItem : dataListAbnormal) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_ABNORMAL;
+                    break;
+                case AppConstant.STATUS_QUALIFIED:
+                    for (HistoryItem historyItem : dataListQualified) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_QUALIFIED;
+                    break;
+                case AppConstant.STATUS_DISQUALIFIED:
+                    for (HistoryItem historyItem : dataListDisqualified) {
+                        dataList.add(historyItem);
+                    }
+                    currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
+                    break;
+                default:
+                    super.onOptionsItemSelected(item);
+                    break;
+            }
+        }
+        ((HistorySportActivity) getActivity()).currentState = currentFragmentState;
+        adapter.notifyDataSetChanged();
     }
 
-    private void sortSportData(){
+    /**
+     * 对所有历史记录进行整理，事先将记录分好类别。
+     * 1、全部 2、达标 3、未达标 4、非正常结束
+     */
+    private void sortSportData() {
 
         if (dataListAll.size() != 0) {
             dataListAll.clear();
         }
-        if (dataListAbnormalData.size() != 0) {
-            dataListAbnormalData.clear();
+        if (dataListAbnormal.size() != 0) {
+            dataListAbnormal.clear();
         }
-        if (dataListNotQualified.size() !=0 ) {
-            dataListNotQualified.clear();
+        if (dataListDisqualified.size() != 0) {
+            dataListDisqualified.clear();
         }
         if (dataListQualified.size() != 0) {
             dataListQualified.clear();
         }
 
-        for (HistoryItem item:dataList) {
+        for (HistoryItem item : dataList) {
             dataListAll.add(item);
         }
 
-        for (int i = 0; i <dataList.size(); i++) {
-            HistoryItem item = dataList.get(i);
+        for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
-            HistoryItem historyItem = new HistoryItem();
-            for (int j = 0; j < item.historySportEntryList.size(); j++) {
-                HistorySportEntry entry = item.historySportEntryList.get(j);
+            for (HistorySportEntry entry : item.historySportEntryList) {
                 if (entry.getEndedAt() == 0) {
                     historySportEntry.add(entry);
                 }
             }
 
-            historyItem.historySportEntryList = historySportEntry;
-            if (historyItem.historySportEntryList.size() != 0) {
+            if (historySportEntry.size() != 0) {
+                HistoryItem historyItem = new HistoryItem();
                 historyItem.date = item.date;
-                dataListAbnormalData.add(historyItem);
+                historyItem.historySportEntryList = historySportEntry;
+                dataListAbnormal.add(historyItem);
+                DLOG.d(TAG, "dataListAbnormal.size():" + dataListAbnormal.size());
             }
         }
 
-        for (HistoryItem item:dataList) {
+        for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
-            for (HistorySportEntry entry: item.historySportEntryList) {
-                if (entry.isQualified()){
+            for (HistorySportEntry entry : item.historySportEntryList) {
+                if (entry.isQualified()) {
                     historySportEntry.add(entry);
                 }
 
             }
 
-            if (historySportEntry.size() != 0){
+            if (historySportEntry.size() != 0) {
                 HistoryItem historyItem = new HistoryItem();
                 historyItem.date = item.date;
-                historyItem.historySportEntryList=historySportEntry;
+                historyItem.historySportEntryList = historySportEntry;
                 dataListQualified.add(historyItem);
             }
         }
 
-        for (HistoryItem item:dataList) {
+        for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
-            for (HistorySportEntry entry: item.historySportEntryList) {
-                if (!entry.isQualified() && entry.getEndedAt()!=0){
+            for (HistorySportEntry entry : item.historySportEntryList) {
+                if (!entry.isQualified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
 
             }
 
-            if (historySportEntry.size() != 0){
+            if (historySportEntry.size() != 0) {
                 HistoryItem historyItem = new HistoryItem();
                 historyItem.date = item.date;
-                historyItem.historySportEntryList=historySportEntry;
-                dataListNotQualified.add(historyItem);
+                historyItem.historySportEntryList = historySportEntry;
+                dataListDisqualified.add(historyItem);
             }
         }
     }

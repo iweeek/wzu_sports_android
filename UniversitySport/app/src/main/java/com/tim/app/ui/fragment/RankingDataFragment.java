@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.application.library.base.BaseFragment;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.widget.EmptyLayout;
@@ -33,7 +32,7 @@ import java.util.List;
 /**
  * 排行榜数据
  */
-public class RankingDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
+public class RankingDataFragment extends BaseFragment1 implements View.OnClickListener, LoadMoreHandler {
 
     public static final String TAG = "RankingDataFragment";
     private static final int PAGE_SIZE = 20;

@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_all"
-        android:title="全部记录"></item>
+        android:title="全部记录"/>
     <item
-        android:id="@+id/action_success"
-        android:title="达标记录" />
+        android:id="@+id/action_qualified"
+        android:title="只看达标" />
     <item
-        android:id="@+id/action_failed"
-        android:title="未达标记录" />
+        android:id="@+id/action_disqualified"
+        android:title="只看未达标" />
     <item
-        android:id="@+id/action_error"
-        android:title="数据异常" />
+        android:id="@+id/action_abnormal"
+        android:title="只看数据异常" />
 </menu>
