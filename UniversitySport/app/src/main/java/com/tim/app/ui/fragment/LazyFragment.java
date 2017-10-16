@@ -3,7 +3,6 @@ package com.tim.app.ui.fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 
 import com.application.library.base.BaseFragment;
@@ -49,8 +48,8 @@ public class LazyFragment extends BaseFragment {
             } else {
                 //进行懒加载
                 layout = new FrameLayout(getApplicationContext());
-                layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                // View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.fragment_lazy_loading, null);
+                // layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                // View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.def_loading_layout, null);
                 // layout.addView(view);
                 super.setContentView(layout);
             }

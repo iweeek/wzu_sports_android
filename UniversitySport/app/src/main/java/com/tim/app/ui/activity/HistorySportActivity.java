@@ -127,7 +127,7 @@ public class HistorySportActivity extends ToolbarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         for (HistoryDataFragment fragment : historySportFragmentList) {
-            if (fragment.isLoaded) {
+            if (fragment.isInit()) {
                 fragment.changeHistoryDataList(item, -1);
             }
         }

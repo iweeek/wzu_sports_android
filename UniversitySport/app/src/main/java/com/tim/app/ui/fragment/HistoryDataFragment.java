@@ -64,8 +64,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
 
     public int currentFragmentState = -1;
 
-    public boolean isLoaded;
-
     private HistoryDataHeadView headView;
     private int universityId;
     //    private int studentId = 2;
@@ -112,7 +110,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
     @Override
     protected void onCreateViewLazy(Bundle savedInstanceState) {
         super.onCreateViewLazy(savedInstanceState);
-        isLoaded = true;
         setContentView(R.layout.fragment_history);
         if (null == rootView) {
             rootView = getContentView();
@@ -386,7 +383,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
     public void onDestroy() {
         super.onDestroy();
         OkHttpUtils.getInstance().cancelTag(TAG);
-        isLoaded = false;
     }
 
     @Override
