@@ -1,11 +1,18 @@
 package com.tim.app.ui.activity;
 
+import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.tim.app.R;
@@ -38,6 +45,42 @@ public class HistorySportActivity extends ToolbarActivity {
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
+    }
+
+    @Override
+    protected void init(Bundle savedInstanceState) {
+        super.init(savedInstanceState);
+        setOverflowButtonColor(this);
+    }
+
+    public static void setOverflowButtonColor(final Activity activity) {
+        final String overflowDescription = activity.getString(R.string.abc_action_menu_overflow_description);
+        final ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        final ViewTreeObserver viewTreeObserver = decorView.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                final ArrayList<View> outViews = new ArrayList<View>();
+                decorView.findViewsWithText(outViews, overflowDescription,
+                        View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                if (outViews.isEmpty()) {
+                    return;
+                }
+                AppCompatImageView overflow=(AppCompatImageView) outViews.get(0);
+                overflow.setColorFilter(Color.WHITE);
+                overflow.setImageResource(R.drawable.ic_screen);
+                removeOnGlobalLayoutListener(decorView,this);
+            }
+        });
+    }
+
+    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+        }
+        else {
+            v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+        }
     }
 
     @Override

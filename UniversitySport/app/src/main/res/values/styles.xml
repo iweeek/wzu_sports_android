@@ -15,6 +15,14 @@
         <!--<item name="android:textColorPrimary">@color/colorTheme</item>-->
     </style>
 
+    <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:contentDescription">@string/accessibility_overflow</item>
+    </style>
+
+    <style name="OverFlowMenuTheme" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+    </style>
+
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -210,4 +218,5 @@
         <item name="android:textSize">16dp</item>
     </style>
 
+    <string name="accessibility_overflow">accessibility_overflow</string>
 </resources>
