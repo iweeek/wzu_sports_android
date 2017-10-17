@@ -455,7 +455,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      */
     public void queryAreaSport() {
         //        mAreaSportEntryList = new ArrayList<>();
-        ServerInterface.instance().queryAreaSport(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryAreaSport(student.getUniversityId(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 SportEntry areaSportEntry = new SportEntry();
@@ -476,6 +476,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                             areaSportEntry.setTargetTime(jsonObject.getInt("qualifiedCostTime"));
                             areaSportEntry.setAcquisitionInterval(jsonObject.getInt("acquisitionInterval"));
+                            areaSportEntry.setParticipantNum(jsonObject.getInt("participantNum"));
 
                             areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
                             areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);

@@ -414,6 +414,8 @@ public class SportResultActivity extends ToolbarActivity {
                         llTargetDistance.setVisibility(View.GONE);
                         llTargetSpeed.setVisibility(View.GONE);
 
+                        String curConsumeEnergy = jsonObject.getString("kcalConsumed");
+                        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         llFloatingWindow.setVisibility(View.VISIBLE);
                         progressDialog.dismissCurrentDialog();
                         return true;
