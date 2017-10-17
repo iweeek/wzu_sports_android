@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.application.library.log.DLOG;
 import com.tim.app.R;
 import com.tim.app.ui.view.SlideBackView;
 
@@ -84,6 +84,18 @@ public class LockScreenActivity extends Activity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    protected void onPause() {
+        DLOG.d("LockScreenActivity", "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        DLOG.d("LockScreenActivity", "onStop");
+        super.onStop();
     }
 
     protected void onDestroy() {

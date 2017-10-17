@@ -8,6 +8,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -66,9 +67,9 @@ public class SlideBackView extends FrameLayout {
     }
 
     private void init(Context context) {
-        //必须是传入Activity
+        // 必须是传入Activity
         mActivity = (Activity) context;
-        //构造ViewDragHelper
+        // 静态工厂方法创建构造ViewDragHelper
         mViewDragHelper = ViewDragHelper.create(this, new DragCallback());
         //设置从左边缘捕捉View
         // mViewDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
@@ -101,10 +102,15 @@ public class SlideBackView extends FrameLayout {
         return mViewDragHelper.shouldInterceptTouchEvent(event);
     }
 
-    // @Override
-    // public boolean onInterceptTouchEvent(MotionEvent ev) {
-    //     return mViewDragHelper.shouldInterceptTouchEvent(ev);
-    // }
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        final int action = MotionEventCompat.getActionMasked(ev);
+        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+            mViewDragHelper.cancel();
+            return false;
+        }
+        return mViewDragHelper.shouldInterceptTouchEvent(ev);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -112,22 +118,27 @@ public class SlideBackView extends FrameLayout {
         return true;
     }
 
+    /**
+     * ViewDragHelper.Callback是连接ViewDragHelper与view之间的桥梁（这个view一般是指拥子view的容器即parentView）
+     */
     class DragCallback extends ViewDragHelper.Callback {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
-            return true;
+            return child == mRootView;
         }
 
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             //当前回调，松开手时触发，比较触发条件和当前的滑动距离
             int left = releasedChild.getLeft();
+            DLOG.d("DragCallback", "mSlideWidth:" + mSlideWidth);
             if (left <= mSlideWidth) {
                 //缓慢滑动的方法,小于触发条件，滚回去
                 mViewDragHelper.settleCapturedViewAt(0, 0);
             } else {
                 //大于触发条件，滚出去...
+                //划走了，但是Activity并没有执行onPause和onStop方法
                 mViewDragHelper.settleCapturedViewAt(mScreenWidth, 0);
             }
             //需要手动调用更新界面的方法
@@ -160,14 +171,21 @@ public class SlideBackView extends FrameLayout {
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
             //上下不能移动，返回0
+            // top = top >= 0 ? top : 0;
+            // return top;
             return 0;
         }
 
+        /**
+         * 如果没有设置 mViewDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);  不会被回调
+         *
+         * @param edgeFlags
+         * @param pointerId
+         */
         @Override
         public void onEdgeDragStarted(int edgeFlags, int pointerId) {
             //触发边缘时，主动捕捉mRootView
             mViewDragHelper.captureChildView(mRootView, pointerId);
-            DLOG.d("onEdgeDragStarted", "onEdgeDragStarted");
         }
 
     }
@@ -180,7 +198,6 @@ public class SlideBackView extends FrameLayout {
         DLOG.d("computeScroll", "computeScroll");
         if (mViewDragHelper.continueSettling(true))
             invalidate();
-
     }
 
     @Override
