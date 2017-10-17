@@ -98,6 +98,20 @@
                         android:visibility="gone"/>
 
                     <ImageView
+                        android:id="@+id/ivHelp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_btn_help"/>
+
+                    <ImageView
+                        android:id="@+id/ivFinished"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_btn_finished"/>
+
+                    <ImageView
                         android:id="@+id/ivHideSportInfo"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
