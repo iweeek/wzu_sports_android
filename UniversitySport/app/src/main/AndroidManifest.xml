@@ -151,6 +151,8 @@
             android:name="com.tim.app.ui.activity.setting.RegisterActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.view.webview.WebViewActivity"
+            android:screenOrientation="portrait"/>
         <!--微信respose模块-->
         <activity
             android:name=".ui.activity.wxapi.WXEntryActivity"
