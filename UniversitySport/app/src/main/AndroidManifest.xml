@@ -212,6 +212,22 @@
                 <!--<action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>-->
             <!--</intent-filter>-->
         <!--</receiver>-->
+
+        <service
+            android:name=".ui.activity.LockScreenService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".ui.activity.LockScreenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.marvin.lockact.LockScreenActivity"
+            android:theme="@style/LockScreenBase"/>
+
     </application>
 
 </manifest>

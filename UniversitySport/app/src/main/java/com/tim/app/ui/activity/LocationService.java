@@ -31,6 +31,8 @@ public class LocationService extends Service {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
             if (aMapLocation != null) {
+                DLOG.d(TAG, "aMapLocation.isFixLastLocation():" + aMapLocation.isFixLastLocation());
+                DLOG.d(TAG, "aMapLocation.isOffset():" + aMapLocation.isOffset());
                 if (aMapLocation.getErrorCode() == 0) {
                     //可在其中解析amapLocation获取相应内容。
                     DLOG.d(TAG, "onLocationChanged aMapLocation: " + aMapLocation);

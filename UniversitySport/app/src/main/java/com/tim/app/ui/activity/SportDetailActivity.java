@@ -1,6 +1,8 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -77,6 +80,9 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -544,6 +550,25 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     }
                 }
 
+
+                Timer timer=new Timer();
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        //实例化SharedPreferences对象（第一步）
+                        SharedPreferences mySharedPreferences = getSharedPreferences("lockData", Activity.MODE_PRIVATE);
+                        //实例化SharedPreferences.Editor对象（第二步）
+                        SharedPreferences.Editor editor = mySharedPreferences.edit();
+                        //用putString的方法保存数据
+                        editor.putString("distance",tvCurrentDistance.getText().toString().trim());
+                        editor.putString("speed",tvAverSpeed.getText().toString().trim());
+                        editor.putString("time", tvElapseTime.getText().toString().trim());
+                        //提交当前数据
+                        editor.commit();
+                    }
+                },0,1000);
+
                 if (SensorService.stepCounterEnabled) {
                     currentSteps = stepCounter;
                 } else {
@@ -843,7 +868,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (!checkLocationPermission()) {
                     return;
                 }
-
+                // TODO
+                SetLockScreen(0);
                 if (state == STATE_NORMAL) {
                     DLOG.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     startTime = System.currentTimeMillis();
@@ -1223,6 +1249,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+        SetLockScreen(1);
 
         if (autoAdjustBrightness) {
             BrightnessUtil.startAutoAdjustBrightness(this);
@@ -1269,4 +1296,42 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         }
     };
+
+    private void SetLockScreen(int type) {
+        if (type == 0) {
+            startService(new Intent(this, LockScreenService.class));
+            // bindService(new Intent(this, LockScreenService.class), connection, BIND_AUTO_CREATE);
+        } else {
+            // unbindService(connection);
+            stopService(new Intent(this, LockScreenService.class));
+
+        }
+
+
+    }
+
+    /*
+     * 判断服务是否启动,context上下文对象 ，className服务的name
+     */
+    public static boolean isServiceRunning(Context mContext, String className) {
+
+        boolean isRunning = false;
+        ActivityManager activityManager = (ActivityManager) mContext
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList = activityManager
+                .getRunningServices(30);
+
+        if (!(serviceList.size() > 0)) {
+            return false;
+        }
+
+        for (int i = 0; i < serviceList.size(); i++) {
+            if (serviceList.get(i).service.getClassName().equals(className) == true) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
+    }
+
 }
