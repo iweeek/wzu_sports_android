@@ -36,6 +36,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
 
     <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature
@@ -43,12 +44,12 @@
         android:required="true"/>
 
     <!-- 增加各个屏幕尺寸的自动适配 -->
-    <supports-screens
-        android:anyDensity="true"
-        android:largeScreens="true"
-        android:normalScreens="true"
-        android:resizeable="true"
-        android:smallScreens="true"/>
+    <!--<supports-screens-->
+        <!--android:anyDensity="true"-->
+        <!--android:largeScreens="true"-->
+        <!--android:normalScreens="true"-->
+        <!--android:resizeable="true"-->
+        <!--android:smallScreens="true"/>-->
 
     <application
         android:name="com.tim.app.TimApplication"
@@ -220,12 +221,12 @@
 
         <activity
             android:name=".ui.activity.LockScreenActivity"
-            android:excludeFromRecents="true"
             android:exported="false"
-            android:launchMode="singleInstance"
-            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity="com.marvin.lockact.LockScreenActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:taskAffinity=".NotificationActivity"
             android:theme="@style/LockScreenBase"/>
 
     </application>

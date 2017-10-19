@@ -22,6 +22,11 @@ public class AppConstant {
     public static final int TYPE_TERM = 3;//学期
     public static final int TYPE_HISTORY = 4;//历史
 
+    public static final int STATE_NORMAL = 0;//初始状态
+    public static final int STATE_STARTED = 1;//已开始
+    public static final int STATE_PAUSE = 2;//暂停
+    public static final int STATE_END = 3;//结束
+
     public static final int TYPE_COST_ENERGY = 1;//消耗热量
     public static final int TYPE_COST_TIME = 2;//消耗时长
 

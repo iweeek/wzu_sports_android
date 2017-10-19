@@ -51,6 +51,11 @@ public class SplashActivity extends BaseActivity {
         super.onBeforeSetContentLayout();
         //        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        // getWindow().setStatusBarColor(Color.TRANSPARENT);
+        // getWindow().setNavigationBarColor(Color.TRANSPARENT);
     }
 
     @Override

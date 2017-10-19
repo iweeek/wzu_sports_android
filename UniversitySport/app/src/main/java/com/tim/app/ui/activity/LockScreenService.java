@@ -7,7 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
+
+import com.application.library.log.DLOG;
 
 
 public class LockScreenService extends Service {
@@ -59,15 +60,16 @@ public class LockScreenService extends Service {
 
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_SCREEN_ON)) {
-                //                Intent LockIntent = new Intent(LockScreenService.this, LockScreenActivity.class);
-                //                LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                //                startActivity(LockIntent);
+                // Intent LockIntent = new Intent(LockScreenService.this, LockScreenActivity.class);
+                // LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // startActivity(LockIntent);
+                // DLOG.e("error", "onReceive  on");
             }
             if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 Intent LockIntent = new Intent(LockScreenService.this, LockScreenActivity.class);
-                LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                // LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(LockIntent);
-                Log.e("error", "onReceive  off");
+                DLOG.e("error", "onReceive  off");
             }
         }
     };

@@ -4,24 +4,66 @@ package com.tim.app.ui.activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.application.library.log.DLOG;
+import com.tim.app.constant.AppConstant;
+import com.tim.app.server.entry.SportEntry;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static com.tim.app.constant.AppConstant.SPEED_SCALE;
 
 
-public class LocationService extends Service {
+public class LocationService extends Service implements AMap.OnMyLocationChangeListener, Serializable {
 
     private static final String TAG = "LocationService";
+
+    public static final int MSG_REGISTER_CLIENT = 0;
+
+    public static final int MSG_FROM_SERVICE = 1;
+
+    public static final int MSG_FROM_SERVICE_TIMER = 2;
+
+    public static final int MSG_GET_SERVICE = 3;
+
+    public static final int MSG_START_LOCATION_IN_SERVICE = 4;
+
+    public static final int MSG_STOP_LOCATION_IN_SERVICE = 5;
+
+    public static final int MSG_START_TIMER = 6;
+
+    public static final int MSG_STOP_TIMER = 7;
+
+    Messenger serviceMessenger = new Messenger(new InComingClientHandler());
+
+    // connected clients
+    ArrayList<Messenger> clients = new ArrayList<Messenger>();
+
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
 
@@ -31,11 +73,11 @@ public class LocationService extends Service {
         @Override
         public void onLocationChanged(AMapLocation aMapLocation) {
             if (aMapLocation != null) {
-                DLOG.d(TAG, "aMapLocation.isFixLastLocation():" + aMapLocation.isFixLastLocation());
-                DLOG.d(TAG, "aMapLocation.isOffset():" + aMapLocation.isOffset());
+                // DLOG.d(TAG, "aMapLocation.isFixLastLocation():" + aMapLocation.isFixLastLocation());
+                // DLOG.d(TAG, "aMapLocation.isOffset():" + aMapLocation.isOffset());
                 if (aMapLocation.getErrorCode() == 0) {
                     //可在其中解析amapLocation获取相应内容。
-                    DLOG.d(TAG, "onLocationChanged aMapLocation: " + aMapLocation);
+                    // DLOG.d(TAG, "onLocationChanged aMapLocation: " + aMapLocation);
                     aMapLocationList.add(aMapLocation);
                 } else {
                     //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
@@ -55,6 +97,8 @@ public class LocationService extends Service {
     private PowerManager.WakeLock wakeLock;
     private WifiManager.WifiLock wifiLock;
     private MyBinder mBinder = new MyBinder();
+    private BigDecimal bdResult;
+    private float currentSpeed;
 
     class MyBinder extends Binder {
         private static final String TAG = "MyBinder";
@@ -68,6 +112,164 @@ public class LocationService extends Service {
             DLOG.d(TAG, "stopLocation");
             stopLocation();
         }
+
+        public LocationService getService() {
+            return LocationService.this;
+        }
+    }
+
+    class InComingClientHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_REGISTER_CLIENT:
+                    DLOG.d("Adding client: " + msg.replyTo);
+                    clients.add(msg.replyTo);
+                    break;
+                case MSG_START_LOCATION_IN_SERVICE:
+                    DLOG.d(TAG, "startLocation");
+                    clients.add(msg.replyTo);
+
+                    int interval = msg.getData().getInt("interval");
+                    DLOG.d(TAG, "interval:" + interval);
+
+                    sportEntry = (SportEntry) msg.getData().getSerializable("sportEntry");
+                    DLOG.d(TAG, "sportEntry:" + sportEntry);
+                    startLocation(interval);
+
+                    // 返回Service到客户端
+                    Message message = new Message();
+                    message.what = MSG_GET_SERVICE;
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("service", LocationService.this);
+                    message.setData(bundle);
+                    try {
+                        msg.replyTo.send(message);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case MSG_STOP_LOCATION_IN_SERVICE:
+                    DLOG.d(TAG, "stopLocation");
+                    stopLocation();
+                    break;
+                case MSG_START_TIMER:
+                    DLOG.d(TAG, "startTimer");
+                    startTimer();
+                    break;
+                case MSG_STOP_TIMER:
+                    DLOG.d(TAG, "stopTimer");
+                    stopTimer();
+                    break;
+                default:
+                    super.handleMessage(msg);
+                    break;
+            }
+        }
+    }
+
+    private int currentDistance = 0;
+
+    private Runnable elapseTimeRunnable;
+    private LatLng lastLatLng = null;
+    private long elapseTime = 0;
+    private long timerInterval = 1000;
+    private SportEntry sportEntry;
+    private int speedLimitation = 10;//米
+
+    private ScheduledFuture<?> timerHandler = null;
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private int state = AppConstant.STATE_NORMAL;
+
+
+    /**
+     * 只是为了计算得到距离和速度，基本就是详情页的内容抽取
+     * @param location
+     */
+    @Override
+    public void onMyLocationChange(Location location) {
+        DLOG.d(TAG, "onMyLocationChangeFromService location: " + location);
+
+        String toastText = "";
+        int errorCode = -1;
+        String errorInfo = "";
+        int locationType = -1;
+        LatLng newLatLng = null;
+        Boolean isNormal = true;
+
+        Bundle locationExtras = location.getExtras();
+        if (locationExtras != null) {
+            errorCode = locationExtras.getInt(MyLocationStyle.ERROR_CODE);
+        }
+
+        if (location != null) {
+
+            if (errorCode != 0) {
+
+            } else {
+                newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                if (lastLatLng == null) {
+                    lastLatLng = newLatLng;
+                }
+            }
+
+            float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
+
+            if (state == AppConstant.STATE_STARTED) {
+
+                if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
+                    //位置漂移
+                    //return;
+                    // toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
+                    // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                    isNormal = false;
+                    // drawLine(lastLatLng, newLatLng, isNormal);
+                    // currentDistance += distanceInterval;
+                } else {
+                    isNormal = true;
+                    // drawLine(lastLatLng, newLatLng, isNormal);
+                    // 计算当前时间
+                    currentDistance += distanceInterval;
+
+                    // 计算当前速度
+                    BigDecimal bdDividend = new BigDecimal(currentDistance);
+                    BigDecimal bdDevisor = new BigDecimal(elapseTime);
+                    BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                    currentSpeed = bdResult.floatValue();
+                }
+            }
+
+            for (int i = 0; i < clients.size(); i++) {
+                try {
+                    Message msg = Message.obtain();
+                    msg.what = MSG_FROM_SERVICE;
+
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("location", location);
+                    bundle.putBoolean("isNormal", isNormal);
+                    DLOG.d(TAG, "currentDistance:" + currentDistance);
+                    bundle.putInt("currentDistance", currentDistance);
+                    DLOG.d(TAG, "currentSpeed:" + currentSpeed);
+                    bundle.putFloat("currentSpeed", currentSpeed);
+                    msg.setData(bundle);
+                    clients.get(i).send(msg);
+
+                } catch (RemoteException e) {
+                    // If we get here, the client is dead, and we should remove it from the list
+                    DLOG.d("Removing client: " + clients.get(i));
+                    clients.remove(i);
+                }
+            }
+
+            lastLatLng = newLatLng;
+        }
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        DLOG.d(TAG, "onBind");
+        return serviceMessenger.getBinder();
     }
 
     public void startLocation(int interval) {
@@ -86,7 +288,48 @@ public class LocationService extends Service {
         mLocationClient.startLocation();
 
         wakeLock.acquire();
+        //锁定WifiLock
         wifiLock.acquire();
+    }
+
+    private void startTimer() {
+        state = AppConstant.STATE_STARTED;
+        // 开启定时
+        elapseTimeRunnable = new Runnable() {
+            public void run() {
+
+                elapseTime += timerInterval / 1000;
+
+                DLOG.d(TAG, "clients.size():" + clients.size());
+                for (int i = 0; i < clients.size(); i++) {
+                    try {
+
+                        Message msg = Message.obtain();
+                        msg.what = MSG_FROM_SERVICE_TIMER;
+
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("elapseTime", elapseTime);
+                        msg.setData(bundle);
+                        clients.get(i).send(msg);
+                        DLOG.d(TAG, "elapseTimeRunnable");
+                    } catch (RemoteException e) {
+                        // If we get here, the client is dead, and we should remove it from the list
+                        DLOG.d("Removing client: " + clients.get(i));
+                        clients.remove(i);
+                    }
+                }
+            }
+        };
+        timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
+    }
+
+    private void stopTimer() {
+        state = AppConstant.STATE_END;
+        if (timerHandler != null) {
+            timerHandler.cancel(true);
+            scheduler.shutdown();
+            timerHandler = null;
+        }
     }
 
     public void stopLocation() {
@@ -98,16 +341,10 @@ public class LocationService extends Service {
             wakeLock.release();
         }
 
+        // 解锁WifiLock
         if (wifiLock.isHeld()) {
             wifiLock.release();
         }
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        DLOG.d(TAG, "onBind");
-        return mBinder;
     }
 
     @Override
@@ -156,7 +393,7 @@ public class LocationService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         DLOG.d(TAG, "onUnbind");
-        return super.onUnbind(intent);
+        return true;
     }
 
     @Override
@@ -170,4 +407,5 @@ public class LocationService extends Service {
         super.onTaskRemoved(rootIntent);
         DLOG.d(TAG, "onTaskRemoved");
     }
+
 }
