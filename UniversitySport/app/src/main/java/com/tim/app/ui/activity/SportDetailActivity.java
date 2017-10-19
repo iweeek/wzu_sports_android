@@ -139,6 +139,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvTargetSpeedLabel;
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
+    private LinearLayout llResult;//运动结果父容器
     private ImageView ivLocation;
     private ImageView ivHelp;
     private ImageView ivFinished;
@@ -938,6 +939,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 aMap.moveCamera(cu);
                 break;
             case R.id.ivShowSportInfo:
+                DLOG.d(TAG, "ivShowSportInfo");
                 // 指南针的位置要变化，UiSettings 中寻找方法
                 if (null == showAnimation) {
                     showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
@@ -963,6 +965,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 rlAnimView.startAnimation(showAnimation);
                 break;
             case R.id.ivHideSportInfo:
+                DLOG.d(TAG, "ivHideSportInfo");
                 if (null == hideAnimation) {
                     hideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
                 }
@@ -1063,22 +1066,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             }
 
                             tvResult.setVisibility(View.VISIBLE);
-                            tvResult.setOnClickListener(new View.OnClickListener() {
+                            llResult.setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void onClick(View view) {
-                                    // TODO
-                                    if (tvResult.getText().toString().trim().equals("数据异常")||
-                                            tvResult.getText().toString().trim().equals("未达标") ){
-                                        WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
-                                    }
-                                }
-                            });
-                            ivHelp.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (tvResult.getText().toString().trim().equals("数据异常")||
-                                            tvResult.getText().toString().trim().equals("未达标") ){
+                                public void onClick(View v) {
+                                    if (historySportEntry.isValid() && !historySportEntry.isQualified() ){
                                         WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
                                         overridePendingTransition(R.anim.right_in,R.anim.left_out);
                                     }
@@ -1145,6 +1136,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
         tvResult = (TextView) findViewById(R.id.tvResult);
+        llResult = (LinearLayout) findViewById(R.id.llResult);
         //        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
         //        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);

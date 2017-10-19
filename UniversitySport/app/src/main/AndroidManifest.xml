@@ -42,6 +42,8 @@
         android:glEsVersion="0x00020000"
         android:required="true"/>
 
+    <meta-data android:name="android.max_aspect" android:value="2.1" />
+
     <!-- 增加各个屏幕尺寸的自动适配 -->
     <supports-screens
         android:anyDensity="true"
