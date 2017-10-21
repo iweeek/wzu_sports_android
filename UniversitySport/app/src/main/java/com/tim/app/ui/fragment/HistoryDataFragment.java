@@ -267,6 +267,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                                         item.historySportEntryList = new ArrayList<HistorySportEntry>();
                                     }
                                     item.historySportEntryList.add(entry);
+                                    
                                 }
                             }
 
@@ -601,10 +602,11 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
     //
     // }
 
+
     /**
      * 根据选中的菜单设置当前显示的记录
-     *
-     * @param item 选中的菜单项
+     * @param item 选中的菜单
+     * @param type 当前fragment显示需要筛选的内容的类型
      */
     public void changeHistoryDataList(MenuItem item, int type) {
         if (dataList.size() != 0)
@@ -734,6 +736,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
+                // 不达标，排除非正常结束
                 if (!entry.isQualified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
@@ -765,7 +768,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 dataListAbnormalData.add(historyItem);
             }
         }
-        DLOG.d(TAG, "dataListAbnormalData.size():" + dataListAbnormalData.size());
 
         for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
