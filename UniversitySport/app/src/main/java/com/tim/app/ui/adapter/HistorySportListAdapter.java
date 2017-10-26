@@ -96,6 +96,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
                 String time = com.tim.app.util.TimeUtil.formatMillisTime(runningSportEntry.getCostTime() * 1000);
+                String hour = time.split(":")[0];
+                if(Integer.parseInt(hour)<10){
+                    time = "0" + time;
+                }
                 tvMiddle.setText(time);
 
                 //消耗热量
