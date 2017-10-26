@@ -16,25 +16,29 @@
             android:id="@+id/rlTop"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_above="@+id/linearLayout"
+            android:layout_alignParentTop="true"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/tvLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="@string/accumTimesPer"
-                android:textColor="#868892"
-                android:textSize="16dp"/>
+                android:textColor="#575B61"
+                android:textSize="14dp"/>
 
             <TextView
                 android:id="@+id/tvAccumTimes"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:text="10"
-                android:textColor="#868892"
-                android:textSize="25dp"/>
+                android:textColor="#575B61"
+                android:textSize="28dp" />
 
         </LinearLayout>
 
@@ -43,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/linearLayout">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -53,16 +58,17 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="@string/signInCount"
-                        android:textColor="#7f858e"
-                        android:textSize="14dp"/>
+                        android:textColor="#575B61"
+                        android:textSize="12dp"/>
 
                     <TextView
                         android:id="@+id/tvSignInCount"
@@ -70,8 +76,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="8"
-                        android:textColor="#474b4f"
-                        android:textSize="16dp"/>
+                        android:textColor="#575B61"
+                        android:textSize="13dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -83,16 +89,18 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="@string/consumeKcal"
-                        android:textColor="#7f858e"
-                        android:textSize="14dp"/>
+                        android:textColor="#575B61"
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/tvEnergyCost"
@@ -100,8 +108,8 @@
                         android:layout_height="wrap_content"
                         android:text="1200"
                         android:layout_gravity="center"
-                        android:textColor="#474b4f"
-                        android:textSize="16dp"/>
+                        android:textColor="#575B61"
+                        android:textSize="13dp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -113,16 +121,17 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="@string/consumeMinute"
-                        android:textColor="#7f858e"
-                        android:textSize="14dp"/>
+                        android:textColor="#575B61"
+                        android:textSize="12dp"/>
 
                     <TextView
                         android:id="@+id/tvTimeCost"
@@ -130,8 +139,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="120"
-                        android:textColor="#474b4f"
-                        android:textSize="16dp"/>
+                        android:textColor="#575B61"
+                        android:textSize="13dp"/>
                 </LinearLayout>
             </LinearLayout>
 

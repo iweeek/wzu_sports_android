@@ -278,7 +278,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         initMap();
         //        mAMapGeoFence = new AMapGeoFence(this.getApplicationContext(), aMap, handler);
 
-        startService(new Intent(this, LocationService.class));
+        //startService(new Intent(this, LocationService.class));
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
