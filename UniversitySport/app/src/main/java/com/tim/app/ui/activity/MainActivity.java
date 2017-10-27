@@ -238,7 +238,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 //                                case R.id.nav_approval://审批
                                 //                                    break;
                                 case R.id.nav_help://客服
-                                    WebViewActivity.loadUrl(MainActivity.this, "http://www.baidu.com", "百度");
+                                    WebViewActivity.loadUrl(MainActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
                                     break;
                                 case R.id.nav_set://设置
                                     Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);

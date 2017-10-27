@@ -48,6 +48,7 @@ import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.MarkerOverlay;
 import com.tim.app.util.MathUtil;
 
@@ -93,6 +94,9 @@ public class SportResultActivity extends ToolbarActivity {
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
+    private ImageView ivHelp;
+    private ImageView ivFinished;
+    private RelativeLayout rlContainer;
     private LinearLayout llTargetContainer;
     private Button btTest;
     private ProgressDialog progressDialog;
@@ -376,16 +380,28 @@ public class SportResultActivity extends ToolbarActivity {
                         if (historyAreaSportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+                            ivHelp.setVisibility(View.VISIBLE);
                         } else {
                             if (qualified) {
                                 tvResult.setText("达标");
                                 tvResult.setTextColor(Color.GREEN);
+                                ivFinished.setVisibility(View.VISIBLE);
                             } else {
                                 tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
                         tvResult.setVisibility(View.VISIBLE);
+                        rlContainer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (historyAreaSportEntry.getEndedAt() == 0||!historyAreaSportEntry.isQualified()) {
+                                    WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                                }
+                            }
+                        });
 
                         // tvSportName.setText(jsonObject.getJSONObject("areaSport")
                         //         .getString("name"));
@@ -513,21 +529,34 @@ public class SportResultActivity extends ToolbarActivity {
                         if (historyRunningSportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+                            ivHelp.setVisibility(View.VISIBLE);
                         } else {
                             if (isValid) {
                                 if (qualified) {
                                     tvResult.setText("达标");
                                     tvResult.setTextColor(Color.GREEN);
+                                    ivFinished.setVisibility(View.VISIBLE);
                                 } else {
                                     tvResult.setText("未达标");
                                     tvResult.setTextColor(Color.RED);
+                                    ivHelp.setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 tvResult.setText("数据异常");
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
                         tvResult.setVisibility(View.VISIBLE);
+                        rlContainer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (historyRunningSportEntry.getEndedAt() == 0||!historyRunningSportEntry.isQualified()) {
+                                    WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                                }
+                            }
+                        });
 
                         tvSportName.setText(jsonObject.getJSONObject("runningSport")
                                 .getString("name"));
@@ -917,6 +946,9 @@ public class SportResultActivity extends ToolbarActivity {
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        ivHelp = (ImageView) findViewById(R.id.ivHelp);
+        ivFinished = (ImageView) findViewById(R.id.ivFinished);
+        rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
         //        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
