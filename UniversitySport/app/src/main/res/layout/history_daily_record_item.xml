@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tool="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical"
     android:paddingBottom="0dp"
@@ -10,14 +10,14 @@
 
     <View
         android:id="@+id/vTopDelimiter"
-        android:layout_width="372dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#DCDCDC"
         android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -147,9 +147,10 @@
     </LinearLayout>
 
     <!--<View-->
-    <!--android:id="@+id/vBottomDelimiter"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="1dp"-->
-    <!--android:background="#DCDCDC" />-->
+        <!--android:id="@+id/vBottomDelimiter"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="#DCDCDC"-->
+        <!--android:visibility="visible" />-->
 
 </LinearLayout>
