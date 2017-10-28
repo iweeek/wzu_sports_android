@@ -286,12 +286,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         VPSportType = (ViewPager) findViewById(R.id.VPSportType);
         tabLayout.setupWithViewPager(VPSportType);
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-//        if (sportEntryDataList != null && sportEntryDataList.size() != 0) {
-//            for (SportEntry item : sportEntryDataList) {
-//                pagerAdapter.addFragment(SportTypeFragment.newInstance(item), item.getName());
-//            }
-//            VPSportType.setOffscreenPageLimit(sportEntryDataList.size());//除去当前显示页面外，还需要预先加载的页面个数
-//        }
         VPSportType.setAdapter(pagerAdapter);
         VPSportType.setCurrentItem(0);
 

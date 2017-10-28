@@ -6,24 +6,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.base.BaseFragment;
+import com.bumptech.glide.request.RequestOptions;
 import com.tim.app.R;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.MainActivity;
+import com.tim.app.ui.cell.GlideApp;
 
 public class SportTypeFragment extends BaseFragment {
-    MainActivity mainActivity;
+    Context mContext;
 
-    SportEntry sportEntry;
+    SportEntry data;
 
     String SportName;
 
-//    public Handler mHandler = new Handler() {
+
+    //    public Handler mHandler = new Handler() {
 //        public void handleMessage(android.os.Message msg) {
 //            switch (msg.what) {
 //                case 1:
@@ -33,16 +38,15 @@ public class SportTypeFragment extends BaseFragment {
 //        }
 //    };
 //
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        mainActivity = (MainActivity) context;
-//        mainActivity.setHandler(mHandler);
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
 
-    public void setSportEntry(SportEntry sportEntry) {
-        this.sportEntry = sportEntry;
+    public void setSportEntry(SportEntry data) {
+        this.data = data;
     }
 
     public static SportTypeFragment newInstance(SportEntry sportEntry) {
@@ -58,9 +62,52 @@ public class SportTypeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_sport_type, container, false);
-        TextView tv = (TextView) rootView.findViewById(R.id.SportTest);
 
-        tv.setText(sportEntry.getName());
+        ImageView rivSportBg = (ImageView) rootView.findViewById(R.id.rivSportBg);
+        ImageView btStart = (ImageView) rootView.findViewById(R.id.btStart);
+        TextView tvParticipantNum = (TextView) rootView.findViewById(R.id.tvParticipantNum);
+        TextView tv_current_distance = (TextView) rootView.findViewById(R.id.tv_current_distance);
+        TextView tvTargetValue = (TextView) rootView.findViewById(R.id.tvTargetValue);
+
+        View llBottom = rootView.findViewById(R.id.llBottom);
+
+
+        if (SportEntry.RUNNING_SPORT == data.getType()) {
+            if (!TextUtils.isEmpty(data.getImgUrl())) {
+                GlideApp.with(mContext)
+                        .load(data.getImgUrl())
+                        .apply(new RequestOptions()
+                                .dontAnimate()
+                                .dontTransform())
+                        .placeholder(R.drawable.ic_bg_run)
+                        .into(rivSportBg);
+            } else {
+                rivSportBg.setImageResource(data.getBgDrawableId());
+            }
+
+            tvParticipantNum.setText(mContext.getString(R.string.joinPrompt, String.valueOf(data.getParticipantNum())));
+
+            if (data.getQualifiedDistance() > 0) {
+                tv_current_distance.setText(mContext.getString(R.string.digitalPlaceholder, String.valueOf(data.getQualifiedDistance())) + "米");
+            }
+            if (!data.getTargetSpeed().equals("") || data.getTargetSpeed() != null) {
+                tvTargetValue.setText(mContext.getString(R.string.digitalPlaceholder, data.getTargetSpeed()) + "米/秒");
+            }
+        } else if (SportEntry.AREA_SPORT == data.getType()) {
+
+            llBottom.setVisibility(View.GONE);
+            if (!TextUtils.isEmpty(data.getImgUrl())) {
+                GlideApp.with(mContext)
+                        .load(data.getImgUrl())
+                        .apply(new RequestOptions()
+                                .dontAnimate()
+                                .dontTransform())
+                        .placeholder(R.drawable.ic_bg_area)
+                        .into(rivSportBg);
+            } else {
+                rivSportBg.setImageResource(data.getBgDrawableId());
+            }
+        }
 
         return rootView;
 
