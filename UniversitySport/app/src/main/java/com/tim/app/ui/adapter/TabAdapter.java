@@ -13,7 +13,7 @@ import java.util.List;
  * 所有tab的adapter
  */
 
-public class TabAdapter extends FragmentStatePagerAdapter {
+public class TabAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
     private Context context;
@@ -26,7 +26,6 @@ public class TabAdapter extends FragmentStatePagerAdapter {
         super(fm);
         this.context = context;
         this.fragments = fragments;
-        notifyDataSetChanged();
     }
 
     public void addFragment(Fragment fragment, String title) {

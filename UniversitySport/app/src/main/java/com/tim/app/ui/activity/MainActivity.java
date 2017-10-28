@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 //        wrvSportType.addItemDecoration(new HorizontalDividerItemDecoration.Builder(
 //                MainActivity.this).color(getResources().getColor(R.color.transparent)).size((int) (RT.getDensity() * 2)).build());
 
-        homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view, null);
+        homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view_new, null);
         llContainer.addView(homepageHeadView, 0);
         tabLayout = (TabLayout) findViewById(R.id.TabSportType);
         VPSportType = (ViewPager) findViewById(R.id.VPSportType);
