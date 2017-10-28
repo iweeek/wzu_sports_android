@@ -297,7 +297,7 @@ public class EmptyLayout {
             loading_temp_view.setVisibility(View.VISIBLE);
             empty_temp_view.setVisibility(View.VISIBLE);
             error_temp_view.setVisibility(View.VISIBLE);
-            if(tempHeight > 0){
+            if (tempHeight > 0) {
                 loading_temp_view.getLayoutParams().height = tempHeight;
                 empty_temp_view.getLayoutParams().height = tempHeight;
                 error_temp_view.getLayoutParams().height = tempHeight;

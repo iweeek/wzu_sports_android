@@ -166,7 +166,7 @@
     <string name="kcalPlaceholder">%s 千卡</string>
     <string name="curConsumeEnergy">本次消耗热量：</string>
     <string name="curConsumeEnergyTemp">本次消耗热量: %s千卡</string>
-    
+
     <string name="minute">分钟</string>
     <string name="consumeMinute">耗时(分钟)</string>
     <string name="consumeTime">耗时</string>
@@ -187,4 +187,7 @@
 
 
     <string name="manual_open_permission_hint">定位权限已被禁用，请手动开启定位权限</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -7,7 +7,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,7 +43,9 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.SportAdapter;
+import com.tim.app.ui.adapter.TabAdapter;
 import com.tim.app.ui.cell.GlideApp;
+import com.tim.app.ui.fragment.SportTypeFragment;
 import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.MathUtil;
@@ -83,11 +89,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private ImageView ivAvatar;
 
     private LinearLayout llContainer;
-    private WrapRecyclerView wrvSportType;
+//    private WrapRecyclerView wrvSportType;
 
-    private SportAdapter adapter;
+    //    private SportAdapter adapter;
     //    private BadNetworkAdapter badNetworkAdapter;
-    private List<SportEntry> sportEntryDataList;
+    public List<SportEntry> sportEntryDataList;
     //    private List<BadNetWork> networkDataList;
 
     private EmptyLayout emptyLayout;
@@ -95,6 +101,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
+
+    Handler mHandler;
+
+    private TabLayout tabLayout;
+    private ViewPager VPSportType;
+    private TabAdapter pagerAdapter;
     //    private BadNetworkView badNetworkView;
 
     /*
@@ -192,7 +204,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                 (NavigationView) findViewById(R.id.nv_main_navigation);
 
         llContainer = (LinearLayout) findViewById(R.id.llContainer);
-        wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
+        //wrvSportType = (WrapRecyclerView) findViewById(R.id.wrvSportType);
 
         emptyLayout = new EmptyLayout(this, llContainer);
         emptyLayout.showLoading();
@@ -262,31 +274,50 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
             }
         });
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        wrvSportType.setLayoutManager(layoutManager);
-        wrvSportType.addItemDecoration(new HorizontalDividerItemDecoration.Builder(
-                MainActivity.this).color(getResources().getColor(R.color.transparent)).size((int) (RT.getDensity() * 2)).build());
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+//        wrvSportType.setLayoutManager(layoutManager);
+//        wrvSportType.addItemDecoration(new HorizontalDividerItemDecoration.Builder(
+//                MainActivity.this).color(getResources().getColor(R.color.transparent)).size((int) (RT.getDensity() * 2)).build());
 
         homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view, null);
-        wrvSportType.addHeaderView(homepageHeadView);
+        llContainer.addView(homepageHeadView, 0);
+        tabLayout = (TabLayout) findViewById(R.id.TabSportType);
+        VPSportType = (ViewPager) findViewById(R.id.VPSportType);
+        tabLayout.setupWithViewPager(VPSportType);
+        pagerAdapter = new TabAdapter(getSupportFragmentManager());
+//        if (sportEntryDataList != null && sportEntryDataList.size() != 0) {
+//            for (SportEntry item : sportEntryDataList) {
+//                pagerAdapter.addFragment(SportTypeFragment.newInstance(item), item.getName());
+//            }
+//            VPSportType.setOffscreenPageLimit(sportEntryDataList.size());//除去当前显示页面外，还需要预先加载的页面个数
+//        }
+        VPSportType.setAdapter(pagerAdapter);
+        VPSportType.setCurrentItem(0);
+
+
+        //wrvSportType.addHeaderView(homepageHeadView);
         //        badNetworkView = (BadNetworkView) LayoutInflater.from(this).inflate(R.layout.bad_network_view, null);
         /**
          * 添加底部留白
          */
-        View footerView = new View(this);
-        footerView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, (int) RT.getDensity() * 50));
-        footerView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-        wrvSportType.addFootView(footerView);
+//        View footerView = new View(this);
+//        footerView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, (int) RT.getDensity() * 50));
+//        footerView.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+//        wrvSportType.addFootView(footerView);
 
         sportEntryDataList = new ArrayList<>();
-        adapter = new SportAdapter(this, sportEntryDataList);
-        wrvSportType.setAdapter(adapter);
+        //adapter = new SportAdapter(this, sportEntryDataList);
+        //wrvSportType.setAdapter(adapter);
 
         //        networkDataList = new ArrayList<>();
         //        networkDataList.add(new BadNetWork());
         //        badNetworkAdapter = new BadNetworkAdapter(this, networkDataList);
         //        wrvSportType.invalidate();
+    }
+
+    public void setHandler(Handler handler) {
+        mHandler = handler;
     }
 
 
@@ -369,12 +400,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             sportEntryDataList.add(sportEntry);
                         }
                         // wrvSportType.setAdapter(adapter);
-                        adapter.setOnItemClickListener(context);
-                        adapter.notifyDataSetChanged();
+                        //adapter.setOnItemClickListener(context);
+                        //adapter.notifyDataSetChanged();
                         if (sportEntryDataList.size() == 0) {
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();
+
                         }
                     } catch (JSONException e) {
                         emptyLayout.showError();
@@ -486,9 +518,16 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 emptyLayout.showEmpty();
                             } else {
                                 emptyLayout.showContent();
+
+                                pagerAdapter.ClearFragment();
+                                for (SportEntry item : sportEntryDataList) {
+                                    pagerAdapter.addFragment(SportTypeFragment.newInstance(item), item.getName());
+                                }
+                                pagerAdapter.notifyDataSetChanged();
+                                VPSportType.setOffscreenPageLimit(sportEntryDataList.size());//除去当前显示页面外，还需要预先加载的页面个数
                             }
                         }
-                        adapter.notifyDataSetChanged();
+                        //    adapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         emptyLayout.showError();
                         e.printStackTrace();
@@ -629,7 +668,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         super.onResume();
         SmoothSwitchScreenUtil.smoothSwitchScreen(this);
         queryHomePagedata();
-        wrvSportType.smoothScrollToPosition(0);
+        //wrvSportType.smoothScrollToPosition(0);
     }
 
     @Override
