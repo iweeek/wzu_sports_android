@@ -2,6 +2,7 @@ package com.tim.app.ui.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -29,6 +30,7 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private TextView tvCurSignInCount;
     private TextView tvCurTermTargetTimes;
     private ImageView ProgressMan;
+    private static Typeface typeface;
 
     private RelativeLayout rlTop;
     //    private RelativeLayout rlRank;
@@ -117,6 +119,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 //        tvAccumulCostTime.setText((getContext().getString(R.string.digitalPlaceholder, costedTime)));
         tvCurSignInCount.setText((getContext().getString(R.string.digitalPlaceholder, curTermSignInCount)));
         tvCurTermTargetTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermTargetCount)));
+        tvCurSignInCount.setTypeface(getTypeface(getContext()),Typeface.BOLD);  //设置字体
+        tvCurTermTargetTimes.setTypeface(getTypeface(getContext()),Typeface.BOLD);  //设置字体
 
         float q = Float.valueOf(curTermSignInCount);
         float t = Float.valueOf(curTermTargetCount);
@@ -131,6 +135,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 //
 //        ProgressMan.setX(width);
 
+    }
+
+    public static Typeface getTypeface(Context context) {
+        if (typeface == null) {
+            typeface = Typeface.createFromAsset(context.getAssets(), "fonts/RussoOne-Regular.ttf");
+        }
+        return typeface;
     }
 
 }

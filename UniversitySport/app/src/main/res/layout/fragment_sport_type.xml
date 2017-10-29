@@ -7,13 +7,18 @@
     <ImageView
         android:id="@+id/rivSportBg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerInside" />
 
     <ImageView
         android:id="@+id/btStart"
-        android:layout_width="115dp"
-        android:layout_height="115dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:paddingBottom="119dp"
+        android:paddingLeft="123dp"
+        android:paddingRight="123dp"
+        android:paddingTop="119dp"
         app:srcCompat="@drawable/font_go" />
 
     <TextView
@@ -45,7 +50,7 @@
             app:srcCompat="@drawable/icon_step" />
 
         <TextView
-            android:id="@+id/tvTargetDistance"
+            android:id="@+id/TvDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

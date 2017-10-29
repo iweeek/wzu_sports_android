@@ -27,22 +27,24 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp">
 
                 <ImageView
                     android:id="@+id/ObliqueLine"
                     android:layout_width="78dp"
                     android:layout_height="51dp"
                     android:layout_centerHorizontal="true"
-                    android:paddingTop="16dp"
+                    android:scaleType="center"
                     android:src="@drawable/oblique_line" />
 
                 <TextView
                     android:id="@+id/tvCurSignInCount"
-                    android:layout_width="wrap_content"
+                    android:layout_width="34dp"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@id/ObliqueLine"
                     android:layout_alignTop="@id/ObliqueLine"
+                    android:gravity="right"
                     android:paddingTop="5dp"
                     android:text="10"
                     android:textColor="#64AAFF"
@@ -64,7 +66,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp">
+                android:layout_height="wrap_content"
+                android:paddingTop="2dp">
 
                 <ImageView
                     android:id="@+id/ProgressMan"
@@ -92,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:paddingBottom="31dp"
                 android:paddingTop="16dp"
                 android:text="本学期累计运动16次"
                 android:textColor="#5F728D"
