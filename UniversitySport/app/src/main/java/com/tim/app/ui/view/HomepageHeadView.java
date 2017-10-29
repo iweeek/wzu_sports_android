@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,13 +115,13 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
      */
     public void setData(String curTermSportCount, String KcalComsuption, String costedTime,
                         String curTermSignInCount, String curTermTargetCount) {
-        tvCurTermAccuTimes.setText(getContext().getString(R.string.curTermSportsCount, curTermSportCount));
+        tvCurTermAccuTimes.setText(Html.fromHtml("本学期累计运动<b><font color='#314666'> " + curTermSportCount + " </font></b>次"));
 //        tvAccumulCostEnergy.setText(getContext().getString(R.string.digitalPlaceholder, KcalComsuption));
 //        tvAccumulCostTime.setText((getContext().getString(R.string.digitalPlaceholder, costedTime)));
         tvCurSignInCount.setText((getContext().getString(R.string.digitalPlaceholder, curTermSignInCount)));
         tvCurTermTargetTimes.setText((getContext().getString(R.string.digitalPlaceholder, curTermTargetCount)));
-        tvCurSignInCount.setTypeface(getTypeface(getContext()),Typeface.BOLD);  //设置字体
-        tvCurTermTargetTimes.setTypeface(getTypeface(getContext()),Typeface.BOLD);  //设置字体
+        tvCurSignInCount.setTypeface(getTypeface(getContext()), Typeface.BOLD);  //设置字体
+        tvCurTermTargetTimes.setTypeface(getTypeface(getContext()), Typeface.BOLD);  //设置字体
 
         float q = Float.valueOf(curTermSignInCount);
         float t = Float.valueOf(curTermTargetCount);
