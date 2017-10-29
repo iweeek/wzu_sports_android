@@ -13,6 +13,7 @@ import com.application.library.log.DLOG;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
+import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.ui.activity.HistoryItem;
 import com.tim.app.ui.activity.SportResultActivity;
@@ -56,6 +57,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
         for (int i = 0; i < data.historySportEntryList.size(); i++) {
             final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
+
+            //加上第一条分割线
+            if(i == 0){
+                View vTopDelimiter = ll.findViewById(R.id.vTopDelimiter);
+                vTopDelimiter.setVisibility(View.VISIBLE);
+            }
+
             if (data.historySportEntryList.get(i).getType() == AppConstant.RUNNING_TYPE) {
                 //向下转型
                 final HistoryRunningSportEntry runningSportEntry = (HistoryRunningSportEntry) data.historySportEntryList.get(i);
@@ -93,6 +101,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvLeft.setText(result);
                 tvLeft.setTypeface(getTypeface(getContext()),Typeface.ITALIC);  //设置字体 斜体
 
+                //设置单位
+                TextView tvUnit = (TextView) ll.findViewById(R.id.tvUnit);
+                tvUnit.setText("公里");
+
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
                 String time = com.tim.app.util.TimeUtil.formatMillisTime(runningSportEntry.getCostTime() * 1000);
@@ -105,6 +117,12 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 //消耗热量
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
                 tvRight.setText(runningSportEntry.getKcalConsumed() + "");
+
+                //隐藏
+                TextView tvArea = (TextView) ll.findViewById(R.id.tvArea);
+                ImageView ivArea = (ImageView) ll.findViewById(R.id.ivArea);
+                tvArea.setVisibility(View.GONE);
+                ivArea.setVisibility(View.GONE);
 
                 //累加总共消耗热量
                 totalEnergyCost += runningSportEntry.getKcalConsumed();
@@ -119,67 +137,72 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 viewHolder.addView(R.id.llSportItem, ll);
             }
-//            else {
-//                View view = (View) ll.findViewById(R.id.vTopDelimiter);
-//                if (!isDelimit) {
-//                    view.setVisibility(View.VISIBLE);
-//                    isDelimit = true;
-//                } else {
-//
+            else {
+                final HistoryAreaSportEntry areaSportEntry = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
+
+                //区域名字
+                TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
+                tvSportDesc.setText(areaSportEntry.getAreaSport());
+
+                ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
+                if (areaSportEntry.getEndedAt() == 0) {
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                } else {
+                    if (data.historySportEntryList.get(i).isQualified()) {
+                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                    } else {
+                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                    }
+                }
+
+                TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
+                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+                tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
+                tvSportTime.setVisibility(View.VISIBLE);
+
+                //耗时
+                TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
+                Double t = areaSportEntry.getCostTime() / 60.0;
+                String result = String .format("%.1f",t);
+                tvLeft.setText(result);
+                tvLeft.setTypeface(getTypeface(getContext()),Typeface.ITALIC);  //设置字体 斜体
+
+                //设置单位
+                TextView tvUnit = (TextView) ll.findViewById(R.id.tvUnit);
+                tvUnit.setText("分钟");
+
+                //耗时
+                TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
+                ImageView ivMiddle = (ImageView) ll.findViewById(R.id.ivMiddle);
+                tvMiddle.setVisibility(View.GONE);
+                ivMiddle.setVisibility(View.GONE);
+//                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaSportEntry.getCostTime() * 1000);
+//                String hour = time.split(":")[0];
+//                if(Integer.parseInt(hour)<10){
+//                    time = "0" + time;
 //                }
-//
-//                final HistoryAreaSportEntry areaSportEntry = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
-//
-//                ImageView iv = (ImageView) ll.findViewById(R.id.ivSporIcon);
-//                iv.setBackgroundResource(R.drawable.ic_fix_location_sport);
-//
-//                //区域名字
-//                TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
-//                tvSportDesc.setText(areaSportEntry.getAreaSport());
-//
-//                TextView tvSportQualified = (TextView) ll.findViewById(R.id.tvSportQualified);
-//                if (areaSportEntry.getEndedAt() == 0) {
-//                    tvSportQualified.setText("非正常结束");
-//                    tvSportQualified.setTextColor(Color.parseColor("#FFAA2B"));
-//                } else {
-//                    if (data.historySportEntryList.get(i).isQualified()) {
-//                        tvSportQualified.setText("达标");
-//                        tvSportQualified.setTextColor(Color.parseColor("#42cc42"));
-//                    } else {
-//                        tvSportQualified.setText("不达标");
-//                        tvSportQualified.setTextColor(Color.parseColor("#ff0000"));
-//                    }
-//                }
-//                TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-//                SimpleDateFormat sdf = new SimpleDateFormat("yy年MM月dd日HH点mm分");
-//                tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
-//                tvSportTime.setVisibility(View.VISIBLE);
-//
-//                //距离区域要隐藏
-//                LinearLayout llLeft = (LinearLayout) ll.findViewById(R.id.llLeft);
-//                llLeft.setVisibility(View.INVISIBLE);
-//
-//                //耗时
-//                TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
-//                //                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaData.getCostTime() * 1000);
-//                tvMiddle.setText(String.valueOf(areaSportEntry.getCostTime() / 60) + " 分钟");
-//
-//                //耗能
-//                TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
-//                tvRight.setText(areaSportEntry.getKcalConsumed() + "");
-//
-//                //累加总共消耗热量
-//                totalEnergyCost += areaSportEntry.getKcalConsumed();
-//
-//                ll.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        SportResultActivity.start(mContext, areaSportEntry);
-//                    }
-//                });
-//
-//                viewHolder.addView(R.id.llSportItem, ll);
-//            }
+//                tvMiddle.setText(time);
+
+                //消耗热量
+                TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
+                tvRight.setText(areaSportEntry.getKcalConsumed() + "");
+
+                TextView tvArea = (TextView) ll.findViewById(R.id.tvArea);
+                tvArea.setText(areaSportEntry.getLocationPoint().getAreaName());
+
+
+                //累加总共消耗热量
+                totalEnergyCost += areaSportEntry.getKcalConsumed();
+
+                ll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SportResultActivity.start(mContext, areaSportEntry);
+                    }
+                });
+
+                viewHolder.addView(R.id.llSportItem, ll);
+            }
         }
 //        //当天日期
 //        viewHolder.setText(R.id.tvSportDate, data.date);
