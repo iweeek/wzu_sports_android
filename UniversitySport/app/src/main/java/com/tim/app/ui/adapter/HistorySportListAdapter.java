@@ -76,13 +76,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
                 if (runningSportEntry.getEndedAt() == 0) {
-                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
                 } else {
                     if (runningSportEntry.isValid()) {
                         if (runningSportEntry.isQualified()) {
                             ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                         } else {
-                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                         }
                     } else {
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
@@ -146,12 +146,12 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
                 if (areaSportEntry.getEndedAt() == 0) {
-                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
                 } else {
                     if (data.historySportEntryList.get(i).isQualified()) {
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                     } else {
-                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                     }
                 }
 

@@ -47,9 +47,10 @@
 
                 <TextView
                     android:id="@+id/tvLeft"
-                    android:layout_width="40dp"
+                    android:layout_width="50dp"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:gravity="center|left"
+                    android:textColor="#314666"
                     android:text="1.5"
                     android:textSize="18dp" />
 
@@ -58,7 +59,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:paddingLeft="8dp"
                     android:text="公里"
                     android:textSize="12dp" />
 
