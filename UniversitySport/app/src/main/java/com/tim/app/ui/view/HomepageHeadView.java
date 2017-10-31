@@ -3,9 +3,12 @@ package com.tim.app.ui.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -14,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tim.app.R;
 import com.tim.app.ui.activity.HistorySportActivity;
@@ -40,6 +42,15 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 //    private LinearLayout llBadNetworkFresh;
     private Context ctx;
     private ProgressBar pbReachTargetTimes;
+
+    private Handler mHandler;
+
+    private int MSG = 1;
+    private int max = 100;
+    private int pro = 0;
+
+    private int width;
+    private int w = 180;
 
     public HomepageHeadView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -129,13 +140,52 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
         pbReachTargetTimes.setProgress((int) (r * 100));
 ////180 60
-//        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-//
-//        int width = wm.getDefaultDisplay().getWidth();
-//        int height = wm.getDefaultDisplay().getHeight();
-//
-//        ProgressMan.setX(width);
 
+        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+        width = wm.getDefaultDisplay().getWidth();
+
+        max = (int) (r * 100);
+        Log.e("haha", "setData: --------------->"+max);
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                //处理消息
+                switch (msg.what) {
+                    case 1:
+                        //设置滚动条和text的值
+                        pbReachTargetTimes.setProgress(pro);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        start();
+
+    }
+
+    private void start() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //子线程循环间隔消息
+                    while (pro < max) {
+                        pro += 1;
+                        w += (width - 180) / 100;
+                        ProgressMan.setX((float) w);
+                        Message msg = new Message();
+                        msg.what = MSG;
+                        mHandler.sendMessage(msg);
+                        Thread.sleep(50);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     public static Typeface getTypeface(Context context) {

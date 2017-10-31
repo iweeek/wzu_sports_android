@@ -1373,7 +1373,6 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
         ivShowSportInfo = findViewById(R.id.ivShowSportInfo);
         ivHideSportInfo = findViewById(R.id.ivHideSportInfo);
 
-
         btContinue.setOnClickListener(this);
         btStop.setOnClickListener(this);
         ivLocation.setOnClickListener(this);
