@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,10 +17,12 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.log.DLOG;
 import com.tim.app.R;
+import com.tim.app.ui.view.MyCircleView;
 import com.tim.app.ui.view.SlideBackView;
 
 import java.util.List;
@@ -28,9 +31,16 @@ public class LockScreenActivity extends Activity {
 
     private static final String TAG = "LockScreenActivity";
 
+    private static Typeface typeface;
+
     private TextView tvDistance;
     private TextView tvAverageSpeed;
     private TextView tvElapseTime;
+    private TextView tvKcal;
+    private TextView tvTargetDistance;
+    private TextView tvTargetSpeed;
+    private MyCircleView circleView;
+    private ImageView ivLockScreenBG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +63,26 @@ public class LockScreenActivity extends Activity {
         tvDistance = (TextView) findViewById(R.id.tvDistance);
         tvAverageSpeed = (TextView) findViewById(R.id.tvAverageSpeed);
         tvElapseTime = (TextView) findViewById(R.id.tvElapseTime);
+        tvKcal = (TextView) findViewById(R.id.tvKcal);
+        tvTargetDistance = (TextView) findViewById(R.id.tvTargetDistance);
+        tvTargetSpeed = (TextView) findViewById(R.id.tvTargetSpeed);
+
+        tvDistance.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
+        tvAverageSpeed.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
+        tvElapseTime.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
+        tvKcal.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
+        tvTargetDistance.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
+        tvTargetSpeed.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
+
+        //ivLockScreenBG = (ImageView) findViewById(R.id.ivLockScreenBG);
+        //GlideApp.with(getApplicationContext()).load(R.drawable.bg_lockscreen).dontAnimate().into(ivLockScreenBG);
+
+        circleView = (MyCircleView) findViewById(R.id.circleView);
+        circleView.setArcWidth(15);
+
+        tvDistance.setText("0");
+        tvAverageSpeed.setText("0.00");
+
 
         hideBottomUIMenu();
     }
@@ -61,6 +91,13 @@ public class LockScreenActivity extends Activity {
     private Messenger locationServiceMessenger = null;
 
     private long elapseTime = 0;
+
+    public static Typeface getTypeface(Context context){
+        if (typeface == null) {
+            typeface = Typeface.createFromAsset(context.getAssets(), "fonts/RussoOne-Regular.ttf");
+        }
+        return typeface;
+    }
 
     class InComingServiceHandler extends Handler {
         @Override
@@ -76,12 +113,24 @@ public class LockScreenActivity extends Activity {
                     DLOG.d(TAG, "elapseTime:" + elapseTime);
                     String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
                     tvElapseTime.setText(time);
+                    tvTargetDistance.setText(String.valueOf(msg.getData().getInt("targetDistance")));
+                    tvTargetSpeed.setText(msg.getData().getString("targetSpeed"));
+                    float percent = (float)msg.getData().getInt("currentDistance")/msg.getData().getInt("targetDistance");
+                    String p = String.valueOf(percent);
+                    tvKcal.setText(p);
+                    circleView.refresh(percent);
                     break;
                 default:
                     super.handleMessage(msg);
                     break;
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        overridePendingTransition(0,0);
+        super.finish();
     }
 
     public Message getMessageToService(int what) {

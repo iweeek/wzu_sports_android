@@ -203,7 +203,7 @@ public class SlideBackView extends FrameLayout {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         //进行阴影绘制,onDraw（）方法在ViewGroup中不一定会执行
-        drawShadow(canvas);
+        //drawShadow(canvas);
         super.dispatchDraw(canvas);
 
     }

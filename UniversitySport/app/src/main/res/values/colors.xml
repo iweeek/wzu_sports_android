@@ -58,4 +58,9 @@
 
     <!-- home -->
     <color name="home_tab_text_color">#cc333333</color>
+
+    <color name="lockscreen_bgcolor">#052851</color>
+    <color name="lockscreen_pbcolor_up">#35a6f2</color>
+    <color name="lockscreen_pbcolor_down">#547397</color>
+
 </resources>

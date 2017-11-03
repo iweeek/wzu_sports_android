@@ -309,6 +309,9 @@ public class LocationService extends Service implements AMap.OnMyLocationChangeL
 
                         Bundle bundle = new Bundle();
                         bundle.putLong("elapseTime", elapseTime);
+                        bundle.putInt("targetDistance",sportEntry.getQualifiedDistance());
+                        bundle.putString("targetSpeed",sportEntry.getTargetSpeed());
+                        bundle.putInt("currentDistance", currentDistance);
                         msg.setData(bundle);
                         clients.get(i).send(msg);
                         DLOG.d(TAG, "elapseTimeRunnable");

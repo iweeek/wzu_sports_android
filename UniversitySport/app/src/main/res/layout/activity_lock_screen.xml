@@ -1,26 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tool="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#ffffff"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lockscreen_bgcolor"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivLockScreenBG"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.tim.app.ui.view.MyCircleView
+        android:id="@+id/circleView"
+        android:layout_width="363dp"
+        android:layout_height="373dp"
+        android:layout_marginTop="0dp"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/tvDistance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="118dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="00000"
+        android:textSize="45dp"
+        android:textColor="#E5F1EF"/>
+
+    <TextView
+        android:id="@+id/tvM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvDistance"
+        android:layout_toRightOf="@+id/tvDistance"
+        android:text="m"
+        android:textSize="20dp"
+        android:textColor="#5F6F87"/>
 
     <TextView
         android:id="@+id/tvAverageSpeed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="194dp"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textSize="45dp"
+        android:textColor="#E5F1EF"
+        android:text="0.00" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvAverageSpeed"
+        android:layout_toRightOf="@+id/tvAverageSpeed"
+        android:layout_alignLeft="@+id/tvM"
+        android:text="m/s"
+        android:textSize="20dp"
+        android:textColor="#5F6F87"/>
+
+    <ImageView
+        android:layout_width="308dp"
+        android:layout_height="2dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/line_lockscreen_h"
+        android:layout_marginTop="425dp"/>
+
+    <ImageView
+        android:layout_width="3dp"
+        android:layout_height="105dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/line_lockscreen_v"
+        android:layout_marginTop="374dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="352dp"
+        android:text="运动时间"
+        android:textSize="16dp"
+        android:textColor="#5F6F87" />
 
     <TextView
         android:id="@+id/tvElapseTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:10:23"
+        android:textSize="23dp"
+        android:textColor="#E5F1EF"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="382dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="214dp"
+        android:layout_marginTop="352dp"
+        android:text="热量消耗(Kcal)"
+        android:textSize="16dp"
+        android:textColor="#5F6F87" />
+
+    <TextView
+        android:id="@+id/tvKcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="500"
+        android:textSize="23dp"
+        android:textColor="#E5F1EF"
+        android:layout_marginLeft="240dp"
+        android:layout_marginTop="382dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="445dp"
+        android:text="目标距离(m)"
+        android:textSize="16dp"
+        android:textColor="#5F6F87" />
+
+    <TextView
+        android:id="@+id/tvTargetDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1500"
+        android:textSize="23dp"
+        android:textColor="#E5F1EF"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="475dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="214dp"
+        android:layout_marginTop="445dp"
+        android:text="目标速度(m/s)"
+        android:textSize="16dp"
+        android:textColor="#5F6F87" />
+
+    <TextView
+        android:id="@+id/tvTargetSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.97"
+        android:textSize="23dp"
+        android:textColor="#E5F1EF"
+        android:layout_marginLeft="240dp"
+        android:layout_marginTop="475dp"/>
+
+    <com.tim.app.ui.view.HighLightTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="31dp"
+        android:text=">>滑动解锁"
+        android:textColor="#5F6F87"
+        android:textSize="28dp" />
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -38,7 +177,7 @@
             android:visibility="gone"
             app:slideUnlockBackgroundResource="@drawable/ic_lock_bg"
             app:slideUnlockBlockResource="@drawable/ic_lock"
-            tool:visibility="visible" />
+            tool:visibility="gone" />
 
         <TextView
             android:id="@+id/tvPause"
@@ -53,4 +192,4 @@
             android:visibility="gone" />
     </FrameLayout>
 
-</LinearLayout>
+</RelativeLayout>

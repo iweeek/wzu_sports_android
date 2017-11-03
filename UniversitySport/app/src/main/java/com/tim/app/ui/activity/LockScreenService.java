@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.application.library.log.DLOG;
-
 
 public class LockScreenService extends Service {
     private MyBinder mBinder = new MyBinder();
@@ -67,9 +65,9 @@ public class LockScreenService extends Service {
             }
             if (action.equals(Intent.ACTION_SCREEN_OFF)) {
                 Intent LockIntent = new Intent(LockScreenService.this, LockScreenActivity.class);
-                // LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                LockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(LockIntent);
-                DLOG.e("error", "onReceive  off");
+                //DLOG.e("error", "onReceive  off");
             }
         }
     };
