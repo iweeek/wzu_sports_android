@@ -58,4 +58,7 @@
 
     <!-- home -->
     <color name="home_tab_text_color">#cc333333</color>
+
+    <color name="loadingbg">#6b9dd4</color>
+
 </resources>

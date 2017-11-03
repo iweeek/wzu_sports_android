@@ -8,14 +8,11 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,16 +30,12 @@ import com.application.library.runtime.ActivityManager;
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.recycle.BaseRecyclerAdapter;
-import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
-import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
-import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.ui.activity.setting.SettingActivity;
-import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.adapter.TabAdapter;
 import com.tim.app.ui.cell.GlideApp;
 import com.tim.app.ui.fragment.SportTypeFragment;
@@ -581,7 +574,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     });
 
                             if (isForced) {//强制升级
-                                builder.setCancelable(false);
+                                //builder.setCancelable(false);
                                 //对话框不变化
                             } else {
                                 builder.setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {

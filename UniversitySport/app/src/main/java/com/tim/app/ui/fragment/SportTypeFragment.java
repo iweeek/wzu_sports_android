@@ -1,25 +1,20 @@
 package com.tim.app.ui.fragment;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.application.library.base.BaseFragment;
-import com.bumptech.glide.request.RequestOptions;
 import com.tim.app.R;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.ui.activity.MainActivity;
-import com.tim.app.ui.activity.SportDetailActivity;
+import com.tim.app.ui.activity.LoadingActivity;
 import com.tim.app.ui.activity.SportsAreaListActivity;
 import com.tim.app.ui.cell.GlideApp;
 
@@ -64,7 +59,7 @@ public class SportTypeFragment extends BaseFragment {
          * 显示相关数据时出错，提示为java.lang.IllegalStateException: FragmentManager is already executing transactions
          */
         ImageView rivSportBg = (ImageView) rootView.findViewById(R.id.rivSportBg);
-        ImageView btStart = (ImageView) rootView.findViewById(R.id.btStart);
+        final ImageView btStart = (ImageView) rootView.findViewById(R.id.btStart);
         TextView tvParticipantNum = (TextView) rootView.findViewById(R.id.tvParticipantNum);
         TextView tvDistance = (TextView) rootView.findViewById(R.id.TvDistance);
         TextView tvTargetValue = (TextView) rootView.findViewById(R.id.tvTargetValue);
@@ -91,8 +86,13 @@ public class SportTypeFragment extends BaseFragment {
         btStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("haha", "onClick: ------------------->x:"+btStart.getX()+" y:"+btStart.getY());
                 if (data.getType() == SportEntry.RUNNING_SPORT) {
-                    SportDetailActivity.start(getActivity(), data);
+                    //SportDetailActivity.start(getActivity(), data);
+                    Intent intent = new Intent();
+                    intent.setClass(getContext(), LoadingActivity.class);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(0,0);
                 } else {
                     SportsAreaListActivity.start(getActivity(), data);
                 }
