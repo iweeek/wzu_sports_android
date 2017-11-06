@@ -4,7 +4,6 @@
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lockscreen_bgcolor"
     android:orientation="vertical">
 
     <ImageView
@@ -12,12 +11,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <com.tim.app.ui.view.MyCircleView
-        android:id="@+id/circleView"
-        android:layout_width="363dp"
-        android:layout_height="373dp"
-        android:layout_marginTop="0dp"
-        android:layout_centerHorizontal="true"/>
+    <!--<com.tim.app.ui.view.MyCircleView-->
+        <!--android:id="@+id/circleView"-->
+        <!--android:layout_width="363dp"-->
+        <!--android:layout_height="373dp"-->
+        <!--android:layout_marginTop="0dp"-->
+        <!--android:layout_centerHorizontal="true"/>-->
+
+    <com.tim.app.ui.view.ColorArcProgressBar
+        android:id="@+id/pgBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="25dp"
+        app:back_color="#929301"
+        app:back_width="10dp"
+        app:front_color1="#f2eb13"
+        app:front_color2="#fa9016"
+        app:front_color3="#ff2616"
+        app:front_width="10dp"
+        app:is_need_content="false"
+        app:is_need_title="false"
+        app:is_need_unit="false"
+        app:max_value="100"
+        app:string_title=""
+        app:string_unit=""
+        app:total_engle="300" />
 
     <TextView
         android:id="@+id/tvDistance"

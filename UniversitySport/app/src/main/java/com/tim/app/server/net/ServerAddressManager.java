@@ -32,7 +32,7 @@ public class ServerAddressManager {
                 stateServerDomain = DEFAULT_BASE_ADDRESS;
                 break;
         }
-        return stateServerDomain;
+        return  stateServerDomain;
     }
 
 

@@ -22,7 +22,8 @@ import android.widget.TextView;
 
 import com.application.library.log.DLOG;
 import com.tim.app.R;
-import com.tim.app.ui.view.MyCircleView;
+import com.tim.app.ui.cell.GlideApp;
+import com.tim.app.ui.view.ColorArcProgressBar;
 import com.tim.app.ui.view.SlideBackView;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class LockScreenActivity extends Activity {
     private TextView tvKcal;
     private TextView tvTargetDistance;
     private TextView tvTargetSpeed;
-    private MyCircleView circleView;
+    private ColorArcProgressBar pgBar;
     private ImageView ivLockScreenBG;
 
     @Override
@@ -74,14 +75,21 @@ public class LockScreenActivity extends Activity {
         tvTargetDistance.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
         tvTargetSpeed.setTypeface(getTypeface(LockScreenActivity.this));  //设置字体 斜体
 
-        //ivLockScreenBG = (ImageView) findViewById(R.id.ivLockScreenBG);
-        //GlideApp.with(getApplicationContext()).load(R.drawable.bg_lockscreen).dontAnimate().into(ivLockScreenBG);
+        ivLockScreenBG = (ImageView) findViewById(R.id.ivLockScreenBG);
+        GlideApp.with(getApplicationContext()).load(R.drawable.bg_lockscreen).dontAnimate().into(ivLockScreenBG);
 
-        circleView = (MyCircleView) findViewById(R.id.circleView);
-        circleView.setArcWidth(15);
+        pgBar = (ColorArcProgressBar) findViewById(R.id.pgBar);
 
         tvDistance.setText("0");
         tvAverageSpeed.setText("0.00");
+        pgBar.setCurrentValues(0);
+
+        tvDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pgBar.setCurrentValues(100);
+            }
+        });
 
 
         hideBottomUIMenu();
@@ -118,7 +126,8 @@ public class LockScreenActivity extends Activity {
                     float percent = (float)msg.getData().getInt("currentDistance")/msg.getData().getInt("targetDistance");
                     String p = String.valueOf(percent);
                     tvKcal.setText(p);
-                    circleView.refresh(percent);
+                    int pg = (int)(percent*100);
+                    //pgBar.setCurrentValues(pg);
                     break;
                 default:
                     super.handleMessage(msg);
