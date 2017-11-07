@@ -23,7 +23,6 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -75,6 +74,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import static com.tim.app.constant.AppConstant.student;
 
@@ -164,6 +167,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*组件*/
     private LocationService.MyBinder myBinder = null;
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private Runnable elapseTimeRunnable;
+    private ScheduledFuture<?> timerHandler = null;
+    private long timerInterval = 1000;
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -182,6 +190,19 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         intent.putExtra("sportEntry", sportEntry);
         intent.putExtra("fixLocationOutdoorSportPoint", fixLocationOutdoorSportPoint);
         context.startActivity(intent);
+    }
+
+    private void startTimer() {
+        timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
+
+    }
+
+    private void stopTimer() {
+        if (timerHandler != null) {
+            timerHandler.cancel(true);
+            scheduler.shutdown();
+            timerHandler = null;
+        }
     }
 
     /****************  <初始化开始> *****************/
@@ -278,7 +299,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         initMap();
         //        mAMapGeoFence = new AMapGeoFence(this.getApplicationContext(), aMap, handler);
 
-        startService(new Intent(this, LocationService.class));
+        Intent intent = new Intent(this, LocationService.class);
+        intent.putExtra("type", "区域");
+        startService(intent);
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
@@ -380,6 +403,21 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         setupArea();
 
+        elapseTimeRunnable = new Runnable() {
+            public void run() {
+                // If you need update UI, simply do this:
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        // update your UI component here.
+                        elapseTime += timerInterval / 1000;
+                        DLOG.d(TAG, "elapseTime: " + elapseTime);
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapsedTime.setText(time);
+                    }
+                });
+            }
+        };
+
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
         aMap.moveCamera(cu);
@@ -400,6 +438,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     if (state == STATE_STARTED) {
                         state = STATE_END;
 
+                        stopTimer();
                         //结束本次运动
                         areaActivitiesEnd(areaSportRecordId);
 
@@ -531,10 +570,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
             DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
 
-            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
-            Log.d(TAG, "elapseTime:" + elapseTime);
-            tvElapsedTime.setText(elapseTime / 60 + " 分钟");
-            DLOG.d(TAG, "elapseTime:" + elapseTime);
+//            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
+//            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+//            Log.d(TAG, "elapseTime:" + elapseTime);
+//            tvElapsedTime.setText(time);
+//            DLOG.d(TAG, "elapseTime:" + elapseTime);
         }
 
         Bundle bundle = location.getExtras();
@@ -758,6 +798,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
                         aMap.moveCamera(cu);
                         allowStart();
+                        startTimer();
                         // DLOG.d(TAG, "onClick：elapseTime:" + elapseTime);
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
