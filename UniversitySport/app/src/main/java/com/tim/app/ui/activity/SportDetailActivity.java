@@ -693,7 +693,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     if (state == STATE_STARTED) {
                         state = STATE_END;
                         stopTimer();
-
                         //做保护
                         if (elapseTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
