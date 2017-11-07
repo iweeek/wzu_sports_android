@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -166,6 +167,20 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_PAUSE = 2;//暂停
     static final int STATE_END = 3;//结束
     private int state = STATE_NORMAL;
+
+    //延时3秒
+    int STOP_TIME = 3000;
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            //要做的事情，这里再次调用此Runnable对象，以实现每两秒实现一次的定时器操作
+            locationDialog.dismissCurrentDialog();
+        }
+
+    };
+
 
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
@@ -464,7 +479,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    locationDialog.dismissCurrentDialog();
+                    handler.postDelayed(runnable, STOP_TIME);
+                    //handler.removeCallbacks(runnable);
+                    //locationDialog.dismissCurrentDialog();
 
                     // 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
