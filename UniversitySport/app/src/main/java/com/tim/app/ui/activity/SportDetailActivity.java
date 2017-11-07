@@ -14,6 +14,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -300,9 +301,25 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         }
     }
 
+    private void getAppDetailSettingIntent(Context context) {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings","com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        startActivity(localIntent);
+    }
+
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
+
+        checkLocationPermissonNew();    //检查定位权限
 
         locationDialog = new LocationDialog(this);
         locationDialog.setCancelable(false);
@@ -792,17 +809,80 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
                 break;
             case REQUEST_PERMISSION_WRITE_FINE_LOCATION:
-                String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-                String op = AppOpsManagerCompat.permissionToOp(permission);
-                int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-                if (result == AppOpsManagerCompat.MODE_IGNORED
-                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    DLOG.d("onRequestPermissionsResult", "onRequestPermissionsResult");
-                    Toast.makeText(this,
-                            getString(R.string.manual_open_permission_hint),
-                            Toast.LENGTH_SHORT).show();
+//                String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+//                String op = AppOpsManagerCompat.permissionToOp(permission);
+//                int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+//                if (result == AppOpsManagerCompat.MODE_IGNORED
+//                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    DLOG.d("onRequestPermissionsResult", "onRequestPermissionsResult");
+//                    Toast.makeText(this,
+//                            getString(R.string.manual_open_permission_hint),
+//                            Toast.LENGTH_SHORT).show();
+//                }
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Toast.makeText(SportDetailActivity.this, "您已授权~", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(SportDetailActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        Toast.makeText(SportDetailActivity.this, "必须要授权才能进行运动哦~", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        intent.setClass(SportDetailActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+                        new AlertDialog.Builder(this)
+                                .setMessage("请授予应用定位权限，应用才可以正常的工作~")
+                                .setPositiveButton("去授权", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //引导用户至设置页手动授权
+                                        Toast.makeText(SportDetailActivity.this, "请授予应用定位权限~", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent();
+                                        intent.setClass(SportDetailActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        Intent intent1 = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                        Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
+                                        intent1.setData(uri);
+                                        startActivity(intent1);
+                                    }
+                                })
+                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //引导用户手动授权，权限请求失败
+                                        Toast.makeText(SportDetailActivity.this, "必须要授权才能进行运动哦~", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent();
+                                        intent.setClass(SportDetailActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }
+                                }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                //引导用户手动授权，权限请求失败
+                                Toast.makeText(SportDetailActivity.this, "必须要授权才能进行运动哦~", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent();
+                                intent.setClass(SportDetailActivity.this, MainActivity.class);
+                                startActivity(intent);
+                            }
+                        }).show();
+                    }
                 }
                 break;
+        }
+    }
+
+    public void checkLocationPermissonNew(){
+        if (ContextCompat.checkSelfPermission(SportDetailActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(SportDetailActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+
+        } else {
         }
     }
 
