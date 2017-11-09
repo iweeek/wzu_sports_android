@@ -25,6 +25,7 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -126,6 +127,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private double distancePerStep = 0; //步幅
     private double stepPerSecond = 0; //步幅
     private int SameTimes = 0;//两点相似次数
+    private boolean drawYellow = false;
     private LocationManager locationManager;
 
     private TextView tvSportName;
@@ -519,6 +521,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 if (lastLatLng.equals(newLatLng)) {
                     SameTimes++;
+                    if (SameTimes > 2)
+                        drawYellow = true;
+                    Log.e("marvin", "SameTimes = " + SameTimes);
                 } else {
                     SameTimes = 0;
                 }
@@ -749,11 +754,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
         // 绘制曲线
         if (isNormal) {
-            if (SameTimes == 0) {
+            if (!drawYellow) {
                 aMap.addPolyline((new PolylineOptions())
                         .add(oldData, newData)
                         .geodesic(true).color(Color.GREEN));
             } else {
+                drawYellow = false;
                 aMap.addPolyline((new PolylineOptions())
                         .add(oldData, newData)
                         .geodesic(true).color(Color.YELLOW));
