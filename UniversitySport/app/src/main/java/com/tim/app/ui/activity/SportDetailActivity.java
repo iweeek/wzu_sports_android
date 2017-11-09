@@ -125,6 +125,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int initCalcSteps = 0;//初始化的步数
     private double distancePerStep = 0; //步幅
     private double stepPerSecond = 0; //步幅
+    private int SameTimes = 0;//两点相似次数
     private LocationManager locationManager;
 
     private TextView tvSportName;
@@ -516,8 +517,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //         + "， 本次移动距离： " + distanceInterval + "， 当前步数： " + stepCounter +
                 //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                if (lastLatLng.equals(newLatLng)) {
+                    SameTimes++;
+                } else {
+                    SameTimes = 0;
+                }
 
-                if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
+                if (distanceInterval / ((SameTimes + 1) * sportEntry.getAcquisitionInterval()) > speedLimitation) {
                     //位置漂移
                     //return;
                     toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
@@ -743,9 +749,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
         // 绘制曲线
         if (isNormal) {
-            aMap.addPolyline((new PolylineOptions())
-                    .add(oldData, newData)
-                    .geodesic(true).color(Color.GREEN));
+            if (SameTimes == 0) {
+                aMap.addPolyline((new PolylineOptions())
+                        .add(oldData, newData)
+                        .geodesic(true).color(Color.GREEN));
+            } else {
+                aMap.addPolyline((new PolylineOptions())
+                        .add(oldData, newData)
+                        .geodesic(true).color(Color.YELLOW));
+            }
         } else {
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
