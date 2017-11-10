@@ -25,6 +25,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Binder;
 import android.os.IBinder;
 
 import com.application.library.log.DLOG;
@@ -33,6 +34,7 @@ import com.tim.app.constant.EventTag;
 import com.tim.app.sport.entry.Acceleration;
 import com.tim.app.sport.entry.Gravity;
 import com.tim.app.sport.entry.Gyroscope;
+import com.tim.app.ui.activity.SportDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,7 @@ import java.util.List;
 public class SensorService extends Service implements SensorEventListener {
 
     private static final String TAG = "SensorService";
+    private static SportDetailActivity sportDetailActivity = null;
 
     public static boolean stepCounterEnabled = false;
 
@@ -130,6 +133,10 @@ public class SensorService extends Service implements SensorEventListener {
         SensorService.thresholdValue = thresholdValue;
     }
 
+    public static void setSportDetailActivity(SportDetailActivity sportDetailActivity) {
+        SensorService.sportDetailActivity = sportDetailActivity;
+    }
+
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
         // nobody knows what happens here: step value might magically decrease
@@ -163,7 +170,7 @@ public class SensorService extends Service implements SensorEventListener {
                     } else {
                         steps = (int) event.values[0];
                         DLOG.d(TAG, "onSensorChanged: step counter: 计步 = " + steps);
-                        EventManager.ins().sendEvent(EventTag.ON_STEP_CHANGE, 0, 0, steps);
+                        sportDetailActivity.onStepChange(steps);
                     }
                     break;
 
@@ -210,7 +217,7 @@ public class SensorService extends Service implements SensorEventListener {
                     detectorStep++;
                     // saveAcceleration(event.timestamp, detectorStep);
                     DLOG.e("StepInAcceleration", "传感器计步： " + detectorStep++);
-                    EventManager.ins().sendEvent(EventTag.ON_DETECTOR_CHANGE, 0, 0, stepCountCal);
+                    // EventManager.ins().sendEvent(EventTag.ON_DETECTOR_CHANGE, 0, 0, stepCountCal);
 
                     break;
                 case Sensor.TYPE_GYROSCOPE:
@@ -301,8 +308,8 @@ public class SensorService extends Service implements SensorEventListener {
                     // 更新界面的处理，不涉及到算法
                     stepCountCal++;
                     DLOG.e(TAG, "thresholdValue:" + thresholdValue + "计步：" + stepCountCal);
-                    EventManager.ins().sendEvent(EventTag.ON_ACCELERATION_CHANGE, 0, 0, stepCountCal);
-
+                    // EventManager.ins().sendEvent(EventTag.ON_ACCELERATION_CHANGE, 0, 0, stepCountCal);
+                    sportDetailActivity.onStepCalcChange(stepCountCal);
                 }
                 if (timeOfNow - timeOfLastPeak >= 250
                         && (peakOfWave - valleyOfWave >= initialValue)) {
@@ -612,6 +619,5 @@ public class SensorService extends Service implements SensorEventListener {
         // } else {
         //     DLOG.v(TAG, "STEP_DETECTOR传感器无法使用");
         // }
-
     }
 }
