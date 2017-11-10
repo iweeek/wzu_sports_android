@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="20dp"
         app:back_color="#929301"
         app:back_width="10dp"
         app:front_color1="#f2eb13"
@@ -111,23 +111,24 @@
         android:text="00:10:23"
         android:textSize="23dp"
         android:textColor="#E5F1EF"
-        android:layout_marginLeft="60dp"
+        android:layout_marginLeft="65dp"
         android:layout_marginTop="382dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="214dp"
+        android:layout_marginLeft="224dp"
         android:layout_marginTop="352dp"
-        android:text="热量消耗(Kcal)"
+        android:text="完成度(%)"
         android:textSize="16dp"
         android:textColor="#5F6F87" />
+    <!--android:text="热量消耗(Kcal)"-->
 
     <TextView
         android:id="@+id/tvKcal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="500"
+        android:text="50%"
         android:textSize="23dp"
         android:textColor="#E5F1EF"
         android:layout_marginLeft="240dp"
@@ -155,7 +156,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="214dp"
+        android:layout_marginLeft="210dp"
         android:layout_marginTop="445dp"
         android:text="目标速度(m/s)"
         android:textSize="16dp"
@@ -168,7 +169,7 @@
         android:text="0.97"
         android:textSize="23dp"
         android:textColor="#E5F1EF"
-        android:layout_marginLeft="240dp"
+        android:layout_marginLeft="238dp"
         android:layout_marginTop="475dp"/>
 
     <com.tim.app.ui.view.HighLightTextView

@@ -84,14 +84,6 @@ public class LockScreenActivity extends Activity {
         tvAverageSpeed.setText("0.00");
         pgBar.setCurrentValues(0);
 
-        tvDistance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pgBar.setCurrentValues(100);
-            }
-        });
-
-
         hideBottomUIMenu();
     }
 
@@ -124,10 +116,12 @@ public class LockScreenActivity extends Activity {
                     tvTargetDistance.setText(String.valueOf(msg.getData().getInt("targetDistance")));
                     tvTargetSpeed.setText(msg.getData().getString("targetSpeed"));
                     float percent = (float)msg.getData().getInt("currentDistance")/msg.getData().getInt("targetDistance");
-                    String p = String.valueOf(percent);
-                    tvKcal.setText(p);
+////                    String p = String.valueOf(percent);
+////                    tvKcal.setText(p);
+//                    tvKcal.setText(pg);
                     int pg = (int)(percent*100);
-                    //pgBar.setCurrentValues(pg);
+                    tvKcal.setText(pg+"%");
+                    pgBar.setCurrentValues(pg);
                     break;
                 default:
                     super.handleMessage(msg);
