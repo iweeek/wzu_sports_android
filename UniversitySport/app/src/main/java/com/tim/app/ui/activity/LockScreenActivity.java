@@ -28,7 +28,7 @@ import com.tim.app.ui.view.SlideBackView;
 
 import java.util.List;
 
-public class LockScreenActivity extends Activity {
+public class LockScreenActivity extends Activity{
 
     private static final String TAG = "LockScreenActivity";
 
@@ -260,5 +260,6 @@ public class LockScreenActivity extends Activity {
     {
         super.onConfigurationChanged(newConfig);
     }
+
 }
 
