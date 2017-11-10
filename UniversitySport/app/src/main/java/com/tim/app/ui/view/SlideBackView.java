@@ -8,7 +8,6 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.provider.Settings;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.DisplayMetrics;
@@ -18,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.application.library.log.DLOG;
-import com.tim.app.util.BrightnessUtil;
 
 /**
  * Created by marvin on 2017/10/16.
@@ -134,13 +132,6 @@ public class SlideBackView extends FrameLayout {
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             //当前回调，松开手时触发，比较触发条件和当前的滑动距离
             int left = releasedChild.getLeft();
-
-            try {
-                turnUpScreen();
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-            }
-
             DLOG.d("DragCallback", "mSlideWidth:" + mSlideWidth);
             if (left <= mSlideWidth) {
                 //缓慢滑动的方法,小于触发条件，滚回去
@@ -154,12 +145,6 @@ public class SlideBackView extends FrameLayout {
             invalidate();
 
             DLOG.d("DragCallback", "onViewReleased");
-        }
-
-        private void turnUpScreen() throws Settings.SettingNotFoundException {
-            int brightness = Settings.System.getInt(getContext().getContentResolver(), Settings.System.SCREEN_BRIGHTNESS);
-            //Log.e("haha", "turnUpScreen: ----------->"+brightness);
-            BrightnessUtil.setScreenBrightness((Activity) getContext(), brightness);
         }
 
         @Override

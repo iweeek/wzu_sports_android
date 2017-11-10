@@ -74,7 +74,6 @@ import com.tim.app.sport.SensorService;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
-import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.MathUtil;
 
 import org.json.JSONException;
@@ -167,10 +166,10 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
 
     private int state = AppConstant.STATE_NORMAL;
 
-    private int screenOffTimeout; //屏幕超时时间
-    private int screenKeepLightTime;
-    private int brightness;
-    private boolean autoAdjustBrightness;
+//    private int screenOffTimeout; //屏幕超时时间
+//    private int screenKeepLightTime;
+//    private int brightness;
+//    private boolean autoAdjustBrightness;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     // private Runnable elapseTimeRunnable;
@@ -371,28 +370,28 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
     public void onTouch(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                turnUpScreen();
+                //turnUpScreen();
                 break;
             case MotionEvent.ACTION_UP:
                 break;
         }
     }
 
-    private void turnUpScreen() {
-
-        // DLOG.d(TAG, "BrightnessUtil.getScreenBrightness(getWindow())" + BrightnessUtil.getScreenBrightness(getWindow()));
-        boolean needToAdjustBrightness = Float.compare(BrightnessUtil.getScreenBrightness(getWindow()), 0.1f) == 0;
-
-        if (needToAdjustBrightness) {
-            if (BrightnessUtil.isAutoAdjustBrightness(this)) {
-                BrightnessUtil.setScreenBrightness(this, brightness);
-            } else {
-                BrightnessUtil.setScreenBrightness(this, brightness);
-            }
-        }
-
-        screenKeepLightTime = 0;
-    }
+//    private void turnUpScreen() {
+//
+//        // DLOG.d(TAG, "BrightnessUtil.getScreenBrightness(getWindow())" + BrightnessUtil.getScreenBrightness(getWindow()));
+//        boolean needToAdjustBrightness = Float.compare(BrightnessUtil.getScreenBrightness(getWindow()), 0.1f) == 0;
+//
+//        if (needToAdjustBrightness) {
+//            if (BrightnessUtil.isAutoAdjustBrightness(this)) {
+//                BrightnessUtil.setScreenBrightness(this, brightness);
+//            } else {
+//                BrightnessUtil.setScreenBrightness(this, brightness);
+//            }
+//        }
+//
+//        screenKeepLightTime = 0;
+//    }
 
     Messenger clientMessenger = new Messenger(new InComingServiceHandler());
 
@@ -481,15 +480,15 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
 
         //屏幕到了锁屏的时间，调暗亮度
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        screenKeepLightTime += interval / 1000;
+        //screenKeepLightTime += interval / 1000;
         // DLOG.d(TAG, "params.screenBrightness: " + params.screenBrightness);
         // DLOG.d(TAG, "screenKeepLightTime:" + screenKeepLightTime);
         // DLOG.d(TAG, "screenOffTimeout:" + screenOffTimeout);
-        if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
-            params.screenBrightness = (float) 0.1;
-            getWindow().setAttributes(params);
-            DLOG.d(TAG, "onMyLocationChange turn down light");
-        }
+//        if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
+//            params.screenBrightness = (float) 0.1;
+//            getWindow().setAttributes(params);
+//            DLOG.d(TAG, "onMyLocationChange turn down light");
+//        }
 
         DLOG.d(TAG, "locationType:" + locationType);
         if (location != null) {
@@ -826,22 +825,22 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
     @Override
     public void initData() {
 
-        autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
-        // DLOG.d(TAG, "autoAdjustBrightness:" + autoAdjustBrightness);
-        if (autoAdjustBrightness) {
-            brightness = BrightnessUtil.getScreenBrightness(this);
-            BrightnessUtil.stopAutoAdjustBrightness(context);
-            // DLOG.d(TAG, "brightness:" + brightness);
-        } else {
-            brightness = BrightnessUtil.getScreenBrightness(this);
-            // DLOG.d(TAG, "brightness:" + brightness);
-        }
+//        autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
+//        // DLOG.d(TAG, "autoAdjustBrightness:" + autoAdjustBrightness);
+//        if (autoAdjustBrightness) {
+//            brightness = BrightnessUtil.getScreenBrightness(this);
+//            BrightnessUtil.stopAutoAdjustBrightness(context);
+//            // DLOG.d(TAG, "brightness:" + brightness);
+//        } else {
+//            brightness = BrightnessUtil.getScreenBrightness(this);
+//            // DLOG.d(TAG, "brightness:" + brightness);
+//        }
 
         float batteryLevel = getBatteryLevel();
         BigDecimal bd = new BigDecimal(Float.toString(batteryLevel));
         Toast.makeText(this, "当前电量： " + bd.toBigInteger() + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
-        screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
-                Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
+//        screenOffTimeout = android.provider.Settings.System.getInt(getContentResolver(),
+//                Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
 
         if (!TextUtils.isEmpty(sportEntry.getName())) {
             tvSportName.setText(sportEntry.getName());
@@ -904,7 +903,7 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
             public void setUnLocked(boolean unLock) {
                 // 如果是true，证明解锁
                 if (unLock) {
-                    turnUpScreen();
+                    //turnUpScreen();
                     // 重置一下滑动解锁的控件
                     slideUnlockView.reset();
                     // 让滑动解锁控件消失
@@ -1052,7 +1051,7 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
 
     @Override
     public void onClick(View v) {
-        turnUpScreen();
+        //turnUpScreen();
         switch (v.getId()) {
             // case ibBack:
             //     finish();
@@ -1485,9 +1484,9 @@ public class SportDetailActivity extends BaseActivity implements /*AMap.OnMyLoca
         mapView.onDestroy();
         SetLockScreen(1);
 
-        if (autoAdjustBrightness) {
-            BrightnessUtil.startAutoAdjustBrightness(this);
-        }
+//        if (autoAdjustBrightness) {
+//            BrightnessUtil.startAutoAdjustBrightness(this);
+//        }
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
