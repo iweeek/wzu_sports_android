@@ -41,6 +41,7 @@ import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.cell.GlideApp;
 import com.tim.app.ui.view.HomepageHeadView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.MathUtil;
 
@@ -236,8 +237,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 //                                    break;
                                 //                                case R.id.nav_approval://审批
                                 //                                    break;
-                                //                                case R.id.nav_customer_service://客服
-                                //                                    break;
+                                case R.id.nav_help://客服
+                                    WebViewActivity.loadUrl(MainActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    break;
                                 case R.id.nav_set://设置
                                     Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
                                     startActivity(intentSetting);

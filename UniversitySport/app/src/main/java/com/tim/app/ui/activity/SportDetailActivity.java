@@ -69,6 +69,7 @@ import com.tim.app.sport.SensorService;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.MathUtil;
 
@@ -138,7 +139,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private TextView tvTargetSpeedLabel;
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
+    private LinearLayout llResult;//运动结果父容器
     private ImageView ivLocation;
+    private ImageView ivHelp;
+    private ImageView ivFinished;
     private TextView tvStepTitle;
     //    private TextView tvCurrentStep;//暂时注释，记得全部放开注释
     private LinearLayout llTargetContainer;
@@ -935,6 +939,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 aMap.moveCamera(cu);
                 break;
             case R.id.ivShowSportInfo:
+                DLOG.d(TAG, "ivShowSportInfo");
                 // 指南针的位置要变化，UiSettings 中寻找方法
                 if (null == showAnimation) {
                     showAnimation = AnimationUtils.loadAnimation(this, R.anim.show_anim);
@@ -960,6 +965,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 rlAnimView.startAnimation(showAnimation);
                 break;
             case R.id.ivHideSportInfo:
+                DLOG.d(TAG, "ivHideSportInfo");
                 if (null == hideAnimation) {
                     hideAnimation = AnimationUtils.loadAnimation(this, R.anim.hide_anim);
                 }
@@ -1047,16 +1053,29 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 if (historySportEntry.isQualified()) {
                                     tvResult.setText(R.string.qualified);
                                     tvResult.setTextColor(Color.GREEN);
+                                    ivFinished.setVisibility(View.VISIBLE);
                                 } else {
                                     tvResult.setText(R.string.notQualified);
                                     tvResult.setTextColor(Color.RED);
+                                    ivHelp.setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 tvResult.setText(R.string.abnormalData);
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
 
                             tvResult.setVisibility(View.VISIBLE);
+                            llResult.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (historySportEntry.isValid() && !historySportEntry.isQualified() ){
+                                        WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
+                                    }
+                                }
+                            });
+
                             rlCurConsumeEnergy.setVisibility(View.VISIBLE);
                             tvCurConsumeEnergy.setText(getString(R.string.curConsumeEnergyTemp, String.valueOf(historySportEntry.getKcalConsumed())));
                             return true;
@@ -1103,6 +1122,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         tvPause = (TextView) findViewById(R.id.tvPause);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        ivHelp = (ImageView) findViewById(R.id.ivHelp);
+        ivFinished = (ImageView) findViewById(R.id.ivFinished);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         rlBottom = (RelativeLayout) findViewById(R.id.rlBottom);
         rlRoot = (RelativeLayout) findViewById(R.id.rlRoot);
@@ -1115,6 +1136,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         btContinue = (Button) findViewById(R.id.btContinue);
         btStop = (Button) findViewById(R.id.btStop);
         tvResult = (TextView) findViewById(R.id.tvResult);
+        llResult = (LinearLayout) findViewById(R.id.llResult);
         //        tvStepTitle = (TextView) findViewById(R.id.tvStepTitle);
         //        tvCurrentStep = (TextView) findViewById(R.id.tvCurrentStep);
         llTargetContainer = (LinearLayout) findViewById(R.id.llTargetContainer);
@@ -1216,7 +1238,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onPause() {
         super.onPause();
-        mapView.onPause();
+        if (mapView != null) {
+            mapView.onPause();
+        }
     }
 
     @Override

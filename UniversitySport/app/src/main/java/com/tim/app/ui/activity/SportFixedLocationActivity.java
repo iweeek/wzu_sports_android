@@ -68,6 +68,7 @@ import com.tim.app.sport.SQLite;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.PermissionUtil;
 
@@ -109,7 +110,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*基本控件*/
     // private LinearLayout llLacationHint;
     private TextView tvResult;//运动结果
-    private ImageView ivLocation;  //页面左下角定位图标
+    private LinearLayout llResult;//运动结果父容器
     private TextView tvAreaName; //区域地点名字
     private TextView tvSelectLocation;//选择区域
     private RelativeLayout rlTopFloatingWindow; //浮动窗顶部地点名字块
@@ -126,6 +127,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private SlideUnlockView slideUnlockView;
     private TextView tvPause;
     private View rlAnimView;
+    private ImageView ivLocation;  //页面左下角定位图标
+    private ImageView ivHelp;
+    private ImageView ivFinished;
 
     private LocationDialog locationDialog;
     private ProgressDialog progressDialog;
@@ -450,8 +454,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlTopFloatingWindow = (RelativeLayout) findViewById(R.id.rlTopFloatingWindow);
         tvElapsedTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvResult = (TextView) findViewById(R.id.tvResult);
+        llResult = (LinearLayout) findViewById(R.id.llResult);
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        ivHelp = (ImageView) findViewById(R.id.ivHelp);
+        ivFinished = (ImageView) findViewById(R.id.ivFinished);
         tvAreaName = (TextView) findViewById(R.id.tvAreaName);
         tvSelectLocation = (TextView) findViewById(R.id.tvSelectLocation);
         rlAreaDesc = (RelativeLayout) findViewById(R.id.rlAreaDesc);
@@ -960,11 +967,23 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             if (historySportEntry.isQualified()) {
                                 tvResult.setText("达标");
                                 tvResult.setTextColor(Color.GREEN);
+                                ivFinished.setVisibility(View.VISIBLE);
                             } else {
                                 tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
                             tvResult.setVisibility(View.VISIBLE);
+                            DLOG.d(TAG, "historySportEntry.isQualified():" + historySportEntry.isQualified());
+                            llResult.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (!historySportEntry.isQualified()){
+                                        WebViewActivity.loadUrl(SportFixedLocationActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
+                                    }
+                                }
+                            });
                             return true;
                         } else {
                             Toast.makeText(SportFixedLocationActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
