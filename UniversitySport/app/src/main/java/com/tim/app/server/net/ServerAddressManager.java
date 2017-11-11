@@ -21,12 +21,10 @@ public class ServerAddressManager {
         String stateServerDomain = "";
         switch (RT.HOST) {
             case DEVELOP:
-                //stateServerDomain = "http://192.168.1.111:8080/";
-                stateServerDomain = DEFAULT_BASE_ADDRESS;
+                stateServerDomain = "http://192.168.1.111:8080/";
                 break;
             case DEBUG:
-                //stateServerDomain = "http://120.77.72.16:8080/";
-                stateServerDomain = DEFAULT_BASE_ADDRESS;
+                stateServerDomain = "http://120.77.72.16:8080/";
                 break;
             case PUBLISH:
                 stateServerDomain = DEFAULT_BASE_ADDRESS;
