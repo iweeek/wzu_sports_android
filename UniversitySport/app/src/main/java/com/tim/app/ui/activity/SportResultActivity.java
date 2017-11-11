@@ -33,7 +33,6 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
@@ -353,8 +352,8 @@ public class SportResultActivity extends ToolbarActivity {
                         }
 
                         //获取信息完毕，接下来处理坐标点
-                        mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
-                        mNormalPoints = getNormalPoints(mNormalDrawPoints);
+                        // mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
+                        // mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
                         // if (mDrawPoints.size() > 0) {
@@ -504,8 +503,8 @@ public class SportResultActivity extends ToolbarActivity {
                         }
 
                         //获取信息完毕，接下来处理坐标点
-                        mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
-                        mNormalPoints = getNormalPoints(mNormalDrawPoints);
+                        // mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
+                        // mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
                         if (mDrawPoints.size() > 0) {
@@ -685,6 +684,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                 DLOG.d(TAG, "onClick mNormalDrawPoints.size: " + mNormalDrawPoints.size());
                 DLOG.d(TAG, "onClick mDrawPoints.size: " + mDrawPoints.size());
+                DLOG.d(TAG, "onClick mPoints.size: " + mPoints.size());
                 // if (historySportEntry instanceof HistoryAreaSportEntry) {
                 //     for (int i = 0; i < mDrawPoints.size(); i++) {
                 //         if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
@@ -696,12 +696,12 @@ public class SportResultActivity extends ToolbarActivity {
                 //     }
                 // } else if (historySportEntry instanceof HistoryRunningSportEntry) {
                 for (int i = 0; i < mDrawPoints.size(); i++) {
-                    if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                    // if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
                         drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
                         ll = mDrawPoints.get(i).getLL();
                         // DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
                         //         ", i: " + i);
-                    }
+                    // }
                 }
                 // }
 
@@ -720,7 +720,7 @@ public class SportResultActivity extends ToolbarActivity {
                     //方式二：
                     // LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
 
-                    DLOG.d(TAG, "onClick mNormalPoints.size: " + mPoints.size());
+                    DLOG.d(TAG, "onClick mNormalPoints.size: " + mNormalPoints.size());
                     // LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
                     // for (LatLng point : mPoints) {
                     // DLOG.d(TAG, "point.latitude:" + point.latitude);
