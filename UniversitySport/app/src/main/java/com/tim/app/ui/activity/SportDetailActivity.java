@@ -333,7 +333,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         // EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
         // EventManager.ins().registListener(EventTag.ON_ACCELERATION_CHANGE, eventListener);//三个参数的构造函数
 
-        startService(new Intent(this, LocationService.class));
+        Intent intent = new Intent(this, LocationService.class);
+        intent.putExtra("type", "跑步");
+        startService(intent);
+        //startService(new Intent(this, LocationService.class));
 
         //        DisplayMetrics displayMetrics = new DisplayMetrics();
         //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -701,7 +704,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     if (state == STATE_STARTED) {
                         state = STATE_END;
                         stopTimer();
-
                         //做保护
                         if (elapseTime != 0) {
                             BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
