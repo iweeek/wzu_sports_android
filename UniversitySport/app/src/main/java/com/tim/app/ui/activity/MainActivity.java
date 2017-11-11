@@ -477,6 +477,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                             areaSportEntry.setTargetTime(jsonObject.getInt("qualifiedCostTime"));
                             areaSportEntry.setAcquisitionInterval(jsonObject.getInt("acquisitionInterval"));
+                            areaSportEntry.setParticipantNum(jsonObject.getInt("participantNum"));
 
                             areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
                             areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
