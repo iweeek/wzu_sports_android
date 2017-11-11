@@ -33,7 +33,6 @@ import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
@@ -322,7 +321,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 查询首页底部运动方式
      */
     public void queryRunningSport() {
-        ServerInterface.instance().queryRunningSports(AppConstant.UNIVERSITY_ID, mIsEnable, student.isMan(), new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningSports(student.getUniversityId(), mIsEnable, student.isMan(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -400,7 +399,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 查询首页顶部本学期运动记录
      */
     public void queryCurTermData() {
-        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, student.getId(), new JsonResponseCallback() {
+        ServerInterface.instance().queryCurTermData(student.getUniversityId(), student.getId(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -457,7 +456,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      */
     public void queryAreaSport() {
         //        mAreaSportEntryList = new ArrayList<>();
-        ServerInterface.instance().queryAreaSport(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryAreaSport(student.getUniversityId(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 SportEntry areaSportEntry = new SportEntry();

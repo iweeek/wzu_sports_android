@@ -358,7 +358,7 @@ public class ServerInterface {
                     "}";
         } else {
             queryStr = "{    \n" +
-                    "  university(id:1) {\n" +
+                    "  university(id:" + universityId + ") {\n" +
                     "\t\ttimeCostedRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
                     "      pagesCount\n" +
                     "      data{\n" +
