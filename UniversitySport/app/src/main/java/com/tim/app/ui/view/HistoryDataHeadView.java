@@ -49,6 +49,7 @@ public class HistoryDataHeadView extends LinearLayout {
 
     public static Typeface getTypeface(Context context){
         if (typeface == null) {
+            // typeface = Typeface.createFromAsset(context.getAssets(), "fonts/RussoOne-Regular.ttf");
             typeface = Typeface.createFromAsset(context.getAssets(), "fonts/MFLangQian_Noncommercial-Bold.ttf");
         }
         return typeface;

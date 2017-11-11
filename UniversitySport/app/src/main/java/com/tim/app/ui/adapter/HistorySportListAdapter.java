@@ -59,7 +59,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
             final LinearLayout ll = (LinearLayout) LayoutInflater.from(mContext).inflate(R.layout.history_daily_record_item, null);
 
             //加上第一条分割线
-            if(i == 0){
+            if (i == 0) {
                 View vTopDelimiter = ll.findViewById(R.id.vTopDelimiter);
                 vTopDelimiter.setVisibility(View.VISIBLE);
             }
@@ -90,28 +90,27 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
                 tvSportTime.setText(sdf.format(runningSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
                 //距离/1000后单位为公里
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                int distance = runningSportEntry.getDistance();
-                //Double distance = runningSportEntry.getDistance()*1.0/1000;
-                //String result = String .format("%.1f",distance);
-                String d = String.valueOf(distance)+" ";
-                tvLeft.setText(d);
-                tvLeft.setTypeface(getTypeface(getContext()),Typeface.ITALIC);  //设置字体 斜体
+                // int distance = runningSportEntry.getDistance();
+                double distance = runningSportEntry.getDistance() * 1.0 / 1000;
+                String result = String.format("%.2f", distance);
+                tvLeft.setText(result + " ");
+                tvLeft.setTypeface(getTypeface(mContext), Typeface.ITALIC);  //设置字体 斜体
 
                 //设置单位
                 TextView tvUnit = (TextView) ll.findViewById(R.id.tvUnit);
-                tvUnit.setText("米");
+                tvUnit.setText("公里");
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
                 String time = com.tim.app.util.TimeUtil.formatMillisTime(runningSportEntry.getCostTime() * 1000);
                 String hour = time.split(":")[0];
-                if(Integer.parseInt(hour)<10){
+                if (Integer.parseInt(hour) < 10) {
                     time = "0" + time;
                 }
                 tvMiddle.setText(time);
@@ -138,8 +137,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
 
                 viewHolder.addView(R.id.llSportItem, ll);
-            }
-            else {
+            } else {
                 final HistoryAreaSportEntry areaSportEntry = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
 
                 //区域名字
@@ -165,9 +163,9 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 //耗时
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
                 Double t = areaSportEntry.getCostTime() / 60.0;
-                String result = String .format("%.1f",t)+" ";
+                String result = String.format("%.1f", t) + " ";
                 tvLeft.setText(result);
-                tvLeft.setTypeface(getTypeface(getContext()),Typeface.ITALIC);  //设置字体 斜体
+                tvLeft.setTypeface(getTypeface(getContext()), Typeface.ITALIC);  //设置字体 斜体
 
                 //设置单位
                 TextView tvUnit = (TextView) ll.findViewById(R.id.tvUnit);
@@ -178,12 +176,12 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 ImageView ivMiddle = (ImageView) ll.findViewById(R.id.ivMiddle);
                 tvMiddle.setVisibility(View.GONE);
                 ivMiddle.setVisibility(View.GONE);
-//                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaSportEntry.getCostTime() * 1000);
-//                String hour = time.split(":")[0];
-//                if(Integer.parseInt(hour)<10){
-//                    time = "0" + time;
-//                }
-//                tvMiddle.setText(time);
+                //                String time = com.tim.app.util.TimeUtil.formatMillisTime(areaSportEntry.getCostTime() * 1000);
+                //                String hour = time.split(":")[0];
+                //                if(Integer.parseInt(hour)<10){
+                //                    time = "0" + time;
+                //                }
+                //                tvMiddle.setText(time);
 
                 //消耗热量
                 TextView tvRight = (TextView) ll.findViewById(R.id.tvRight);
@@ -206,13 +204,13 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 viewHolder.addView(R.id.llSportItem, ll);
             }
         }
-//        //当天日期
-//        viewHolder.setText(R.id.tvSportDate, data.date);
-//        //一天的热量消耗
-//        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.kcalPlaceholder, String.valueOf(totalEnergyCost)));
+        //        //当天日期
+        //        viewHolder.setText(R.id.tvSportDate, data.date);
+        //        //一天的热量消耗
+        //        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.kcalPlaceholder, String.valueOf(totalEnergyCost)));
     }
 
-    public static Typeface getTypeface(Context context){
+    public static Typeface getTypeface(Context context) {
         if (typeface == null) {
             typeface = Typeface.createFromAsset(context.getAssets(), "fonts/RussoOne-Regular.ttf");
         }

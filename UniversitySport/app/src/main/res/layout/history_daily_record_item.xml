@@ -12,7 +12,7 @@
         android:id="@+id/vTopDelimiter"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#DCDCDC"
+        android:background="@color/colorLine"
         android:visibility="gone" />
 
     <LinearLayout
@@ -34,8 +34,8 @@
 
             <ImageView
                 android:id="@+id/ivSportQualified"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
                 tool:srcCompat="@color/about_header_background" />
 
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingLeft="12dp">
+                android:paddingLeft="22dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,9 +66,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:paddingLeft="0dp"
-                        android:text="米"
-                        android:textSize="13dp" />
+                        android:paddingLeft="4dp"
+                        android:text="公里"
+                        android:textSize="12dp" />
 
                     <TextView
                         android:id="@+id/tvSportDesc"
@@ -78,7 +78,7 @@
                         android:paddingLeft="11dp"
                         android:text="慢跑"
                         android:textColor="#66A6FE"
-                        android:textSize="13dp" />
+                        android:textSize="12dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -93,7 +93,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:paddingRight="14dp"
-                        android:text="10/16 20:30"
+                        android:text="10-16 20:30"
                         android:textColor="#5D5D5E"
                         android:textSize="13dp" />
 
@@ -191,7 +191,7 @@
         android:id="@+id/vBottomDelimiter"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#DCDCDC"
+        android:background="@color/colorLine"
         android:visibility="visible" />
 
 </LinearLayout>
