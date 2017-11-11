@@ -9,7 +9,9 @@
     <ImageView
         android:id="@+id/ivLockScreenBG"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"/>
 
     <!--<com.tim.app.ui.view.MyCircleView-->
         <!--android:id="@+id/circleView"-->
@@ -22,9 +24,8 @@
         android:id="@+id/pgBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
         app:back_color="#929301"
         app:back_width="10dp"
         app:front_color1="#f2eb13"
