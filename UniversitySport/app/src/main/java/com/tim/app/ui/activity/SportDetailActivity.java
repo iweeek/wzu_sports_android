@@ -57,13 +57,10 @@ import com.amap.api.maps.model.PolylineOptions;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.net.ResponseCallback;
-import com.application.library.runtime.event.EventListener;
-import com.application.library.runtime.event.EventManager;
 import com.application.library.util.NetUtils;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
-import com.tim.app.constant.EventTag;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.SportEntry;
@@ -331,9 +328,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         initMap();
 
         SensorService.setThresholdValue(sportEntry.getStepThreshold());
+        SensorService.setSportDetailActivity(this);
         startService(new Intent(this, SensorService.class));
-        EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
-        EventManager.ins().registListener(EventTag.ON_ACCELERATION_CHANGE, eventListener);//三个参数的构造函数
+        // EventManager.ins().registListener(EventTag.ON_STEP_CHANGE, eventListener);//三个参数的构造函数
+        // EventManager.ins().registListener(EventTag.ON_ACCELERATION_CHANGE, eventListener);//三个参数的构造函数
 
         startService(new Intent(this, LocationService.class));
 
@@ -1214,6 +1212,41 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         ivHideSportInfo.setOnClickListener(this);
     }
 
+    public void onStepChange(int steps) {
+        DLOG.d(TAG, "系统自带计步器：" + steps);
+        if (state == STATE_STARTED) {
+            // DLOG.d(TAG, "state: " + state);
+            if (initSteps == 0) {
+                initSteps = steps;
+            } else {
+                stepCounter = steps - initSteps - pauseStateSteps;
+                // tvCurrentStep.setText(String.valueOf(stepCounter) + "步");
+            }
+        } else {
+            if (initSteps != 0) {
+                pauseStateSteps = steps - initSteps - stepCounter;
+            }
+        }
+    }
+
+    public void onStepCalcChange(int calcSteps) {
+        DLOG.d(TAG, "自定义计步器：" + calcSteps);
+        if (state == STATE_STARTED) {
+            // DLOG.d(TAG, "state: " + state);
+            if (initCalcSteps == 0) {
+                initCalcSteps = calcSteps;
+            } else {
+                stepCountCal = calcSteps - initCalcSteps - pauseStateCalcSteps;
+                // tvCurrentStep.setText(String.valueOf(stepCounter) + "步");
+            }
+        } else {
+            if (initCalcSteps != 0) {
+                pauseStateCalcSteps = calcSteps - initCalcSteps - stepCountCal;
+            }
+        }
+    }
+
+    /*
     EventListener eventListener = new EventListener() {
         @Override
         public void handleMessage(int what, int arg1, int arg2, Object dataobj) {
@@ -1268,7 +1301,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
         }
     };
-
+    */
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -1311,7 +1344,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
-        EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
+        // EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
 
         if (myBinder != null) {
             unbindService(connection);
