@@ -358,7 +358,7 @@ public class ServerInterface {
                     "}";
         } else {
             queryStr = "{    \n" +
-                    "  university(id:1) {\n" +
+                    "  university(id:" + universityId + ") {\n" +
                     "\t\ttimeCostedRanking (pageSize:" + pageSize + " pageNumber:" + pageNo + "){\n" +
                     "      pagesCount\n" +
                     "      data{\n" +
@@ -421,7 +421,7 @@ public class ServerInterface {
                 "        }\n" +
                 "      }\n" +
                 "    }\n" +
-                "    areaActivities(startDate: \"2017-06-19\", endDate: \"2017-10-08\") {\n" +
+                "    areaActivities(startDate: \"" + startDate + "\", endDate: \"" + endDate + "\") {\n" +
                 "      data {\n" +
                 "        id\n" +
                 "        areaSportId\n" +
@@ -506,17 +506,17 @@ public class ServerInterface {
      */
     public void queryAreaSport(int universityId, ResponseCallback callback) {
         String queryStr = "{\n" +
-                " areaSports(universityId:" + universityId + "){\n" +
+                "  areaSports(universityId: " + universityId + ") {\n" +
                 "    id\n" +
                 "    name\n" +
                 "    qualifiedCostTime\n" +
                 "    acquisitionInterval\n" +
                 "    isEnabled\n" +
-                "    universityId\n" +
                 "    imgUrl\n" +
+                "    participantNum\n" +
+                "    universityId\n" +
                 "  }\n" +
-                "}\n" +
-                "\n";
+                "}\n";
         query(queryStr, callback);
     }
 
