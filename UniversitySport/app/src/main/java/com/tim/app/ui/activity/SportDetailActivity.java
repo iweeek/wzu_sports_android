@@ -173,7 +173,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_NETWORK_ERROR = 4;//网络原因结束
     private int state = STATE_NORMAL;
     // 定位提示最少显示 3 秒钟
-    private static final int STOP_TIME = 3000;
+    private static final int WARM_UP_TIME = 3000;
 
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
@@ -489,7 +489,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    handler.postDelayed(runnable, STOP_TIME);
+                    handler.postDelayed(runnable, WARM_UP_TIME);
                     //handler.removeCallbacks(runnable);
                     //locationDialog.dismissCurrentDialog();
 
