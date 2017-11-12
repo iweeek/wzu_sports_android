@@ -559,7 +559,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     });
 
                             if (isForced) {//强制升级
-                                //builder.setCancelable(false);
+                                builder.setCancelable(false);
                                 //对话框不变化
                             } else {
                                 builder.setNegativeButton("暂不升级", new DialogInterface.OnClickListener() {
