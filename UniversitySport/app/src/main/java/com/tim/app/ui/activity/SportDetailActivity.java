@@ -1059,10 +1059,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 historySportEntry.setKcalConsumed(json.getInt("kcalConsumed"));
                                 historySportEntry.setQualified(json.getBoolean("qualified"));
                                 historySportEntry.setValid(json.getBoolean("isValid"));
-
-                                //historySportEntry.setVerified(json.getBoolean("isVerified"));
-                                historySportEntry.setVerified(true);    //先写死，以后用的时候再改
-
+                                historySportEntry.setVerified(json.getBoolean("isVerified"));
                                 historySportEntry.setQualifiedDistance(json.getInt("qualifiedDistance"));
                                 historySportEntry.setQualifiedCostTime(json.getInt("qualifiedCostTime"));
                                 historySportEntry.setMinCostTime(json.getLong("minCostTime"));
