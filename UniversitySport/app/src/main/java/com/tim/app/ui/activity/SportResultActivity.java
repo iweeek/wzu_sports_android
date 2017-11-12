@@ -292,7 +292,7 @@ public class SportResultActivity extends ToolbarActivity {
 
         if (historyRunningSportEntry != null) {
             queryRunningActivity(historyRunningSportEntry.getId());
-        } else if (historyAreaSportEntry != null){
+        } else if (historyAreaSportEntry != null) {
             llTargetContainer.setVisibility(View.GONE);
             btDrawLine.setVisibility(View.GONE);
             setupArea();
@@ -395,7 +395,7 @@ public class SportResultActivity extends ToolbarActivity {
                         rlContainer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (historyAreaSportEntry.getEndedAt() == 0||!historyAreaSportEntry.isQualified()) {
+                                if (historyAreaSportEntry.getEndedAt() == 0 || !historyAreaSportEntry.isQualified()) {
                                     WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
                                     overridePendingTransition(R.anim.right_in, R.anim.left_out);
                                 }
@@ -407,7 +407,7 @@ public class SportResultActivity extends ToolbarActivity {
                         tvSportName.setText(historyAreaSportEntry.getLocationPoint().getAreaName());
 
                         elapseTime = jsonObject.getLong("costTime");
-                        tvElapseTime.setText((int)elapseTime / 60 + " 分钟");
+                        tvElapseTime.setText((int) elapseTime / 60 + " 分钟");
 
                         // if (elapseTime != 0) {
                         //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
@@ -527,32 +527,69 @@ public class SportResultActivity extends ToolbarActivity {
 
                         boolean qualified = jsonObject.getBoolean("qualified");
                         boolean isValid = jsonObject.getBoolean("isValid");
+
+                        boolean isVerified = jsonObject.getBoolean("isVerified");
+                        //boolean isVerified = true;    //先写死，以后用的时候再改
+
+                        //非正常结束
                         if (historyRunningSportEntry.getEndedAt() == 0) {
-                            tvResult.setText("非正常结束");
-                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+                            tvResult.setText("未结束");
+                            tvResult.setTextColor(Color.RED);
                             ivHelp.setVisibility(View.VISIBLE);
                         } else {
-                            if (isValid) {
-                                if (qualified) {
-                                    tvResult.setText("达标");
-                                    tvResult.setTextColor(Color.GREEN);
-                                    ivFinished.setVisibility(View.VISIBLE);
+                            //是否达标
+                            if (qualified) {
+                                //是否审核
+                                if (isVerified) {
+                                    //是否有效
+                                    if (isValid) {
+                                        tvResult.setText("达标");
+                                        tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                        ivFinished.setVisibility(View.VISIBLE);
+                                    } else {
+                                        tvResult.setText("审核未通过");
+                                        tvResult.setTextColor(Color.RED);
+                                        ivHelp.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
-                                    tvResult.setText("未达标");
+                                    tvResult.setText("达标待审核");
                                     tvResult.setTextColor(Color.RED);
                                     ivHelp.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                tvResult.setText("数据异常");
+                                tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
                                 ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
+
+//                        if (historyRunningSportEntry.getEndedAt() == 0) {
+//                            tvResult.setText("非正常结束");
+//                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+//                            ivHelp.setVisibility(View.VISIBLE);
+//                        } else {
+//                            if (isValid) {
+//                                if (qualified) {
+//                                    tvResult.setText("达标");
+//                                    tvResult.setTextColor(Color.GREEN);
+//                                    ivFinished.setVisibility(View.VISIBLE);
+//                                } else {
+//                                    tvResult.setText("未达标");
+//                                    tvResult.setTextColor(Color.RED);
+//                                    ivHelp.setVisibility(View.VISIBLE);
+//                                }
+//                            } else {
+//                                tvResult.setText("数据异常");
+//                                tvResult.setTextColor(Color.RED);
+//                                ivHelp.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+
                         tvResult.setVisibility(View.VISIBLE);
                         rlContainer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (historyRunningSportEntry.getEndedAt() == 0||!historyRunningSportEntry.isQualified()) {
+                                if (historyRunningSportEntry.getEndedAt() == 0 || !historyRunningSportEntry.isQualified()) {
                                     WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
                                     overridePendingTransition(R.anim.right_in, R.anim.left_out);
                                 }
@@ -697,10 +734,10 @@ public class SportResultActivity extends ToolbarActivity {
                 // } else if (historySportEntry instanceof HistoryRunningSportEntry) {
                 for (int i = 0; i < mDrawPoints.size(); i++) {
                     // if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                        drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
-                        ll = mDrawPoints.get(i).getLL();
-                        // DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
-                        //         ", i: " + i);
+                    drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                    ll = mDrawPoints.get(i).getLL();
+                    // DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
+                    //         ", i: " + i);
                     // }
                 }
                 // }
