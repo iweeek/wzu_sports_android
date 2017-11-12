@@ -75,12 +75,35 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(runningSportEntry.getSportName());
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
+
+//                if (runningSportEntry.getEndedAt() == 0) {
+//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+//                } else {
+//                    if (runningSportEntry.isValid()) {
+//                        if (runningSportEntry.isQualified()) {
+//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+//                        } else {
+//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+//                        }
+//                    } else {
+//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+//                    }
+//                }
+
+                //非正常结束
                 if (runningSportEntry.getEndedAt() == 0) {
                     ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
                 } else {
-                    if (runningSportEntry.isValid()) {
-                        if (runningSportEntry.isQualified()) {
-                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+                    //是否达标
+                    if (runningSportEntry.isQualified()) {
+                        //是否审核
+                        if (runningSportEntry.isVerified()) {
+                            //是否有效
+                            if (runningSportEntry.isValid()) {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+                            } else {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                            }
                         } else {
                             ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                         }
@@ -145,11 +168,33 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(areaSportEntry.getAreaSport());
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
+//                if (areaSportEntry.getEndedAt() == 0) {
+//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+//                } else {
+//                    if (data.historySportEntryList.get(i).isQualified()) {
+//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+//                    } else {
+//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+//                    }
+//                }
+
+                //非正常结束
                 if (areaSportEntry.getEndedAt() == 0) {
                     ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
                 } else {
-                    if (data.historySportEntryList.get(i).isQualified()) {
-                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                    //是否达标
+                    if (areaSportEntry.isQualified()) {
+                        //是否审核
+                        if (areaSportEntry.isVerified()) {
+                            //是否有效
+                            if (areaSportEntry.isValid()) {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                            } else {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                            }
+                        } else {
+                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                        }
                     } else {
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                     }

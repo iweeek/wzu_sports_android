@@ -1009,15 +1009,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             historySportEntry.setEndedAt(jsonObject.optLong("endedAt"));
                             historySportEntry.setEndedBy(jsonObject.optBoolean("endedBy"));
                             historySportEntry.setType(AppConstant.AREA_TYPE);
-//                            if (historySportEntry.isQualified()) {
-//                                tvResult.setText("达标");
-//                                tvResult.setTextColor(Color.GREEN);
-//                                ivFinished.setVisibility(View.VISIBLE);
-//                            } else {
-//                                tvResult.setText("未达标");
-//                                tvResult.setTextColor(Color.RED);
-//                                ivHelp.setVisibility(View.VISIBLE);
-//                            }
 
                             //非正常结束
                             if (historySportEntry.getEndedAt() == 0) {

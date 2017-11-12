@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_all"
-        android:title="全部记录"/>
+        android:title="全部记录" />
     <item
         android:id="@+id/action_qualified"
         android:title="只看达标" />
@@ -11,9 +11,12 @@
         android:id="@+id/action_disqualified"
         android:title="只看未达标" />
     <item
-        android:id="@+id/action_abnormal_data"
-        android:title="只看数据异常" />
+        android:id="@+id/action_not_verified"
+        android:title="只看达标待审核" />
+    <item
+        android:id="@+id/action_verified_fail"
+        android:title="只看审核未通过" />
     <item
         android:id="@+id/action_abnormal_end"
-        android:title="只看非正常结束"/>
+        android:title="只看未结束" />
 </menu>

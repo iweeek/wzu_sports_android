@@ -1238,22 +1238,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             btStart.setVisibility(View.VISIBLE);
                             btStart.setText("查看锻炼结果");
 
-                            //                            if (historySportEntry.isValid()) {
-                            //                                if (historySportEntry.isQualified()) {
-                            //                                    tvResult.setText(R.string.qualified);
-                            //                                    tvResult.setTextColor(Color.GREEN);
-                            //                                    ivFinished.setVisibility(View.VISIBLE);
-                            //                                } else {
-                            //                                    tvResult.setText(R.string.notQualified);
-                            //                                    tvResult.setTextColor(Color.RED);
-                            //                                    ivHelp.setVisibility(View.VISIBLE);
-                            //                                }
-                            //                            } else {
-                            //                                tvResult.setText(R.string.abnormalData);
-                            //                                tvResult.setTextColor(Color.RED);
-                            //                                ivHelp.setVisibility(View.VISIBLE);
-                            //                            }
-
                             //非正常结束
                             if (historySportEntry.getEndedAt() == 0) {
                                 tvResult.setText("未结束");

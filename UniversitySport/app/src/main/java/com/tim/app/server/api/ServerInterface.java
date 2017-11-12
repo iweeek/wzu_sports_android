@@ -260,7 +260,7 @@ public class ServerInterface {
                 //                "    targetFinishedTime\n" +
                 //                "    sportDate\n" +
                 //                "    startTime\n" +
-                //                "    endedAt\n" +
+                "    endedAt\n" +
                 "    qualifiedDistance\n" +
                 "    qualifiedCostTime\n" +
                 //                "    minCostTime\n" +
@@ -298,6 +298,7 @@ public class ServerInterface {
                 "    kcalConsumed\n" +
                 "    isValid\n" +
                 "    isVerified\n" +
+                "    endedAt\n" +
                 // "    areaSport {\n" +
                 // "      name\n" +
                 // "    }\n" +

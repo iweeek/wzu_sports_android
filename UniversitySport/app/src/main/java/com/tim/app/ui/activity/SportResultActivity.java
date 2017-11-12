@@ -374,23 +374,41 @@ public class SportResultActivity extends ToolbarActivity {
                         JSONObject jsonObject = json.getJSONObject("data").getJSONObject("areaActivity");
 
                         boolean qualified = jsonObject.getBoolean("qualified");
+                        boolean isVerified = jsonObject.getBoolean("isVerified");
+                        boolean isValid = jsonObject.getBoolean("isValid");
 
-                        //判断最终达标情况
+                        //非正常结束
                         if (historyAreaSportEntry.getEndedAt() == 0) {
-                            tvResult.setText("非正常结束");
-                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+                            tvResult.setText("未结束");
+                            tvResult.setTextColor(Color.RED);
                             ivHelp.setVisibility(View.VISIBLE);
                         } else {
+                            //是否达标
                             if (qualified) {
-                                tvResult.setText("达标");
-                                tvResult.setTextColor(Color.GREEN);
-                                ivFinished.setVisibility(View.VISIBLE);
+                                //是否审核
+                                if (isVerified) {
+                                    //是否有效
+                                    if (isValid) {
+                                        tvResult.setText("达标");
+                                        tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                        ivFinished.setVisibility(View.VISIBLE);
+                                    } else {
+                                        tvResult.setText("审核未通过");
+                                        tvResult.setTextColor(Color.RED);
+                                        ivHelp.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    tvResult.setText("达标待审核");
+                                    tvResult.setTextColor(Color.RED);
+                                    ivHelp.setVisibility(View.VISIBLE);
+                                }
                             } else {
                                 tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
                                 ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
+
                         tvResult.setVisibility(View.VISIBLE);
                         rlContainer.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -562,28 +580,6 @@ public class SportResultActivity extends ToolbarActivity {
                                 ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
-
-//                        if (historyRunningSportEntry.getEndedAt() == 0) {
-//                            tvResult.setText("非正常结束");
-//                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
-//                            ivHelp.setVisibility(View.VISIBLE);
-//                        } else {
-//                            if (isValid) {
-//                                if (qualified) {
-//                                    tvResult.setText("达标");
-//                                    tvResult.setTextColor(Color.GREEN);
-//                                    ivFinished.setVisibility(View.VISIBLE);
-//                                } else {
-//                                    tvResult.setText("未达标");
-//                                    tvResult.setTextColor(Color.RED);
-//                                    ivHelp.setVisibility(View.VISIBLE);
-//                                }
-//                            } else {
-//                                tvResult.setText("数据异常");
-//                                tvResult.setTextColor(Color.RED);
-//                                ivHelp.setVisibility(View.VISIBLE);
-//                            }
-//                        }
 
                         tvResult.setVisibility(View.VISIBLE);
                         rlContainer.setOnClickListener(new View.OnClickListener() {
