@@ -528,8 +528,8 @@ public class SportResultActivity extends ToolbarActivity {
                         boolean qualified = jsonObject.getBoolean("qualified");
                         boolean isValid = jsonObject.getBoolean("isValid");
 
-                        //boolean isVerified = jsonObject.getBoolean("isVerified");
-                        boolean isVerified = true;    //先写死，以后用的时候再改
+                        boolean isVerified = jsonObject.getBoolean("isVerified");
+                        //boolean isVerified = true;    //先写死，以后用的时候再改
 
                         //非正常结束
                         if (historyRunningSportEntry.getEndedAt() == 0) {

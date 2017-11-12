@@ -416,6 +416,7 @@ public class ServerInterface {
                 "        sportDate\n" +
                 "        endedAt\n" +
                 "        isValid\n" +
+                "        isVerified\n" +
                 "        runningSport {\n" +
                 "          name\n" +
                 "        }\n" +
@@ -440,6 +441,8 @@ public class ServerInterface {
                 "        costTime\n" +
                 "        kcalConsumed\n" +
                 "        qualified\n" +
+                "        isValid\n" +
+                "        isVerified\n" +
                 "        startTime\n" +
                 "        sportDate\n" +
                 "        endedAt\n" +

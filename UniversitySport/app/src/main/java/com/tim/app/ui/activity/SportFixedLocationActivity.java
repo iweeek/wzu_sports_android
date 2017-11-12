@@ -1000,8 +1000,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             historySportEntry.setKcalConsumed(jsonObject.optInt("kcalConsumed"));
                             historySportEntry.setQualified(jsonObject.optBoolean("qualified"));
 
-                            //historySportEntry.setVerified(json.getBoolean("isVerified"));
-                            historySportEntry.setVerified(true);    //先写死，以后用的时候再改
+                            historySportEntry.setVerified(jsonObject.optBoolean("isVerified"));
+                            //historySportEntry.setVerified(true);    //先写死，以后用的时候再改
 
                             historySportEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
                             historySportEntry.setCreatedAt(jsonObject.optLong("createdAt"));
