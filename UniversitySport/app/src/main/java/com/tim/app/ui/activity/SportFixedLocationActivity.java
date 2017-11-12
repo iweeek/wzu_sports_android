@@ -999,29 +999,66 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             historySportEntry.setStartTime(jsonObject.optLong("startTime"));
                             historySportEntry.setKcalConsumed(jsonObject.optInt("kcalConsumed"));
                             historySportEntry.setQualified(jsonObject.optBoolean("qualified"));
+
+                            //historySportEntry.setVerified(json.getBoolean("isVerified"));
+                            historySportEntry.setVerified(true);    //先写死，以后用的时候再改
+
                             historySportEntry.setQualifiedCostTime(jsonObject.optInt("qualifiedCostTime"));
                             historySportEntry.setCreatedAt(jsonObject.optLong("createdAt"));
                             historySportEntry.setUpdatedAt(jsonObject.optLong("updatedAt"));
                             historySportEntry.setEndedAt(jsonObject.optLong("endedAt"));
                             historySportEntry.setEndedBy(jsonObject.optBoolean("endedBy"));
                             historySportEntry.setType(AppConstant.AREA_TYPE);
-                            if (historySportEntry.isQualified()) {
-                                tvResult.setText("达标");
-                                tvResult.setTextColor(Color.GREEN);
-                                ivFinished.setVisibility(View.VISIBLE);
-                            } else {
-                                tvResult.setText("未达标");
+//                            if (historySportEntry.isQualified()) {
+//                                tvResult.setText("达标");
+//                                tvResult.setTextColor(Color.GREEN);
+//                                ivFinished.setVisibility(View.VISIBLE);
+//                            } else {
+//                                tvResult.setText("未达标");
+//                                tvResult.setTextColor(Color.RED);
+//                                ivHelp.setVisibility(View.VISIBLE);
+//                            }
+
+                            //非正常结束
+                            if (historySportEntry.getEndedAt() == 0) {
+                                tvResult.setText("未结束");
                                 tvResult.setTextColor(Color.RED);
                                 ivHelp.setVisibility(View.VISIBLE);
+                            } else {
+                                //是否达标
+                                if (historySportEntry.isQualified()) {
+                                    //是否审核
+                                    if (historySportEntry.isVerified()) {
+                                        //是否有效
+                                        if (historySportEntry.isValid()) {
+                                            tvResult.setText("达标");
+                                            tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                            ivFinished.setVisibility(View.VISIBLE);
+                                        } else {
+                                            tvResult.setText("审核未通过");
+                                            tvResult.setTextColor(Color.RED);
+                                            ivHelp.setVisibility(View.VISIBLE);
+                                        }
+                                    } else {
+                                        tvResult.setText("达标待审核");
+                                        tvResult.setTextColor(Color.RED);
+                                        ivHelp.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    tvResult.setText("未达标");
+                                    tvResult.setTextColor(Color.RED);
+                                    ivHelp.setVisibility(View.VISIBLE);
+                                }
                             }
+
                             tvResult.setVisibility(View.VISIBLE);
                             DLOG.d(TAG, "historySportEntry.isQualified():" + historySportEntry.isQualified());
                             llResult.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (!historySportEntry.isQualified()){
+                                    if (!historySportEntry.isQualified()) {
                                         WebViewActivity.loadUrl(SportFixedLocationActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
+                                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
                                     }
                                 }
                             });
