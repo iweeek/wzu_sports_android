@@ -18,6 +18,7 @@ import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -171,6 +172,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_END = 3;//结束
     static final int STATE_NETWORK_ERROR = 4;//网络原因结束
     private int state = STATE_NORMAL;
+    // 定位提示最少显示 3 秒钟
+    private static final int WARM_UP_TIME = 3000;
+
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            locationDialog.dismissCurrentDialog();
+        }
+    };
 
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
@@ -478,7 +489,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     firstLocationType = locationType;
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
-                    locationDialog.dismissCurrentDialog();
+                    handler.postDelayed(runnable, WARM_UP_TIME);
+                    //handler.removeCallbacks(runnable);
+                    //locationDialog.dismissCurrentDialog();
 
                     // 待删除
                     //aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
