@@ -17,6 +17,7 @@
     <color name="colorTabText">#585858</color>
 
     <color name="colorLine">#eeeeee</color>
+    <color name="colorLine2">#DCDCDC</color>
     <color name="colorPageBg">#f2f4f5</color>
     <color name="colorTitle">#666</color>
     <color name="colorSubtitle">#999</color>
