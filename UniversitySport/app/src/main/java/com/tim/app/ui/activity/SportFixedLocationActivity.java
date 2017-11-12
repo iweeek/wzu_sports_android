@@ -23,7 +23,6 @@ import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -68,6 +67,7 @@ import com.tim.app.sport.SQLite;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.PermissionUtil;
 
@@ -75,6 +75,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import static com.tim.app.constant.AppConstant.student;
 
@@ -109,7 +113,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*基本控件*/
     // private LinearLayout llLacationHint;
     private TextView tvResult;//运动结果
-    private ImageView ivLocation;  //页面左下角定位图标
+    private LinearLayout llResult;//运动结果父容器
     private TextView tvAreaName; //区域地点名字
     private TextView tvSelectLocation;//选择区域
     private RelativeLayout rlTopFloatingWindow; //浮动窗顶部地点名字块
@@ -126,6 +130,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private SlideUnlockView slideUnlockView;
     private TextView tvPause;
     private View rlAnimView;
+    private ImageView ivLocation;  //页面左下角定位图标
+    private ImageView ivHelp;
+    private ImageView ivFinished;
 
     private LocationDialog locationDialog;
     private ProgressDialog progressDialog;
@@ -164,6 +171,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*组件*/
     private LocationService.MyBinder myBinder = null;
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private Runnable elapseTimeRunnable;
+    private ScheduledFuture<?> timerHandler = null;
+    private long timerInterval = 1000;
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -182,6 +194,19 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         intent.putExtra("sportEntry", sportEntry);
         intent.putExtra("fixLocationOutdoorSportPoint", fixLocationOutdoorSportPoint);
         context.startActivity(intent);
+    }
+
+    private void startTimer() {
+        timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
+
+    }
+
+    private void stopTimer() {
+        if (timerHandler != null) {
+            timerHandler.cancel(true);
+            scheduler.shutdown();
+            timerHandler = null;
+        }
     }
 
     /****************  <初始化开始> *****************/
@@ -278,7 +303,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         initMap();
         //        mAMapGeoFence = new AMapGeoFence(this.getApplicationContext(), aMap, handler);
 
-        //startService(new Intent(this, LocationService.class));
+        Intent intent = new Intent(this, LocationService.class);
+        intent.putExtra("type", "区域");
+        startService(intent);
 
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
@@ -380,6 +407,21 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         setupArea();
 
+        elapseTimeRunnable = new Runnable() {
+            public void run() {
+                // If you need update UI, simply do this:
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        // update your UI component here.
+                        elapseTime += timerInterval / 1000;
+                        DLOG.d(TAG, "elapseTime: " + elapseTime);
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapsedTime.setText(time);
+                    }
+                });
+            }
+        };
+
         CameraUpdate cu = CameraUpdateFactory.newCameraPosition(
                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
         aMap.moveCamera(cu);
@@ -400,6 +442,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                     if (state == STATE_STARTED) {
                         state = STATE_END;
 
+                        stopTimer();
                         //结束本次运动
                         areaActivitiesEnd(areaSportRecordId);
 
@@ -450,8 +493,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         rlTopFloatingWindow = (RelativeLayout) findViewById(R.id.rlTopFloatingWindow);
         tvElapsedTime = (TextView) findViewById(R.id.tvElapsedTime);
         tvResult = (TextView) findViewById(R.id.tvResult);
+        llResult = (LinearLayout) findViewById(R.id.llResult);
         tvParticipantNum = (TextView) findViewById(R.id.tvParticipantNum);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        ivHelp = (ImageView) findViewById(R.id.ivHelp);
+        ivFinished = (ImageView) findViewById(R.id.ivFinished);
         tvAreaName = (TextView) findViewById(R.id.tvAreaName);
         tvSelectLocation = (TextView) findViewById(R.id.tvSelectLocation);
         rlAreaDesc = (RelativeLayout) findViewById(R.id.rlAreaDesc);
@@ -531,10 +577,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
             DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
 
-            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
-            Log.d(TAG, "elapseTime:" + elapseTime);
-            tvElapsedTime.setText(elapseTime / 60 + " 分钟");
-            DLOG.d(TAG, "elapseTime:" + elapseTime);
+//            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
+//            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+//            Log.d(TAG, "elapseTime:" + elapseTime);
+//            tvElapsedTime.setText(time);
+//            DLOG.d(TAG, "elapseTime:" + elapseTime);
         }
 
         Bundle bundle = location.getExtras();
@@ -758,6 +805,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                 new CameraPosition(targetLatLngs.get(0), zoomLevel, 0, 0));
                         aMap.moveCamera(cu);
                         allowStart();
+                        startTimer();
                         // DLOG.d(TAG, "onClick：elapseTime:" + elapseTime);
                     } else {
                         Toast.makeText(this, "请到指定运动区域进行锻炼", Toast.LENGTH_SHORT).show();
@@ -960,11 +1008,23 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             if (historySportEntry.isQualified()) {
                                 tvResult.setText("达标");
                                 tvResult.setTextColor(Color.GREEN);
+                                ivFinished.setVisibility(View.VISIBLE);
                             } else {
                                 tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
                             tvResult.setVisibility(View.VISIBLE);
+                            DLOG.d(TAG, "historySportEntry.isQualified():" + historySportEntry.isQualified());
+                            llResult.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (!historySportEntry.isQualified()){
+                                        WebViewActivity.loadUrl(SportFixedLocationActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
+                                    }
+                                }
+                            });
                             return true;
                         } else {
                             Toast.makeText(SportFixedLocationActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();

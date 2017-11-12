@@ -3,6 +3,7 @@ package com.tim.app.ui.activity.setting;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.app.AlertDialog;
@@ -11,14 +12,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.util.PackageUtil;
 import com.tim.app.R;
 import com.tim.app.server.api.ServerInterface;
+import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.AboutActivity;
 import com.tim.app.ui.activity.ToolbarActivity;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.NetUtil;
+import com.tim.app.util.ToastUtil;
 
 import org.json.JSONObject;
 
@@ -84,6 +88,14 @@ public class SettingActivity extends ToolbarActivity {
                             PackageManager manager = (SettingActivity.this).getPackageManager();
                             PackageInfo info = manager.getPackageInfo(SettingActivity.this.getPackageName(), 0);
 
+                            SharedPreferences sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE);
+                            int ignoreVersion = sp.getInt(User.IGNORE_VERSION, 0);
+                            DLOG.d(TAG, "ignoreVersion:" + ignoreVersion);
+                            if (ignoreVersion == versionCode) {
+                                ToastUtil.toast(SettingActivity.this, "已忽略本次更新");
+                                return false;
+                            }
+
                             if (versionCode > info.versionCode) {
 
                                 final AlertDialog.Builder builder =
@@ -108,6 +120,14 @@ public class SettingActivity extends ToolbarActivity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                        }
+                                    });
+                                    builder.setNeutralButton("忽略本次", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            SharedPreferences.Editor sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE).edit();
+                                            sp.putInt(User.IGNORE_VERSION, versionCode);
+                                            sp.apply();
                                         }
                                     });
                                 }

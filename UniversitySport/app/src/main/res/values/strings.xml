@@ -7,6 +7,9 @@
     <string name="app_school_leaderboard">校园排行榜</string>
     <string name="app_system_setting">设置</string>
 
+    <string name="actionbar_webview_share">分享到</string>
+    <string name="actionbar_webview_cope">复制链接</string>
+    <string name="actionbar_webview_open">打开链接</string>
 
     <!-- 通用动作 -->
     <string name="action_back">返回</string>
@@ -18,6 +21,8 @@
     <string name="action_prompt">提示</string>
     <string name="action_clear">清空</string>
     <string name="action_save">保存</string>
+    <string name="action_share">分享</string>
+
 
     <!-- 网络 -->
     <string name="crashhandler_sorry_error">Sorry,程序错误.</string>
