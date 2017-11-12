@@ -27,7 +27,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -127,8 +126,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int initCalcSteps = 0;//初始化的步数
     private double distancePerStep = 0; //步幅
     private double stepPerSecond = 0; //步幅
-    private int SameTimes = 0;//两点相似次数
-    private boolean drawYellow = false;
+    private int sameTimes = 0;//两点相似次数
+    private boolean isDrawYellow = false;
     private LocationManager locationManager;
 
     private TextView tvSportName;
@@ -534,15 +533,15 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                 if (lastLatLng.equals(newLatLng)) {
-                    SameTimes++;
-                    if (SameTimes > 1) {
-                        drawYellow = true;
+                    sameTimes++;
+                    if (sameTimes > 1) {
+                        isDrawYellow = true;
                     }
                 } else {
-                    SameTimes = 0;
+                    sameTimes = 0;
                 }
 
-                if (distanceInterval / ((SameTimes + 1) * sportEntry.getAcquisitionInterval()) > speedLimitation) {
+                if (distanceInterval / ((sameTimes + 1) * sportEntry.getAcquisitionInterval()) > speedLimitation) {
                     //位置漂移
                     //return;
                     toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
@@ -771,12 +770,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
         // 绘制曲线
         if (isNormal) {
-            if (!drawYellow) {
+            if (!isDrawYellow) {
                 aMap.addPolyline((new PolylineOptions())
                         .add(oldData, newData)
                         .geodesic(true).color(Color.GREEN));
             } else {
-                drawYellow = false;
+                isDrawYellow = false;
                 aMap.addPolyline((new PolylineOptions())
                         .add(oldData, newData)
                         .geodesic(true).color(Color.YELLOW));
