@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
+import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -15,7 +16,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.BatteryManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -73,6 +76,7 @@ import com.tim.app.ui.view.SlideUnlockView;
 import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.MathUtil;
+import com.tim.app.util.SystemUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -179,7 +183,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            locationDialog.dismissCurrentDialog();
+            if (locationDialog != null && locationDialog.isShowing()) {
+                locationDialog.dismissCurrentDialog();
+            }
         }
     };
 
@@ -214,7 +220,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     public static final String COMMIT_AGAIN_MSG = "请检查网络设置，并到开旷地点重试";
 
-    public int COMMIT_AGAIN_TIMES = 0;
+    public int commitTimes = 0;
 
     public static final String OPEN_GPS_MSG = "需要打开GPS才能开始运动...";
 
@@ -232,6 +238,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             myBinder.startLocationInService(interval);
         }
     };
+    private AlertDialog openLocationServiceDialog;
 
     public static void start(Context context, SportEntry sportEntry) {
         Intent intent = new Intent(context, SportDetailActivity.class);
@@ -259,35 +266,53 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         // 判断GPS模块是否开启，如果没有则开启
         if (!locationManager
                 .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
-            //            Toast.makeText(this, "定位服务未打开，请打开定位服务",
-            //                    Toast.LENGTH_SHORT).show();
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("定位服务未打开，请打开定位服务");
-            builder.setPositiveButton("确定",
-                    new android.content.DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface arg0, int arg1) {
-                            // 转到手机设置界面，用户设置GPS
-                            Intent intent = new Intent(
-                                    Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            startActivityForResult(intent, 0); // 设置完成后返回到原来的界面
-                        }
-                    });
-            //            locationDialog.setNeutralButton("取消", new android.content.DialogInterface.OnClickListener() {
-            //                @Override
-            //                public void onClick(DialogInterface arg0, int arg1) {
-            //                    arg0.dismiss();
-            //                }
-            //            });
-
-            AlertDialog dialog = builder.show();
-            TextView message = (TextView) dialog.findViewById(android.R.id.message);
-            Button positiveButton = (Button) dialog.findViewById(android.R.id.button1);
-            positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
-            message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+            buildLocationServiceDialog();
         } else {
             locationDialog.show();
         }
+    }
+
+    private void buildLocationServiceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("重要提示");
+        builder.setMessage("请打开定位服务，并授予定位权限~");
+        builder.setPositiveButton("去设置",
+                new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Intent intent = new Intent(
+                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivityForResult(intent, 0);
+                    }
+                });
+
+        openLocationServiceDialog = builder.create();
+        openLocationServiceDialog.setCancelable(false);
+        openLocationServiceDialog.show();
+        openLocationServiceDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    openLocationServiceDialog.dismiss();
+                    finish();
+                }
+                return false;
+            }
+        });
+        openLocationServiceDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(
+                        Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(intent, 0);
+                // dialog.dismiss();
+            }
+        });
+
+        TextView message = (TextView) openLocationServiceDialog.findViewById(android.R.id.message);
+        Button positiveButton = (Button) openLocationServiceDialog.findViewById(android.R.id.button1);
+        positiveButton.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+        message.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
     }
 
     @Override
@@ -298,29 +323,37 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         if (requestCode == 0) {
             if (locationManager
                     .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+                openLocationServiceDialog.dismiss();
                 locationDialog.show();
             } else {
-                Toast.makeText(this, OPEN_GPS_MSG, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, OPEN_GPS_MSG, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void getAppDetailSettingIntent(Context context) {
+        Intent localIntent = new Intent();
+        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            localIntent.setAction(Intent.ACTION_VIEW);
+            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            localIntent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        startActivity(localIntent);
     }
 
     @Override
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
-        locationDialog = new LocationDialog(this);
-        locationDialog.setCancelable(false);
-        locationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
-                    locationDialog.dismissCurrentDialog();
-                    finish();
-                }
-                return false;
-            }
-        });
+        initLocationDislog();
+
+        initGPS();
+
+        checkLocationPermissonNew();    //检查定位权限
 
         Float level = getBatteryLevel();
         tvRemainPower = (TextView) locationDialog.findViewById(R.id.tvRemainPower);
@@ -328,8 +361,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-
-        initGPS();
 
         sportEntry = (SportEntry) getIntent().getSerializableExtra("sportEntry");
         interval = sportEntry.getAcquisitionInterval() * 1000;
@@ -381,6 +412,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_BATTERY_LOW);
         registerReceiver(lowBatteryReceiver, filter);
+    }
+
+    private void initLocationDislog() {
+        locationDialog = new LocationDialog(this);
+        locationDialog.setCancelable(false);
+        locationDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+                    locationDialog.dismissCurrentDialog();
+                    finish();
+                }
+                return false;
+            }
+        });
     }
 
     private void initMap() {
@@ -482,6 +528,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             } else {
                 newLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 DLOG.d(TAG, "newLatLng: " + newLatLng);
+                DLOG.d(TAG, "定位成功");
+                // locationDialog.dismissCurrentDialog();
+
                 // 判断第一次，第一次会提示
                 if (lastLatLng == null) {
                     String errText = "定位成功";
@@ -490,7 +539,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     llLacationHint.setVisibility(View.GONE);
                     Toast.makeText(this, errText, Toast.LENGTH_SHORT).show();
                     handler.postDelayed(runnable, WARM_UP_TIME);
-                    //handler.removeCallbacks(runnable);
                     //locationDialog.dismissCurrentDialog();
 
                     // 待删除
@@ -506,7 +554,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
             }
             if (state == STATE_STARTED) {
                 String msg = location.toString();
-                //                DLOG.writeToInternalFile(msg);
+                //   DLOG.writeToInternalFile(msg);
 
                 float batteryLevel = getBatteryLevel();
                 DLOG.d(TAG, "lastLatLng: " + lastLatLng);
@@ -797,6 +845,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        DLOG.d(TAG, "requestCode:" + requestCode);
         switch (requestCode) {
             case REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -804,40 +853,149 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 }
                 break;
             case REQUEST_PERMISSION_WRITE_FINE_LOCATION:
-                String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-                String op = AppOpsManagerCompat.permissionToOp(permission);
-                int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-                if (result == AppOpsManagerCompat.MODE_IGNORED
-                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    DLOG.d("onRequestPermissionsResult", "onRequestPermissionsResult");
-                    Toast.makeText(this,
-                            getString(R.string.manual_open_permission_hint),
-                            Toast.LENGTH_SHORT).show();
+                //                String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+                //                String op = AppOpsManagerCompat.permissionToOp(permission);
+                //                int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+                //                if (result == AppOpsManagerCompat.MODE_IGNORED
+                //                        && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                //                    DLOG.d("onRequestPermissionsResult", "onRequestPermissionsResult");
+                //                    Toast.makeText(this,
+                //                            getString(R.string.manual_open_permission_hint),
+                //                            Toast.LENGTH_SHORT).show();
+                //                }
+                DLOG.d(TAG, "grantResults.length:" + grantResults.length);
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Toast.makeText(SportDetailActivity.this, "您已授权~", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(SportDetailActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        Toast.makeText(SportDetailActivity.this, "必须要授权才能进行运动哦~", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        showPermissionDialog();
+                    }
                 }
                 break;
         }
     }
 
-    public boolean checkLocationPermission() {
-        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        String op = AppOpsManagerCompat.permissionToOp(permission);
-        int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
-        if (result == AppOpsManagerCompat.MODE_IGNORED
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            DLOG.d(TAG, "没有定位权限");
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                Toast.makeText(this,
-                        getString(R.string.manual_open_permission_hint),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+    public void showPermissionDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("重要提示")
+                .setMessage("请授予应用定位权限，应用才可以正常工作~")
+                .setPositiveButton("去授权", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //引导用户至设置页手动授权
+                        Toast.makeText(SportDetailActivity.this, "请授予应用定位权限~", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
+                        intent1.setData(uri);
+                        startActivity(intent1);
+                        finish();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //引导用户手动授权，权限请求失败
+                        Toast.makeText(SportDetailActivity.this, "必须要授权才能进行运动哦~", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).setCancelable(false).show();
+    }
+
+    public void checkLocationPermissonNew() {
+        if (ContextCompat.checkSelfPermission(SportDetailActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(SportDetailActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+            DLOG.d(TAG, "没有授予");
+        } else {
+            DLOG.d(TAG, "授予了");
+            // 小米手机5.0，无法正确获得是否授权
+            if (SystemUtil.getRomType().equals(SystemUtil.SYS_MIUI)) {
+                String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+                String op = AppOpsManagerCompat.permissionToOp(permission);
+                int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+                DLOG.d(TAG, "result:" + result);
+                if (result == AppOpsManagerCompat.MODE_IGNORED) {
+                    DLOG.d(TAG, "没有定位权限");
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        if (!testAppops()) {
+                            handler.postDelayed(runnable, WARM_UP_TIME);
+                            showPermissionDialog();
+                        }
+                    } else {
+                        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                    }
+                } else {
+                    // 有权限或者默认。
+                    DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
+                }
             }
+        }
+    }
+
+    /**
+     * checkOp：小米手机2 5.0，授权返回0，拒绝返回1
+     *
+     * @return
+     */
+    public boolean testAppops() {
+        AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int checkOp = appOpsManager.checkOp(AppOpsManager.OPSTR_FINE_LOCATION, Binder.getCallingUid(), getPackageName());
+            DLOG.d(TAG, "checkOp:" + checkOp);
+            if (checkOp == AppOpsManager.MODE_IGNORED) {
+                DLOG.d(TAG, "权限被拒绝了");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkLocationPermission() {
+
+        DLOG.d(TAG + "SystemRom: ", SystemUtil.getRomType());
+        // 小米手机5.0权限
+        if (SystemUtil.getRomType().equals(SystemUtil.SYS_MIUI)) {
+            String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+            String op = AppOpsManagerCompat.permissionToOp(permission);
+            int result = AppOpsManagerCompat.noteProxyOp(context, op, context.getPackageName());
+            if (result == AppOpsManagerCompat.MODE_IGNORED
+                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                DLOG.d(TAG, "没有定位权限");
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    Toast.makeText(this,
+                            getString(R.string.manual_open_permission_hint),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            REQUEST_PERMISSION_WRITE_FINE_LOCATION);
+                }
+                return false;
+            } else {
+                // 有权限或者默认。
+                DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
+                return true;
+            }
+        }
+        // 判断定位服务开关
+        if (!locationManager
+                .isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)) {
+            buildLocationServiceDialog();
             return false;
         } else {
-            // 有权限或者默认。
-            DLOG.d(TAG, "ACCESS_FINE_LOCATION was GRANTED!");
             return true;
         }
     }
@@ -1083,21 +1241,21 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             btStart.setVisibility(View.VISIBLE);
                             btStart.setText("查看锻炼结果");
 
-//                            if (historySportEntry.isValid()) {
-//                                if (historySportEntry.isQualified()) {
-//                                    tvResult.setText(R.string.qualified);
-//                                    tvResult.setTextColor(Color.GREEN);
-//                                    ivFinished.setVisibility(View.VISIBLE);
-//                                } else {
-//                                    tvResult.setText(R.string.notQualified);
-//                                    tvResult.setTextColor(Color.RED);
-//                                    ivHelp.setVisibility(View.VISIBLE);
-//                                }
-//                            } else {
-//                                tvResult.setText(R.string.abnormalData);
-//                                tvResult.setTextColor(Color.RED);
-//                                ivHelp.setVisibility(View.VISIBLE);
-//                            }
+                            //                            if (historySportEntry.isValid()) {
+                            //                                if (historySportEntry.isQualified()) {
+                            //                                    tvResult.setText(R.string.qualified);
+                            //                                    tvResult.setTextColor(Color.GREEN);
+                            //                                    ivFinished.setVisibility(View.VISIBLE);
+                            //                                } else {
+                            //                                    tvResult.setText(R.string.notQualified);
+                            //                                    tvResult.setTextColor(Color.RED);
+                            //                                    ivHelp.setVisibility(View.VISIBLE);
+                            //                                }
+                            //                            } else {
+                            //                                tvResult.setText(R.string.abnormalData);
+                            //                                tvResult.setTextColor(Color.RED);
+                            //                                ivHelp.setVisibility(View.VISIBLE);
+                            //                            }
 
                             //非正常结束
                             if (historySportEntry.getEndedAt() == 0) {
@@ -1135,10 +1293,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             llResult.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (!historySportEntry.isQualified()) {
-                                        WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                                    }
+                                    WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
                                 }
                             });
 
@@ -1148,8 +1304,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         } else {
                             // 判断网络提交异常次数 <= 3次，提示用户再次提交
-                            if (COMMIT_AGAIN_TIMES++ < 3) {
-
+                            if (commitTimes++ < 3) {
                                 showRetryDialog(context, COMMIT_AGAIN_MSG);
                                 progressDialog.dismissCurrentDialog();
                                 return false;
@@ -1387,12 +1542,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        if (mapView != null) {
+            mapView.onDestroy();
+        }
 
         if (autoAdjustBrightness) {
             BrightnessUtil.startAutoAdjustBrightness(this);
         }
 
+        if (locationDialog != null && locationDialog.isShowing()) {
+            locationDialog.dismissCurrentDialog();
+        }
         //页面销毁移除未完成的网络请求
         OkHttpUtils.getInstance().cancelTag(TAG);
         // EventManager.ins().removeListener(EventTag.ON_STEP_CHANGE, eventListener);
