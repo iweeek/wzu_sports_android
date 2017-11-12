@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "com.guangyangyundong.sport"
         minSdkVersion 19
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 19
         versionName "1.1.0.5a10bd4"
         manifestPlaceholders = [YOUR_APP_KEY: "57c68fab67e58ecacf002627"]
