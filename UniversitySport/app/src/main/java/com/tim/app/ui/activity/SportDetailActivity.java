@@ -172,20 +172,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     static final int STATE_END = 3;//结束
     static final int STATE_NETWORK_ERROR = 4;//网络原因结束
     private int state = STATE_NORMAL;
+    // 定位提示最少显示 3 秒钟
+    private static final int STOP_TIME = 3000;
 
-    //延时3秒
-    int STOP_TIME = 3000;
-    Handler handler = new Handler();
-    Runnable runnable = new Runnable() {
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            // TODO Auto-generated method stub
-            //要做的事情，这里再次调用此Runnable对象，以实现每两秒实现一次的定时器操作
             locationDialog.dismissCurrentDialog();
         }
-
     };
-
 
     private int screenOffTimeout; //屏幕超时时间
     private int screenKeepLightTime;
