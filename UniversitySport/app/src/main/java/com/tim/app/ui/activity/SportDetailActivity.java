@@ -946,6 +946,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
     /**
      * checkOp：小米手机2 5.0，授权返回0，拒绝返回1
+     *
      * @return
      */
     public boolean testAppops() {
@@ -1216,6 +1217,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 historySportEntry.setKcalConsumed(json.getInt("kcalConsumed"));
                                 historySportEntry.setQualified(json.getBoolean("qualified"));
                                 historySportEntry.setValid(json.getBoolean("isValid"));
+                                historySportEntry.setVerified(json.getBoolean("isVerified"));
                                 historySportEntry.setQualifiedDistance(json.getInt("qualifiedDistance"));
                                 historySportEntry.setQualifiedCostTime(json.getInt("qualifiedCostTime"));
                                 historySportEntry.setMinCostTime(json.getLong("minCostTime"));
@@ -1236,30 +1238,60 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             btStart.setVisibility(View.VISIBLE);
                             btStart.setText("查看锻炼结果");
 
-                            if (historySportEntry.isValid()) {
+                            //                            if (historySportEntry.isValid()) {
+                            //                                if (historySportEntry.isQualified()) {
+                            //                                    tvResult.setText(R.string.qualified);
+                            //                                    tvResult.setTextColor(Color.GREEN);
+                            //                                    ivFinished.setVisibility(View.VISIBLE);
+                            //                                } else {
+                            //                                    tvResult.setText(R.string.notQualified);
+                            //                                    tvResult.setTextColor(Color.RED);
+                            //                                    ivHelp.setVisibility(View.VISIBLE);
+                            //                                }
+                            //                            } else {
+                            //                                tvResult.setText(R.string.abnormalData);
+                            //                                tvResult.setTextColor(Color.RED);
+                            //                                ivHelp.setVisibility(View.VISIBLE);
+                            //                            }
+
+                            //非正常结束
+                            if (historySportEntry.getEndedAt() == 0) {
+                                tvResult.setText("未结束");
+                                tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
+                            } else {
+                                //是否达标
                                 if (historySportEntry.isQualified()) {
-                                    tvResult.setText(R.string.qualified);
-                                    tvResult.setTextColor(Color.GREEN);
-                                    ivFinished.setVisibility(View.VISIBLE);
+                                    //是否审核
+                                    if (historySportEntry.isVerified()) {
+                                        //是否有效
+                                        if (historySportEntry.isValid()) {
+                                            tvResult.setText("达标");
+                                            tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                            ivFinished.setVisibility(View.VISIBLE);
+                                        } else {
+                                            tvResult.setText("审核未通过");
+                                            tvResult.setTextColor(Color.RED);
+                                            ivHelp.setVisibility(View.VISIBLE);
+                                        }
+                                    } else {
+                                        tvResult.setText("达标待审核");
+                                        tvResult.setTextColor(Color.RED);
+                                        ivHelp.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
-                                    tvResult.setText(R.string.notQualified);
+                                    tvResult.setText("未达标");
                                     tvResult.setTextColor(Color.RED);
                                     ivHelp.setVisibility(View.VISIBLE);
                                 }
-                            } else {
-                                tvResult.setText(R.string.abnormalData);
-                                tvResult.setTextColor(Color.RED);
-                                ivHelp.setVisibility(View.VISIBLE);
                             }
 
                             tvResult.setVisibility(View.VISIBLE);
                             llResult.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (historySportEntry.isValid() && !historySportEntry.isQualified()) {
-                                        WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                                    }
+                                    WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
                                 }
                             });
 
