@@ -1103,10 +1103,10 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                             llResult.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (historySportEntry.isValid() && !historySportEntry.isQualified() ){
+                                    // if (historySportEntry.isValid() && !historySportEntry.isQualified()) {
                                         WebViewActivity.loadUrl(SportDetailActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                        overridePendingTransition(R.anim.right_in,R.anim.left_out);
-                                    }
+                                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                                    // }
                                 }
                             });
 
@@ -1134,7 +1134,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 });
     }
 
-    public void showRetryDialog(Context context , String message) {
+    public void showRetryDialog(Context context, String message) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_message, null);
         TextView confirm;    //确定按钮
         final TextView content;    //内容
