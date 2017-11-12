@@ -15,7 +15,6 @@ import com.application.library.widget.EmptyLayout;
 import com.application.library.widget.loadmore.LoadMoreContainer;
 import com.application.library.widget.loadmore.LoadMoreHandler;
 import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
-import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
@@ -131,7 +130,8 @@ public class HistoryDataFragment extends BaseFragment implements View.OnClickLis
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             wrvHistoryData.setLayoutManager(layoutManager);
-            wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.colorLine)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
+            //wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.colorLine)).size((int) getResources().getDimension(R.dimen.dimen_2)).build());
+            //wrvHistoryData.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity()).color(getResources().getColor(R.color.colorLine2)).size((int) getResources().getDimension(R.dimen.dimen_1)).build());
 
             headView = (HistoryDataHeadView) LayoutInflater.from(getActivity()).inflate(R.layout.history_data_head_view, null);
 
