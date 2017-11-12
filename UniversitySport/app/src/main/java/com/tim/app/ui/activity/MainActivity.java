@@ -3,6 +3,7 @@ package com.tim.app.ui.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -33,14 +34,15 @@ import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
-import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
+import com.tim.app.server.entry.User;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.cell.GlideApp;
 import com.tim.app.ui.view.HomepageHeadView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.MathUtil;
 
@@ -236,8 +238,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 //                                    break;
                                 //                                case R.id.nav_approval://审批
                                 //                                    break;
-                                //                                case R.id.nav_customer_service://客服
-                                //                                    break;
+                                case R.id.nav_help://客服
+                                    WebViewActivity.loadUrl(MainActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    break;
                                 case R.id.nav_set://设置
                                     Intent intentSetting = new Intent(MainActivity.this, SettingActivity.class);
                                     startActivity(intentSetting);
@@ -320,7 +323,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 查询首页底部运动方式
      */
     public void queryRunningSport() {
-        ServerInterface.instance().queryRunningSports(AppConstant.UNIVERSITY_ID, mIsEnable, student.isMan(), new JsonResponseCallback() {
+        ServerInterface.instance().queryRunningSports(student.getUniversityId(), mIsEnable, student.isMan(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -398,7 +401,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      * 查询首页顶部本学期运动记录
      */
     public void queryCurTermData() {
-        ServerInterface.instance().queryCurTermData(AppConstant.UNIVERSITY_ID, student.getId(), new JsonResponseCallback() {
+        ServerInterface.instance().queryCurTermData(student.getUniversityId(), student.getId(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 if (errCode == 0) {
@@ -455,7 +458,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
      */
     public void queryAreaSport() {
         //        mAreaSportEntryList = new ArrayList<>();
-        ServerInterface.instance().queryAreaSport(AppConstant.UNIVERSITY_ID, new JsonResponseCallback() {
+        ServerInterface.instance().queryAreaSport(student.getUniversityId(), new JsonResponseCallback() {
             @Override
             public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
                 SportEntry areaSportEntry = new SportEntry();
@@ -476,6 +479,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                             areaSportEntry.setTargetTime(jsonObject.getInt("qualifiedCostTime"));
                             areaSportEntry.setAcquisitionInterval(jsonObject.getInt("acquisitionInterval"));
+                            areaSportEntry.setParticipantNum(jsonObject.getInt("participantNum"));
 
                             areaSportEntry.setImgUrl(jsonObject.getString("imgUrl"));
                             areaSportEntry.setBgDrawableId(R.drawable.ic_bg_area);
@@ -529,6 +533,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         PackageManager manager = context.getPackageManager();
                         PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
 
+                        SharedPreferences sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE);
+                        int ignoreVersion = sp.getInt(User.IGNORE_VERSION, 0);
+                        DLOG.d(TAG, "ignoreVersion:" + ignoreVersion);
+                        if (ignoreVersion == versionCode) {
+                            return false;
+                        }
+
                         DLOG.d(TAG, "服务器版本" + versionCode);
                         DLOG.d(TAG, "客户端版本" + info.versionCode);
                         if (versionCode > info.versionCode) {
@@ -555,6 +566,14 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
+                                    }
+                                });
+                                builder.setNeutralButton("忽略本次", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        SharedPreferences.Editor sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE).edit();
+                                        sp.putInt(User.IGNORE_VERSION, versionCode);
+                                        sp.apply();
                                     }
                                 });
                             }

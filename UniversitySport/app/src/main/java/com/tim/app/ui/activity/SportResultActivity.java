@@ -33,7 +33,6 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.PolylineOptions;
 import com.amap.api.maps.utils.SpatialRelationUtil;
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker;
@@ -48,6 +47,7 @@ import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
+import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.MarkerOverlay;
 import com.tim.app.util.MathUtil;
 
@@ -93,6 +93,9 @@ public class SportResultActivity extends ToolbarActivity {
     private TextView tvTargetSpeed;
     private TextView tvResult;//运动结果
     private ImageView ivLocation;
+    private ImageView ivHelp;
+    private ImageView ivFinished;
+    private RelativeLayout rlContainer;
     private LinearLayout llTargetContainer;
     private Button btTest;
     private ProgressDialog progressDialog;
@@ -289,7 +292,7 @@ public class SportResultActivity extends ToolbarActivity {
 
         if (historyRunningSportEntry != null) {
             queryRunningActivity(historyRunningSportEntry.getId());
-        } else if (historyAreaSportEntry != null){
+        } else if (historyAreaSportEntry != null) {
             llTargetContainer.setVisibility(View.GONE);
             btDrawLine.setVisibility(View.GONE);
             setupArea();
@@ -349,8 +352,8 @@ public class SportResultActivity extends ToolbarActivity {
                         }
 
                         //获取信息完毕，接下来处理坐标点
-                        mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
-                        mNormalPoints = getNormalPoints(mNormalDrawPoints);
+                        // mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
+                        // mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
                         // if (mDrawPoints.size() > 0) {
@@ -376,23 +379,35 @@ public class SportResultActivity extends ToolbarActivity {
                         if (historyAreaSportEntry.getEndedAt() == 0) {
                             tvResult.setText("非正常结束");
                             tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+                            ivHelp.setVisibility(View.VISIBLE);
                         } else {
                             if (qualified) {
                                 tvResult.setText("达标");
                                 tvResult.setTextColor(Color.GREEN);
+                                ivFinished.setVisibility(View.VISIBLE);
                             } else {
                                 tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
                         tvResult.setVisibility(View.VISIBLE);
+                        rlContainer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (historyAreaSportEntry.getEndedAt() == 0 || !historyAreaSportEntry.isQualified()) {
+                                    WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                                }
+                            }
+                        });
 
                         // tvSportName.setText(jsonObject.getJSONObject("areaSport")
                         //         .getString("name"));
                         tvSportName.setText(historyAreaSportEntry.getLocationPoint().getAreaName());
 
                         elapseTime = jsonObject.getLong("costTime");
-                        tvElapseTime.setText((int)elapseTime / 60 + " 分钟");
+                        tvElapseTime.setText((int) elapseTime / 60 + " 分钟");
 
                         // if (elapseTime != 0) {
                         //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
@@ -414,6 +429,8 @@ public class SportResultActivity extends ToolbarActivity {
                         llTargetDistance.setVisibility(View.GONE);
                         llTargetSpeed.setVisibility(View.GONE);
 
+                        String curConsumeEnergy = jsonObject.getString("kcalConsumed");
+                        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
                         llFloatingWindow.setVisibility(View.VISIBLE);
                         progressDialog.dismissCurrentDialog();
                         return true;
@@ -486,8 +503,8 @@ public class SportResultActivity extends ToolbarActivity {
                         }
 
                         //获取信息完毕，接下来处理坐标点
-                        mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
-                        mNormalPoints = getNormalPoints(mNormalDrawPoints);
+                        // mNormalDrawPoints = getNormalDrawPoints(mDrawPoints, MyLocationStyle.LOCATION_TYPE_LOCATE);
+                        // mNormalPoints = getNormalPoints(mNormalDrawPoints);
 
                         //设置起始坐标
                         if (mDrawPoints.size() > 0) {
@@ -510,24 +527,74 @@ public class SportResultActivity extends ToolbarActivity {
 
                         boolean qualified = jsonObject.getBoolean("qualified");
                         boolean isValid = jsonObject.getBoolean("isValid");
+
+                        boolean isVerified = jsonObject.getBoolean("isVerified");
+                        //boolean isVerified = true;    //先写死，以后用的时候再改
+
+                        //非正常结束
                         if (historyRunningSportEntry.getEndedAt() == 0) {
-                            tvResult.setText("非正常结束");
-                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+                            tvResult.setText("未结束");
+                            tvResult.setTextColor(Color.RED);
+                            ivHelp.setVisibility(View.VISIBLE);
                         } else {
-                            if (isValid) {
-                                if (qualified) {
-                                    tvResult.setText("达标");
-                                    tvResult.setTextColor(Color.GREEN);
+                            //是否达标
+                            if (qualified) {
+                                //是否审核
+                                if (isVerified) {
+                                    //是否有效
+                                    if (isValid) {
+                                        tvResult.setText("达标");
+                                        tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                        ivFinished.setVisibility(View.VISIBLE);
+                                    } else {
+                                        tvResult.setText("审核未通过");
+                                        tvResult.setTextColor(Color.RED);
+                                        ivHelp.setVisibility(View.VISIBLE);
+                                    }
                                 } else {
-                                    tvResult.setText("未达标");
+                                    tvResult.setText("达标待审核");
                                     tvResult.setTextColor(Color.RED);
+                                    ivHelp.setVisibility(View.VISIBLE);
                                 }
                             } else {
-                                tvResult.setText("数据异常");
+                                tvResult.setText("未达标");
                                 tvResult.setTextColor(Color.RED);
+                                ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
+
+//                        if (historyRunningSportEntry.getEndedAt() == 0) {
+//                            tvResult.setText("非正常结束");
+//                            tvResult.setTextColor(Color.parseColor("#FFAA2B"));
+//                            ivHelp.setVisibility(View.VISIBLE);
+//                        } else {
+//                            if (isValid) {
+//                                if (qualified) {
+//                                    tvResult.setText("达标");
+//                                    tvResult.setTextColor(Color.GREEN);
+//                                    ivFinished.setVisibility(View.VISIBLE);
+//                                } else {
+//                                    tvResult.setText("未达标");
+//                                    tvResult.setTextColor(Color.RED);
+//                                    ivHelp.setVisibility(View.VISIBLE);
+//                                }
+//                            } else {
+//                                tvResult.setText("数据异常");
+//                                tvResult.setTextColor(Color.RED);
+//                                ivHelp.setVisibility(View.VISIBLE);
+//                            }
+//                        }
+
                         tvResult.setVisibility(View.VISIBLE);
+                        rlContainer.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (historyRunningSportEntry.getEndedAt() == 0 || !historyRunningSportEntry.isQualified()) {
+                                    WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
+                                }
+                            }
+                        });
 
                         tvSportName.setText(jsonObject.getJSONObject("runningSport")
                                 .getString("name"));
@@ -654,6 +721,7 @@ public class SportResultActivity extends ToolbarActivity {
 
                 DLOG.d(TAG, "onClick mNormalDrawPoints.size: " + mNormalDrawPoints.size());
                 DLOG.d(TAG, "onClick mDrawPoints.size: " + mDrawPoints.size());
+                DLOG.d(TAG, "onClick mPoints.size: " + mPoints.size());
                 // if (historySportEntry instanceof HistoryAreaSportEntry) {
                 //     for (int i = 0; i < mDrawPoints.size(); i++) {
                 //         if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
@@ -665,12 +733,12 @@ public class SportResultActivity extends ToolbarActivity {
                 //     }
                 // } else if (historySportEntry instanceof HistoryRunningSportEntry) {
                 for (int i = 0; i < mDrawPoints.size(); i++) {
-                    if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
-                        drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
-                        ll = mDrawPoints.get(i).getLL();
-                        // DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
-                        //         ", i: " + i);
-                    }
+                    // if (mDrawPoints.get(i).getLocationType() == MyLocationStyle.LOCATION_TYPE_LOCATE) {
+                    drawLine(ll, mDrawPoints.get(i).getLL(), mDrawPoints.get(i).isNormal());
+                    ll = mDrawPoints.get(i).getLL();
+                    // DLOG.d(TAG, "onClick drawLine ll: " + ll + ", type: " + mDrawPoints.get(i).getLocationType() +
+                    //         ", i: " + i);
+                    // }
                 }
                 // }
 
@@ -689,7 +757,7 @@ public class SportResultActivity extends ToolbarActivity {
                     //方式二：
                     // LatLngBounds bounds = getLatLngBounds(mNormalPoints);  //根据提供的点缩放至屏幕可见范围。
 
-                    DLOG.d(TAG, "onClick mNormalPoints.size: " + mPoints.size());
+                    DLOG.d(TAG, "onClick mNormalPoints.size: " + mNormalPoints.size());
                     // LatLngBounds bounds = new LatLngBounds(mNormalPoints.get(0), mNormalPoints.get(mNormalPoints.size() - 2));
                     // for (LatLng point : mPoints) {
                     // DLOG.d(TAG, "point.latitude:" + point.latitude);
@@ -917,6 +985,9 @@ public class SportResultActivity extends ToolbarActivity {
         tvTargetSpeedLabel = (TextView) findViewById(R.id.tvTargetTitle);
         tvTargetSpeed = (TextView) findViewById(R.id.tvTargetValue);
         ivLocation = (ImageView) findViewById(R.id.ivLocation);
+        ivHelp = (ImageView) findViewById(R.id.ivHelp);
+        ivFinished = (ImageView) findViewById(R.id.ivFinished);
+        rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
         //        ibMenu = (ImageView) findViewById(R.id.ivTitleMenu);
         slideUnlockView = (SlideUnlockView) findViewById(R.id.slideUnlockView);
         btDrawLine = (Button) findViewById(R.id.btDrawLine);
