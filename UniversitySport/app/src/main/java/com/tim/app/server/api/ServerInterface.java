@@ -267,6 +267,7 @@ public class ServerInterface {
                 "    kcalConsumed\n" +
                 "    qualified\n" +
                 "    isValid\n" +
+                "    isVerified\n" +
                 //                "    speed\n" +
                 //                "    stepPerSecond\n" +
                 //                "    distancePerStep\n" +
@@ -295,6 +296,8 @@ public class ServerInterface {
                 "    qualified\n" +
                 "    qualifiedCostTime\n" +
                 "    kcalConsumed\n" +
+                "    isValid\n" +
+                "    isVerified\n" +
                 // "    areaSport {\n" +
                 // "      name\n" +
                 // "    }\n" +
