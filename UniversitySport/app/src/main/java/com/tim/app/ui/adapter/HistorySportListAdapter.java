@@ -119,15 +119,15 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //距离/1000后单位为公里
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                // int distance = runningSportEntry.getDistance();
-                double distance = runningSportEntry.getDistance() * 1.0 / 1000;
-                String result = String.format("%.2f", distance);
-                tvLeft.setText(result + " ");
+                int distance = runningSportEntry.getDistance();
+                // double distance = runningSportEntry.getDistance() * 1.0 / 1000;
+                // String result = String.format("%.2f", distance);
+                tvLeft.setText(distance + " ");
                 tvLeft.setTypeface(getTypeface(mContext), Typeface.ITALIC);  //设置字体 斜体
 
                 //设置单位
                 TextView tvUnit = (TextView) ll.findViewById(R.id.tvUnit);
-                tvUnit.setText("公里");
+                tvUnit.setText("米");
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
@@ -207,8 +207,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //耗时
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                Double t = areaSportEntry.getCostTime() / 60.0;
-                String result = String.format("%.1f", t) + " ";
+                Double costTime = areaSportEntry.getCostTime() / 60.0;
+                String result = String.format("%.0f", costTime) + " ";
                 tvLeft.setText(result);
                 tvLeft.setTypeface(getTypeface(getContext()), Typeface.ITALIC);  //设置字体 斜体
 
