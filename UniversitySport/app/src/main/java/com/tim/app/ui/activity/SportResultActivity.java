@@ -339,7 +339,8 @@ public class SportResultActivity extends ToolbarActivity {
                         JSONArray jsonArray = json.getJSONObject("data").getJSONObject("areaActivity").getJSONArray("data");
                         if (jsonArray.length() == 0) {
                             Toast.makeText(SportResultActivity.this, noSportDataMsg, Toast.LENGTH_SHORT).show();
-                            return true;
+                            // progressDialog.dismissCurrentDialog();
+                            // return true;
                         }
 
                         //添加画线点
@@ -413,10 +414,8 @@ public class SportResultActivity extends ToolbarActivity {
                         rlContainer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (historyAreaSportEntry.getEndedAt() == 0 || !historyAreaSportEntry.isQualified()) {
-                                    WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                                }
+                                WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                overridePendingTransition(R.anim.right_in, R.anim.left_out);
                             }
                         });
 
@@ -585,10 +584,8 @@ public class SportResultActivity extends ToolbarActivity {
                         rlContainer.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (historyRunningSportEntry.getEndedAt() == 0 || !historyRunningSportEntry.isQualified()) {
-                                    WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                                }
+                                WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                overridePendingTransition(R.anim.right_in, R.anim.left_out);
                             }
                         });
 

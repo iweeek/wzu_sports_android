@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -229,6 +228,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                                     //                                    if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
                                     entry.setEndedAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
                                     entry.setValid(runningSportArray.optJSONObject(i).getBoolean("isValid"));
+                                    entry.setVerified(runningSportArray.optJSONObject(i).getBoolean("isVerified"));
                                     //                                    } else {
                                     //                                        continue;
                                     //                                    }
@@ -247,12 +247,16 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                                     HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
                                     entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
                                     entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
+
                                     entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));
                                     entry.setKcalConsumed(Integer.valueOf(areaSportArray.optJSONObject(i).optString("kcalConsumed")));
                                     entry.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
+                                    entry.setValid(areaSportArray.optJSONObject(i).optBoolean("isValid"));
+                                    entry.setVerified(areaSportArray.optJSONObject(i).optBoolean("isVerified"));
                                     entry.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
                                     entry.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
                                     entry.setEndedAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
+
                                     JSONObject point = areaSportArray.getJSONObject(i).getJSONObject("location");
                                     FixLocationOutdoorSportPoint locationPoint = new FixLocationOutdoorSportPoint();
                                     locationPoint.setAreaName(point.getString("name"));
@@ -269,7 +273,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                                         item.historySportEntryList = new ArrayList<HistorySportEntry>();
                                     }
                                     item.historySportEntryList.add(entry);
-
                                 }
                             }
 
@@ -698,7 +701,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 if (entry.isQualified() && entry.isValid() && entry.isVerified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
-
             }
 
             if (historySportEntry.size() != 0) {

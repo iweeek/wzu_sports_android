@@ -577,11 +577,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
             MyLocationStyle myLocationStyle = aMap.getMyLocationStyle();
             DLOG.d(TAG, "myLocationStyle.getInterval():" + myLocationStyle.getInterval());
 
-//            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
-//            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
-//            Log.d(TAG, "elapseTime:" + elapseTime);
-//            tvElapsedTime.setText(time);
-//            DLOG.d(TAG, "elapseTime:" + elapseTime);
+            //            elapseTime = (long) ((System.currentTimeMillis() - startTime + 0.5) / 1000);
+            //            String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+            //            Log.d(TAG, "elapseTime:" + elapseTime);
+            //            tvElapsedTime.setText(time);
+            //            DLOG.d(TAG, "elapseTime:" + elapseTime);
         }
 
         Bundle bundle = location.getExtras();
@@ -1047,10 +1047,8 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             llResult.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (!historySportEntry.isQualified()) {
-                                        WebViewActivity.loadUrl(SportFixedLocationActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
-                                        overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                                    }
+                                    WebViewActivity.loadUrl(SportFixedLocationActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                                    overridePendingTransition(R.anim.right_in, R.anim.left_out);
                                 }
                             });
                             return true;
