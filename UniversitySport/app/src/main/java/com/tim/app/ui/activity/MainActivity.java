@@ -226,6 +226,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             menuItem.setChecked(true);
                             //                            mDrawerLayout.closeDrawers();
                             switch (menuItem.getItemId()) {
+                                case R.id.nav_rank:
+                                    Intent intentRank = new Intent(MainActivity.this, SchoolRankingActivity.class);
+                                    startActivity(intentRank);
+                                    break;
                                 case R.id.nav_survey://历史数据概况
                                     Intent intent = new Intent(MainActivity.this, HistorySportActivity.class);
                                     startActivity(intent);
@@ -241,7 +245,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 //                                    break;
                                 //                                case R.id.nav_approval://审批
                                 //                                    break;
-                                case R.id.nav_help://客服
+                                case R.id.nav_help://帮助
                                     WebViewActivity.loadUrl(MainActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
                                     break;
                                 case R.id.nav_set://设置
