@@ -68,7 +68,7 @@ public class HistorySportActivity extends ToolbarActivity {
                 }
                 AppCompatImageView overflow = (AppCompatImageView) outViews.get(0);
                 overflow.setColorFilter(Color.WHITE);
-                overflow.setImageResource(R.drawable.ic_screen);
+                overflow.setImageResource(R.drawable.ic_option);
                 removeOnGlobalLayoutListener(decorView, this);
             }
         });
