@@ -131,6 +131,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private int initCalcSteps = 0;//初始化的步数
     private double distancePerStep = 0; //步幅
     private double stepPerSecond = 0; //步幅
+    private int acquisitionTimes = 1;//两点相似次数
     private LocationManager locationManager;
 
     private TextView tvSportName;
@@ -575,16 +576,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     bdDividend = new BigDecimal(stepsInterval);
                     bdDevisor = new BigDecimal(sportEntry.getAcquisitionInterval());
                     stepPerSecond = bdDividend.divide(bdDevisor, 2, RoundingMode.HALF_UP).doubleValue();
-                    //                    try {
-                    //                        //                        fos = openFileOutput("testMode", MODE_PRIVATE);
-                    //                        fos.write(((++counter) + ">>>" + s1 + s + "\n").getBytes());
-                    //                    } catch (FileNotFoundException e) {
-                    //                        e.printStackTrace();
-                    //                    } catch (IOException e) {
-                    //                        e.printStackTrace();
-                    //                    } finally {
-                    //
-                    //                    }
                 }
 
                 // toastText = "绘制曲线，上一次坐标： " + lastLatLng + "， 新坐标：" + newLatLng
@@ -592,31 +583,65 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 //         "， 当前电量: " + batteryLevel + "%" + "locationType: " + locationType;
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
-                if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
-                    //位置漂移
-                    //return;
-                    toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
-                    Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                    isNormal = false;
-                    drawLine(lastLatLng, newLatLng, isNormal);
-                    // currentDistance += distanceInterval;
+                if (!lastLatLng.equals(newLatLng)) {
+                    // 前后定位点位置不同
+                    if (acquisitionTimes == 1) {
+                        if (distanceInterval / 1 * sportEntry.getAcquisitionInterval() > speedLimitation) {
+                            toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
+                            Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                            isNormal = false;
+                            drawLine(lastLatLng, newLatLng, isNormal);
+                            // currentDistance += distanceInterval;
+                        } else {
+                            isNormal = true;
+                            drawLine(lastLatLng, newLatLng, isNormal);
+                            currentDistance += distanceInterval;
+
+                            if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                                targetFinishedTime = elapseTime;
+                            }
+
+                            tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
+                            bdDividend = new BigDecimal(currentDistance);
+                            bdDevisor = new BigDecimal(elapseTime);
+                            BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                            // 解决速度过大
+                            if (bdResult.compareTo(new BigDecimal(10)) < 0) {
+                                tvAverSpeed.setText(bdResult.toString() + " ");
+                            }
+                        }
+                    } else {
+                        // 累加采样间隔时间
+                        if (distanceInterval / (acquisitionTimes * sportEntry.getAcquisitionInterval()) > speedLimitation) {
+                            toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
+                            Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
+                            isNormal = false;
+                            drawLine(lastLatLng, newLatLng, isNormal);
+                            // currentDistance += distanceInterval;
+                        } else {
+                            isNormal = true;
+                            drawLine(lastLatLng, newLatLng, isNormal);
+                            currentDistance += distanceInterval;
+
+                            if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
+                                targetFinishedTime = elapseTime;
+                            }
+
+                            tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
+                            bdDividend = new BigDecimal(currentDistance);
+                            bdDevisor = new BigDecimal(elapseTime);
+                            BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
+                            // 解决速度过大
+                            if (bdResult.compareTo(new BigDecimal(10)) < 0) {
+                                tvAverSpeed.setText(bdResult.toString() + " ");
+                            }
+                        }
+                        acquisitionTimes = 1;
+                    }
                 } else {
-                    isNormal = true;
-                    drawLine(lastLatLng, newLatLng, isNormal);
-                    currentDistance += distanceInterval;
-
-                    if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
-                        targetFinishedTime = elapseTime;
-                    }
-
-                    tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
-                    bdDividend = new BigDecimal(currentDistance);
-                    bdDevisor = new BigDecimal(elapseTime);
-                    BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
-                    // 解决速度过大
-                    if (bdResult.compareTo(new BigDecimal(10)) < 0) {
-                        tvAverSpeed.setText(bdResult.toString() + " ");
-                    }
+                    // 两次坐标点相同，记录次数（初始值为1）
+                    DLOG.d(TAG, "两个点一样： newLatLng：" + newLatLng + "，lastLatLng：" + lastLatLng);
+                    acquisitionTimes++;
                 }
 
                 if (SensorService.stepCounterEnabled) {
@@ -821,9 +846,16 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private void drawLine(LatLng oldData, LatLng newData, boolean isNormal) {
         // 绘制曲线
         if (isNormal) {
-            aMap.addPolyline((new PolylineOptions())
-                    .add(oldData, newData)
-                    .geodesic(true).color(Color.GREEN));
+            // if (!isDrawYellow) {
+                aMap.addPolyline((new PolylineOptions())
+                        .add(oldData, newData)
+                        .geodesic(true).color(Color.GREEN));
+            // } else {
+            //     isDrawYellow = false;
+            //     aMap.addPolyline((new PolylineOptions())
+            //             .add(oldData, newData)
+            //             .geodesic(true).color(Color.YELLOW));
+            // }
         } else {
             aMap.addPolyline((new PolylineOptions())
                     .add(oldData, newData)
