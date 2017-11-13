@@ -1,15 +1,27 @@
 package com.tim.app.ui.activity;
 
+import android.app.Activity;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatImageView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.application.library.util.SmoothSwitchScreenUtil;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.ui.adapter.TabAdapter;
 import com.tim.app.ui.fragment.HistoryDataFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 历史运动数据
@@ -22,6 +34,13 @@ public class HistorySportActivity extends ToolbarActivity {
     private ViewPager vpHistoryData;
     private TabAdapter pagerAdapter;
 
+    private HistoryDataFragment fragmentWeek;
+    private HistoryDataFragment fragmentMonth;
+    private HistoryDataFragment fragmentTerm;
+
+    public int currentState = -1;
+    private List<HistoryDataFragment> historySportFragmentList = new ArrayList<>();
+
     @Override
     protected void onBeforeSetContentLayout() {
         super.onBeforeSetContentLayout();
@@ -29,17 +48,75 @@ public class HistorySportActivity extends ToolbarActivity {
     }
 
     @Override
+    protected void init(Bundle savedInstanceState) {
+        super.init(savedInstanceState);
+        setOverflowButtonColor(this);
+    }
+
+    public static void setOverflowButtonColor(final Activity activity) {
+        final String overflowDescription = activity.getString(R.string.abc_action_menu_overflow_description);
+        final ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+        final ViewTreeObserver viewTreeObserver = decorView.getViewTreeObserver();
+        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                final ArrayList<View> outViews = new ArrayList<View>();
+                decorView.findViewsWithText(outViews, overflowDescription,
+                        View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+                if (outViews.isEmpty()) {
+                    return;
+                }
+                AppCompatImageView overflow=(AppCompatImageView) outViews.get(0);
+                overflow.setColorFilter(Color.WHITE);
+                overflow.setImageResource(R.drawable.ic_screen);
+                removeOnGlobalLayoutListener(decorView,this);
+            }
+        });
+    }
+
+    public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+        }
+        else {
+            v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
+        }
+    }
+
+    @Override
     public void initView() {
         tabLayout = (TabLayout) findViewById(R.id.stbNavBar);
-        vpHistoryData = (ViewPager)findViewById(R.id.vpHistoryData);
+        vpHistoryData = (ViewPager) findViewById(R.id.vpHistoryData);
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK), "本周");
-        pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH), "本月");
-        pagerAdapter.addFragment(HistoryDataFragment.newInstance(AppConstant.TYPE_TERM), "本学期");
+        fragmentWeek = HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK, AppConstant.STATUS_QUALIFIED);
+        fragmentMonth = HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH, AppConstant.STATUS_QUALIFIED);
+        fragmentTerm = HistoryDataFragment.newInstance(AppConstant.TYPE_TERM, AppConstant.STATUS_QUALIFIED);
+        historySportFragmentList.add(fragmentWeek);
+        historySportFragmentList.add(fragmentMonth);
+        historySportFragmentList.add(fragmentTerm);
+        pagerAdapter.addFragment(fragmentWeek, "本周");
+        pagerAdapter.addFragment(fragmentMonth, "本月");
+        pagerAdapter.addFragment(fragmentTerm, "本学期");
         vpHistoryData.setOffscreenPageLimit(2);//除去当前显示页面外，还需要预先加载的页面个数
         vpHistoryData.setAdapter(pagerAdapter);
         vpHistoryData.setCurrentItem(0);
+        vpHistoryData.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                historySportFragmentList.get(position).currentFragmentState = currentState;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         tabLayout.setupWithViewPager(vpHistoryData);
     }
 
@@ -77,4 +154,28 @@ public class HistorySportActivity extends ToolbarActivity {
     protected int getLayoutId() {
         return R.layout.activity_history;
     }
+
+    public interface PageSelectListener {
+        void onPageSelected(int status);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionbar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        for (HistoryDataFragment fragment : historySportFragmentList) {
+            if (fragment.isInit()) {
+                fragment.changeHistoryDataList(item, -1);
+            }
+        }
+        return true;
+
+    }
+
 }

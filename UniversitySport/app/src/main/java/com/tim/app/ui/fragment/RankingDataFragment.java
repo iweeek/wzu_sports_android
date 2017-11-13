@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.application.library.base.BaseFragment;
 import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.application.library.widget.EmptyLayout;

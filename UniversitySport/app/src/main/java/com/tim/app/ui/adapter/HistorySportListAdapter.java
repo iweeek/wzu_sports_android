@@ -75,14 +75,37 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(runningSportEntry.getSportName());
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
+
+//                if (runningSportEntry.getEndedAt() == 0) {
+//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+//                } else {
+//                    if (runningSportEntry.isValid()) {
+//                        if (runningSportEntry.isQualified()) {
+//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+//                        } else {
+//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+//                        }
+//                    } else {
+//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+//                    }
+//                }
+
+                //非正常结束
                 if (runningSportEntry.getEndedAt() == 0) {
-                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                 } else {
-                    if (runningSportEntry.isValid()) {
-                        if (runningSportEntry.isQualified()) {
-                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+                    //是否达标
+                    if (runningSportEntry.isQualified()) {
+                        //是否审核
+                        if (runningSportEntry.isVerified()) {
+                            //是否有效
+                            if (runningSportEntry.isValid()) {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+                            } else {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+                            }
                         } else {
-                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                         }
                     } else {
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
@@ -96,15 +119,15 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //距离/1000后单位为公里
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                // int distance = runningSportEntry.getDistance();
-                double distance = runningSportEntry.getDistance() * 1.0 / 1000;
-                String result = String.format("%.2f", distance);
-                tvLeft.setText(result + " ");
+                int distance = runningSportEntry.getDistance();
+                // double distance = runningSportEntry.getDistance() * 1.0 / 1000;
+                // String result = String.format("%.2f", distance);
+                tvLeft.setText(distance + " ");
                 tvLeft.setTypeface(getTypeface(mContext), Typeface.ITALIC);  //设置字体 斜体
 
                 //设置单位
                 TextView tvUnit = (TextView) ll.findViewById(R.id.tvUnit);
-                tvUnit.setText("公里");
+                tvUnit.setText("米");
 
                 //耗时
                 TextView tvMiddle = (TextView) ll.findViewById(R.id.tvMiddle);
@@ -145,25 +168,48 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(areaSportEntry.getAreaSport());
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
+//                if (areaSportEntry.getEndedAt() == 0) {
+//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+//                } else {
+//                    if (data.historySportEntryList.get(i).isQualified()) {
+//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+//                    } else {
+//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+//                    }
+//                }
+
+                //非正常结束
                 if (areaSportEntry.getEndedAt() == 0) {
-                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                 } else {
-                    if (data.historySportEntryList.get(i).isQualified()) {
-                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                    //是否达标
+                    if (areaSportEntry.isQualified()) {
+                        //是否审核
+                        if (areaSportEntry.isVerified()) {
+                            //是否有效
+                            if (areaSportEntry.isValid()) {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                            } else {
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                            }
+                        } else {
+                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                        }
                     } else {
+                        //未达标
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                     }
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
                 tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
                 //耗时
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                Double t = areaSportEntry.getCostTime() / 60.0;
-                String result = String.format("%.1f", t) + " ";
+                Double costTime = areaSportEntry.getCostTime() / 60.0;
+                String result = String.format("%.0f", costTime) + " ";
                 tvLeft.setText(result);
                 tvLeft.setTypeface(getTypeface(getContext()), Typeface.ITALIC);  //设置字体 斜体
 
