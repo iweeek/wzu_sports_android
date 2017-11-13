@@ -586,7 +586,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 if (!lastLatLng.equals(newLatLng)) {
                     // 前后定位点位置不同
                     if (acquisitionTimes == 1) {
-                        if (distanceInterval / 1 * sportEntry.getAcquisitionInterval() > speedLimitation) {
+                        if (distanceInterval / sportEntry.getAcquisitionInterval() > speedLimitation) {
                             toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
                             Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                             isNormal = false;
@@ -757,8 +757,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
-
-
+        
         elapseTimeRunnable = new Runnable() {
             public void run() {
                 // If you need update UI, simply do this:

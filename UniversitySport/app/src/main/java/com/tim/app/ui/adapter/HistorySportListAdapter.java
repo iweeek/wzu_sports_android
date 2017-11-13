@@ -161,6 +161,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 viewHolder.addView(R.id.llSportItem, ll);
             } else {
+
                 final HistoryAreaSportEntry areaSportEntry = (HistoryAreaSportEntry) data.historySportEntryList.get(i);
 
                 //区域名字
@@ -208,8 +209,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //耗时
                 TextView tvLeft = (TextView) ll.findViewById(R.id.tvLeft);
-                Double costTime = areaSportEntry.getCostTime() / 60.0;
-                String result = String.format("%.0f", costTime) + " ";
+                Integer costTime = areaSportEntry.getCostTime() / 60;
+                String result = String.valueOf(costTime) + " ";
                 tvLeft.setText(result);
                 tvLeft.setTypeface(getTypeface(getContext()), Typeface.ITALIC);  //设置字体 斜体
 
