@@ -455,6 +455,8 @@ public class LoginActivity extends BaseActivity {
             value = getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, "");
             //            Log.d(TAG, "after put value: " + value);
 
+            editor.putBoolean(AppConstant.IS_FIRST_LAUNCH, true);
+
             editor.apply();
             //            Log.d(TAG, "key: " + getSharedPreferences(preferenceName, MODE_PRIVATE).getString(key, ""));
         } catch (IOException e) {
