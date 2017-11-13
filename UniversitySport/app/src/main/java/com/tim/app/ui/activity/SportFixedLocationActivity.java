@@ -137,11 +137,11 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private LocationDialog locationDialog;
     private ProgressDialog progressDialog;
 
-    /*屏幕亮度*/
-    private int screenOffTimeout; //屏幕超时时间
-    private int screenKeepLightTime;
-    private int brightness;
-    private boolean autoAdjustBrightness;
+//    /*屏幕亮度*/
+//    private int screenOffTimeout; //屏幕超时时间
+//    private int screenKeepLightTime;
+//    private int brightness;
+//    private boolean autoAdjustBrightness;
 
     /*初始化变量*/
     static final int STATE_NORMAL = 0;//初始状态
@@ -373,16 +373,16 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     public void initData() {
         float batteryLevel = getBatteryLevel();
         Toast.makeText(this, "当前电量： " + batteryLevel + "%， 请及时充电，保持电量充足", Toast.LENGTH_LONG).show();
-        screenOffTimeout = Settings.System.getInt(getContentResolver(),
-                Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
-
-        autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
-        if (autoAdjustBrightness) {
-            brightness = BrightnessUtil.getScreenBrightness(this);
-            BrightnessUtil.stopAutoAdjustBrightness(context);
-        } else {
-            brightness = BrightnessUtil.getScreenBrightness(this);
-        }
+//        screenOffTimeout = Settings.System.getInt(getContentResolver(),
+//                Settings.System.SCREEN_OFF_TIMEOUT, 0) / 1000;
+//
+//        autoAdjustBrightness = BrightnessUtil.isAutoAdjustBrightness(context);
+//        if (autoAdjustBrightness) {
+//            brightness = BrightnessUtil.getScreenBrightness(this);
+//            BrightnessUtil.stopAutoAdjustBrightness(context);
+//        } else {
+//            brightness = BrightnessUtil.getScreenBrightness(this);
+//        }
 
 
         if (!TextUtils.isEmpty(fixLocationOutdoorSportPoint.getAreaName())) {
@@ -595,12 +595,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
         //屏幕到了锁屏的时间，调暗亮度，采样时间太长了导致不容易测试
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        screenKeepLightTime += interval / 1000;
-        if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
-            params.screenBrightness = (float) 0.1;
-            getWindow().setAttributes(params);
-            DLOG.d(TAG, "onMyLocationChange turn down light");
-        }
+//        screenKeepLightTime += interval / 1000;
+//        if (screenOffTimeout <= screenKeepLightTime && Float.compare(params.screenBrightness, 0.1f) != 0) {
+//            params.screenBrightness = (float) 0.1;
+//            getWindow().setAttributes(params);
+//            DLOG.d(TAG, "onMyLocationChange turn down light");
+//        }
 
         if (location != null) {
             //定位成功
@@ -730,9 +730,9 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
         super.onDestroy();
         mapView.onDestroy();
 
-        if (autoAdjustBrightness) {
-            BrightnessUtil.startAutoAdjustBrightness(this);
-        }
+//        if (autoAdjustBrightness) {
+//            BrightnessUtil.startAutoAdjustBrightness(this);
+//        }
 
         //        Log.d(TAG, "onDestroy");
 
@@ -1088,14 +1088,14 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private void turnUpScreen() {
         boolean needToAdjustBrightness = Float.compare(BrightnessUtil.getScreenBrightness(getWindow()), 0.1f) == 0;
 
-        if (needToAdjustBrightness) {
-            if (BrightnessUtil.isAutoAdjustBrightness(this)) {
-                BrightnessUtil.setScreenBrightness(this, brightness);
-            } else {
-                BrightnessUtil.setScreenBrightness(this, brightness);
-            }
-        }
-        screenKeepLightTime = 0;
+//        if (needToAdjustBrightness) {
+//            if (BrightnessUtil.isAutoAdjustBrightness(this)) {
+//                BrightnessUtil.setScreenBrightness(this, brightness);
+//            } else {
+//                BrightnessUtil.setScreenBrightness(this, brightness);
+//            }
+//        }
+//        screenKeepLightTime = 0;
     }
 
 
