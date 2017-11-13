@@ -181,7 +181,7 @@
     <string name="username_password_mismatching">用户名和密码不匹配</string>
 
     <!--运动准备-->
-    <string name="gpsLocationing">GPS定位中...</string>
+    <string name="gpsLocationing">GPS定位中，请走到开阔地带</string>
     <string name="readyToSport">请做好热身准备</string>
     <string name="remainPower">当前剩余电量%s%%</string>
 
