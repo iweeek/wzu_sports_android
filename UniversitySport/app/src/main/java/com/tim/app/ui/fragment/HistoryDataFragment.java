@@ -328,7 +328,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         tabEndDate = new LocalDate(new Date()).toString();
         if (type == AppConstant.THIS_WEEK) {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentWeekStartDate()).toString();
-            getHistoryRecord();
+                getHistoryRecord();
         } else if (type == AppConstant.THIS_MONTH) {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
             getHistoryRecord();
@@ -573,44 +573,32 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
      * @param type 当前fragment显示需要筛选的内容的类型
      */
     public void changeHistoryDataList(MenuItem item, int type) {
-        if (dataList.size() != 0)
+        if (dataList != null)
             dataList.clear();
         if (item != null) {
             switch (item.getItemId()) {
                 case R.id.action_all:
-                    for (HistoryItem historyItem : dataListAll) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListAll);
                     currentFragmentState = AppConstant.STATUS_ALL;
                     break;
                 case R.id.action_qualified:
-                    for (HistoryItem historyItem : dataListQualified) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListQualified);
                     currentFragmentState = AppConstant.STATUS_QUALIFIED;
                     break;
                 case R.id.action_disqualified:
-                    for (HistoryItem historyItem : dataListDisqualified) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListDisqualified);
                     currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
                     break;
                 case R.id.action_not_verified:
-                    for (HistoryItem historyItem : dataListNotVerified) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListNotVerified);
                     currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
                     break;
                 case R.id.action_verified_fail:
-                    for (HistoryItem historyItem : dataListVerifiedFailed) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListVerifiedFailed);
                     currentFragmentState = AppConstant.STATUS_VERIFIED_FAILED;
                     break;
                 case R.id.action_abnormal_end:
-                    for (HistoryItem historyItem : dataListAbnormalEnd) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListAbnormalEnd);
                     currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
                     break;
                 default:
@@ -622,39 +610,27 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         if (type != -1) {
             switch (type) {
                 case AppConstant.STATUS_ALL:
-                    for (HistoryItem historyItem : dataListAll) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListAll);
                     currentFragmentState = AppConstant.STATUS_ALL;
                     break;
                 case AppConstant.STATUS_QUALIFIED:
-                    for (HistoryItem historyItem : dataListQualified) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListQualified);
                     currentFragmentState = AppConstant.STATUS_QUALIFIED;
                     break;
                 case AppConstant.STATUS_DISQUALIFIED:
-                    for (HistoryItem historyItem : dataListDisqualified) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListDisqualified);
                     currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
                     break;
                 case AppConstant.STATUS_NOT_VERIFIED:
-                    for (HistoryItem historyItem : dataListNotVerified) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListNotVerified);
                     currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
                     break;
                 case AppConstant.STATUS_VERIFIED_FAILED:
-                    for (HistoryItem historyItem : dataListVerifiedFailed) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListVerifiedFailed);
                     currentFragmentState = AppConstant.STATUS_VERIFIED_FAILED;
                     break;
                 case AppConstant.STATUS_ABNORMAL_END:
-                    for (HistoryItem historyItem : dataListAbnormalEnd) {
-                        dataList.add(historyItem);
-                    }
+                    dataList.addAll(dataListAbnormalEnd);
                     currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
                     break;
                 default:
@@ -663,6 +639,9 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
             }
         }
         ((HistorySportActivity) getActivity()).currentState = currentFragmentState;
+        if (dataList.size() > 0) {
+            emptyLayout.showContent();
+        }
         adapter.notifyDataSetChanged();
     }
 
