@@ -802,9 +802,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
 
                         tvParticipantNum.setVisibility(View.GONE);
 
-                        /**
-                         * marvin 2017.10.14
-                         */
                         progressDialog.show();
                         runningActivitiesEnd(targetFinishedTime);
 
