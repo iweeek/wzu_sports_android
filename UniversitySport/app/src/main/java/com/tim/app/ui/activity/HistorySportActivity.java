@@ -66,10 +66,10 @@ public class HistorySportActivity extends ToolbarActivity {
                 if (outViews.isEmpty()) {
                     return;
                 }
-                AppCompatImageView overflow=(AppCompatImageView) outViews.get(0);
+                AppCompatImageView overflow = (AppCompatImageView) outViews.get(0);
                 overflow.setColorFilter(Color.WHITE);
                 overflow.setImageResource(R.drawable.ic_screen);
-                removeOnGlobalLayoutListener(decorView,this);
+                removeOnGlobalLayoutListener(decorView, this);
             }
         });
     }
@@ -77,8 +77,7 @@ public class HistorySportActivity extends ToolbarActivity {
     public static void removeOnGlobalLayoutListener(View v, ViewTreeObserver.OnGlobalLayoutListener listener) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
             v.getViewTreeObserver().removeGlobalOnLayoutListener(listener);
-        }
-        else {
+        } else {
             v.getViewTreeObserver().removeOnGlobalLayoutListener(listener);
         }
     }
@@ -159,19 +158,55 @@ public class HistorySportActivity extends ToolbarActivity {
         void onPageSelected(int status);
     }
 
+    public int selectId = 1;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu, menu);
+        //menu.setGroupCheckable(R.id.option_menu, true, true);
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        for (int i = 0; i < menu.size(); i++) {
+            menu.getItem(i).setCheckable(false);
+            menu.getItem(i).setChecked(false);
+        }
+        menu.getItem(selectId).setCheckable(true);
+        menu.getItem(selectId).setChecked(true);
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        //supportInvalidateOptionsMenu();
         for (HistoryDataFragment fragment : historySportFragmentList) {
             if (fragment.isInit()) {
                 fragment.changeHistoryDataList(item, -1);
+                item.setCheckable(true);
+                item.setChecked(true);
+                switch (item.getItemId()) {
+                    case R.id.action_all:
+                        selectId = 0;
+                        break;
+                    case R.id.action_qualified:
+                        selectId = 1;
+                        break;
+                    case R.id.action_disqualified:
+                        selectId = 2;
+                        break;
+                    case R.id.action_not_verified:
+                        selectId = 3;
+                        break;
+                    case R.id.action_verified_fail:
+                        selectId = 4;
+                        break;
+                    case R.id.action_abnormal_end:
+                        selectId = 5;
+                        break;
+                    default:break;
+                }
             }
         }
         return true;
