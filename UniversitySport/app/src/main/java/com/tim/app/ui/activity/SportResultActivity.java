@@ -381,7 +381,7 @@ public class SportResultActivity extends ToolbarActivity {
                         //非正常结束
                         if (historyAreaSportEntry.getEndedAt() == 0) {
                             tvResult.setText("未结束");
-                            tvResult.setTextColor(Color.RED);
+                            tvResult.setTextColor(Color.parseColor("#FF9800"));
                             ivHelp.setVisibility(View.VISIBLE);
                         } else {
                             //是否达标
@@ -391,7 +391,7 @@ public class SportResultActivity extends ToolbarActivity {
                                     //是否有效
                                     if (isValid) {
                                         tvResult.setText("达标");
-                                        tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                        tvResult.setTextColor(Color.parseColor("#4CAF50"));
                                         ivFinished.setVisibility(View.VISIBLE);
                                     } else {
                                         tvResult.setText("审核未通过");
@@ -400,12 +400,12 @@ public class SportResultActivity extends ToolbarActivity {
                                     }
                                 } else {
                                     tvResult.setText("达标待审核");
-                                    tvResult.setTextColor(Color.RED);
+                                    tvResult.setTextColor(Color.parseColor("#4CAF50"));
                                     ivHelp.setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 tvResult.setText("未达标");
-                                tvResult.setTextColor(Color.RED);
+                                tvResult.setTextColor(Color.parseColor("#FF9800"));
                                 ivHelp.setVisibility(View.VISIBLE);
                             }
                         }
@@ -424,7 +424,8 @@ public class SportResultActivity extends ToolbarActivity {
                         tvSportName.setText(historyAreaSportEntry.getLocationPoint().getAreaName());
 
                         elapseTime = jsonObject.getLong("costTime");
-                        tvElapseTime.setText((int) elapseTime / 60 + " 分钟");
+                        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+                        tvElapseTime.setText(time);
 
                         // if (elapseTime != 0) {
                         //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
@@ -551,7 +552,7 @@ public class SportResultActivity extends ToolbarActivity {
                         //非正常结束
                         if (historyRunningSportEntry.getEndedAt() == 0) {
                             tvResult.setText("未结束");
-                            tvResult.setTextColor(Color.RED);
+                            tvResult.setTextColor(Color.parseColor("#FF9800"));
                             ivHelp.setVisibility(View.VISIBLE);
                         } else {
                             //是否达标
@@ -561,7 +562,7 @@ public class SportResultActivity extends ToolbarActivity {
                                     //是否有效
                                     if (isValid) {
                                         tvResult.setText("达标");
-                                        tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                        tvResult.setTextColor(Color.parseColor("#4CAF50"));
                                         ivFinished.setVisibility(View.VISIBLE);
                                     } else {
                                         tvResult.setText("审核未通过");
@@ -570,12 +571,12 @@ public class SportResultActivity extends ToolbarActivity {
                                     }
                                 } else {
                                     tvResult.setText("达标待审核");
-                                    tvResult.setTextColor(Color.RED);
+                                    tvResult.setTextColor(Color.parseColor("#4CAF50"));
                                     ivHelp.setVisibility(View.VISIBLE);
                                 }
                             } else {
                                 tvResult.setText("未达标");
-                                tvResult.setTextColor(Color.RED);
+                                tvResult.setTextColor(Color.parseColor("#FF9800"));
                                 ivHelp.setVisibility(View.VISIBLE);
                             }
                         }

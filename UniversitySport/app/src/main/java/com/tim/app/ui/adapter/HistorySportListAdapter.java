@@ -92,7 +92,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //非正常结束
                 if (runningSportEntry.getEndedAt() == 0) {
-                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                 } else {
                     //是否达标
                     if (runningSportEntry.isQualified()) {
@@ -102,10 +102,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                             if (runningSportEntry.isValid()) {
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                             } else {
-                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
                             }
                         } else {
-                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                         }
                     } else {
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
@@ -180,7 +180,7 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //非正常结束
                 if (areaSportEntry.getEndedAt() == 0) {
-                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                 } else {
                     //是否达标
                     if (areaSportEntry.isQualified()) {
@@ -190,18 +190,19 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                             if (areaSportEntry.isValid()) {
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                             } else {
-                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                                ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
                             }
                         } else {
-                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                         }
                     } else {
+                        //未达标
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                     }
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM/dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
                 tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
