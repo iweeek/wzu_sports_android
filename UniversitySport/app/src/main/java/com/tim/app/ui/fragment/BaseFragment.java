@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.application.library.dialog.LoadingDialog;
 
-public class BaseFragment1 extends Fragment {
+public class BaseFragment extends Fragment {
     private LoadingDialog mLoadingDialog;
 
     @Override

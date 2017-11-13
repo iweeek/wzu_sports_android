@@ -34,7 +34,7 @@ import static com.tim.app.constant.AppConstant.student;
 /**
  * 排行榜数据
  */
-public class RankingDataFragment extends BaseFragment1 implements View.OnClickListener, LoadMoreHandler {
+public class RankingDataFragment extends BaseFragment implements View.OnClickListener, LoadMoreHandler {
 
     public static final String TAG = "RankingDataFragment";
     private static final int PAGE_SIZE = 20;
