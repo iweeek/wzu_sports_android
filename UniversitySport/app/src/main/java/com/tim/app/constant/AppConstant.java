@@ -27,6 +27,8 @@ public class AppConstant {
 
     public static final int UNIVERSITY_ID = 1;
 
+    public static final String IS_FIRST_LAUNCH = "isFirstLaunch";
+
     //    1：注册
     //    2：找回密码
     //    3：绑定手机

@@ -7,7 +7,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -34,6 +36,7 @@ import com.application.library.widget.recycle.HorizontalDividerItemDecoration;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.tim.app.R;
 import com.tim.app.RT;
+import com.tim.app.constant.AppConstant;
 import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
@@ -312,11 +315,41 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 
         DLOG.d(TAG, "position:" + position);
         DLOG.d(TAG, "sportEntry:" + sportEntry);
+        SharedPreferences sharedPreferences = getSharedPreferences(User.USER_SHARED_PREFERENCE, Context.MODE_PRIVATE);
+        Boolean isFirstLaunch = sharedPreferences.getBoolean(AppConstant.IS_FIRST_LAUNCH, true);
         if (sportEntry.getType() == SportEntry.RUNNING_SPORT) {
-            SportDetailActivity.start(this, sportEntry);
+            if (isFirstLaunch) {
+                showPermissionDialog();
+                sharedPreferences.edit().putBoolean(AppConstant.IS_FIRST_LAUNCH,false).apply();
+            } else {
+                SportDetailActivity.start(this, sportEntry);
+            }
         } else {
-            SportsAreaListActivity.start(this, sportEntry);
+            if (isFirstLaunch) {
+                showPermissionDialog();
+                sharedPreferences.edit().putBoolean(AppConstant.IS_FIRST_LAUNCH,false).apply();
+            } else {
+                SportsAreaListActivity.start(this, sportEntry);
+            }
         }
+    }
+
+    public void showPermissionDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("重要提示")
+                .setMessage("请授予应用定位权限，应用才可以正常工作~")
+                .setPositiveButton("去授权", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //引导用户至设置页手动授权
+                        Toast.makeText(MainActivity.this, "请授予应用定位权限~", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getApplicationContext().getPackageName(), null);
+                        intent1.setData(uri);
+                        startActivity(intent1);
+                    }
+                })
+                .setCancelable(false).show();
     }
 
     /**
