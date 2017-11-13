@@ -1013,7 +1013,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                             //非正常结束
                             if (historySportEntry.getEndedAt() == 0) {
                                 tvResult.setText("未结束");
-                                tvResult.setTextColor(Color.RED);
+                                tvResult.setTextColor(Color.parseColor("#FF9800"));
                                 ivHelp.setVisibility(View.VISIBLE);
                             } else {
                                 //是否达标
@@ -1023,7 +1023,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                         //是否有效
                                         if (historySportEntry.isValid()) {
                                             tvResult.setText("达标");
-                                            tvResult.setTextColor(Color.rgb(42, 204, 42));
+                                            tvResult.setTextColor(Color.parseColor("#4CAF50"));
                                             ivFinished.setVisibility(View.VISIBLE);
                                         } else {
                                             tvResult.setText("审核未通过");
@@ -1032,12 +1032,12 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                                         }
                                     } else {
                                         tvResult.setText("达标待审核");
-                                        tvResult.setTextColor(Color.RED);
+                                        tvResult.setTextColor(Color.parseColor("#4CAF50"));
                                         ivHelp.setVisibility(View.VISIBLE);
                                     }
                                 } else {
                                     tvResult.setText("未达标");
-                                    tvResult.setTextColor(Color.RED);
+                                    tvResult.setTextColor(Color.parseColor("#FF9800"));
                                     ivHelp.setVisibility(View.VISIBLE);
                                 }
                             }
