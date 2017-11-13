@@ -584,11 +584,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 // Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
 
                 if (!lastLatLng.equals(newLatLng)) {
-                    // 有移位
+                    // 前后定位点位置不同
                     if (acquisitionTimes == 1) {
                         if (distanceInterval / 1 * sportEntry.getAcquisitionInterval() > speedLimitation) {
-                            //位置漂移
-                            //return;
                             toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
                             Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                             isNormal = false;
@@ -615,8 +613,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     } else {
                         // 累加采样间隔时间
                         if (distanceInterval / (acquisitionTimes * sportEntry.getAcquisitionInterval()) > speedLimitation) {
-                            //位置漂移
-                            //return;
                             toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
                             Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
                             isNormal = false;
@@ -646,34 +642,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     // 两次坐标点相同，记录次数（初始值为1）
                     DLOG.d(TAG, "两个点一样： newLatLng：" + newLatLng + "，lastLatLng：" + lastLatLng);
                     acquisitionTimes++;
-
-                    // 此时 distanceInterval 距离为 0
-                    if (distanceInterval / (1 * sportEntry.getAcquisitionInterval()) > speedLimitation) {
-                        //位置漂移
-                        //return;
-                        toastText = "异常移动，每秒位移：" + distanceInterval / sportEntry.getAcquisitionInterval();
-                        Toast.makeText(this, toastText, Toast.LENGTH_LONG).show();
-                        isNormal = false;
-                        drawLine(lastLatLng, newLatLng, isNormal);
-                        // currentDistance += distanceInterval;
-                    } else {
-                        isNormal = true;
-                        drawLine(lastLatLng, newLatLng, isNormal);
-                        currentDistance += distanceInterval;
-
-                        if (currentDistance > sportEntry.getQualifiedDistance() && targetFinishedTime == 0) {
-                            targetFinishedTime = elapseTime;
-                        }
-
-                        tvCurrentDistance.setText(String.valueOf(currentDistance) + " ");
-                        bdDividend = new BigDecimal(currentDistance);
-                        bdDevisor = new BigDecimal(elapseTime);
-                        BigDecimal bdResult = bdDividend.divide(bdDevisor, SPEED_SCALE, BigDecimal.ROUND_HALF_UP);
-                        // 解决速度过大
-                        if (bdResult.compareTo(new BigDecimal(10)) < 0) {
-                            tvAverSpeed.setText(bdResult.toString() + " ");
-                        }
-                    }
                 }
 
                 if (SensorService.stepCounterEnabled) {
