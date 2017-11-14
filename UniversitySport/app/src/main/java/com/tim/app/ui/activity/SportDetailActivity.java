@@ -553,6 +553,13 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     btStart.setVisibility(View.VISIBLE);
                 }
             }
+
+            if (SensorService.stepCounterEnabled) {
+                currentSteps = stepCounter;
+            } else {
+                currentSteps = stepCountCal;
+            }
+
             if (state == STATE_STARTED) {
                 String msg = location.toString();
                 //   DLOG.writeToInternalFile(msg);
@@ -562,7 +569,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 float distanceInterval = AMapUtils.calculateLineDistance(newLatLng, lastLatLng);
 
                 // 如果采样间隔之间，没有步数的变化，stepsInterval就是零！ 会报 Infinity or NaN: Infinity 错误的！
-                int stepsInterval = stepCounter - lastSteps;
+                // int stepsInterval = stepCounter - lastSteps;
+                int stepsInterval = currentSteps - lastSteps;
                 BigDecimal bdDividend;
                 BigDecimal bdDevisor;
                 if (stepsInterval == 0) {
@@ -644,12 +652,6 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     acquisitionTimes++;
                 }
 
-                if (SensorService.stepCounterEnabled) {
-                    currentSteps = stepCounter;
-                } else {
-                    currentSteps = stepCountCal;
-                }
-
                 // 提交到服务器
                 ServerInterface.instance().runningActivityData(TAG, sportRecordId, currentSteps, stepCountCal, currentDistance,
                         location.getLongitude(), location.getLatitude(), String.valueOf(distancePerStep), String.valueOf(stepPerSecond),
@@ -670,7 +672,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                         });
             }
 
-            lastSteps = stepCounter;
+            // lastSteps = stepCounter;
+            lastSteps = currentSteps;
             lastLatLng = newLatLng;
             DLOG.d(TAG, toastText);
         } else {
@@ -1064,6 +1067,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     DLOG.d(TAG, "sportEntry.getId():" + sportEntry.getId());
                     startTime = System.currentTimeMillis();
                     stepCountCal = 0;
+                    stepCounter = 0;
                     ServerInterface.instance().runningActivitiesStart(TAG, sportEntry.getId(), student.getId(), startTime, new JsonResponseCallback() {
                         @Override
                         public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {

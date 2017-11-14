@@ -652,7 +652,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
                 boolean isContains = circle.contains(lastLatLng);
                 if (!isContains) {
                     isNormal = false;
-                    Toast.makeText(context, "你已离开运动区域，请回到运动区域进行锻炼", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "你已离开运动区域，请回到运动区域进行锻炼", Toast.LENGTH_LONG).show();
                 }
 
                 //// 向服务器提交数据
