@@ -573,8 +573,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                         SharedPreferences sp = getSharedPreferences(User.USER_UPDATE_PREFERENCE, Context.MODE_PRIVATE);
                         int ignoreVersion = sp.getInt(User.IGNORE_VERSION, 0);
                         DLOG.d(TAG, "ignoreVersion:" + ignoreVersion);
-                        if (ignoreVersion == versionCode) {
-                            return false;
+                        // 是否要跳过本次更新
+                        if (isForced) {
+                            // 是强制的，即使是之前忽略了，那么也要进行更新。
+                        } else {
+                            if (ignoreVersion == versionCode) {
+                                return false;
+                            }
                         }
 
                         DLOG.d(TAG, "服务器版本" + versionCode);
