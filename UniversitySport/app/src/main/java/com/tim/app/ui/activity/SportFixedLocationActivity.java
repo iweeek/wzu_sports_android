@@ -171,7 +171,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     /*组件*/
     private LocationService.MyBinder myBinder = null;
 
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     private Runnable elapseTimeRunnable;
     private ScheduledFuture<?> timerHandler = null;
     private long timerInterval = 1000;
@@ -198,7 +198,6 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
 
     private void startTimer() {
         timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
-
     }
 
     private void stopTimer() {
