@@ -88,9 +88,9 @@ public class HistorySportActivity extends ToolbarActivity {
         vpHistoryData = (ViewPager) findViewById(R.id.vpHistoryData);
 
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-        fragmentWeek = HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK, AppConstant.STATUS_QUALIFIED);
-        fragmentMonth = HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH, AppConstant.STATUS_QUALIFIED);
-        fragmentTerm = HistoryDataFragment.newInstance(AppConstant.TYPE_TERM, AppConstant.STATUS_QUALIFIED);
+        fragmentWeek = HistoryDataFragment.newInstance(AppConstant.TYPE_WEEK, AppConstant.STATUS_ALL);
+        fragmentMonth = HistoryDataFragment.newInstance(AppConstant.TYPE_MONTH, AppConstant.STATUS_ALL);
+        fragmentTerm = HistoryDataFragment.newInstance(AppConstant.TYPE_TERM, AppConstant.STATUS_ALL);
         historySportFragmentList.add(fragmentWeek);
         historySportFragmentList.add(fragmentMonth);
         historySportFragmentList.add(fragmentTerm);
@@ -158,7 +158,7 @@ public class HistorySportActivity extends ToolbarActivity {
         void onPageSelected(int status);
     }
 
-    public int selectId = 1;
+    public int selectId = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

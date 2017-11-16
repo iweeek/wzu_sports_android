@@ -76,19 +76,19 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
 
-//                if (runningSportEntry.getEndedAt() == 0) {
-//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
-//                } else {
-//                    if (runningSportEntry.isValid()) {
-//                        if (runningSportEntry.isQualified()) {
-//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
-//                        } else {
-//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
-//                        }
-//                    } else {
-//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
-//                    }
-//                }
+                //                if (runningSportEntry.getEndedAt() == 0) {
+                //                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+                //                } else {
+                //                    if (runningSportEntry.isValid()) {
+                //                        if (runningSportEntry.isQualified()) {
+                //                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+                //                        } else {
+                //                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                //                        }
+                //                    } else {
+                //                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                //                    }
+                //                }
 
                 //非正常结束
                 if (runningSportEntry.getEndedAt() == 0) {
@@ -169,15 +169,15 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 tvSportDesc.setText(areaSportEntry.getAreaSport());
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
-//                if (areaSportEntry.getEndedAt() == 0) {
-//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
-//                } else {
-//                    if (data.historySportEntryList.get(i).isQualified()) {
-//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
-//                    } else {
-//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
-//                    }
-//                }
+                //                if (areaSportEntry.getEndedAt() == 0) {
+                //                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                //                } else {
+                //                    if (data.historySportEntryList.get(i).isQualified()) {
+                //                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                //                    } else {
+                //                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                //                    }
+                //                }
 
                 //非正常结束
                 if (areaSportEntry.getEndedAt() == 0) {
@@ -251,10 +251,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 viewHolder.addView(R.id.llSportItem, ll);
             }
         }
-        //        //当天日期
-        //        viewHolder.setText(R.id.tvSportDate, data.date);
-        //        //一天的热量消耗
-        //        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.kcalPlaceholder, String.valueOf(totalEnergyCost)));
+        //当天日期
+        viewHolder.setText(R.id.tvSportDate, data.date);
+        //一天的热量消耗
+        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.kcalPlaceholder, String.valueOf(totalEnergyCost)));
     }
 
     public static Typeface getTypeface(Context context) {
