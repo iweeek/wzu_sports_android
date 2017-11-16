@@ -76,7 +76,6 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 // 运动结果
                 TextView tvResult = (TextView) ll.findViewById(R.id.tvResult);
-                tvResult.setText(runningSportEntry.getSportName());
 
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
 
@@ -96,6 +95,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //非正常结束
                 if (runningSportEntry.getEndedAt() == 0) {
+                    tvResult.setText("未结束");
+                    tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                     ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                 } else {
                     //是否达标
@@ -104,14 +105,22 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                         if (runningSportEntry.isVerified()) {
                             //是否有效
                             if (runningSportEntry.isValid()) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                             } else {
+                                tvResult.setText("审核未通过");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.red_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
                             }
                         } else {
+                            tvResult.setText("达标待审核");
+                            tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                             ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                         }
                     } else {
+                        tvResult.setText("未达标");
+                        tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                     }
                 }
@@ -172,6 +181,9 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(areaSportEntry.getAreaSport());
 
+                // 运动结果
+                TextView tvResult = (TextView) ll.findViewById(R.id.tvResult);
+
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
                 //                if (areaSportEntry.getEndedAt() == 0) {
                 //                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
@@ -185,6 +197,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
 
                 //非正常结束
                 if (areaSportEntry.getEndedAt() == 0) {
+                    tvResult.setText("未结束");
+                    tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                     ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                 } else {
                     //是否达标
@@ -193,15 +207,23 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                         if (areaSportEntry.isVerified()) {
                             //是否有效
                             if (areaSportEntry.isValid()) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                             } else {
+                                tvResult.setText("审核未通过");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.red_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
                             }
                         } else {
+                            tvResult.setText("达标待审核");
+                            tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                             ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                         }
                     } else {
                         //未达标
+                        tvResult.setText("未达标");
+                        tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                     }
                 }

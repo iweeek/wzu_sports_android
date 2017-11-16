@@ -193,18 +193,18 @@ public class HistorySportActivity extends ToolbarActivity {
                     case R.id.action_qualified:
                         selectId = 1;
                         break;
-                    case R.id.action_disqualified:
-                        selectId = 2;
-                        break;
-                    case R.id.action_not_verified:
-                        selectId = 3;
-                        break;
+//                    case R.id.action_disqualified:
+//                        selectId = 2;
+//                        break;
+//                    case R.id.action_not_verified:
+//                        selectId = 3;
+//                        break;
                     case R.id.action_verified_fail:
-                        selectId = 4;
+                        selectId = 2;//4->2
                         break;
-                    case R.id.action_abnormal_end:
-                        selectId = 5;
-                        break;
+//                    case R.id.action_abnormal_end:
+//                        selectId = 5;
+//                        break;
                     default:break;
                 }
             }

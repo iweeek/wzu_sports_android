@@ -585,22 +585,22 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                     dataList.addAll(dataListQualified);
                     currentFragmentState = AppConstant.STATUS_QUALIFIED;
                     break;
-                case R.id.action_disqualified:
-                    dataList.addAll(dataListDisqualified);
-                    currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
-                    break;
-                case R.id.action_not_verified:
-                    dataList.addAll(dataListNotVerified);
-                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
-                    break;
+//                case R.id.action_disqualified:
+//                    dataList.addAll(dataListDisqualified);
+//                    currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
+//                    break;
+//                case R.id.action_not_verified:
+//                    dataList.addAll(dataListNotVerified);
+//                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
+//                    break;
                 case R.id.action_verified_fail:
                     dataList.addAll(dataListVerifiedFailed);
                     currentFragmentState = AppConstant.STATUS_VERIFIED_FAILED;
                     break;
-                case R.id.action_abnormal_end:
-                    dataList.addAll(dataListAbnormalEnd);
-                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
-                    break;
+//                case R.id.action_abnormal_end:
+//                    dataList.addAll(dataListAbnormalEnd);
+//                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
+//                    break;
                 default:
                     super.onOptionsItemSelected(item);
                     break;
@@ -617,22 +617,22 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                     dataList.addAll(dataListQualified);
                     currentFragmentState = AppConstant.STATUS_QUALIFIED;
                     break;
-                case AppConstant.STATUS_DISQUALIFIED:
-                    dataList.addAll(dataListDisqualified);
-                    currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
-                    break;
-                case AppConstant.STATUS_NOT_VERIFIED:
-                    dataList.addAll(dataListNotVerified);
-                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
-                    break;
+//                case AppConstant.STATUS_DISQUALIFIED:
+//                    dataList.addAll(dataListDisqualified);
+//                    currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
+//                    break;
+//                case AppConstant.STATUS_NOT_VERIFIED:
+//                    dataList.addAll(dataListNotVerified);
+//                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
+//                    break;
                 case AppConstant.STATUS_VERIFIED_FAILED:
                     dataList.addAll(dataListVerifiedFailed);
                     currentFragmentState = AppConstant.STATUS_VERIFIED_FAILED;
                     break;
-                case AppConstant.STATUS_ABNORMAL_END:
-                    dataList.addAll(dataListAbnormalEnd);
-                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
-                    break;
+//                case AppConstant.STATUS_ABNORMAL_END:
+//                    dataList.addAll(dataListAbnormalEnd);
+//                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
+//                    break;
                 default:
                     super.onOptionsItemSelected(item);
                     break;
@@ -677,7 +677,12 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
+                //达标
                 if (entry.isQualified() && entry.isValid() && entry.isVerified() && entry.getEndedAt() != 0) {
+                    historySportEntry.add(entry);
+                }
+                //达标待审核
+                if (entry.isQualified() && !entry.isVerified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
             }
@@ -686,7 +691,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 HistoryItem historyItem = new HistoryItem();
                 historyItem.date = item.date;
                 historyItem.historySportEntryList = historySportEntry;
-                dataListQualified.add(historyItem);
+                dataListQualified.add(historyItem);//实际为达标+达标待审核
             }
         }
 
@@ -697,7 +702,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 if (!entry.isQualified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
-
             }
 
             if (historySportEntry.size() != 0) {
