@@ -471,20 +471,4 @@
         </LinearLayout>
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/colorLine"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="运动方式"
-        android:textColor="#324252"
-        android:textSize="16dp"
-        android:textStyle="bold"/>
-
 </com.tim.app.ui.view.HomepageHeadView>

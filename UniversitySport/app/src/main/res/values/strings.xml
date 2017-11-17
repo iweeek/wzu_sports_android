@@ -158,7 +158,7 @@
     <string name="qualifiedDistance">达标距离</string>
     <string name="accumTimesPer">本周累计运动(次)</string>
     <string name="signInCount">打卡(次)</string>
-    <string name="curTermSportsCount">本学期累计运动(次)</string>
+    <string name="curTermSportsCount">本学期累计运动<tt>%s</tt>次</string>
 
     <!--公用-->
     <string name="digitalPlaceholder">%s</string>

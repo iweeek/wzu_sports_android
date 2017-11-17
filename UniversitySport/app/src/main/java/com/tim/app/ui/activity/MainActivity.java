@@ -283,7 +283,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
 //        wrvSportType.addItemDecoration(new HorizontalDividerItemDecoration.Builder(
 //                MainActivity.this).color(getResources().getColor(R.color.transparent)).size((int) (RT.getDensity() * 2)).build());
 
-        homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view, null);
+        homepageHeadView = (HomepageHeadView) LayoutInflater.from(this).inflate(R.layout.homepage_head_view_new, null);
         //wrvSportType.addHeaderView(homepageHeadView);
         //        badNetworkView = (BadNetworkView) LayoutInflater.from(this).inflate(R.layout.bad_network_view, null);
         /**
@@ -295,12 +295,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         VPSportType = (ViewPager) findViewById(R.id.VPSportType);
         tabLayout.setupWithViewPager(VPSportType);
         pagerAdapter = new TabAdapter(getSupportFragmentManager());
-        //        if (sportEntryDataList != null && sportEntryDataList.size() != 0) {
-        //            for (SportEntry item : sportEntryDataList) {
-        //                pagerAdapter.addFragment(SportTypeFragment.newInstance(item), item.getName());
-        //            }
-        //            VPSportType.setOffscreenPageLimit(sportEntryDataList.size());//闄ゅ幓褰撳墠鏄剧ず椤甸潰澶栵紝杩橀渶瑕侀¢勫厛鍔犺浇鐨勯〉闈¢涓ª鏁
-        //        }
         VPSportType.setAdapter(pagerAdapter);
         VPSportType.setCurrentItem(0);
 
