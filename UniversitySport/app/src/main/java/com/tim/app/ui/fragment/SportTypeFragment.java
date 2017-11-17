@@ -1,20 +1,19 @@
 package com.tim.app.ui.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.application.library.base.BaseFragment;
 import com.tim.app.R;
 import com.tim.app.server.entry.SportEntry;
-import com.tim.app.ui.activity.LoadingActivity;
+import com.tim.app.ui.activity.SportDetailActivity;
 import com.tim.app.ui.activity.SportsAreaListActivity;
 import com.tim.app.ui.cell.GlideApp;
 
@@ -66,10 +65,15 @@ public class SportTypeFragment extends BaseFragment {
         View llBottom = rootView.findViewById(R.id.llBottom);
 //        GlideApp.with(getContext()).load(R.drawable.font_go).dontAnimate().into(btStart);
         if (SportEntry.RUNNING_SPORT == data.getType()) {
-            GlideApp.with(getContext())
-                    .load(R.drawable.sport_running)
-                    .into(rivSportBg);
-
+            if (data.getQualifiedDistance() == 4000) {
+                GlideApp.with(getContext())
+                        .load(R.drawable.sport_walking)
+                        .into(rivSportBg);
+            } else {
+                GlideApp.with(getContext())
+                        .load(R.drawable.sport_running)
+                        .into(rivSportBg);
+            }
             tvParticipantNum.setText("当前" + data.getParticipantNum() + "人正在参加");
             tvDistance.setText(data.getQualifiedDistance() + "米");
             tvTargetValue.setText(data.getTargetSpeed() + "米/秒");
@@ -86,13 +90,16 @@ public class SportTypeFragment extends BaseFragment {
         btStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("haha", "onClick: ------------------->x:"+btStart.getX()+" y:"+btStart.getY());
+                WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+                int height = wm.getDefaultDisplay().getHeight();
                 if (data.getType() == SportEntry.RUNNING_SPORT) {
                     //SportDetailActivity.start(getActivity(), data);
-                    Intent intent = new Intent();
-                    intent.setClass(getContext(), LoadingActivity.class);
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(0,0);
+                    SportDetailActivity.start(getActivity(), data, (height - btStart.getY()));
+                    getActivity().overridePendingTransition(0, 0);
+//                    Intent intent = new Intent();
+//                    intent.setClass(getContext(), LoadingActivity.class);
+//                    startActivity(intent);
+//                    getActivity().overridePendingTransition(0,0);
                 } else {
                     SportsAreaListActivity.start(getActivity(), data);
                 }

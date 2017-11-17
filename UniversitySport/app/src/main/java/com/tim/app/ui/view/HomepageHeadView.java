@@ -8,7 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -50,7 +50,10 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     private int pro = 0;
 
     private int width;
-    private int w = 180;
+    private int w;
+    private int startx;
+
+    private int sleeptime = 50;
 
     public HomepageHeadView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -144,8 +147,10 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
         WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
         width = wm.getDefaultDisplay().getWidth();
 
+        startx = getPx(60);
+        w = startx;
+
         max = (int) (r * 100);
-        Log.e("haha", "setData: --------------->"+max);
 
         mHandler = new Handler() {
             @Override
@@ -163,7 +168,6 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
             }
         };
         start();
-
     }
 
     private void start() {
@@ -174,18 +178,29 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
                     //子线程循环间隔消息
                     while (pro < max) {
                         pro += 1;
-                        w += (width - 180) / 100;
+                        w += (width - startx) / 100;
                         ProgressMan.setX((float) w);
                         Message msg = new Message();
                         msg.what = MSG;
                         mHandler.sendMessage(msg);
-                        Thread.sleep(50);
+                        Thread.sleep(sleeptime);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+    }
+
+
+    public int getPx(int dp)
+    {
+        DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
+        //float density = mDisplayMetrics.density;
+        int densityDpi = mDisplayMetrics.densityDpi;
+        int px = dp * (densityDpi / 160);
+        //Log.e("haha", "suit: ------------------>px:"+px);
+        return px;
     }
 
     public static Typeface getTypeface(Context context) {

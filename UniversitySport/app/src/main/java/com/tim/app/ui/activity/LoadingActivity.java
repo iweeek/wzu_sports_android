@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -56,6 +57,10 @@ public class LoadingActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
 
                         //layoutView.setVisibility(View.GONE);
+                        Intent intent = new Intent();
+                        intent.setClass(LoadingActivity.this, SportDetailActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.fade_out, R.anim.fade_in);
                     }
 
                     @Override
