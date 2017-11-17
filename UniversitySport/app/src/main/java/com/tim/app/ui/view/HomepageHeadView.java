@@ -4,10 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.Html;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -36,6 +41,17 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 //    private LinearLayout llBadNetworkFresh;
     private Context ctx;
     private ProgressBar pbReachTargetTimes;
+
+    private Handler mHandler;
+
+    private int MSG = 1;
+    private int max = 100;
+    private int pro = 0;
+
+    private int width;
+    private int w;
+    private int startx;
+    private int sleeptime = 50;
 
     private static Typeface typeface;
 
@@ -114,7 +130,8 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
     @SuppressLint("StringFormatInvalid")
     public void setData(String curTermSportCount, String KcalComsuption, String costedTime,
                         String curTermSignInCount, String curTermTargetCount) {
-        tvCurTermAccuTimes.setText(getContext().getString(R.string.curTermSportsCount, curTermSportCount));
+        //tvCurTermAccuTimes.setText(getContext().getString(R.string.curTermSportsCount, curTermSportCount));
+        tvCurTermAccuTimes.setText(Html.fromHtml("本学期累计运动<b><font color='#314666'> " + curTermSportCount + " </font></b>次"));
 //        tvAccumulCostEnergy.setText(getContext().getString(R.string.digitalPlaceholder, KcalComsuption));
 //        tvAccumulCostTime.setText((getContext().getString(R.string.digitalPlaceholder, costedTime)));
         tvCurSignInCount.setText((getContext().getString(R.string.digitalPlaceholder, curTermSignInCount)));
@@ -128,14 +145,60 @@ public class HomepageHeadView extends LinearLayout implements View.OnClickListen
 
         pbReachTargetTimes.setProgress((int) (r * 100));
         //180 60
-        //        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
-        //
-        //        int width = wm.getDefaultDisplay().getWidth();
-        //        int height = wm.getDefaultDisplay().getHeight();
-        //
-        //        ProgressMan.setX(width);
+        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+        width = wm.getDefaultDisplay().getWidth();
 
-        pbReachTargetTimes.setProgress((int) (r * 100));
+        startx = getPx(60);
+        w = startx;
+        max = (int) (r * 100);
+
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case 1:
+                        //设置滚动条和text的值
+                        pbReachTargetTimes.setProgress(pro);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        start();
+    }
+
+    private void start() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (pro < max) {
+                        pro += 1;
+                        w += (width - startx) / 100;
+                        ivProgressMan.setX((float) w);
+                        Message msg = new Message();
+                        msg.what = MSG;
+                        mHandler.sendMessage(msg);
+                        Thread.sleep(sleeptime);
+                    }
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+
+                }
+            }
+        }).start();
+    }
+
+    public int getPx(int dp) {
+        DisplayMetrics mDisplayMetrics = getResources().getDisplayMetrics();
+        //float density = mDisplayMetrics.density;
+        int densityDpi = mDisplayMetrics.densityDpi;
+        int px = dp * (densityDpi / 160);
+        //Log.e("haha", "suit: ------------------>px:"+px);
+        return px;
     }
 
     public static Typeface getTypeface(Context context) {

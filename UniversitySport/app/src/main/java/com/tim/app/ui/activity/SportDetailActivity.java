@@ -1,6 +1,7 @@
 package com.tim.app.ui.activity;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -25,6 +26,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -36,8 +38,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -204,6 +208,8 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     private View ivShowSportInfo;
     private View ivHideSportInfo;
 
+    private LinearLayout layoutView;
+
     private Animation showAnimation;
     private Animation hideAnimation;
 
@@ -247,6 +253,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         context.startActivity(intent);
     }
 
+    public static void start(Context context, SportEntry sportEntry, float y) {
+        Intent intent = new Intent(context, SportDetailActivity.class);
+        intent.putExtra("y", y);
+        intent.putExtra("sportEntry", sportEntry);
+        context.startActivity(intent);
+    }
 
     private void startTimer() {
         timerHandler = scheduler.scheduleAtFixedRate(elapseTimeRunnable, 0, timerInterval, TimeUnit.MILLISECONDS);
@@ -350,6 +362,58 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     protected void init(Bundle savedInstanceState) {
         super.init(savedInstanceState);
 
+        final int y = (int) getIntent().getFloatExtra("y", 1300) - 300;
+        layoutView = (LinearLayout) findViewById(R.id.llRoot);
+        layoutView.post(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void run() {
+                // 圆形动画的x坐标  位于View的中心
+                int cx = (layoutView.getLeft() + layoutView.getRight())/2;
+                int cy = y;
+
+                //圆形动画的y坐标  位于View的中心
+                //int cy = (layoutView.getTop()layoutView.getBottom()) / 2;
+
+                //起始大小半径
+                float startX = 230f;
+
+                //结束大小半径 大小为图片对角线的一半
+                float startY = (float) Math.sqrt(cx * cx + cy * cy);
+                Animator animator = ViewAnimationUtils.createCircularReveal(layoutView, cx, cy, startX, startY);
+
+                //在动画开始的地方速率改变比较慢,然后开始加速
+                animator.setInterpolator(new AccelerateInterpolator());
+                animator.setDuration(500);
+                animator.start();
+                animator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        layoutView.setVisibility(View.GONE);
+                        rlRoot.setVisibility(View.VISIBLE);
+                    }
+
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+            }
+        });
+
         initLocationDislog();
 
         initGPS();
@@ -426,6 +490,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                     finish();
                 }
                 return false;
+            }
+        });
+        locationDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                locationDialog.dismiss();
             }
         });
     }
@@ -760,7 +830,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         } else {// PackageManager.PERMISSION_DENIED
             UserManager.instance().cleanCache();
         }
-        
+
         elapseTimeRunnable = new Runnable() {
             public void run() {
                 // If you need update UI, simply do this:
@@ -846,9 +916,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         // 绘制曲线
         if (isNormal) {
             // if (!isDrawYellow) {
-                aMap.addPolyline((new PolylineOptions())
-                        .add(oldData, newData)
-                        .geodesic(true).color(Color.GREEN));
+            aMap.addPolyline((new PolylineOptions())
+                    .add(oldData, newData)
+                    .geodesic(true).color(Color.GREEN));
             // } else {
             //     isDrawYellow = false;
             //     aMap.addPolyline((new PolylineOptions())

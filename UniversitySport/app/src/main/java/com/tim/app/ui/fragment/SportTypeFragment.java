@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,6 +24,8 @@ public class SportTypeFragment extends BaseFragment {
     SportEntry data;
 
     String SportName;
+
+    private ImageView btStart;
 
     public Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -57,16 +60,22 @@ public class SportTypeFragment extends BaseFragment {
  * 显示相关数据时出错，提示为java.lang.IllegalStateException: FragmentManager is already executing transactions
  */
         ImageView rivSportBg = (ImageView) rootView.findViewById(R.id.rivSportBg);
-        ImageView btStart = (ImageView) rootView.findViewById(R.id.btStart);
+        btStart = (ImageView) rootView.findViewById(R.id.btStart);
         TextView tvParticipantNum = (TextView) rootView.findViewById(R.id.tvParticipantNum);
         TextView tvDistance = (TextView) rootView.findViewById(R.id.TvDistance);
         TextView tvTargetValue = (TextView) rootView.findViewById(R.id.tvTargetValue);
         View llBottom = rootView.findViewById(R.id.llBottom);
         //        GlideApp.with(getContext()).load(R.drawable.font_go).dontAnimate().into(btStart);
         if (SportEntry.RUNNING_SPORT == data.getType()) {
-            GlideApp.with(getContext())
-                    .load(R.drawable.sport_running)
-                    .into(rivSportBg);
+            if (data.getQualifiedDistance() == 4000) {
+                GlideApp.with(getContext())
+                        .load(R.drawable.sport_walking)
+                        .into(rivSportBg);
+            } else {
+                GlideApp.with(getContext())
+                        .load(R.drawable.sport_running)
+                        .into(rivSportBg);
+            }
 
             tvParticipantNum.setText("当前" + data.getParticipantNum() + "人正在参加");
             tvDistance.setText(data.getQualifiedDistance() + "米");
@@ -85,8 +94,12 @@ public class SportTypeFragment extends BaseFragment {
         btStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+                int height = wm.getDefaultDisplay().getHeight();
                 if (data.getType() == SportEntry.RUNNING_SPORT) {
-                    SportDetailActivity.start(getActivity(), data);
+//                    SportDetailActivity.start(getActivity(), data);
+                    SportDetailActivity.start(getActivity(), data, (height - btStart.getY()));
+                    getActivity().overridePendingTransition(0, 0);
                 } else {
                     SportsAreaListActivity.start(getActivity(), data);
                 }

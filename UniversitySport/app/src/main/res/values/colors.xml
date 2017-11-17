@@ -23,6 +23,7 @@
     <color name="colorSubtitle">#999</color>
 
     <color name="colorWhite">#ffffff</color>
+    <color name="blue">#66a6fe</color>
     <color name="login_btn_text_color">#535353</color>
     <color name="errorTextColor">#57FFDA</color>
     <color name="white_90">#e6ffffff</color>
@@ -114,4 +115,6 @@
     <color name="app_yellow">#f4b400</color>
     <color name="app_yellow_dark">#f09300</color>
     <color name="app_red">#db4437</color>
+
+    <color name="loadingbg">#66a6fe</color>
 </resources>
