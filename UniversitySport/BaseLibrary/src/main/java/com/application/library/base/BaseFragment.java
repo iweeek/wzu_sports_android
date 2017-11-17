@@ -28,7 +28,7 @@ public class BaseFragment extends Fragment {
 
     //子类通过重写onCreateView，调用setOnContentView进行布局设置，否则contentView==null，返回null
     @Override
-    public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.inflater = inflater;
         this.container = container;
         onCreateView(savedInstanceState);

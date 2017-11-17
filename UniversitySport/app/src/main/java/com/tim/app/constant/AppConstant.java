@@ -56,6 +56,7 @@ public class AppConstant {
     */
     public static final int RUNNING_TYPE = 1;
     public static final int AREA_TYPE = 2;
+    public static final String[] SPORTTYPE = {"快走", "慢跑", "快跑", "区域运动"};
 
     /**
      * 全局的用户/学生对象
