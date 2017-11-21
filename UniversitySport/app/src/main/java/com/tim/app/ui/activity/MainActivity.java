@@ -432,13 +432,6 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             emptyLayout.showEmpty();
                         } else {
                             emptyLayout.showContent();
-
-                            pagerAdapter.ClearFragment();
-                            for (SportEntry item : sportEntryDataList) {
-                                pagerAdapter.addFragment(SportTypeFragment.newInstance(item), item.getName());
-                            }
-                            pagerAdapter.notifyDataSetChanged();
-                            VPSportType.setOffscreenPageLimit(sportEntryDataList.size());
                         }
                     } catch (JSONException e) {
                         emptyLayout.showError();
@@ -537,7 +530,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                             areaSportEntry.setId(jsonObject.getInt("id"));
                             areaSportEntry.setName(jsonObject.getString("name"));
                             areaSportEntry.setType(SportEntry.AREA_SPORT);
-                            //                        areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
+                            //areaSportEntry.setEnable(jsonObject.optBoolean("isEnable"));
                             areaSportEntry.setTargetTime(jsonObject.getInt("qualifiedCostTime"));
                             areaSportEntry.setAcquisitionInterval(jsonObject.getInt("acquisitionInterval"));
                             areaSportEntry.setParticipantNum(jsonObject.getInt("participantNum"));
@@ -551,6 +544,13 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
                                 emptyLayout.showEmpty();
                             } else {
                                 emptyLayout.showContent();
+
+                                pagerAdapter.ClearFragment();
+                                for (SportEntry item : sportEntryDataList) {
+                                    pagerAdapter.addFragment(SportTypeFragment.newInstance(item), item.getName());
+                                }
+                                pagerAdapter.notifyDataSetChanged();
+                                VPSportType.setOffscreenPageLimit(sportEntryDataList.size());
                             }
                         }
                         //adapter.notifyDataSetChanged();
