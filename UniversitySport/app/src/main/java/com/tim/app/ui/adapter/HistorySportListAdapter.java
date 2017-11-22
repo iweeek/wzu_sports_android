@@ -126,7 +126,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                //SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 tvSportTime.setText(sdf.format(runningSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
@@ -229,7 +230,8 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                //SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
