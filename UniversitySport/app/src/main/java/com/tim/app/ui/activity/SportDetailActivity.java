@@ -319,6 +319,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        finish();
+        MainActivity.start(SportDetailActivity.this);
+        
         LocationManager locationManager = (LocationManager) this
                 .getSystemService(Context.LOCATION_SERVICE);
         if (requestCode == 0) {
