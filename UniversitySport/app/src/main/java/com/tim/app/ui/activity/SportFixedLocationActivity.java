@@ -62,8 +62,6 @@ import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
-import com.tim.app.sport.RunningSportsCallback;
-import com.tim.app.sport.SQLite;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
@@ -960,7 +958,7 @@ public class SportFixedLocationActivity extends BaseActivity implements AMap.OnM
     private void areaActivitiesEnd(final int areaSportRecordId) {
         DLOG.d(TAG, "areaSportRecordId:" + areaSportRecordId);
         //必须先初始化。
-        SQLite.init(context, RunningSportsCallback.getInstance());
+        // SQLite.init(context, RunningActivityCallback.getInstance());
         //提交本次运动数据，更新UI
         ServerInterface.instance().areaActivitiesEnd(
                 TAG, areaSportRecordId, new JsonResponseCallback() {

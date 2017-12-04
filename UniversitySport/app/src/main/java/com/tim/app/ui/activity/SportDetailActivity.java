@@ -5,6 +5,7 @@ import android.app.AppOpsManager;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,6 +70,9 @@ import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.logic.UserManager;
+import com.tim.app.sport.RunningActivityCallback;
+import com.tim.app.sport.RunningActivityDataCallback;
+import com.tim.app.sport.SQLite;
 import com.tim.app.sport.SensorService;
 import com.tim.app.ui.dialog.LocationDialog;
 import com.tim.app.ui.dialog.ProgressDialog;
@@ -78,6 +82,7 @@ import com.tim.app.util.BrightnessUtil;
 import com.tim.app.util.MathUtil;
 import com.tim.app.util.SystemUtil;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -102,6 +107,9 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
     //重要实体
     private SportEntry sportEntry;
     private HistoryRunningSportEntry historySportEntry;
+    private SQLite sqLite;
+    private RunningActivityCallback runningActivityCallback;
+    private RunningActivityDataCallback runningActivityDataCallback;
 
     //    private FileOutputStream fos;
     //    private int counter = 0;
@@ -355,6 +363,12 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
         initGPS();
 
         checkLocationPermissonNew();    //检查定位权限
+
+        runningActivityCallback = runningActivityCallback.getInstance();
+        runningActivityDataCallback = runningActivityDataCallback.getInstance();
+        SQLite.init(context, runningActivityCallback);
+        SQLite.init(context, runningActivityDataCallback);
+        sqLite = SQLite.getInstance(this);
 
         Float level = getBatteryLevel();
         tvRemainPower = (TextView) locationDialog.findViewById(R.id.tvRemainPower);
@@ -649,6 +663,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                 } else {
                     // 两次坐标点相同，记录次数（初始值为1）
                     DLOG.d(TAG, "两个点一样： newLatLng：" + newLatLng + "，lastLatLng：" + lastLatLng);
+                    isNormal = true;
                     acquisitionTimes++;
                 }
 
@@ -670,6 +685,22 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 }
                             }
                         });
+                //保存到本地数据库
+                ContentValues values = new ContentValues();
+                values.put("activityId", sportRecordId);
+                values.put("acquisitionTime", new DateTime().getMillis());
+                values.put("stepCount", currentSteps);
+                values.put("stepCountCal", stepCountCal);
+                values.put("distance", currentDistance);
+                values.put("distancePerStep", distancePerStep);
+                values.put("stepPerSecond", stepPerSecond);
+                values.put("longitude", location.getLongitude());
+                values.put("latitude", location.getLatitude());
+                values.put("locationType", locationType);
+                values.put("isNormal", isNormal);
+                values.put("createdAt", new DateTime().getMillis());
+                values.put("updatedAt", new DateTime().getMillis());
+                sqLite.saveRecord(runningActivityDataCallback, values);
             }
 
             // lastSteps = stepCounter;
@@ -1076,6 +1107,17 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                     sportRecordId = json.getInt("id");
                                     DLOG.d(TAG, "sportRecordId:" + sportRecordId);
 
+                                    //保存到本地数据库
+                                    ContentValues values = new ContentValues();
+                                    values.put("id", sportRecordId);
+                                    values.put("runningSportId", sportEntry.getId());
+                                    values.put("studentId", student.getId());
+                                    values.put("startTime", startTime);
+                                    values.put("createdAt", new DateTime().getMillis());
+                                    values.put("updatedAt", new DateTime().getMillis());
+                                    values.put("endedBy", 0);
+                                    sqLite.saveRecord(runningActivityCallback, values);
+
                                     if (SensorService.stepCounterEnabled) {
                                         currentSteps = stepCounter;
                                     } else {
@@ -1215,10 +1257,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
      * 提交运动数据
      */
     private void runningActivitiesEnd(final long targetFinishedTime) {
-        //必须先初始化。
-        //        SQLite.init(context, RunningSportsCallback.getInstance());
         DLOG.d(TAG, "runningActivitiesEnd");
-
         if (SensorService.stepCounterEnabled) {
             currentSteps = stepCounter;
         } else {
@@ -1236,6 +1275,7 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 historySportEntry = new HistoryRunningSportEntry();
 
                                 historySportEntry.setId(json.getInt("id"));
+                                historySportEntry.setEndRunningSportId(json.getLong("endRunningSportId"));
                                 historySportEntry.setSportId(json.getInt("runningSportId"));
                                 historySportEntry.setStudentId(json.getInt("studentId"));
                                 historySportEntry.setDistance(json.getInt("distance"));
@@ -1264,6 +1304,30 @@ public class SportDetailActivity extends BaseActivity implements AMap.OnMyLocati
                                 Toast.makeText(SportDetailActivity.this, COMMIT_FALIED_MSG, Toast.LENGTH_SHORT).show();
                                 return false;
                             }
+
+                            //保存到本地数据库
+                            ContentValues values = new ContentValues();
+                            values.put("id", sportRecordId);
+                            values.put("endRunningSportId", historySportEntry.getEndRunningSportId());
+                            values.put("studentId", historySportEntry.getStudentId());
+                            values.put("distance", historySportEntry.getDistance());
+                            values.put("stepCount", historySportEntry.getStepCount());
+                            values.put("costTime", historySportEntry.getCostTime());
+                            values.put("speed", historySportEntry.getSpeed());
+                            values.put("stepPerSecond", historySportEntry.getStepPerSecond());
+                            values.put("distancePerStep", historySportEntry.getDistancePerStep());
+                            values.put("targetFinishedTime", historySportEntry.getTargetFinishedTime());
+                            values.put("startTime", historySportEntry.getStartTime());
+                            values.put("kcalConsumed", historySportEntry.getKcalConsumed());
+                            values.put("qualified", historySportEntry.isQualified());
+                            values.put("isValid", historySportEntry.isValid());
+                            values.put("isVerified", historySportEntry.isVerified());
+                            values.put("qualifiedDistance", historySportEntry.getQualifiedDistance());
+                            values.put("qualifiedCostTime", historySportEntry.getQualifiedCostTime());
+                            values.put("minCostTime", historySportEntry.getMinCostTime());
+                            values.put("updatedAt", new DateTime().getMillis());
+                            values.put("endedAt", historySportEntry.getEndedAt());
+                            sqLite.updateRecord(runningActivityCallback, values);
 
                             rlBottom.setVisibility(View.VISIBLE);
                             llBottom.setVisibility(View.GONE);

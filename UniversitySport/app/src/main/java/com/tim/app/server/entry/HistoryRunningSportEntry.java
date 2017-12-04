@@ -14,6 +14,7 @@ public class HistoryRunningSportEntry extends HistorySportEntry implements Seria
     private double stepPerSecond;
     private double distancePerStep;
     private int qualifiedDistance;
+    private long endRunningSportId;
 
     public int getDistance() {
         return distance;
@@ -61,5 +62,13 @@ public class HistoryRunningSportEntry extends HistorySportEntry implements Seria
 
     public void setQualifiedDistance(int qualifiedDistance) {
         this.qualifiedDistance = qualifiedDistance;
+    }
+
+    public long getEndRunningSportId() {
+        return endRunningSportId;
+    }
+
+    public void setEndRunningSportId(long endRunningSportId) {
+        this.endRunningSportId = endRunningSportId;
     }
 }
