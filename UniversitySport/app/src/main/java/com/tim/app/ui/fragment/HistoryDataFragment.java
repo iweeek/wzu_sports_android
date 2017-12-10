@@ -17,18 +17,27 @@ import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.WrapRecyclerView;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.RT;
 import com.tim.app.constant.AppConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
 import com.tim.app.server.entry.HistorySportEntry;
+import com.tim.app.server.entry.db.AreaActivityRecord;
+import com.tim.app.server.entry.db.AreaActivityRecordDao;
+import com.tim.app.server.entry.db.DaoSession;
+import com.tim.app.server.entry.db.DateStringConverter;
+import com.tim.app.server.entry.db.RunningActivityRecord;
+import com.tim.app.server.entry.db.RunningActivityRecordDao;
 import com.tim.app.ui.activity.HistoryItem;
 import com.tim.app.ui.activity.HistorySportActivity;
 import com.tim.app.ui.adapter.HistorySportListAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
 import com.tim.app.util.MyDateUtil;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,7 +96,10 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
 
     private String tabStartDate;
     private String tabEndDate;
+    private DateTime startDate;
+    private DateTime endDate;
 
+    private DaoSession mDaoSession;
     //    private String monthTabStartDate;
     //    private String monthTabEndDate;
     //
@@ -164,173 +176,341 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
 
     }
 
-
     private void getHistoryRecord() {
-        ServerInterface.instance().queryHistorySportsRecord(student.getId(), tabStartDate, tabEndDate, type, new JsonResponseCallback() {
-            @Override
-            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
-                Date startDate = null;
-                Date endDate = null;
-                // 点击刷新，清空原来的内容（解决点击刷新之后出现重复信息）
-                if (dataList != null) {
-                    dataList.clear();
-                }
-                if (errCode == 0) {
+        DLOG.d(TAG, "startDate.getMillis():" + startDate.toString());
+        DLOG.d(TAG, "endDate.getMillis():" + endDate.toString());
+        final DateStringConverter converter = new DateStringConverter();
+        if (mDaoSession.getRunningActivityRecordDao().count() != 0) {
+            ServerInterface.instance().queryHistorySportsRecordOnlyStatistic(student.getId(), tabStartDate, tabEndDate, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    // 点击刷新，清空原来的内容（解决点击刷新之后出现重复信息）
+                    if (dataList != null) {
+                        dataList.clear();
+                    }
+                    if (errCode == 0) {
 
-                    JSONObject student = json.optJSONObject("data").optJSONObject("student");
-                    try {
-                        int accuRunningActivityCount = student.optInt("accuRunningActivityCount");
-                        int accuAreaActivityCount = student.optInt("accuAreaActivityCount");
+                        JSONObject student = json.optJSONObject("data").optJSONObject("student");
+                        try {
+                            int accuRunningActivityCount = student.getInt("accuRunningActivityCount");
+                            int accuAreaActivityCount = student.getInt("accuAreaActivityCount");
 
-                        //                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
-                        //                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
+                            DLOG.d(TAG, "accuRunningActivityCount:" + accuRunningActivityCount);
+                            DLOG.d(TAG, "accuAreaActivityCount:" + accuAreaActivityCount);
+                            //                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
+                            //                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
 
-                        String totalSignInCount = String.valueOf(student.optInt("signInCount"));
+                            String totalSignInCount = String.valueOf(student.getInt("signInCount"));
 
-                        int runningActivityTimeCosted = student.optInt("runningActivityTimeCosted");
-                        int areaActivityTimeCosted = student.optInt("areaActivityTimeCosted");
+                            int runningActivityTimeCosted = student.getInt("runningActivityTimeCosted");
+                            int areaActivityTimeCosted = student.getInt("areaActivityTimeCosted");
 
-                        int runningActivityKcalConsumption = student.optInt("runningActivityKcalConsumption");
-                        int areaActivityKcalConsumption = student.optInt("areaActivityKcalConsumption");
+                            int runningActivityKcalConsumption = student.getInt("runningActivityKcalConsumption");
+                            int areaActivityKcalConsumption = student.getInt("areaActivityKcalConsumption");
 
-                        String totalActivityCount = String.valueOf(accuAreaActivityCount + accuRunningActivityCount);
-                        //                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
-                        String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
-                        String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
+                            String totalActivityCount = String.valueOf(accuAreaActivityCount + accuRunningActivityCount);
+                            DLOG.d(TAG, "totalActivityCount:" + totalActivityCount);
 
-                        if (type == AppConstant.THIS_WEEK) {
-                            headView.setData("本周累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
-                        } else if (type == AppConstant.THIS_MONTH) {
-                            headView.setData("本月累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
-                        } else {
-                            headView.setData("本学期累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
-                        }
+                            //                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
+                            String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
+                            String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
 
-                        JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");
-                        JSONArray areaSportArray = student.optJSONObject("areaActivities").optJSONArray("data");
-
-                        for (LocalDate date = new LocalDate(tabEndDate); date.isAfter(new LocalDate(tabStartDate).minusDays(1)); date = date.minusDays(1)) {
-                            //                            Log.d(TAG, "date: " + date);
-                            HistoryItem item = new HistoryItem();
-                            item.historySportEntryList = null;
-                            for (int i = 0; i < runningSportArray.length(); i++) {
-                                if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
-                                    HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
-                                    entry.setId(runningSportArray.optJSONObject(i).optInt("id"));
-                                    entry.setSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
-                                    entry.setCostTime(Integer.valueOf(runningSportArray.optJSONObject(i).optString("costTime")));
-                                    entry.setDistance(Integer.valueOf(runningSportArray.optJSONObject(i).optString("distance")));
-                                    entry.setKcalConsumed(Integer.valueOf(runningSportArray.optJSONObject(i).optString("kcalConsumed")));
-                                    entry.setQualified(runningSportArray.optJSONObject(i).optBoolean("qualified"));
-                                    entry.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
-                                    entry.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
-                                    //过滤不完整数据
-                                    //                                    if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
-                                    entry.setEndedAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
-                                    entry.setValid(runningSportArray.optJSONObject(i).getBoolean("isValid"));
-                                    entry.setVerified(runningSportArray.optJSONObject(i).getBoolean("isVerified"));
-                                    //                                    } else {
-                                    //                                        continue;
-                                    //                                    }
-                                    entry.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
-                                    entry.setType(AppConstant.RUNNING_TYPE);
-
-                                    if (item.historySportEntryList == null) {
-                                        item.historySportEntryList = new ArrayList<HistorySportEntry>();
-                                    }
-                                    item.historySportEntryList.add(entry);
-                                }
-                            }
-
-                            for (int i = 0; i < areaSportArray.length(); i++) {
-                                if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
-                                    HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
-                                    entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
-                                    entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
-
-                                    entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));
-                                    entry.setKcalConsumed(Integer.valueOf(areaSportArray.optJSONObject(i).optString("kcalConsumed")));
-                                    entry.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
-                                    entry.setValid(areaSportArray.optJSONObject(i).optBoolean("isValid"));
-                                    entry.setVerified(areaSportArray.optJSONObject(i).optBoolean("isVerified"));
-                                    entry.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
-                                    entry.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
-                                    entry.setEndedAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
-
-                                    JSONObject point = areaSportArray.getJSONObject(i).getJSONObject("location");
-                                    FixLocationOutdoorSportPoint locationPoint = new FixLocationOutdoorSportPoint();
-                                    locationPoint.setAreaName(point.getString("name"));
-                                    locationPoint.setAddress(point.getString("addr"));
-                                    locationPoint.setEnabled(point.getBoolean("isEnabled"));
-                                    locationPoint.setLatitude(Double.parseDouble(point.getString("latitude")));
-                                    locationPoint.setLongitude(Double.parseDouble(point.getString("longitude")));
-                                    locationPoint.setRadius(point.getInt("radius"));
-                                    entry.setAreaSport(areaSportArray.optJSONObject(i).getJSONObject("areaSport").getString("name"));
-                                    entry.setLocationPoint(locationPoint);
-                                    entry.setType(AppConstant.AREA_TYPE);
-
-                                    if (item.historySportEntryList == null) {
-                                        item.historySportEntryList = new ArrayList<HistorySportEntry>();
-                                    }
-                                    item.historySportEntryList.add(entry);
-                                }
-                            }
-
-                            if (item.historySportEntryList != null) {
-                                //                                for (int i = 0; i < item.historySportEntryList.size(); i++) {
-                                //                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
-                                //                                }
-                                // 对item.historySportEntryList进行排序
-                                //                                TimeComparator timeComparator = new TimeComparator();
-                                //                                Collections.sort(item.historySportEntryList, timeComparator);
-
-                                item.date = date.toString();
-                                dataList.add(item);
-                            }
-                        }
-
-                        sortSportData();
-
-                        // 显示当前需要筛选的内容
-                        if (currentFragmentState != -1) {
-                            if (((HistorySportActivity) getActivity()).currentState != -1) {
-                                currentFragmentState = ((HistorySportActivity) getActivity()).currentState;  // 如果有前一次筛选记录
+                            if (type == AppConstant.THIS_WEEK) {
+                                headView.setData("本周累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            } else if (type == AppConstant.THIS_MONTH) {
+                                headView.setData("本月累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                             } else {
-                                // TODO 第一次初始化，默认是显示 "达标" 记录。
+                                headView.setData("本学期累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
                             }
 
-                            changeHistoryDataList(null, currentFragmentState);
-                        }
+                            // 从本地取
+                            QueryBuilder<RunningActivityRecord> ruuningBuilder = mDaoSession.getRunningActivityRecordDao().queryBuilder();
+                            List<RunningActivityRecord> runningAvtivityList = ruuningBuilder.where(
+                                    RunningActivityRecordDao.Properties.StartTime.between(
+                                            converter.convertToDatabaseValue(startDate.toDate()),
+                                            converter.convertToDatabaseValue(endDate.toDate())))
+                                    .list();
 
-                        adapter.notifyDataSetChanged();
-                        if (dataList.size() == 0) {
-                            emptyLayout.showEmpty();
-                        } else {
-                            emptyLayout.showContent();
+                            for (LocalDate date = new LocalDate(tabEndDate); date.isAfter(new LocalDate(tabStartDate).minusDays(1)); date = date.minusDays(1)) {
+                                HistoryItem item = new HistoryItem();
+                                item.historySportEntryList = null;
+                                for (RunningActivityRecord record : runningAvtivityList) {
+                                    if (record.getSportDate().equals(date.toString())) {
+                                        HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
+                                        entry.setId(record.getId());
+                                        entry.setSportId((int) record.getRunningSportId());
+                                        entry.setCostTime(record.getCostTime());
+                                        entry.setDistance(record.getDistance());
+                                        entry.setKcalConsumed(record.getKcalConsumed());
+                                        entry.setQualified(record.getQualified());
+                                        entry.setStartTime(record.getStartTime().getTime());
+                                        entry.setSportDate(record.getSportDate());
+                                        entry.setEndedAt(record.getEndedAt().getTime());
+                                        entry.setValid(record.getIsValid());
+                                        entry.setVerified(record.getIsVerified());
+                                        entry.setSportName(record.getRunningSportName());
+                                        entry.setType(AppConstant.RUNNING_TYPE);
+
+                                        if (item.historySportEntryList == null) {
+                                            item.historySportEntryList = new ArrayList<HistorySportEntry>();
+                                        }
+                                        item.historySportEntryList.add(entry);
+                                    }
+                                }
+
+                                QueryBuilder<AreaActivityRecord> areaBuilder = mDaoSession.getAreaActivityRecordDao().queryBuilder();
+                                List<AreaActivityRecord> areaActivityList = areaBuilder.where(AreaActivityRecordDao.Properties.StartTime.between(
+                                        converter.convertToDatabaseValue(startDate.toDate()),
+                                        converter.convertToDatabaseValue(endDate.toDate())
+                                )).list();
+
+                                for (AreaActivityRecord record : areaActivityList) {
+                                    if (record.getSportDate().equals(date.toString())) {
+                                        HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
+                                        entry.setId(record.getId());
+                                        entry.setSportId((int) record.getAreaSportId());
+                                        entry.setCostTime(record.getCostTime());
+                                        entry.setKcalConsumed(record.getKcalConsumed());
+                                        entry.setQualified(record.getQualified());
+                                        entry.setValid(record.getIsValid());
+                                        entry.setVerified(record.getIsVerified());
+                                        entry.setStartTime(record.getStartTime().getTime());
+                                        entry.setSportDate(record.getSportDate());
+                                        entry.setEndedAt(record.getEndedAt().getTime());
+
+                                        FixLocationOutdoorSportPoint locationPoint = new FixLocationOutdoorSportPoint();
+                                        locationPoint.setAreaName(record.getName());
+                                        locationPoint.setAddress(record.getAddr());
+                                        locationPoint.setEnabled(record.getIsEnabled());
+                                        locationPoint.setLatitude(record.getLatitude());
+                                        locationPoint.setLongitude(record.getLongitude());
+                                        locationPoint.setRadius(record.getRadius());
+                                        entry.setAreaSport(record.getAreaSportName());
+                                        entry.setLocationPoint(locationPoint);
+                                        entry.setType(AppConstant.AREA_TYPE);
+
+                                        if (item.historySportEntryList == null) {
+                                            item.historySportEntryList = new ArrayList<HistorySportEntry>();
+                                        }
+                                        item.historySportEntryList.add(entry);
+                                    }
+                                }
+
+                                if (item.historySportEntryList != null) {
+                                    item.date = date.toString();
+                                    dataList.add(item);
+                                }
+                            }
+
+                            sortSportData();
+
+                            // 显示当前需要筛选的内容
+                            if (currentFragmentState != -1) {
+                                if (((HistorySportActivity) getActivity()).currentState != -1) {
+                                    currentFragmentState = ((HistorySportActivity) getActivity()).currentState;  // 如果有前一次筛选记录
+                                } else {
+                                    // TODO 第一次初始化，默认是显示 "达标" 记录。
+                                }
+
+                                changeHistoryDataList(null, currentFragmentState);
+                            }
+
+                            adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            emptyLayout.showEmptyOrError(errCode);
+                            e.printStackTrace();
+                            DLOG.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
+                            return false;
                         }
-                        return true;
-                    } catch (org.json.JSONException e) {
+                    } else {
                         emptyLayout.showEmptyOrError(errCode);
-                        e.printStackTrace();
-                        DLOG.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
                         return false;
                     }
-                } else {
-                    emptyLayout.showEmptyOrError(errCode);
-                    return false;
                 }
-            }
+            });
 
-        });
+
+        } else {
+            ServerInterface.instance().queryHistorySportsRecord(student.getId(), tabStartDate, tabEndDate, type, new JsonResponseCallback() {
+                @Override
+                public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                    Date startDate = null;
+                    Date endDate = null;
+                    // 点击刷新，清空原来的内容（解决点击刷新之后出现重复信息）
+                    if (dataList != null) {
+                        dataList.clear();
+                    }
+                    if (errCode == 0) {
+
+                        JSONObject student = json.optJSONObject("data").optJSONObject("student");
+                        try {
+                            int accuRunningActivityCount = student.optInt("accuRunningActivityCount");
+                            int accuAreaActivityCount = student.optInt("accuAreaActivityCount");
+
+                            DLOG.d(TAG, "accuRunningActivityCount:" + accuRunningActivityCount);
+                            DLOG.d(TAG, "accuAreaActivityCount:" + accuAreaActivityCount);
+                            //                        int qualifiedRunningActivityCount = student.optInt("qualifiedRunningActivityCount");
+                            //                        int qualifiedAreaActivityCount = student.optInt("qualifiedAreaActivityCount");
+
+                            String totalSignInCount = String.valueOf(student.optInt("signInCount"));
+
+                            int runningActivityTimeCosted = student.optInt("runningActivityTimeCosted");
+                            int areaActivityTimeCosted = student.optInt("areaActivityTimeCosted");
+
+                            int runningActivityKcalConsumption = student.optInt("runningActivityKcalConsumption");
+                            int areaActivityKcalConsumption = student.optInt("areaActivityKcalConsumption");
+
+                            String totalActivityCount = String.valueOf(accuAreaActivityCount + accuRunningActivityCount);
+                            DLOG.d(TAG, "totalActivityCount:" + totalActivityCount);
+
+                            //                        String totalqualifiedActivityCount = String.valueOf(qualifiedAreaActivityCount + qualifiedRunningActivityCount);
+                            String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
+                            String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
+
+                            if (type == AppConstant.THIS_WEEK) {
+                                headView.setData("本周累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            } else if (type == AppConstant.THIS_MONTH) {
+                                headView.setData("本月累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            } else {
+                                headView.setData("本学期累计运动(次)", totalActivityCount, totalSignInCount, toalActivityKcalConsumption, totalActivityTimeCosted);
+                            }
+
+                            JSONArray runningSportArray = student.optJSONObject("runningActivities").optJSONArray("data");
+                            JSONArray areaSportArray = student.optJSONObject("areaActivities").optJSONArray("data");
+
+                            for (LocalDate date = new LocalDate(tabEndDate); date.isAfter(new LocalDate(tabStartDate).minusDays(1)); date = date.minusDays(1)) {
+                                //                            Log.d(TAG, "date: " + date);
+                                HistoryItem item = new HistoryItem();
+                                item.historySportEntryList = null;
+                                for (int i = 0; i < runningSportArray.length(); i++) {
+                                    if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
+                                        HistoryRunningSportEntry entry = new HistoryRunningSportEntry();
+                                        entry.setId(runningSportArray.optJSONObject(i).optInt("id"));
+                                        entry.setSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
+                                        entry.setCostTime(Integer.valueOf(runningSportArray.optJSONObject(i).optString("costTime")));
+                                        entry.setDistance(Integer.valueOf(runningSportArray.optJSONObject(i).optString("distance")));
+                                        entry.setKcalConsumed(Integer.valueOf(runningSportArray.optJSONObject(i).optString("kcalConsumed")));
+                                        entry.setQualified(runningSportArray.optJSONObject(i).optBoolean("qualified"));
+                                        entry.setStartTime(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime")));
+                                        entry.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
+                                        //过滤不完整数据
+                                        //                                    if (Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")) > 0) {
+                                        entry.setEndedAt(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt")));
+                                        entry.setValid(runningSportArray.optJSONObject(i).getBoolean("isValid"));
+                                        entry.setVerified(runningSportArray.optJSONObject(i).getBoolean("isVerified"));
+                                        //                                    } else {
+                                        //                                        continue;
+                                        //                                    }
+                                        entry.setSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
+                                        entry.setType(AppConstant.RUNNING_TYPE);
+
+                                        if (item.historySportEntryList == null) {
+                                            item.historySportEntryList = new ArrayList<HistorySportEntry>();
+                                        }
+                                        item.historySportEntryList.add(entry);
+                                    }
+                                }
+
+                                for (int i = 0; i < areaSportArray.length(); i++) {
+                                    if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
+                                        HistoryAreaSportEntry entry = new HistoryAreaSportEntry();
+                                        entry.setId(areaSportArray.optJSONObject(i).optInt("id"));
+                                        entry.setSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
+
+                                        entry.setCostTime(Integer.valueOf(areaSportArray.optJSONObject(i).optString("costTime")));
+                                        entry.setKcalConsumed(Integer.valueOf(areaSportArray.optJSONObject(i).optString("kcalConsumed")));
+                                        entry.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
+                                        entry.setValid(areaSportArray.optJSONObject(i).optBoolean("isValid"));
+                                        entry.setVerified(areaSportArray.optJSONObject(i).optBoolean("isVerified"));
+                                        entry.setStartTime(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime")));
+                                        entry.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
+                                        entry.setEndedAt(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt")));
+
+                                        JSONObject point = areaSportArray.getJSONObject(i).getJSONObject("location");
+                                        FixLocationOutdoorSportPoint locationPoint = new FixLocationOutdoorSportPoint();
+                                        locationPoint.setAreaName(point.getString("name"));
+                                        locationPoint.setAddress(point.getString("addr"));
+                                        locationPoint.setEnabled(point.getBoolean("isEnabled"));
+                                        locationPoint.setLatitude(Double.parseDouble(point.getString("latitude")));
+                                        locationPoint.setLongitude(Double.parseDouble(point.getString("longitude")));
+                                        locationPoint.setRadius(point.getInt("radius"));
+                                        entry.setAreaSport(areaSportArray.optJSONObject(i).getJSONObject("areaSport").getString("name"));
+                                        entry.setLocationPoint(locationPoint);
+                                        entry.setType(AppConstant.AREA_TYPE);
+
+                                        if (item.historySportEntryList == null) {
+                                            item.historySportEntryList = new ArrayList<HistorySportEntry>();
+                                        }
+                                        item.historySportEntryList.add(entry);
+                                    }
+                                }
+
+                                if (item.historySportEntryList != null) {
+                                    //                                for (int i = 0; i < item.historySportEntryList.size(); i++) {
+                                    //                                    Log.d(TAG, item.historySportEntryList.get(i).toString());
+                                    //                                }
+                                    // 对item.historySportEntryList进行排序
+                                    //                                TimeComparator timeComparator = new TimeComparator();
+                                    //                                Collections.sort(item.historySportEntryList, timeComparator);
+
+                                    item.date = date.toString();
+                                    dataList.add(item);
+                                }
+                            }
+
+                            sortSportData();
+
+                            // 显示当前需要筛选的内容
+                            if (currentFragmentState != -1) {
+                                if (((HistorySportActivity) getActivity()).currentState != -1) {
+                                    currentFragmentState = ((HistorySportActivity) getActivity()).currentState;  // 如果有前一次筛选记录
+                                } else {
+                                    // TODO 第一次初始化，默认是显示 "达标" 记录。
+                                }
+
+                                changeHistoryDataList(null, currentFragmentState);
+                            }
+
+                            adapter.notifyDataSetChanged();
+                            if (dataList.size() == 0) {
+                                emptyLayout.showEmpty();
+                            } else {
+                                emptyLayout.showContent();
+                            }
+                            return true;
+                        } catch (org.json.JSONException e) {
+                            emptyLayout.showEmptyOrError(errCode);
+                            e.printStackTrace();
+                            DLOG.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
+                            return false;
+                        }
+                    } else {
+                        emptyLayout.showEmptyOrError(errCode);
+                        return false;
+                    }
+                }
+
+            });
+        }
     }
 
     private void initData() {
+        mDaoSession = RT.ins().getDaoSession();
         tabEndDate = new LocalDate(new Date()).toString();
+        endDate = new DateTime(new Date());
         if (type == AppConstant.THIS_WEEK) {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentWeekStartDate()).toString();
-                getHistoryRecord();
+            startDate = new DateTime(MyDateUtil.getCurrentWeekStartDate());
+            getHistoryRecord();
         } else if (type == AppConstant.THIS_MONTH) {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
+            startDate = new DateTime(MyDateUtil.getCurrentMonthStartDate());
             getHistoryRecord();
         } else if ((type == AppConstant.THIS_TERM)) {
             ServerInterface.instance().queryTermInfo(0, new JsonResponseCallback() {
@@ -342,6 +522,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                         Date dt = new Date(json.optJSONObject("data").optJSONObject("term").getLong("startDate"));
                         termStartDate = sdf.format(dt);
                         tabStartDate = termStartDate;
+                        startDate = new DateTime(dt);
                         getHistoryRecord();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -353,6 +534,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
             });
         } else {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
+            startDate = new DateTime(MyDateUtil.getCurrentMonthStartDate());
             getHistoryRecord();
         }
         adapter.notifyDataSetChanged();
@@ -394,7 +576,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        DLOG.d(TAG, "onClick");
         switch (v.getId()) {
             default:
                 break;
@@ -413,6 +594,8 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 ld = ld.minusDays(1);
                 tabEndDate = new LocalDate(tabStartDate).minusDays(1).toString();
                 tabStartDate = ld.toString();
+                startDate = new DateTime(MyDateUtil.getCurrentWeekStartDate());
+                endDate = new DateTime(new Date());
                 getHistoryRecord();
                 lrvLoadMore.loadMoreFinish(false, true);
             } else {
@@ -712,7 +895,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
                 if (entry.isQualified() && !entry.isVerified() && entry.getEndedAt() != 0) {
-                        historySportEntry.add(entry);
+                    historySportEntry.add(entry);
                 }
             }
 
@@ -728,7 +911,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
                 if (entry.isQualified() && entry.isVerified() && !entry.isValid() && entry.getEndedAt() != 0) {
-                        historySportEntry.add(entry);
+                    historySportEntry.add(entry);
                 }
             }
 

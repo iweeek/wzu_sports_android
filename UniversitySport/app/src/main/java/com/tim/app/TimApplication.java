@@ -10,6 +10,7 @@ public class TimApplication extends LSApplication {
         super.onCreate();
         RT.application = this;
         RT.ins().init();
+        RT.ins().initGreenDao(this);
     }
 
 }

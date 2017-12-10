@@ -13,8 +13,8 @@ import java.util.Date;
  * @创建时间 04/12/2017
  * @描述
  */
-@Entity(nameInDb = "running_activity_data")
-public class RunningActivityDataRecord {
+@Entity(nameInDb = "area_activity_data")
+public class AreaActivityDataRecord {
 
     @Property(nameInDb = "id")
     @Id(autoincrement = true)
@@ -26,24 +26,15 @@ public class RunningActivityDataRecord {
 
     @Convert(converter = DateStringConverter.class, columnType = String.class)
     public Date acquisitionTime;
-    @Property(nameInDb = "step_count")
-    public int stepCount;
-    @Property(nameInDb = "step_count_cal")
-    public int stepCountCal;
-    @Property(nameInDb = "distance")
-    public int distance;
-    @Property(nameInDb = "distance_per_step")
-    public double distancePerStep;
-    @Property(nameInDb = "step_per_second")
-    public long stepPerSecond;
+
+    @Property(nameInDb = "is_normal")
+    public boolean isNormal;
     @Property(nameInDb = "longitude")
     public double longitude;
     @Property(nameInDb = "latitude")
     public double latitude;
     @Property(nameInDb = "location_type")
     public int locationType;
-    @Property(nameInDb = "is_normal")
-    public boolean isNormal;
 
     @Convert(converter = DateStringConverter.class, columnType = String.class)
     @Property(nameInDb = "created_at")
@@ -53,29 +44,23 @@ public class RunningActivityDataRecord {
     @Property(nameInDb = "updated_at")
     public Date updatedAt;
 
-    @Generated(hash = 294229296)
-    public RunningActivityDataRecord(Long id, long activityId, Date acquisitionTime,
-            int stepCount, int stepCountCal, int distance, double distancePerStep,
-            long stepPerSecond, double longitude, double latitude, int locationType,
-            boolean isNormal, Date createdAt, Date updatedAt) {
+    @Generated(hash = 882222915)
+    public AreaActivityDataRecord(Long id, long activityId, Date acquisitionTime,
+            boolean isNormal, double longitude, double latitude, int locationType,
+            Date createdAt, Date updatedAt) {
         this.id = id;
         this.activityId = activityId;
         this.acquisitionTime = acquisitionTime;
-        this.stepCount = stepCount;
-        this.stepCountCal = stepCountCal;
-        this.distance = distance;
-        this.distancePerStep = distancePerStep;
-        this.stepPerSecond = stepPerSecond;
+        this.isNormal = isNormal;
         this.longitude = longitude;
         this.latitude = latitude;
         this.locationType = locationType;
-        this.isNormal = isNormal;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    @Generated(hash = 1910225190)
-    public RunningActivityDataRecord() {
+    @Generated(hash = 542785037)
+    public AreaActivityDataRecord() {
     }
 
     public Long getId() {
@@ -102,44 +87,12 @@ public class RunningActivityDataRecord {
         this.acquisitionTime = acquisitionTime;
     }
 
-    public int getStepCount() {
-        return this.stepCount;
+    public boolean getIsNormal() {
+        return this.isNormal;
     }
 
-    public void setStepCount(int stepCount) {
-        this.stepCount = stepCount;
-    }
-
-    public int getStepCountCal() {
-        return this.stepCountCal;
-    }
-
-    public void setStepCountCal(int stepCountCal) {
-        this.stepCountCal = stepCountCal;
-    }
-
-    public int getDistance() {
-        return this.distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public double getDistancePerStep() {
-        return this.distancePerStep;
-    }
-
-    public void setDistancePerStep(double distancePerStep) {
-        this.distancePerStep = distancePerStep;
-    }
-
-    public long getStepPerSecond() {
-        return this.stepPerSecond;
-    }
-
-    public void setStepPerSecond(long stepPerSecond) {
-        this.stepPerSecond = stepPerSecond;
+    public void setIsNormal(boolean isNormal) {
+        this.isNormal = isNormal;
     }
 
     public double getLongitude() {
@@ -166,14 +119,6 @@ public class RunningActivityDataRecord {
         this.locationType = locationType;
     }
 
-    public boolean getIsNormal() {
-        return this.isNormal;
-    }
-
-    public void setIsNormal(boolean isNormal) {
-        this.isNormal = isNormal;
-    }
-
     public Date getCreatedAt() {
         return this.createdAt;
     }
@@ -190,4 +135,5 @@ public class RunningActivityDataRecord {
         this.updatedAt = updatedAt;
     }
 
+    
 }

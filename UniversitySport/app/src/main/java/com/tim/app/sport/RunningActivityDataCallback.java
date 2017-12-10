@@ -108,6 +108,15 @@ public class RunningActivityDataCallback implements SQLite.TableInterface{
     }
 
     @Override
+    public int count(SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("select count(*) from  " +
+                getTableName(), null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        return count;
+    }
+
+    @Override
     public void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 0:
@@ -184,22 +193,22 @@ public class RunningActivityDataCallback implements SQLite.TableInterface{
     public RunningActivityDataRecord getEntityByCursor(String tableName, Cursor c) {
         switch (tableName) {
             case TABLE_RUNNING_ACTIVITY_DATA:
-                return new RunningActivityDataRecord(
-                        c.getLong(0),
-                        c.getLong(1),
-                        c.getInt(2),
-                        c.getInt(3),
-                        c.getInt(4),
-                        c.getInt(5),
-                        c.getLong(6),
-                        c.getLong(7),
-                        c.getLong(8),
-                        c.getLong(9),
-                        c.getInt(10),
-                        c.getInt(11),
-                        c.getInt(12),
-                        c.getInt(13)
-                );
+                // return new RunningActivityDataRecord(
+                //         c.getLong(0),
+                //         c.getLong(1),
+                //         c.getInt(2),
+                //         c.getInt(3),
+                //         c.getInt(4),
+                //         c.getInt(5),
+                //         c.getLong(6),
+                //         c.getLong(7),
+                //         c.getLong(8),
+                //         c.getLong(9),
+                //         c.getInt(10),
+                //         c.getInt(11),
+                //         c.getInt(12),
+                //         c.getInt(13)
+                // );
         }
         return null;
     }

@@ -19,6 +19,8 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tim.app.receiver.LSReceiver;
+import com.tim.app.server.entry.db.DaoMaster;
+import com.tim.app.server.entry.db.DaoSession;
 import com.tim.app.server.net.NetworkHost;
 
 import java.io.File;
@@ -34,13 +36,15 @@ public class RT {
 
     private static RT self = null;
 
+    private DaoSession mDaoSession;
+
     public static Application application = null;
 
     public static NetworkHost HOST = null;
 
     static {
         if (BuildConfig.DEBUG) {
-            HOST = NetworkHost.DEBUG;
+            HOST = NetworkHost.PUBLISH;
         } else {
             HOST = NetworkHost.PUBLISH;
             DEBUG = false;
@@ -155,6 +159,15 @@ public class RT {
 //            cethread.start();
 //            CrashHandler.getInstance().init(application);
         }
+    }
+
+    public void initGreenDao(TimApplication application) {
+        mDaoSession = new DaoMaster(
+                new DaoMaster.DevOpenHelper(application, "wzu_sports_record.db").getWritableDb()).newSession();
+    }
+
+    public DaoSession getDaoSession() {
+        return mDaoSession;
     }
 
     private void initOkHttp() {

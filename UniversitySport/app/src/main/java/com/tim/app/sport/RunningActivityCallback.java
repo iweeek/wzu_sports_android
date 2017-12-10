@@ -134,6 +134,14 @@ public class RunningActivityCallback implements SQLite.TableInterface {
     }
 
     @Override
+    public int count(SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("select count(*) from  " +
+                getTableName(), null);
+        cursor.moveToFirst();
+        int count = cursor.getInt(0);
+        return count;
+    }
+    @Override
     public void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         switch (oldVersion) {
             case 0:
@@ -163,32 +171,32 @@ public class RunningActivityCallback implements SQLite.TableInterface {
     public <T> void assignValuesByEntity(String tableName, T t, ContentValues values) {
         switch (tableName){
             case TABLE_RUNNING_ACTIVITY:
-                if(t instanceof RunningActivityRecord){
-                    RunningActivityRecord record = (RunningActivityRecord) t;
-                    values.put(KEY_ID, record.getId());
-                    values.put(KEY_RUNNING_SPORT_ID, record.getRunningSportId());
-                    values.put(KEY_END_RUNNING_SPORT_ID, record.getEndRunningSportId());
-                    values.put(KEY_RUNNING_STUDENT_ID, record.getStudentId());
-                    values.put(KEY_DISTANCE, record.getDistance());
-                    values.put(KEY_STEP_COUNT, record.getStepCount());
-                    values.put(KEY_COST_TIME, record.getCostTime());
-                    values.put(KEY_SPEED, record.getSpeed());
-                    values.put(KEY_STEP_PER_SECOND, record.getStepPerSecond());
-                    values.put(KEY_DISTANCE_PER_STEP, record.getDistancePerStep());
-                    values.put(KEY_TARGET_FINISHED_TIME, record.getTargetFinishedTime());
-                    values.put(KEY_START_TIME, record.getStartTime());
-                    values.put(KEY_KCAL_CONSUMED, record.getKcalConsumed());
-                    values.put(KEY_QUALIFIED, record.getQualified());
-                    values.put(KEY_IS_VALID, record.getIsValid());
-                    values.put(KEY_IS_VERIFIED, record.getIsVerified());
-                    values.put(KEY_QUALIFIED_DISTANCE, record.getQualifiedDistance());
-                    values.put(KEY_QUALIFIED_COST_TIME, record.getQualifiedCostTime());
-                    values.put(KEY_MIN_COST_TIME, record.getMinCostTime());
-                    values.put(KEY_CREATED_AT, record.getCreatedAt());
-                    values.put(KEY_UPDATED_AT, record.getUpdatedAt());
-                    values.put(KEY_ENDED_AT, record.getEndedAt());
-                    values.put(KEY_ENDED_BY, record.getEndedBy());
-                }
+                // if(t instanceof RunningActivityRecord){
+                //     RunningActivityRecord record = (RunningActivityRecord) t;
+                //     values.put(KEY_ID, record.getId());
+                //     values.put(KEY_RUNNING_SPORT_ID, record.getRunningSportId());
+                //     values.put(KEY_END_RUNNING_SPORT_ID, record.getEndRunningSportId());
+                //     values.put(KEY_RUNNING_STUDENT_ID, record.getStudentId());
+                //     values.put(KEY_DISTANCE, record.getDistance());
+                //     values.put(KEY_STEP_COUNT, record.getStepCount());
+                //     values.put(KEY_COST_TIME, record.getCostTime());
+                //     values.put(KEY_SPEED, record.getSpeed());
+                //     values.put(KEY_STEP_PER_SECOND, record.getStepPerSecond());
+                //     values.put(KEY_DISTANCE_PER_STEP, record.getDistancePerStep());
+                //     values.put(KEY_TARGET_FINISHED_TIME, record.getTargetFinishedTime());
+                //     values.put(KEY_START_TIME, record.getStartTime());
+                //     values.put(KEY_KCAL_CONSUMED, record.getKcalConsumed());
+                //     values.put(KEY_QUALIFIED, record.getQualified());
+                //     values.put(KEY_IS_VALID, record.getIsValid());
+                //     values.put(KEY_IS_VERIFIED, record.getIsVerified());
+                //     values.put(KEY_QUALIFIED_DISTANCE, record.getQualifiedDistance());
+                //     values.put(KEY_QUALIFIED_COST_TIME, record.getQualifiedCostTime());
+                //     values.put(KEY_MIN_COST_TIME, record.getMinCostTime());
+                //     values.put(KEY_CREATED_AT, record.getCreatedAt());
+                //     values.put(KEY_UPDATED_AT, record.getUpdatedAt());
+                //     values.put(KEY_ENDED_AT, record.getEndedAt());
+                //     values.put(KEY_ENDED_BY, record.getEndedBy());
+                // }
                 break;
 
         }
@@ -211,31 +219,32 @@ public class RunningActivityCallback implements SQLite.TableInterface {
     public RunningActivityRecord getEntityByCursor(String tableName, Cursor c) {
         switch (tableName) {
             case TABLE_RUNNING_ACTIVITY:
-                return new RunningActivityRecord(
-                        c.getLong(0),
-                        c.getLong(1),
-                        c.getLong(2),
-                        c.getLong(3),
-                        c.getInt(4),
-                        c.getInt(5),
-                        c.getInt(6),
-                        c.getLong(7),
-                        c.getLong(8),
-                        c.getLong(9),
-                        c.getInt(10),
-                        c.getInt(11),
-                        c.getInt(12),
-                        c.getInt(13),
-                        c.getInt(14),
-                        c.getInt(15),
-                        c.getInt(16),
-                        c.getInt(17),
-                        c.getInt(18),
-                        c.getInt(19),
-                        c.getInt(20),
-                        c.getInt(21),
-                        c.getInt(22)
-                        );
+                return null;
+                // return new RunningActivityRecord(
+                //         c.getLong(0),
+                //         c.getLong(1),
+                //         c.getLong(2),
+                //         c.getLong(3),
+                //         c.getInt(4),
+                //         c.getInt(5),
+                //         c.getInt(6),
+                //         c.getLong(7),
+                //         c.getLong(8),
+                //         c.getLong(9),
+                //         c.getInt(10),
+                //         c.getInt(11),
+                //         c.getInt(12),
+                //         c.getInt(13),
+                //         c.getInt(14),
+                //         c.getInt(15),
+                //         c.getInt(16),
+                //         c.getInt(17),
+                //         c.getInt(18),
+                //         c.getInt(19),
+                //         c.getInt(20),
+                //         c.getInt(21),
+                //         c.getInt(22)
+                //         );
         }
         return null;
     }

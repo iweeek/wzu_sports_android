@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.application.library.log.DLOG;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -23,6 +26,7 @@ public class SQLite extends SQLiteOpenHelper {
     private static final String TAG = "SQLite";
 
     private static List<SQLite.TableInterface> mCallBacks = new ArrayList<>();
+    private static Map<Class, SQLite.TableInterface> mCallBackMap = new HashMap<>();
 
     public static final String ILLEGAL_OPREATION = "非法操作，请先执行初始化操作。 SQLite.init()";
     private final static int DB_VERSION = 2;
@@ -38,6 +42,8 @@ public class SQLite extends SQLiteOpenHelper {
 
         int getDBVersion();
 
+        int count(SQLiteDatabase db);
+
         void doUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
         List<String> createTableSql();
@@ -52,11 +58,33 @@ public class SQLite extends SQLiteOpenHelper {
 
     }
 
-    public static void init(Context context, SQLite.TableInterface callBack) {
-        if (instance == null) {
-            instance = new SQLite(context, callBack);
+    // public static void init(Context context, SQLite.TableInterface callBack) {
+    //     if (instance == null) {
+    //         instance = new SQLite(context, callBack);
+    //     }
+    //     mCallBacks.add(callBack);
+    // }
+
+    public static void init(Context context, Class theClass) {
+        if (SQLite.TableInterface.class.isAssignableFrom(theClass)) {
+            // theClass 实现了 SQLite.TableInterface
+            Log.d(TAG, "theClass 实现了 SQLite.TableInterface");
+            try {
+                SQLite.TableInterface callBack = (TableInterface) theClass.newInstance();
+                if (instance == null) {
+                    instance = new SQLite(context, callBack);
+                }
+                mCallBacks.add(callBack);
+                mCallBackMap.put(theClass, callBack);
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // theClass 没有实现 SQLite.TableInterface
+            Log.d(TAG, "theClass 没有实现 SQLite.TableInterface");
         }
-        mCallBacks.add(callBack);
     }
 
     private SQLite(final Context context) {
@@ -111,6 +139,12 @@ public class SQLite extends SQLiteOpenHelper {
         }
     }
 
+    public int count(TableInterface callBack) {
+        // 判断是否实现了TableInterface
+        // TableInterface callBack = mCallBackMap.get(clazz);
+        int count = callBack.count(getWritableDatabase());
+        return count;
+    }
 
     /**
      * @return the insert raw ID
@@ -134,41 +168,33 @@ public class SQLite extends SQLiteOpenHelper {
 
     }
 
-    // public int count() {
-    //     Cursor cursor = getWritableDatabase().rawQuery("select count(*) from  " +
-    //             mCallBack.getDBName(), null);
-    //     return cursor.getCount();
-    // }
+    public static <T> List<T> query(TableInterface callback,
+                                    @Nullable String queryStr, @Nullable String[] whereArgs) {
+        if (instance == null) {
+            throw new IllegalStateException(ILLEGAL_OPREATION);
+        }
 
-    //
-    // public static <T> List<T> query(String tableName,
-    //                                 @Nullable String queryStr, @Nullable String[] whereArgs) {
-    //     if (instance == null) {
-    //         throw new IllegalStateException(ILLEGAL_OPREATION);
-    //     }
-    //
-    //     List<T> list = new ArrayList<>();
-    //     SQLiteDatabase db = instance.getReadableDatabase();
-    //     db.beginTransaction();
-    //     try {
-    //         db.setTransactionSuccessful();
-    //         Cursor c = db.rawQuery(queryStr, whereArgs);
-    //         if (c.moveToFirst()) {
-    //             do {
-    //                 T record = (T) instance.mCallBack
-    //                         .getEntityByCursor(mCallBack.getTableName(), c);
-    //                 if (record != null) {
-    //                     list.add(record);
-    //                 }
-    //             } while (c.moveToNext());
-    //             c.close();
-    //         }
-    //     } finally {
-    //         db.endTransaction();
-    //         db.close();
-    //     }
-    //     return list;
-    // }
+        List<T> list = new ArrayList<>();
+        SQLiteDatabase db = instance.getReadableDatabase();
+        db.beginTransaction();
+        try {
+            db.setTransactionSuccessful();
+            Cursor c = db.rawQuery(queryStr, whereArgs);
+            if (c.moveToFirst()) {
+                do {
+                    T record = (T) callback.getEntityByCursor(callback.getTableName(), c);
+                    if (record != null) {
+                        list.add(record);
+                    }
+                } while (c.moveToNext());
+                c.close();
+            }
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+        return list;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     // Self

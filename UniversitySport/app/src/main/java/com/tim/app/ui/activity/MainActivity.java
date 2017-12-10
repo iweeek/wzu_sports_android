@@ -41,6 +41,9 @@ import com.tim.app.constant.AppStatusConstant;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.SportEntry;
 import com.tim.app.server.entry.User;
+import com.tim.app.server.entry.db.AreaActivityRecord;
+import com.tim.app.server.entry.db.DaoSession;
+import com.tim.app.server.entry.db.RunningActivityRecord;
 import com.tim.app.ui.activity.setting.SettingActivity;
 import com.tim.app.ui.adapter.SportAdapter;
 import com.tim.app.ui.cell.GlideApp;
@@ -48,14 +51,19 @@ import com.tim.app.ui.view.HomepageHeadView;
 import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.DownloadAppUtils;
 import com.tim.app.util.MathUtil;
+import com.tim.app.util.MyDateUtil;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
@@ -100,7 +108,12 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
     private NavigationView navigationView;
 
     private HomepageHeadView homepageHeadView;
-    //    private BadNetworkView badNetworkView;
+
+    private String tabStartDate;
+    private String tabEndDate;
+    private String termStartDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
+
+    private DaoSession mDaoSession;
 
     /*
     * 微信
@@ -673,6 +686,169 @@ public class MainActivity extends BaseActivity implements BaseRecyclerAdapter.On
         } else {
             // ignore it
         }
+
+        // 初始化数据库
+        // runningActivityCallback = runningActivityCallback.getInstance();
+        // runningActivityDataCallback = runningActivityDataCallback.getInstance();
+        // SQLite.init(context, RunningActivityCallback.class);
+        // SQLite.init(context, RunningActivityDataCallback.class);
+        // sqLite = SQLite.getInstance(this);
+        // DLOG.d(TAG, "你好");
+
+        // 检查历史数据是否已同步。
+        mDaoSession = RT.ins().getDaoSession();
+        long count = mDaoSession.getRunningActivityRecordDao().count();
+        DLOG.d(TAG, "count:" + count);
+        if (count == 0) {
+            getTerm();
+        }
+    }
+
+    private void getTerm() {
+        tabEndDate = new LocalDate(new Date()).toString();
+        ServerInterface.instance().queryTermInfo(0, new JsonResponseCallback() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+                try {
+                    Date dt = new Date(json.optJSONObject("data").optJSONObject("term").getLong("startDate"));
+                    termStartDate = sdf.format(dt);
+                    tabStartDate = termStartDate;
+                    synchronizeHistoryData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // getHistoryRecord();
+                    return false;
+                }
+                return true;
+            }
+        });
+    }
+
+    /**
+     * 同步最新的数据库历史记录
+     */
+    private void synchronizeHistoryData() {
+        ServerInterface.instance().queryHistorySportsRecord(student.getId(), tabStartDate, tabEndDate, AppConstant.THIS_TERM, new JsonResponseCallback() {
+            @Override
+            public boolean onJsonResponse(JSONObject json, int errCode, String errMsg, int id, boolean fromCache) {
+
+                if (errCode == 0) {
+
+                    JSONObject stu = json.optJSONObject("data").optJSONObject("student");
+                    try {
+                        int accuRunningActivityCount = stu.optInt("accuRunningActivityCount");
+                        int accuAreaActivityCount = stu.optInt("accuAreaActivityCount");
+
+                        String totalSignInCount = String.valueOf(stu.optInt("signInCount"));
+
+                        int runningActivityTimeCosted = stu.optInt("runningActivityTimeCosted");
+                        int areaActivityTimeCosted = stu.optInt("areaActivityTimeCosted");
+
+                        int runningActivityKcalConsumption = stu.optInt("runningActivityKcalConsumption");
+                        int areaActivityKcalConsumption = stu.optInt("areaActivityKcalConsumption");
+
+                        String totalActivityCount = String.valueOf(accuAreaActivityCount + accuRunningActivityCount);
+                        String totalActivityTimeCosted = String.valueOf(runningActivityTimeCosted + areaActivityTimeCosted);
+                        String toalActivityKcalConsumption = String.valueOf(runningActivityKcalConsumption + areaActivityKcalConsumption);
+
+                        JSONArray runningSportArray = stu.optJSONObject("runningActivities").optJSONArray("data");
+                        JSONArray areaSportArray = stu.optJSONObject("areaActivities").optJSONArray("data");
+
+                        for (LocalDate date = new LocalDate(tabEndDate); date.isAfter(new LocalDate(tabStartDate).minusDays(1)); date = date.minusDays(1)) {
+                            HistoryItem item = new HistoryItem();
+                            item.historySportEntryList = null;
+                            for (int i = 0; i < runningSportArray.length(); i++) {
+                                if ((runningSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
+                                    ////////////////////////////////////////////////////////////////////
+                                    RunningActivityRecord runningActivityRecord = new RunningActivityRecord();
+                                    runningActivityRecord.setId(runningSportArray.optJSONObject(i).optLong("id"));
+                                    runningActivityRecord.setRunningSportId(runningSportArray.optJSONObject(i).optInt("runningSportId"));
+                                    runningActivityRecord.setRunningSportName(runningSportArray.optJSONObject(i).optJSONObject("runningSport").optString("name"));
+                                    runningActivityRecord.setCostTime(runningSportArray.optJSONObject(i).optInt("costTime"));
+                                    runningActivityRecord.setDistance(Integer.valueOf(runningSportArray.optJSONObject(i).optString("distance")));
+                                    runningActivityRecord.setKcalConsumed(Integer.valueOf(runningSportArray.optJSONObject(i).optString("kcalConsumed")));
+                                    runningActivityRecord.setStudentId(student.getId());
+                                    runningActivityRecord.setQualified(runningSportArray.optJSONObject(i).optBoolean("qualified"));
+                                    runningActivityRecord.setStartTime(new Date(Long.valueOf(runningSportArray.optJSONObject(i).optString("startTime"))));
+                                    runningActivityRecord.setSportDate(String.valueOf(runningSportArray.optJSONObject(i).optString("sportDate")));
+                                    runningActivityRecord.setEndedAt(new Date(Long.valueOf(runningSportArray.optJSONObject(i).getString("endedAt"))));
+                                    runningActivityRecord.setIsValid(runningSportArray.optJSONObject(i).getBoolean("isValid"));
+                                    runningActivityRecord.setIsVerified(runningSportArray.optJSONObject(i).getBoolean("isVerified"));
+                                    runningActivityRecord.setCreatedAt(new DateTime().toDate());
+                                    runningActivityRecord.setUpdatedAt(new DateTime().toDate());
+                                    runningActivityRecord.setEndedBy(0);
+                                    mDaoSession.getRunningActivityRecordDao().insert(runningActivityRecord);
+                                }
+                            }
+
+                            for (int i = 0; i < areaSportArray.length(); i++) {
+                                if ((areaSportArray.optJSONObject(i).optString("sportDate")).equals(date.toString())) {
+                                    JSONObject point = areaSportArray.getJSONObject(i).getJSONObject("location");
+                                    AreaActivityRecord areaActivityRecord = new AreaActivityRecord();
+                                    areaActivityRecord.setId(areaSportArray.optJSONObject(i).optLong("id"));
+                                    areaActivityRecord.setAreaSportId(areaSportArray.optJSONObject(i).optInt("areaSportId"));
+                                    areaActivityRecord.setCostTime(areaSportArray.optJSONObject(i).optInt("costTime"));
+                                    areaActivityRecord.setKcalConsumed(Integer.valueOf(areaSportArray.optJSONObject(i).optString("kcalConsumed")));
+                                    areaActivityRecord.setStudentId(student.getId());
+                                    areaActivityRecord.setQualified(areaSportArray.optJSONObject(i).optBoolean("qualified"));
+                                    areaActivityRecord.setIsValid(areaSportArray.optJSONObject(i).getBoolean("isValid"));
+                                    areaActivityRecord.setIsVerified(areaSportArray.optJSONObject(i).getBoolean("isVerified"));
+                                    areaActivityRecord.setStartTime(new Date(Long.valueOf(areaSportArray.optJSONObject(i).optString("startTime"))));
+                                    areaActivityRecord.setSportDate(String.valueOf(areaSportArray.optJSONObject(i).optString("sportDate")));
+                                    areaActivityRecord.setEndedAt(new Date(Long.valueOf(areaSportArray.optJSONObject(i).getString("endedAt"))));
+                                    areaActivityRecord.setCreatedAt(new DateTime().toDate());
+                                    areaActivityRecord.setUpdatedAt(new DateTime().toDate());
+                                    areaActivityRecord.setEndedBy(0);
+                                    areaActivityRecord.setAreaSportName(areaSportArray.optJSONObject(i).getJSONObject("areaSport").getString("name"));
+                                    areaActivityRecord.setName(point.getString("name"));
+                                    areaActivityRecord.setAddr(point.getString("addr"));
+                                    areaActivityRecord.setIsEnabled(point.getBoolean("isEnabled"));
+                                    areaActivityRecord.setLatitude(Double.parseDouble(point.getString("latitude")));
+                                    areaActivityRecord.setLongitude(Double.parseDouble(point.getString("longitude")));
+                                    areaActivityRecord.setRadius(point.getInt("radius"));
+                                    mDaoSession.getAreaActivityRecordDao().insert(areaActivityRecord);
+                                }
+                            }
+                        }
+                        // ContentValues values = new ContentValues();
+                        // values.put("id", sportRecordId);
+                        // values.put("endRunningSportId", historySportEntry.getEndRunningSportId());
+                        // values.put("studentId", historySportEntry.getStudentId());
+                        // values.put("distance", historySportEntry.getDistance());
+                        // values.put("stepCount", historySportEntry.getStepCount());
+                        // values.put("costTime", historySportEntry.getCostTime());
+                        // values.put("speed", historySportEntry.getSpeed());
+                        // values.put("stepPerSecond", historySportEntry.getStepPerSecond());
+                        // values.put("distancePerStep", historySportEntry.getDistancePerStep());
+                        // values.put("targetFinishedTime", historySportEntry.getTargetFinishedTime());
+                        // values.put("startTime", historySportEntry.getStartTime());
+                        // values.put("kcalConsumed", historySportEntry.getKcalConsumed());
+                        // values.put("qualified", historySportEntry.isQualified());
+                        // values.put("isValid", historySportEntry.isValid());
+                        // values.put("isVerified", historySportEntry.isVerified());
+                        // values.put("qualifiedDistance", historySportEntry.getQualifiedDistance());
+                        // values.put("qualifiedCostTime", historySportEntry.getQualifiedCostTime());
+                        // values.put("minCostTime", historySportEntry.getMinCostTime());
+                        // values.put("updatedAt", new DateTime().getMillis());
+                        // values.put("endedAt", historySportEntry.getEndedAt());
+                        // sqLite.updateRecord(runningActivityCallback, values);
+
+
+                        return true;
+                    } catch (org.json.JSONException e) {
+                        emptyLayout.showEmptyOrError(errCode);
+                        e.printStackTrace();
+                        DLOG.e(TAG, "queryHistorySportsRecord onJsonResponse e: " + e);
+                        return false;
+                    }
+                } else {
+                    emptyLayout.showEmptyOrError(errCode);
+                    return false;
+                }
+            }
+
+        });
     }
 
     private void queryHomePagedata() {
