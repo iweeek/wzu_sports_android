@@ -40,10 +40,16 @@ import com.application.library.log.DLOG;
 import com.application.library.net.JsonResponseCallback;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
+import com.tim.app.RT;
 import com.tim.app.server.api.ServerInterface;
 import com.tim.app.server.entry.FixLocationOutdoorSportPoint;
 import com.tim.app.server.entry.HistoryAreaSportEntry;
 import com.tim.app.server.entry.HistoryRunningSportEntry;
+import com.tim.app.server.entry.db.AreaActivityDataRecord;
+import com.tim.app.server.entry.db.AreaActivityDataRecordDao;
+import com.tim.app.server.entry.db.DaoSession;
+import com.tim.app.server.entry.db.RunningActivityDataRecord;
+import com.tim.app.server.entry.db.RunningActivityDataRecordDao;
 import com.tim.app.server.logic.UserManager;
 import com.tim.app.ui.dialog.ProgressDialog;
 import com.tim.app.ui.view.SlideUnlockView;
@@ -51,6 +57,8 @@ import com.tim.app.ui.view.webview.WebViewActivity;
 import com.tim.app.util.MarkerOverlay;
 import com.tim.app.util.MathUtil;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -72,6 +80,7 @@ public class SportResultActivity extends ToolbarActivity {
 
     private HistoryRunningSportEntry historyRunningSportEntry;
     private HistoryAreaSportEntry historyAreaSportEntry;
+    private DaoSession mDaoSession;
 
     private LatLng oldLatLng = null;
     private int interval = 0;
@@ -290,8 +299,22 @@ public class SportResultActivity extends ToolbarActivity {
     public void initData() {
         setTitle(getString(R.string.app_result));
 
+        /**
+         * 先从本地查找是否是这个activityId的记录。如果有，那么就直接从本地数据库中取出来。如果没有，从服务器取，并保存在本地。
+         */
+
+        mDaoSession = RT.ins().getDaoSession();
         if (historyRunningSportEntry != null) {
-            queryRunningActivity(historyRunningSportEntry.getId());
+            QueryBuilder<RunningActivityDataRecord> runningBuilder = mDaoSession.getRunningActivityDataRecordDao().queryBuilder();
+            List<RunningActivityDataRecord> runningActivityDataList = runningBuilder.where(
+                    RunningActivityDataRecordDao.Properties.ActivityId.eq(historyRunningSportEntry.getId())
+            ).list();
+
+            if (runningActivityDataList.size() > 0) {
+                queryLocalRunningActivity(runningActivityDataList);
+            } else {
+                queryRunningActivity(historyRunningSportEntry.getId());
+            }
         } else if (historyAreaSportEntry != null) {
             llTargetContainer.setVisibility(View.GONE);
             btDrawLine.setVisibility(View.GONE);
@@ -301,7 +324,17 @@ public class SportResultActivity extends ToolbarActivity {
                     new CameraPosition(targetLatLng, zoomLevel, 0, 0));
             aMap.moveCamera(cu);
 
-            queryAreaActivity(historyAreaSportEntry.getId());
+            QueryBuilder<AreaActivityDataRecord> areaBuilder = mDaoSession.getAreaActivityDataRecordDao().queryBuilder();
+            List<AreaActivityDataRecord> areaActivityDataList = areaBuilder.where(
+                    AreaActivityDataRecordDao.Properties.ActivityId.eq(historyAreaSportEntry.getId())
+            ).list();
+
+            if (areaActivityDataList.size() > 0) {
+                queryLocalAreaActivity(areaActivityDataList);
+            } else {
+                queryAreaActivity(historyAreaSportEntry.getId());
+            }
+            // queryAreaActivity(historyAreaSportEntry.getId());
         }
 
         aMap.moveCamera(CameraUpdateFactory.zoomTo(zoomLevel));
@@ -328,6 +361,102 @@ public class SportResultActivity extends ToolbarActivity {
         DLOG.d(TAG, "sportEntry.getLocationPoint():" + historyAreaSportEntry.getLocationPoint());
     }
 
+    /**
+     * 处理本地查询出来的区域数据
+     * @param list
+     */
+    private void queryLocalAreaActivity(List<AreaActivityDataRecord> list) {
+        //添加画线点
+        for (AreaActivityDataRecord record : list) {
+            LatLng ll = new LatLng(record.getLatitude(), record.getLongitude());
+            DrawPoint dp = new DrawPoint(ll, record.getIsNormal(), record.getLocationType());
+            mPoints.add(ll);
+            mDrawPoints.add(dp);
+        }
+
+        boolean qualified = historyAreaSportEntry.isQualified();
+        boolean isValid = historyAreaSportEntry.isValid();
+        boolean isVerified = historyAreaSportEntry.isVerified();
+
+        //非正常结束
+        if (historyAreaSportEntry.getEndedAt() == 0) {
+            tvResult.setText("未结束");
+            tvResult.setTextColor(Color.parseColor("#FF9800"));
+            ivHelp.setVisibility(View.VISIBLE);
+        } else {
+            //是否达标
+            if (qualified) {
+                //是否审核
+                if (isVerified) {
+                    //是否有效
+                    if (isValid) {
+                        tvResult.setText("达标");
+                        tvResult.setTextColor(Color.parseColor("#4CAF50"));
+                        ivFinished.setVisibility(View.VISIBLE);
+                    } else {
+                        tvResult.setText("审核未通过");
+                        tvResult.setTextColor(Color.RED);
+                        ivHelp.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    tvResult.setText("达标待审核");
+                    tvResult.setTextColor(Color.parseColor("#4CAF50"));
+                    ivHelp.setVisibility(View.VISIBLE);
+                }
+            } else {
+                tvResult.setText("未达标");
+                tvResult.setTextColor(Color.parseColor("#FF9800"));
+                ivHelp.setVisibility(View.VISIBLE);
+            }
+        }
+
+        tvResult.setVisibility(View.VISIBLE);
+        rlContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            }
+        });
+
+        // tvSportName.setText(jsonObject.getJSONObject("areaSport")
+        //         .getString("name"));
+        tvSportName.setText(historyAreaSportEntry.getLocationPoint().getAreaName());
+
+        elapseTime = historyAreaSportEntry.getCostTime();
+        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+        tvElapseTime.setText(time);
+
+        // if (elapseTime != 0) {
+        //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+        //             Double.toString(elapseTime), SPEED_SCALE);
+        //     tvAverSpeed.setText(String.valueOf(bd));
+        // }
+
+        // targetTime = jsonObject.getInt("qualifiedCostTime");
+        // tvTargetTime.setText(String.valueOf(targetTime / 60));
+
+        // if (targetTime != 0) {
+        //     BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
+        //             Double.toString(targetTime), SPEED_SCALE);
+        //     tvTargetSpeed.setText(String.valueOf(bd));
+        // }
+
+        llCurrentDistance.setVisibility(View.GONE);
+        llAverageSpeed.setVisibility(View.GONE);
+        llTargetDistance.setVisibility(View.GONE);
+        llTargetSpeed.setVisibility(View.GONE);
+
+        String curConsumeEnergy = String.valueOf(historyAreaSportEntry.getKcalConsumed());
+        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
+        llFloatingWindow.setVisibility(View.VISIBLE);
+        progressDialog.dismissCurrentDialog();
+    }
+
+    /**
+     * 查询服务器的区域数据
+     * @param id
+     */
     private void queryAreaActivity(long id) {
         progressDialog.show();
         ServerInterface.instance().queryAreaActivity(id, new JsonResponseCallback() {
@@ -350,6 +479,17 @@ public class SportResultActivity extends ToolbarActivity {
                             DrawPoint dp = new DrawPoint(ll, jsonArray.getJSONObject(i).getInt("locationType"));
                             mPoints.add(ll);
                             mDrawPoints.add(dp);
+
+
+                            AreaActivityDataRecord areaActivityDataRecord = new AreaActivityDataRecord();
+                            areaActivityDataRecord.setActivityId(historyAreaSportEntry.getId());
+                            areaActivityDataRecord.setLongitude(jsonArray.getJSONObject(i).getDouble("longitude"));
+                            areaActivityDataRecord.setLatitude(jsonArray.getJSONObject(i).getDouble("latitude"));
+                            areaActivityDataRecord.setLocationType(jsonArray.getJSONObject(i).getInt("locationType"));
+                            areaActivityDataRecord.setAcquisitionTime(new Date(Long.valueOf(jsonArray.getJSONObject(i).getString("acquisitionTime"))));
+                            areaActivityDataRecord.setCreatedAt(new DateTime().toDate());
+                            areaActivityDataRecord.setUpdatedAt(new DateTime().toDate());
+                            mDaoSession.getAreaActivityDataRecordDao().insert(areaActivityDataRecord);
                         }
 
                         //获取信息完毕，接下来处理坐标点
@@ -467,6 +607,120 @@ public class SportResultActivity extends ToolbarActivity {
         });
     }
 
+    /**
+     * 处理本地查询出来的跑步数据
+     * @param list
+     */
+    private void queryLocalRunningActivity(List<RunningActivityDataRecord> list) {
+        //添加画线点
+        for (RunningActivityDataRecord record : list) {
+            LatLng ll = new LatLng(record.getLatitude(), record.getLongitude());
+            DrawPoint dp = new DrawPoint(ll, record.getIsNormal(), record.getLocationType());
+            mPoints.add(ll);
+            mDrawPoints.add(dp);
+        }
+
+        if (mDrawPoints.size() > 0) {
+            oldLatLng = mDrawPoints.get(0).getLL();
+            MarkerOptions markerOption = new MarkerOptions();
+            markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+                    .decodeResource(getResources(), R.drawable.icon_starting_point)));
+            markerOption.position(oldLatLng).title("出发点");
+            Marker marker = aMap.addMarker(markerOption);//添加标记
+            CameraUpdate cu = CameraUpdateFactory.newCameraPosition(new CameraPosition(oldLatLng, zoomLevel, 0, 0));
+            aMap.moveCamera(cu);
+        } else {
+            Toast.makeText(SportResultActivity.this, noSportTrackMsg, Toast.LENGTH_SHORT).show();
+        }
+
+        // llCurrentInfo.setVisibility(View.VISIBLE);
+        // JSONObject jsonObject = json.optJSONObject("data").optJSONObject("runningActivity");
+        currentDistance = historyRunningSportEntry.getDistance();
+        tvCurrentDistance.setText(String.valueOf(currentDistance));
+
+        boolean qualified = historyRunningSportEntry.isQualified();
+        boolean isValid = historyRunningSportEntry.isValid();
+        boolean isVerified = historyRunningSportEntry.isVerified();
+        //boolean isVerified = true;    //先写死，以后用的时候再改
+
+        //非正常结束
+        if (historyRunningSportEntry.getEndedAt() == 0) {
+            tvResult.setText("未结束");
+            tvResult.setTextColor(Color.parseColor("#FF9800"));
+            ivHelp.setVisibility(View.VISIBLE);
+        } else {
+            //是否达标
+            if (qualified) {
+                //是否审核
+                if (isVerified) {
+                    //是否有效
+                    if (isValid) {
+                        tvResult.setText("达标");
+                        tvResult.setTextColor(Color.parseColor("#4CAF50"));
+                        ivFinished.setVisibility(View.VISIBLE);
+                    } else {
+                        tvResult.setText("审核未通过");
+                        tvResult.setTextColor(Color.RED);
+                        ivHelp.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    tvResult.setText("达标待审核");
+                    tvResult.setTextColor(Color.parseColor("#4CAF50"));
+                    ivHelp.setVisibility(View.VISIBLE);
+                }
+            } else {
+                tvResult.setText("未达标");
+                tvResult.setTextColor(Color.parseColor("#FF9800"));
+                ivHelp.setVisibility(View.VISIBLE);
+            }
+        }
+
+        tvResult.setVisibility(View.VISIBLE);
+        rlContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WebViewActivity.loadUrl(SportResultActivity.this, "http://www.guangyangyundong.com:86/#/help", "帮助中心");
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
+            }
+        });
+
+        tvSportName.setText(historyRunningSportEntry.getSportName());
+
+        elapseTime = historyRunningSportEntry.getCostTime();
+        Date date = new Date(elapseTime);
+
+        String time = com.tim.app.util.TimeUtil.formatMillisTime(elapseTime * 1000);
+        tvElapseTime.setText(time);
+
+        if (elapseTime != 0) {
+            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(currentDistance),
+                    Double.toString(elapseTime), SPEED_SCALE);
+            tvAverSpeed.setText(String.valueOf(bd));
+        }
+
+        targetDistance = historyRunningSportEntry.getQualifiedDistance();
+        tvTargetDistance.setText(String.valueOf(targetDistance));
+
+        targetTime =historyRunningSportEntry.getQualifiedCostTime();
+        // tvTargetTime.setText(String.valueOf(targetTime / 60));
+
+        if (targetTime != 0) {
+            BigDecimal bd = MathUtil.bigDecimalDivide(Double.toString(targetDistance),
+                    Double.toString(targetTime), SPEED_SCALE);
+            tvTargetSpeed.setText(String.valueOf(bd));
+        }
+
+        String curConsumeEnergy = String.valueOf(historyRunningSportEntry.getKcalConsumed());
+        tvCurConsumeEnergy.setText(getString(R.string.digitalPlaceholder, curConsumeEnergy) + " ");
+        rlCurConsumeEnergy.setVisibility(View.VISIBLE);
+        llFloatingWindow.setVisibility(View.VISIBLE);
+        progressDialog.dismissCurrentDialog();
+    }
+
+    /**
+     * 查询服务器跑步数据
+     * @param id
+     */
     private void queryRunningActivity(long id) {
         progressDialog.show();
         ServerInterface.instance().queryRunningActivity(id, new JsonResponseCallback() {
@@ -518,6 +772,19 @@ public class SportResultActivity extends ToolbarActivity {
                                     jsonArray.optJSONObject(i).optInt("locationType"));
                             mPoints.add(ll);
                             mDrawPoints.add(dp);
+
+                            RunningActivityDataRecord runningActivityDataRecord = new RunningActivityDataRecord();
+                            runningActivityDataRecord.setActivityId(historyRunningSportEntry.getId());
+                            runningActivityDataRecord.setLongitude(jsonArray.getJSONObject(i).getDouble("longitude"));
+                            runningActivityDataRecord.setLatitude(jsonArray.getJSONObject(i).getDouble("latitude"));
+                            runningActivityDataRecord.setIsNormal(jsonArray.getJSONObject(i).getBoolean("isNormal"));
+                            runningActivityDataRecord.setLocationType(jsonArray.getJSONObject(i).getInt("locationType"));
+                            runningActivityDataRecord.setStepCount(jsonArray.getJSONObject(i).getInt("stepCount"));
+                            runningActivityDataRecord.setDistance(jsonArray.getJSONObject(i).getInt("distance"));
+                            runningActivityDataRecord.setAcquisitionTime(new Date(Long.valueOf(jsonArray.getJSONObject(i).getString("acquisitionTime"))));
+                            runningActivityDataRecord.setCreatedAt(new DateTime().toDate());
+                            runningActivityDataRecord.setUpdatedAt(new DateTime().toDate());
+                            mDaoSession.getRunningActivityDataRecordDao().insert(runningActivityDataRecord);
                         }
 
                         //获取信息完毕，接下来处理坐标点
