@@ -76,6 +76,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'com.android.support:design:25.0.0'
     compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.gavin.com.library:stickyDecoration:1.2.0'
 }
 
 def releaseTime() {

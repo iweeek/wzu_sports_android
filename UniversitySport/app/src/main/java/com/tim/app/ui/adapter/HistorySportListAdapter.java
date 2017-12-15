@@ -74,24 +74,29 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(runningSportEntry.getSportName());
 
+                // 运动结果
+                TextView tvResult = (TextView) ll.findViewById(R.id.tvResult);
+
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
 
-//                if (runningSportEntry.getEndedAt() == 0) {
-//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
-//                } else {
-//                    if (runningSportEntry.isValid()) {
-//                        if (runningSportEntry.isQualified()) {
-//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
-//                        } else {
-//                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
-//                        }
-//                    } else {
-//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
-//                    }
-//                }
+                //                if (runningSportEntry.getEndedAt() == 0) {
+                //                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
+                //                } else {
+                //                    if (runningSportEntry.isValid()) {
+                //                        if (runningSportEntry.isQualified()) {
+                //                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
+                //                        } else {
+                //                            ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                //                        }
+                //                    } else {
+                //                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
+                //                    }
+                //                }
 
                 //非正常结束
                 if (runningSportEntry.getEndedAt() == 0) {
+                    tvResult.setText("未结束");
+                    tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                     ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                 } else {
                     //是否达标
@@ -100,20 +105,29 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                         if (runningSportEntry.isVerified()) {
                             //是否有效
                             if (runningSportEntry.isValid()) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                             } else {
+                                tvResult.setText("审核未通过");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.red_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_red));
                             }
                         } else {
+                            tvResult.setText("达标待审核");
+                            tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                             ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_blue));
                         }
                     } else {
+                        tvResult.setText("未达标");
+                        tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_runman_orange));
                     }
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                //SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 tvSportTime.setText(sdf.format(runningSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
@@ -168,19 +182,24 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 TextView tvSportDesc = (TextView) ll.findViewById(R.id.tvSportDesc);
                 tvSportDesc.setText(areaSportEntry.getAreaSport());
 
+                // 运动结果
+                TextView tvResult = (TextView) ll.findViewById(R.id.tvResult);
+
                 ImageView ivSportQualified = (ImageView) ll.findViewById(R.id.ivSportQualified);
-//                if (areaSportEntry.getEndedAt() == 0) {
-//                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
-//                } else {
-//                    if (data.historySportEntryList.get(i).isQualified()) {
-//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
-//                    } else {
-//                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
-//                    }
-//                }
+                //                if (areaSportEntry.getEndedAt() == 0) {
+                //                    ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
+                //                } else {
+                //                    if (data.historySportEntryList.get(i).isQualified()) {
+                //                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
+                //                    } else {
+                //                        ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
+                //                    }
+                //                }
 
                 //非正常结束
                 if (areaSportEntry.getEndedAt() == 0) {
+                    tvResult.setText("未结束");
+                    tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                     ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                 } else {
                     //是否达标
@@ -189,21 +208,30 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                         if (areaSportEntry.isVerified()) {
                             //是否有效
                             if (areaSportEntry.isValid()) {
+                                tvResult.setText("达标");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                             } else {
+                                tvResult.setText("审核未通过");
+                                tvResult.setTextColor(getContext().getResources().getColor(R.color.red_primary));
                                 ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_red));
                             }
                         } else {
+                            tvResult.setText("达标待审核");
+                            tvResult.setTextColor(getContext().getResources().getColor(R.color.green_primary));
                             ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_blue));
                         }
                     } else {
                         //未达标
+                        tvResult.setText("未达标");
+                        tvResult.setTextColor(getContext().getResources().getColor(R.color.orange_primary));
                         ivSportQualified.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_area_orange));
                     }
                 }
 
                 TextView tvSportTime = (TextView) ll.findViewById(R.id.tvSportTime);
-                SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                //SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
                 tvSportTime.setText(sdf.format(areaSportEntry.getStartTime()));
                 tvSportTime.setVisibility(View.VISIBLE);
 
@@ -251,10 +279,10 @@ public class HistorySportListAdapter extends BaseRecyclerAdapter<BaseRecyclerAda
                 viewHolder.addView(R.id.llSportItem, ll);
             }
         }
-        //        //当天日期
-        //        viewHolder.setText(R.id.tvSportDate, data.date);
-        //        //一天的热量消耗
-        //        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.kcalPlaceholder, String.valueOf(totalEnergyCost)));
+        //当天日期
+        viewHolder.setText(R.id.tvSportDate, data.date);
+        //一天的热量消耗
+        viewHolder.setText(R.id.tvEnergyCost, mContext.getString(R.string.kcalPlaceholder, String.valueOf(totalEnergyCost)));
     }
 
     public static Typeface getTypeface(Context context) {

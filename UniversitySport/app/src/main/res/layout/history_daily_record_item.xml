@@ -80,6 +80,16 @@
                         android:text="慢跑"
                         android:textColor="#66A6FE"
                         android:textSize="11dp" />
+
+                    <TextView
+                        android:id="@+id/tvResult"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="11dp"
+                        android:text="达标"
+                        android:textColor="@color/green_primary"
+                        android:textSize="11dp" />
                 </LinearLayout>
 
                 <LinearLayout

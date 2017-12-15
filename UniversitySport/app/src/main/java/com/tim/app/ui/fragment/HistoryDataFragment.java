@@ -1,6 +1,7 @@
 package com.tim.app.ui.fragment;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,9 @@ import com.application.library.widget.loadmore.LoadMoreContainer;
 import com.application.library.widget.loadmore.LoadMoreHandler;
 import com.application.library.widget.loadmore.LoadMoreRecycleViewContainer;
 import com.application.library.widget.recycle.WrapRecyclerView;
+import com.gavin.com.library.StickyDecoration;
+import com.gavin.com.library.listener.GroupListener;
+import com.gavin.com.library.listener.OnGroupClickListener;
 import com.lzy.okhttputils.OkHttpUtils;
 import com.tim.app.R;
 import com.tim.app.constant.AppConstant;
@@ -27,6 +31,7 @@ import com.tim.app.ui.activity.HistoryItem;
 import com.tim.app.ui.activity.HistorySportActivity;
 import com.tim.app.ui.adapter.HistorySportListAdapter;
 import com.tim.app.ui.view.HistoryDataHeadView;
+import com.tim.app.util.DensityUtil;
 import com.tim.app.util.MyDateUtil;
 
 import org.joda.time.LocalDate;
@@ -159,6 +164,44 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         }
         headView.setData("0", "0", "0", "0", "0");
         initData();
+
+        //回调
+        GroupListener groupListener = new GroupListener() {
+            @Override
+            public String getGroupName(int position) {
+                //根据position获取对应的组名称
+                if (position == 0) {
+                    return "";
+                } else {
+                    if (position <= dataList.size()) {
+                        return dataList.get(position - 1).date;
+                    } else {
+                        return "";
+                    }
+                }
+            }
+        };
+        //创建StickyDecoration，实现悬浮栏
+        StickyDecoration decoration = StickyDecoration.Builder
+                .init(groupListener)
+                .setGroupBackground(Color.parseColor("#ffffff"))  //背景色（默认 透明）
+                .setGroupHeight(DensityUtil.dp2px(this.getContext(), 32))     //高度
+                .setDivideColor(Color.parseColor("#CCCCCC"))      //分割线颜色（默认 #CCCCCC）
+                .setDivideHeight(DensityUtil.dp2px(this.getContext(), 1))     //分割线高宽度 (默认 0)
+                .setGroupTextColor(Color.parseColor("#7A8084"))                 //字体颜色 （默认 Color.WHITE）
+                .setGroupTextSize(DensityUtil.sp2px(this.getContext(), 20))    //字体大小 （默认 40）
+                .setTextSideMargin(DensityUtil.dp2px(this.getContext(), 20))  //边距   靠左时为左边距  靠右时为右边距（默认 10）
+                .isAlignLeft(true)                               //靠右显示  （默认 靠左）
+                .setOnClickListener(new OnGroupClickListener() {  //点击事件，返回当前分组下第一个item的position
+                    @Override
+                    public void onClick(int position) {
+                        //处理点击事件
+                    }
+                })
+                .build();
+
+        wrvHistoryData.addItemDecoration(decoration);
+
 
         setHasOptionsMenu(true);
 
@@ -328,7 +371,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         tabEndDate = new LocalDate(new Date()).toString();
         if (type == AppConstant.THIS_WEEK) {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentWeekStartDate()).toString();
-                getHistoryRecord();
+            getHistoryRecord();
         } else if (type == AppConstant.THIS_MONTH) {
             tabStartDate = new LocalDate(MyDateUtil.getCurrentMonthStartDate()).toString();
             getHistoryRecord();
@@ -589,18 +632,18 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                     dataList.addAll(dataListDisqualified);
                     currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
                     break;
-                case R.id.action_not_verified:
-                    dataList.addAll(dataListNotVerified);
-                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
-                    break;
+//                case R.id.action_not_verified:
+//                    dataList.addAll(dataListNotVerified);
+//                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
+//                    break;
                 case R.id.action_verified_fail:
                     dataList.addAll(dataListVerifiedFailed);
                     currentFragmentState = AppConstant.STATUS_VERIFIED_FAILED;
                     break;
-                case R.id.action_abnormal_end:
-                    dataList.addAll(dataListAbnormalEnd);
-                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
-                    break;
+//                case R.id.action_abnormal_end:
+//                    dataList.addAll(dataListAbnormalEnd);
+//                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
+//                    break;
                 default:
                     super.onOptionsItemSelected(item);
                     break;
@@ -621,18 +664,18 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                     dataList.addAll(dataListDisqualified);
                     currentFragmentState = AppConstant.STATUS_DISQUALIFIED;
                     break;
-                case AppConstant.STATUS_NOT_VERIFIED:
-                    dataList.addAll(dataListNotVerified);
-                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
-                    break;
+//                case AppConstant.STATUS_NOT_VERIFIED:
+//                    dataList.addAll(dataListNotVerified);
+//                    currentFragmentState = AppConstant.STATUS_NOT_VERIFIED;
+//                    break;
                 case AppConstant.STATUS_VERIFIED_FAILED:
                     dataList.addAll(dataListVerifiedFailed);
                     currentFragmentState = AppConstant.STATUS_VERIFIED_FAILED;
                     break;
-                case AppConstant.STATUS_ABNORMAL_END:
-                    dataList.addAll(dataListAbnormalEnd);
-                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
-                    break;
+//                case AppConstant.STATUS_ABNORMAL_END:
+//                    dataList.addAll(dataListAbnormalEnd);
+//                    currentFragmentState = AppConstant.STATUS_ABNORMAL_END;
+//                    break;
                 default:
                     super.onOptionsItemSelected(item);
                     break;
@@ -677,7 +720,12 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
         for (HistoryItem item : dataList) {
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
+                //达标
                 if (entry.isQualified() && entry.isValid() && entry.isVerified() && entry.getEndedAt() != 0) {
+                    historySportEntry.add(entry);
+                }
+                //达标待审核
+                if (entry.isQualified() && !entry.isVerified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
             }
@@ -686,7 +734,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 HistoryItem historyItem = new HistoryItem();
                 historyItem.date = item.date;
                 historyItem.historySportEntryList = historySportEntry;
-                dataListQualified.add(historyItem);
+                dataListQualified.add(historyItem);//实际为达标+达标待审核
             }
         }
 
@@ -697,7 +745,6 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
                 if (!entry.isQualified() && entry.getEndedAt() != 0) {
                     historySportEntry.add(entry);
                 }
-
             }
 
             if (historySportEntry.size() != 0) {
@@ -712,7 +759,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
                 if (entry.isQualified() && !entry.isVerified() && entry.getEndedAt() != 0) {
-                        historySportEntry.add(entry);
+                    historySportEntry.add(entry);
                 }
             }
 
@@ -728,7 +775,7 @@ public class HistoryDataFragment extends LazyFragment implements View.OnClickLis
             List<HistorySportEntry> historySportEntry = new ArrayList<>();
             for (HistorySportEntry entry : item.historySportEntryList) {
                 if (entry.isQualified() && entry.isVerified() && !entry.isValid() && entry.getEndedAt() != 0) {
-                        historySportEntry.add(entry);
+                    historySportEntry.add(entry);
                 }
             }
 
