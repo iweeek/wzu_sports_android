@@ -324,10 +324,10 @@ public class ServerInterface {
         String timeRange = "CURRENT_TERM";
         String queryStr = "{\n" +
                 "  student(id: " + studentId + ") {\n" +
-                "    areaActivityKcalConsumption\n" +
-                "    runningActivityKcalConsumption\n" +
-                "    areaActivityTimeCosted\n" +
-                "    runningActivityTimeCosted\n" +
+                "    areaActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
+                "    runningActivityKcalConsumption(timeRange: " + timeRange + ")\n" +
+                "    areaActivityTimeCosted(timeRange: " + timeRange + ")\n" +
+                "    runningActivityTimeCosted(timeRange: " + timeRange + ")\n" +
                 "    currentTermQualifiedAreaActivityCount\n" +
                 "    currentTermQualifiedRunningActivityCount\n" +
                 "    currentTermAreaActivityCount\n" +
